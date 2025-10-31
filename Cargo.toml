@@ -41,6 +41,7 @@ members = [
     "lib/codecs",
     "lib/configurable",
     "lib/configurable-derive",
+    "lib/docker",
     "lib/event",
     "lib/finalize",
     "lib/framework",
@@ -148,7 +149,7 @@ secrets = [
 
 extensions-consul_observer = []
 extensions-dns_observer = ["dep:resolver"]
-extensions-docker = ["dep:hyper-unix"]
+extensions-docker = ["dep:docker"]
 extensions-exec_observer = ["tokio/process"]
 extensions-healthcheck = ["tonic/router", "dep:tonic-health"]
 extensions-http_observer = []
@@ -181,7 +182,7 @@ sources-clickhouse_metrics = []
 sources-consul = []
 sources-dnsmasq = ["dep:resolver"]
 sources-dnstap = []
-sources-docker = ["dep:hyper-unix"]
+sources-docker = ["dep:docker"]
 sources-dpdk = []
 sources-exec = ["tokio/process"]
 sources-elasticsearch = []
@@ -402,6 +403,7 @@ tonic = { version = "0.14.2", default-features = false, features = ["server", "r
 # Workspaces
 codecs = { path = "lib/codecs" }
 configurable = { path = "lib/configurable" }
+docker = { path = "lib/docker", optional = true }
 event = { path = "lib/event" }
 finalize = { path = "lib/finalize", optional = true }
 framework = { path = "lib/framework" }

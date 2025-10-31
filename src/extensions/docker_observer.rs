@@ -1,20 +1,16 @@
 use std::collections::{BTreeMap, HashMap};
-use std::fmt::Display;
 use std::path::PathBuf;
 use std::time::Duration;
 
-use bytes::Bytes;
 use configurable::configurable_component;
+use docker::containers::ListContainersOptions;
+use docker::system::EventsOptions;
+use docker::{Client, Error};
 use framework::config::{ExtensionConfig, ExtensionContext};
 use framework::observe::{Endpoint, Observer};
 use framework::{Extension, ShutdownSignal};
 use futures::StreamExt;
-use http::{Method, Request};
-use http_body_util::{BodyExt, Full};
-use hyper_unix::UnixConnector;
-use hyper_util::rt::TokioExecutor;
 use regex::Regex;
-use serde::Deserialize;
 use tokio::sync::watch::{Sender, channel};
 use value::{Value, value};
 
@@ -50,10 +46,7 @@ impl ExtensionConfig for Config {
             .iter()
             .map(|pattern| Regex::new(pattern))
             .collect::<Result<Vec<_>, _>>()?;
-
-        let connector = UnixConnector::new(self.path.clone());
-        let client = hyper_util::client::legacy::Builder::new(TokioExecutor::new())
-            .build::<_, Full<Bytes>>(connector);
+        let client = Client::new(self.path.clone());
 
         Ok(Box::pin(run(
             client,
@@ -105,74 +98,35 @@ async fn run(
     Ok(())
 }
 
-type Client = hyper_util::client::legacy::Client<UnixConnector, Full<Bytes>>;
-
-#[derive(Deserialize)]
-#[serde(rename_all = "PascalCase")]
-struct Container {
-    id: String,
-    image: String,
-}
-
-#[derive(Debug)]
-enum Error {
-    UnexpectedStatusCode(http::StatusCode),
-
-    Hyper(hyper::Error),
-
-    Client(hyper_util::client::legacy::Error),
-
-    Deserialize(serde_json::Error),
-}
-
-impl Display for Error {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Error::UnexpectedStatusCode(code) => write!(f, "unexpected status code: {code}"),
-            Error::Hyper(err) => err.fmt(f),
-            Error::Client(err) => err.fmt(f),
-            Error::Deserialize(err) => err.fmt(f),
-        }
-    }
-}
-
 /// Watch events
 ///
 /// https://docs.docker.com/reference/api/engine/version/v1.51/#tag/System/operation/SystemEvents
 async fn watch(client: Client, tx: Sender<()>, mut shutdown: ShutdownSignal) {
     async fn watch_inner(client: &Client, tx: &Sender<()>, shutdown: &mut ShutdownSignal) {
-        let req = Request::builder()
-            .method(Method::GET)
-            // filters={"type":["container"],"event":["destroy","die","pause","rename","stop","start","unpause","update"]}
-            .uri("http://localhost/events?filters=%7B%22type%22%3A%5B%22container%22%5D%2C%22event%22%3A%5B%22destroy%22%2C%22die%22%2C%22pause%22%2C%22rename%22%2C%22stop%22%2C%22start%22%2C%22unpause%22%2C%22update%22%5D%7D")
-            .body(Full::<Bytes>::default())
-            .unwrap();
-
-        let resp = match client.request(req).await {
-            Ok(resp) => resp,
-            Err(err) => {
-                warn!(message = "watch events failed", ?err);
-                return;
-            }
+        let mut filters = HashMap::new();
+        filters.insert("type", vec!["container"]);
+        filters.insert(
+            "event",
+            vec![
+                "destroy", "die", "pause", "rename", "stop", "start", "unpause", "update",
+            ],
+        );
+        let opts = EventsOptions {
+            filters: Some(filters),
+            ..Default::default()
         };
 
-        let (parts, incoming) = resp.into_parts();
-        if !parts.status.is_success() {
-            let data = incoming.collect().await.unwrap().to_bytes();
-
-            warn!(
-                message = "unexpected response status code",
-                code = %parts.status,
-                body = %String::from_utf8_lossy(&data)
-            );
-
-            return;
-        }
-
-        let mut stream = incoming.into_data_stream().take_until(shutdown);
-        while let Some(Ok(_data)) = stream.next().await {
-            if let Err(_err) = tx.send(()) {
-                break;
+        match client.events(opts).await {
+            Ok(stream) => {
+                let mut stream = stream.take_until(shutdown);
+                while let Some(Ok(_data)) = stream.next().await {
+                    if let Err(_err) = tx.send(()) {
+                        break;
+                    }
+                }
+            }
+            Err(err) => {
+                warn!(message = "watch events failed", ?err);
             }
         }
     }
@@ -188,27 +142,42 @@ async fn watch(client: Client, tx: Sender<()>, mut shutdown: ShutdownSignal) {
 }
 
 async fn list(client: &Client, exclude_images: &[Regex]) -> Result<Vec<Endpoint>, Error> {
-    let containers = fetch::<Vec<Container>>(
-        client,
-        "http://localhost/containers/json?filters=%7B%22status%22%3A%5B%22running%22%5D%7D"
-            .to_string(),
-    )
-    .await?;
+    let mut filters = HashMap::new();
+    filters.insert("status", vec!["running"]);
+    let opts = ListContainersOptions {
+        filters: Some(filters),
+        ..Default::default()
+    };
+
+    let containers = match client.list_containers(opts).await {
+        Ok(containers) => containers
+            .into_iter()
+            .filter(|c| !exclude_images.iter().any(|m| m.is_match(&c.image)))
+            .collect::<Vec<_>>(),
+        Err(err) => {
+            return Err(err);
+        }
+    };
 
     let mut endpoints = Vec::with_capacity(containers.len());
     for container in containers {
-        if exclude_images
-            .iter()
-            .any(|re| re.is_match(&container.image))
-        {
-            continue;
-        }
+        let inspect = match client.inspect_container(&container.id).await {
+            Ok(inspect) => {
+                if inspect.config.exposed_ports.is_empty() {
+                    continue;
+                }
 
-        let inspect = fetch::<Inspect>(
-            client,
-            format!("http://localhost/containers/{}/json", &container.id),
-        )
-        .await?;
+                inspect
+            }
+            Err(err) => {
+                warn!(
+                    message = "inspect container failed",
+                    id = container.id,
+                    ?err
+                );
+                continue;
+            }
+        };
 
         if inspect.config.exposed_ports.is_empty() {
             continue;
@@ -246,6 +215,8 @@ async fn list(client: &Client, exclude_images: &[Regex]) -> Result<Vec<Endpoint>
             };
 
             let id = format!("{}:{}", container_id, exposed);
+            let port = port.parse::<u16>().unwrap_or_default();
+
             let details = value!({
                 "name": name.clone(),
                 "image": image.clone(),
@@ -255,6 +226,7 @@ async fn list(client: &Client, exclude_images: &[Regex]) -> Result<Vec<Endpoint>
                 "container_id": container_id.clone(),
                 "transport": proto.to_string(),
                 "labels": labels.clone(),
+                "port": port,
             });
 
             endpoints.push(Endpoint {
@@ -267,61 +239,6 @@ async fn list(client: &Client, exclude_images: &[Regex]) -> Result<Vec<Endpoint>
     }
 
     Ok(endpoints)
-}
-
-#[derive(Deserialize)]
-struct Empty {}
-
-#[derive(Deserialize)]
-#[serde(rename_all = "PascalCase")]
-struct InspectConfig {
-    hostname: String,
-    image: String,
-
-    #[serde(default)]
-    cmd: Option<Vec<String>>,
-    labels: HashMap<String, String>,
-    exposed_ports: HashMap<String, Empty>,
-}
-
-#[derive(Deserialize)]
-#[serde(rename_all = "PascalCase")]
-struct Network {
-    #[serde(rename = "IPAddress")]
-    ip_address: String,
-}
-
-#[derive(Deserialize)]
-#[serde(rename_all = "PascalCase")]
-struct NetworkSettings {
-    networks: HashMap<String, Network>,
-    // ports: HashMap<String, Option<Vec<Port>>>,
-}
-
-#[derive(Deserialize)]
-#[serde(rename_all = "PascalCase")]
-struct Inspect {
-    name: String,
-    config: InspectConfig,
-    network_settings: NetworkSettings,
-}
-
-async fn fetch<T: serde::de::DeserializeOwned>(client: &Client, uri: String) -> Result<T, Error> {
-    let req = Request::builder()
-        .method(Method::GET)
-        .uri(uri)
-        .body(Full::<Bytes>::default())
-        .unwrap();
-
-    let resp = client.request(req).await.map_err(Error::Client)?;
-    let (parts, incoming) = resp.into_parts();
-    if !parts.status.is_success() {
-        return Err(Error::UnexpectedStatusCode(parts.status));
-    }
-
-    let body = incoming.collect().await.map_err(Error::Hyper)?.to_bytes();
-
-    serde_json::from_slice::<T>(&body).map_err(Error::Deserialize)
 }
 
 #[cfg(test)]
