@@ -62,7 +62,7 @@ async fn run(
 }
 
 async fn collect() -> Result<Vec<Metric>, Error> {
-    let client = Client::connect().inspect_err(|err| match err {
+    let client = Client::connect().await.inspect_err(|err| match err {
         Error::Io(err) if err.kind() == ErrorKind::NotFound => {
             debug!(message = "WiFi collector got permission denied when accessing metrics");
         }
@@ -71,7 +71,7 @@ async fn collect() -> Result<Vec<Metric>, Error> {
         }
     })?;
 
-    let interfaces = client.interfaces()?;
+    let interfaces = client.interfaces().await?;
     let mut metrics = Vec::with_capacity(interfaces.len() * 14);
 
     for interface in interfaces {
@@ -95,7 +95,7 @@ async fn collect() -> Result<Vec<Metric>, Error> {
             ),
         ));
 
-        match client.bss(&interface) {
+        match client.bss(&interface).await {
             Ok(bss) => {
                 metrics.push(Metric::gauge_with_tags(
                     "wifi_station_info",
@@ -131,7 +131,7 @@ async fn collect() -> Result<Vec<Metric>, Error> {
             }
         };
 
-        match client.station_info(&interface) {
+        match client.station_info(&interface).await {
             Ok(infos) => {
                 for info in infos {
                     let tags = tags!(

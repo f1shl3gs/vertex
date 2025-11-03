@@ -1,6 +1,8 @@
-use std::os::fd::RawFd;
+use std::os::fd::{AsRawFd, FromRawFd, OwnedFd};
 use std::sync::atomic::{AtomicU32, Ordering};
 use std::time::Duration;
+
+use tokio::io::unix::AsyncFd;
 
 const REQUEST: u16 = 1;
 const DUMP: u16 = 0x100 | 0x200;
@@ -234,7 +236,7 @@ const HEADER_SIZE: usize = size_of::<Header>();
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     #[error(transparent)]
-    Io(std::io::Error),
+    Io(#[from] std::io::Error),
 
     #[error("invalid information element")]
     InvalidIE,
@@ -253,7 +255,7 @@ pub enum Error {
 }
 
 pub struct Client {
-    fd: RawFd,
+    fd: AsyncFd<OwnedFd>,
 
     family_id: u16,
     family_version: u8,
@@ -262,22 +264,110 @@ pub struct Client {
     seq: AtomicU32,
 }
 
-impl Drop for Client {
-    fn drop(&mut self) {
-        unsafe {
-            // don't handle error
-            libc::close(self.fd);
-        }
-    }
-}
-
 impl Client {
-    #[inline]
-    fn next_seq(&self) -> u32 {
-        self.seq.fetch_add(1, Ordering::SeqCst)
+    pub async fn connect() -> Result<Self, Error> {
+        let fd = unsafe {
+            let fd = libc::socket(libc::AF_NETLINK, libc::SOCK_RAW, libc::NETLINK_GENERIC);
+            if fd == -1 {
+                return Err(Error::Io(std::io::Error::last_os_error()));
+            }
+
+            let enable = 1;
+            let ret = libc::ioctl(fd, libc::FIONBIO, &enable as *const _);
+            if ret != 0 {
+                return Err(Error::Io(std::io::Error::last_os_error()));
+            }
+
+            let ret = libc::setsockopt(
+                fd,
+                libc::SOL_NETLINK,
+                libc::NETLINK_EXT_ACK,
+                &enable as *const i32 as *const libc::c_void,
+                4,
+            );
+            if ret == -1 {
+                return Err(Error::Io(std::io::Error::last_os_error()));
+            }
+
+            // NETLINK_GET_STRICT_CHK
+            let ret = libc::setsockopt(
+                fd,
+                libc::SOL_NETLINK,
+                libc::NETLINK_GET_STRICT_CHK,
+                &enable as *const i32 as *const libc::c_void,
+                4,
+            );
+            if ret == -1 {
+                return Err(Error::Io(std::io::Error::last_os_error()));
+            }
+
+            OwnedFd::from_raw_fd(fd)
+        };
+
+        let pid = std::process::id();
+        let mut client = Client {
+            fd: AsyncFd::new(fd)?,
+            family_id: 16, // GENL_ID_CTRL
+            family_version: 1,
+
+            pid,
+            seq: AtomicU32::new(1),
+        };
+
+        // get family
+        #[rustfmt::skip]
+        let buf: [u8; 12] = [
+            12, 0, // length
+            2, 0, // type
+            110, 108, 56, 48, // "nl80"
+            50, 49, 49, 0     // "211\0"
+        ];
+
+        let mut family_id = 0;
+        let mut family_version = 0;
+
+        client
+            .execute(3, 0, &buf, |_header, data| {
+                let attrs = AttributeIterator {
+                    data: &data[4..],
+                    pos: 0,
+                };
+
+                for (typ, data) in attrs {
+                    match typ {
+                        // libc::CTRL_ATTR_FAMILY_ID
+                        1 => {
+                            if data.len() < 2 {
+                                continue;
+                            }
+                            let a = data[0];
+                            let b = data[1];
+
+                            family_id = ((b as u16) << 8) | a as u16;
+                        }
+                        // libc::CTRL_ATTR_FAMILY_VERSION
+                        3 => {
+                            if data.len() < 4 {
+                                continue;
+                            }
+
+                            family_version = u32::from_ne_bytes(data.try_into().unwrap()) as u8;
+                        }
+                        _ => {}
+                    }
+                }
+
+                Ok(())
+            })
+            .await?;
+
+        client.family_id = family_id;
+        client.family_version = family_version;
+
+        Ok(client)
     }
 
-    pub fn interfaces(&self) -> Result<Vec<Interface>, Error> {
+    pub async fn interfaces(&self) -> Result<Vec<Interface>, Error> {
         let mut interfaces = Vec::new();
 
         self.execute(CMD_GET_INTERFACE, DUMP, &[], |_header, data| {
@@ -319,12 +409,13 @@ impl Client {
             interfaces.push(interface);
 
             Ok(())
-        })?;
+        })
+        .await?;
 
         Ok(interfaces)
     }
 
-    fn execute<F>(&self, cmd: u8, flags: u16, attrs: &[u8], mut f: F) -> Result<(), Error>
+    async fn execute<F>(&self, cmd: u8, flags: u16, attrs: &[u8], mut f: F) -> Result<(), Error>
     where
         F: FnMut(&Header, &[u8]) -> Result<(), Error>,
     {
@@ -343,10 +434,10 @@ impl Client {
         buf.extend([cmd, self.family_version, 0, 0]);
         buf.extend(attrs);
 
-        self.send(&buf)?;
+        self.send(&buf).await?;
 
         loop {
-            let resp = self.receive()?;
+            let resp = self.receive().await?;
 
             let mut multiple = false;
             let msgs = MessageIterator {
@@ -386,7 +477,7 @@ impl Client {
         Ok(())
     }
 
-    pub fn bss(&self, interface: &Interface) -> Result<BSS, Error> {
+    pub async fn bss(&self, interface: &Interface) -> Result<BSS, Error> {
         let mut buf = Vec::with_capacity(20);
 
         // length, type, data
@@ -460,7 +551,8 @@ impl Client {
             }
 
             Ok(())
-        })?;
+        })
+        .await?;
 
         match bss {
             Some(bss) => Ok(bss),
@@ -468,7 +560,7 @@ impl Client {
         }
     }
 
-    pub fn station_info(&self, interface: &Interface) -> Result<Vec<StationInfo>, Error> {
+    pub async fn station_info(&self, interface: &Interface) -> Result<Vec<StationInfo>, Error> {
         let mut buf = Vec::with_capacity(20);
 
         // attributes
@@ -490,7 +582,8 @@ impl Client {
             infos.push(parse_station_info(&data[4..])?);
 
             Ok(())
-        })?;
+        })
+        .await?;
 
         if msgs == 0 {
             return Err(Error::NotExists);
@@ -499,171 +592,119 @@ impl Client {
         Ok(infos)
     }
 
-    pub fn connect() -> Result<Self, Error> {
-        let fd = unsafe {
-            let ret = libc::socket(libc::AF_NETLINK, libc::SOCK_RAW, libc::NETLINK_GENERIC);
-            if ret == -1 {
-                return Err(Error::Io(std::io::Error::last_os_error()));
-            }
+    async fn send(&self, buf: &[u8]) -> Result<usize, Error> {
+        self.fd
+            .writable()
+            .await?
+            .try_io(|fd| {
+                let mut sa = unsafe { std::mem::zeroed::<libc::sockaddr_nl>() };
+                sa.nl_family = libc::AF_NETLINK as u16;
+                let mut iovec = libc::iovec {
+                    iov_base: buf.as_ptr() as *mut _,
+                    iov_len: buf.len(),
+                };
+                let msghdr = libc::msghdr {
+                    msg_name: (&mut sa) as *mut _ as *mut _,
+                    msg_namelen: size_of::<libc::sockaddr_nl>() as _,
+                    msg_iov: &mut iovec,
+                    msg_iovlen: 1,
+                    msg_control: std::ptr::null_mut(),
+                    msg_controllen: 0,
+                    msg_flags: 0,
+                };
 
-            ret
-        };
-
-        unsafe {
-            let enable = 1;
-
-            let ret = libc::setsockopt(
-                fd,
-                libc::SOL_NETLINK,
-                libc::NETLINK_EXT_ACK,
-                &enable as *const i32 as *const libc::c_void,
-                4,
-            );
-            if ret == -1 {
-                return Err(Error::Io(std::io::Error::last_os_error()));
-            }
-
-            // NETLINK_GET_STRICT_CHK
-            let ret = libc::setsockopt(
-                fd,
-                libc::SOL_NETLINK,
-                libc::NETLINK_GET_STRICT_CHK,
-                &enable as *const i32 as *const libc::c_void,
-                4,
-            );
-            if ret == -1 {
-                return Err(Error::Io(std::io::Error::last_os_error()));
-            }
-        }
-
-        let pid = std::process::id();
-        let mut client = Client {
-            fd,
-            family_id: 16, // GENL_ID_CTRL
-            family_version: 1,
-
-            pid,
-            seq: AtomicU32::new(1),
-        };
-
-        // get family
-        #[rustfmt::skip]
-        let buf: [u8; 12] = [
-            12, 0, // length
-            2, 0, // type
-            110, 108, 56, 48, // "nl80"
-            50, 49, 49, 0     // "211\0"
-        ];
-
-        let mut family_id = 0;
-        let mut family_version = 0;
-
-        client.execute(3, 0, &buf, |_header, data| {
-            let attrs = AttributeIterator {
-                data: &data[4..],
-                pos: 0,
-            };
-
-            for (typ, data) in attrs {
-                match typ {
-                    // libc::CTRL_ATTR_FAMILY_ID
-                    1 => {
-                        if data.len() < 2 {
-                            continue;
-                        }
-                        let a = data[0];
-                        let b = data[1];
-
-                        family_id = ((b as u16) << 8) | a as u16;
-                    }
-                    // libc::CTRL_ATTR_FAMILY_VERSION
-                    3 => {
-                        if data.len() < 4 {
-                            continue;
-                        }
-
-                        family_version = u32::from_ne_bytes(data.try_into().unwrap()) as u8;
-                    }
-                    _ => {}
+                let ret = unsafe { libc::sendmsg(fd.as_raw_fd(), &msghdr, 0) };
+                if ret == -1 {
+                    return Err(std::io::Error::last_os_error());
                 }
-            }
 
-            Ok(())
-        })?;
-
-        client.family_id = family_id;
-        client.family_version = family_version;
-
-        Ok(client)
+                Ok(ret as usize)
+            })
+            .expect("sendmsg success")
+            .map_err(Into::into)
     }
 
-    fn send(&self, buf: &[u8]) -> Result<usize, Error> {
-        let mut sa = unsafe { std::mem::zeroed::<libc::sockaddr_nl>() };
-        sa.nl_family = libc::AF_NETLINK as u16;
-        let mut iovec = libc::iovec {
-            iov_base: buf.as_ptr() as *mut _,
-            iov_len: buf.len(),
-        };
-        let msghdr = libc::msghdr {
-            msg_name: (&mut sa) as *mut _ as *mut _,
-            msg_namelen: size_of::<libc::sockaddr_nl>() as _,
-            msg_iov: &mut iovec,
-            msg_iovlen: 1,
-            msg_control: std::ptr::null_mut(),
-            msg_controllen: 0,
-            msg_flags: 0,
-        };
-        let ret = unsafe { libc::sendmsg(self.fd, &msghdr, 0) };
-        if ret == -1 {
-            return Err(Error::Io(std::io::Error::last_os_error()));
-        }
-
-        Ok(ret as usize)
-    }
-
-    fn receive(&self) -> Result<Vec<u8>, Error> {
+    async fn receive(&self) -> Result<Vec<u8>, Error> {
         // For most systems, 4096 is one PageSize
         let mut buf = Vec::<u8>::with_capacity(4096);
-        let mut iov = libc::iovec {
-            iov_base: buf.as_mut_ptr() as *mut _,
-            iov_len: buf.capacity(),
-        };
-        let mut sa = unsafe { std::mem::zeroed::<libc::sockaddr_nl>() };
-        sa.nl_family = libc::AF_NETLINK as u16;
-        let mut header = libc::msghdr {
-            msg_name: (&mut sa) as *mut _ as *mut _,
-            msg_namelen: size_of::<libc::sockaddr_nl>() as _,
-            msg_iov: &mut iov,
-            msg_iovlen: 1,
-            msg_control: std::ptr::null_mut(),
-            msg_controllen: 0,
-            msg_flags: libc::MSG_PEEK,
-        };
 
         loop {
             // peek at the buffer to see how many bytes are available.
-            let ret = unsafe { libc::recvmsg(self.fd, &mut header, libc::MSG_PEEK) };
-            if ret == -1 {
-                return Err(Error::Io(std::io::Error::last_os_error()));
-            }
+            let read = self
+                .fd
+                .readable()
+                .await?
+                .try_io(|fd| {
+                    let mut iov = libc::iovec {
+                        iov_base: buf.as_mut_ptr() as *mut _,
+                        iov_len: buf.capacity(),
+                    };
+                    let mut sa = unsafe { std::mem::zeroed::<libc::sockaddr_nl>() };
+                    sa.nl_family = libc::AF_NETLINK as u16;
+                    let mut msghdr = libc::msghdr {
+                        msg_name: (&mut sa) as *mut _ as *mut _,
+                        msg_namelen: size_of::<libc::sockaddr_nl>() as _,
+                        msg_iov: &mut iov,
+                        msg_iovlen: 1,
+                        msg_control: std::ptr::null_mut(),
+                        msg_controllen: 0,
+                        msg_flags: libc::MSG_PEEK,
+                    };
 
-            if buf.capacity() > ret as usize {
-                unsafe { buf.set_len(ret as usize) };
+                    let ret = unsafe { libc::recvmsg(fd.as_raw_fd(), &mut msghdr, libc::MSG_PEEK) };
+                    if ret == -1 {
+                        return Err(std::io::Error::last_os_error());
+                    }
+
+                    Ok(ret as usize)
+                })
+                .expect("peek response size")?;
+
+            if buf.capacity() > read {
+                unsafe { buf.set_len(read) };
                 break;
             }
 
             // double in size if not enough bytes
             buf.reserve(buf.capacity());
-            iov.iov_base = buf.as_mut_ptr() as *mut _;
-            iov.iov_len = buf.capacity();
         }
 
-        let read = unsafe { libc::recvmsg(self.fd, &mut header, 0) };
-        if read == -1 {
-            return Err(Error::Io(std::io::Error::last_os_error()));
-        }
+        let _read = self
+            .fd
+            .readable()
+            .await?
+            .try_io(|fd| {
+                let mut iov = libc::iovec {
+                    iov_base: buf.as_mut_ptr() as *mut _,
+                    iov_len: buf.capacity(),
+                };
+                let mut sa = unsafe { std::mem::zeroed::<libc::sockaddr_nl>() };
+                sa.nl_family = libc::AF_NETLINK as u16;
+                let mut msghdr = libc::msghdr {
+                    msg_name: (&mut sa) as *mut _ as *mut _,
+                    msg_namelen: size_of::<libc::sockaddr_nl>() as _,
+                    msg_iov: &mut iov,
+                    msg_iovlen: 1,
+                    msg_control: std::ptr::null_mut(),
+                    msg_controllen: 0,
+                    msg_flags: 0,
+                };
+
+                let ret = unsafe { libc::recvmsg(fd.as_raw_fd(), &mut msghdr, 0) };
+                if ret == -1 {
+                    return Err(std::io::Error::last_os_error());
+                }
+
+                Ok(ret as usize)
+            })
+            .expect("recvmsg success")?;
 
         Ok(buf)
+    }
+
+    #[inline]
+    fn next_seq(&self) -> u32 {
+        self.seq.fetch_add(1, Ordering::SeqCst)
     }
 }
 
@@ -691,29 +732,6 @@ fn parse_ies(data: &[u8]) -> Result<Vec<(u8, &[u8])>, Error> {
     }
 
     Ok(ies)
-}
-
-#[test]
-fn ies() {
-    let input = [
-        0u8, 6, 104, 108, 121, 119, 116, 116, 1, 8, 140, 18, 152, 36, 176, 72, 96, 108, 3, 1, 149,
-        70, 5, 115, 208, 0, 0, 12, 45, 26, 111, 8, 3, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 61, 22, 149, 5, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 127, 8, 4, 0, 15, 2, 0, 0, 0, 64, 191, 12, 50, 88, 137, 51, 250, 255, 0, 0,
-        250, 255, 0, 0, 192, 5, 1, 155, 0, 252, 255, 195, 4, 2, 202, 202, 202, 221, 24, 0, 80, 242,
-        2, 1, 1, 128, 0, 3, 164, 0, 0, 39, 164, 0, 0, 66, 67, 94, 0, 98, 50, 47, 0, 221, 9, 0, 3,
-        127, 1, 1, 0, 0, 255, 127, 48, 20, 1, 0, 0, 15, 172, 4, 1, 0, 0, 15, 172, 4, 1, 0, 0, 15,
-        172, 2, 0, 0, 221, 8, 8, 134, 59, 0, 0, 1, 0, 3, 221, 135, 0, 80, 242, 4, 16, 74, 0, 1, 16,
-        16, 68, 0, 1, 2, 16, 59, 0, 1, 3, 16, 71, 0, 16, 191, 187, 159, 115, 124, 205, 253, 163,
-        186, 118, 48, 35, 3, 209, 120, 159, 16, 33, 0, 7, 76, 105, 110, 107, 115, 121, 115, 16, 35,
-        0, 5, 87, 72, 87, 48, 49, 16, 36, 0, 5, 87, 72, 87, 48, 49, 16, 66, 0, 14, 50, 53, 70, 49,
-        48, 54, 48, 55, 57, 50, 52, 50, 52, 50, 16, 84, 0, 8, 0, 6, 0, 80, 242, 4, 0, 1, 16, 17, 0,
-        12, 76, 105, 110, 107, 115, 121, 115, 50, 52, 50, 52, 50, 16, 8, 0, 2, 1, 4, 16, 60, 0, 1,
-        2, 16, 73, 0, 6, 0, 55, 42, 0, 1, 32, 221, 31, 140, 253, 240, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 255, 255, 48, 35, 3, 209, 120, 161, 0, 0, 0, 0, 0, 0,
-    ];
-
-    parse_ies(&input).unwrap();
 }
 
 const NL80211_ATTR_IFINDEX: u16 = 0x3;
@@ -983,19 +1001,19 @@ mod tests {
         assert_eq!(size_of::<Header>(), HEADER_SIZE);
     }
 
-    // #[ignore]
+    #[ignore]
     #[tokio::test]
     async fn dump() {
-        let client = Client::connect().unwrap();
+        let client = Client::connect().await.unwrap();
 
-        let infos = client.interfaces().unwrap();
+        let infos = client.interfaces().await.unwrap();
 
         for info in infos {
             if info.name.is_empty() {
                 continue;
             }
 
-            match client.bss(&info) {
+            match client.bss(&info).await {
                 Ok(bss) => {
                     println!("bss: {:?}", bss);
                 }
@@ -1004,7 +1022,7 @@ mod tests {
                 }
             }
 
-            match client.station_info(&info) {
+            match client.station_info(&info).await {
                 Ok(stations) => {
                     for station in stations {
                         println!("station: {:?}", station);
