@@ -26,7 +26,7 @@ memchr = { version = "2.7.6", default-features = false }
 serde = { version = "1.0.228", default-features = false }
 serde_json = { version = "1.0.145", default-features = false, features = ["std"] }
 tokio = { version = "1.48.0", default-features = false }
-tokio-util = { version = "0.7.16", default-features = false, features = ["codec"] }
+tokio-util = { version = "0.7.17", default-features = false, features = ["codec"] }
 tracing = { version = "0.1.41", default-features = false }
 vtl = { path = "../vtl" }
 
