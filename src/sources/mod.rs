@@ -108,6 +108,8 @@ mod syslog;
 mod systemd;
 #[cfg(feature = "sources-tail")]
 mod tail;
+#[cfg(all(target_os = "linux", feature = "sources-wireless"))]
+mod wireless;
 #[cfg(feature = "sources-zookeeper")]
 mod zookeeper;
 
