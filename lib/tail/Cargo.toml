@@ -9,7 +9,7 @@ futures = { version = "0.3.31", default-features = false }
 memchr = { version = "2.7.6", default-features = false, features = ["alloc"] }
 pin-project-lite = { version = "0.2.16", default-features = false }
 tokio = { version = "1.48.0", default-features = false, features = ["net", "rt", "sync", "time"] }
-tokio-util = { version = "0.7.16", default-features = false, features = ["codec"]}
+tokio-util = { version = "0.7.17", default-features = false, features = ["codec"]}
 tracing = { version = "0.1.41", default-features = false }
 
 [target.'cfg(not(windows))'.dependencies]

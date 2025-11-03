@@ -18,7 +18,7 @@ serde = { version = "1.0.228", default-features = false, features = ["derive"] }
 serde_json = { version = "1.0.145", default-features = false, features = ["std"] }
 serde_yaml = { version = "0.9.34", default-features = false }
 thiserror = { version = "2.0.17", default-features = false }
-tokio-util = { version = "0.7.16", default-features = false, features = ["codec", "io"] }
+tokio-util = { version = "0.7.17", default-features = false, features = ["codec", "io"] }
 tracing = { version = "0.1.41", default-features = false }
 
 # TLS
