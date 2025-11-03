@@ -603,15 +603,11 @@ impl Client {
                     iov_base: buf.as_ptr() as *mut _,
                     iov_len: buf.len(),
                 };
-                let msghdr = libc::msghdr {
-                    msg_name: (&mut sa) as *mut _ as *mut _,
-                    msg_namelen: size_of::<libc::sockaddr_nl>() as _,
-                    msg_iov: &mut iovec,
-                    msg_iovlen: 1,
-                    msg_control: std::ptr::null_mut(),
-                    msg_controllen: 0,
-                    msg_flags: 0,
-                };
+                let mut msghdr = unsafe { std::mem::zeroed::<libc::msghdr>() };
+                msghdr.msg_name = (&mut sa) as *mut _ as *mut _;
+                msghdr.msg_namelen = size_of::<libc::sockaddr_nl>() as _;
+                msghdr.msg_iov = &mut iovec;
+                msghdr.msg_iovlen = 1;
 
                 let ret = unsafe { libc::sendmsg(fd.as_raw_fd(), &msghdr, 0) };
                 if ret == -1 {
@@ -635,21 +631,18 @@ impl Client {
                 .readable()
                 .await?
                 .try_io(|fd| {
-                    let mut iov = libc::iovec {
+                    let mut iovec = libc::iovec {
                         iov_base: buf.as_mut_ptr() as *mut _,
                         iov_len: buf.capacity(),
                     };
                     let mut sa = unsafe { std::mem::zeroed::<libc::sockaddr_nl>() };
                     sa.nl_family = libc::AF_NETLINK as u16;
-                    let mut msghdr = libc::msghdr {
-                        msg_name: (&mut sa) as *mut _ as *mut _,
-                        msg_namelen: size_of::<libc::sockaddr_nl>() as _,
-                        msg_iov: &mut iov,
-                        msg_iovlen: 1,
-                        msg_control: std::ptr::null_mut(),
-                        msg_controllen: 0,
-                        msg_flags: libc::MSG_PEEK,
-                    };
+                    let mut msghdr = unsafe { std::mem::zeroed::<libc::msghdr>() };
+                    msghdr.msg_name = (&mut sa) as *mut _ as *mut _;
+                    msghdr.msg_namelen = size_of::<libc::sockaddr_nl>() as _;
+                    msghdr.msg_iov = &mut iovec;
+                    msghdr.msg_iovlen = 1;
+                    msghdr.msg_flags = libc::MSG_PEEK;
 
                     let ret = unsafe { libc::recvmsg(fd.as_raw_fd(), &mut msghdr, libc::MSG_PEEK) };
                     if ret == -1 {
@@ -674,21 +667,17 @@ impl Client {
             .readable()
             .await?
             .try_io(|fd| {
-                let mut iov = libc::iovec {
+                let mut iovec = libc::iovec {
                     iov_base: buf.as_mut_ptr() as *mut _,
                     iov_len: buf.capacity(),
                 };
                 let mut sa = unsafe { std::mem::zeroed::<libc::sockaddr_nl>() };
                 sa.nl_family = libc::AF_NETLINK as u16;
-                let mut msghdr = libc::msghdr {
-                    msg_name: (&mut sa) as *mut _ as *mut _,
-                    msg_namelen: size_of::<libc::sockaddr_nl>() as _,
-                    msg_iov: &mut iov,
-                    msg_iovlen: 1,
-                    msg_control: std::ptr::null_mut(),
-                    msg_controllen: 0,
-                    msg_flags: 0,
-                };
+                let mut msghdr = unsafe { std::mem::zeroed::<libc::msghdr>() };
+                msghdr.msg_name = (&mut sa) as *mut _ as *mut _;
+                msghdr.msg_namelen = size_of::<libc::sockaddr_nl>() as _;
+                msghdr.msg_iov = &mut iovec;
+                msghdr.msg_iovlen = 1;
 
                 let ret = unsafe { libc::recvmsg(fd.as_raw_fd(), &mut msghdr, 0) };
                 if ret == -1 {
