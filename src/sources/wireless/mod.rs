@@ -38,6 +38,7 @@ async fn run(
     mut output: Pipeline,
     mut shutdown: ShutdownSignal,
 ) -> Result<(), ()> {
+    let timeout = Duration::from_secs(10);
     let mut ticker = tokio::time::interval(interval);
 
     loop {
@@ -46,14 +47,17 @@ async fn run(
             _ = &mut shutdown => break,
         }
 
-        match collect().await {
-            Ok(metrics) => {
+        match tokio::time::timeout(timeout, collect()).await {
+            Ok(Ok(metrics)) => {
                 if let Err(_err) = output.send(metrics).await {
                     break;
                 }
             }
-            Err(err) => {
-                warn!(message = "collect wifi metrics failed", ?err);
+            Ok(Err(err)) => {
+                warn!(message = "collect wifi metrics failed", %err);
+            }
+            Err(_err) => {
+                warn!(message = "collect wifi metrics timeout", ?timeout);
             }
         }
     }
@@ -62,7 +66,7 @@ async fn run(
 }
 
 async fn collect() -> Result<Vec<Metric>, Error> {
-    let client = Client::connect().await.inspect_err(|err| match err {
+    let mut client = Client::connect().await.inspect_err(|err| match err {
         Error::Io(err) if err.kind() == ErrorKind::NotFound => {
             debug!(message = "WiFi collector got permission denied when accessing metrics");
         }

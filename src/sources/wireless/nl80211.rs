@@ -1,8 +1,14 @@
 use std::os::fd::{AsRawFd, FromRawFd, OwnedFd};
+use std::pin::Pin;
 use std::sync::atomic::{AtomicU32, Ordering};
+use std::task::{Context, Poll, ready};
 use std::time::Duration;
 
 use tokio::io::unix::AsyncFd;
+use tokio::io::{AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt, ReadBuf};
+
+// https://github.com/torvalds/linux/blob/master/net/netlink/af_netlink.c#L1944
+const MAX_MESSAGES_SIZE: usize = 32768;
 
 const REQUEST: u16 = 1;
 const DUMP: u16 = 0x100 | 0x200;
@@ -254,8 +260,88 @@ pub enum Error {
     Api(String),
 }
 
+struct NetlinkDatagram(AsyncFd<OwnedFd>);
+
+impl AsyncRead for NetlinkDatagram {
+    fn poll_read(
+        self: Pin<&mut Self>,
+        cx: &mut Context<'_>,
+        buf: &mut ReadBuf<'_>,
+    ) -> Poll<std::io::Result<()>> {
+        loop {
+            let mut guard = ready!(self.0.poll_read_ready(cx))?;
+
+            let unfilled = buf.initialize_unfilled();
+            match guard.try_io(|inner| {
+                let ret = unsafe {
+                    libc::recv(
+                        inner.as_raw_fd(),
+                        unfilled.as_mut_ptr() as *mut _,
+                        unfilled.len(),
+                        0,
+                    )
+                };
+                if ret == -1 {
+                    return Err(std::io::Error::last_os_error());
+                }
+
+                Ok(ret as usize)
+            }) {
+                Ok(Ok(len)) => {
+                    buf.advance(len);
+                    return Poll::Ready(Ok(()));
+                }
+                Ok(Err(err)) => return Poll::Ready(Err(err)),
+                Err(_would_block) => continue,
+            }
+        }
+    }
+}
+
+impl AsyncWrite for NetlinkDatagram {
+    fn poll_write(
+        self: Pin<&mut Self>,
+        cx: &mut Context<'_>,
+        buf: &[u8],
+    ) -> Poll<Result<usize, std::io::Error>> {
+        loop {
+            let mut guard = ready!(self.0.poll_write_ready(cx))?;
+
+            match guard.try_io(|inner| {
+                let ret = unsafe {
+                    libc::send(
+                        inner.as_raw_fd(),
+                        buf.as_ptr() as *const libc::c_void,
+                        buf.len(),
+                        0,
+                    )
+                };
+                if ret < 0 {
+                    return Err(std::io::Error::last_os_error());
+                }
+
+                Ok(ret as usize)
+            }) {
+                Ok(result) => return Poll::Ready(result),
+                Err(_would_block) => continue,
+            }
+        }
+    }
+
+    fn poll_flush(self: Pin<&mut Self>, _cx: &mut Context<'_>) -> Poll<Result<(), std::io::Error>> {
+        Poll::Ready(Ok(()))
+    }
+
+    fn poll_shutdown(
+        self: Pin<&mut Self>,
+        _cx: &mut Context<'_>,
+    ) -> Poll<Result<(), std::io::Error>> {
+        Poll::Ready(Ok(()))
+    }
+}
+
 pub struct Client {
-    fd: AsyncFd<OwnedFd>,
+    fd: NetlinkDatagram,
 
     family_id: u16,
     family_version: u8,
@@ -267,36 +353,16 @@ pub struct Client {
 impl Client {
     pub async fn connect() -> Result<Self, Error> {
         let fd = unsafe {
-            let fd = libc::socket(libc::AF_NETLINK, libc::SOCK_RAW, libc::NETLINK_GENERIC);
+            let fd = libc::socket(
+                libc::PF_NETLINK,
+                libc::SOCK_DGRAM | libc::SOCK_CLOEXEC,
+                libc::NETLINK_GENERIC,
+            );
             if fd == -1 {
                 return Err(Error::Io(std::io::Error::last_os_error()));
             }
 
-            let enable = 1;
-            let ret = libc::ioctl(fd, libc::FIONBIO, &enable as *const _);
-            if ret != 0 {
-                return Err(Error::Io(std::io::Error::last_os_error()));
-            }
-
-            let ret = libc::setsockopt(
-                fd,
-                libc::SOL_NETLINK,
-                libc::NETLINK_EXT_ACK,
-                &enable as *const i32 as *const libc::c_void,
-                4,
-            );
-            if ret == -1 {
-                return Err(Error::Io(std::io::Error::last_os_error()));
-            }
-
-            // NETLINK_GET_STRICT_CHK
-            let ret = libc::setsockopt(
-                fd,
-                libc::SOL_NETLINK,
-                libc::NETLINK_GET_STRICT_CHK,
-                &enable as *const i32 as *const libc::c_void,
-                4,
-            );
+            let ret = libc::ioctl(fd, libc::FIONBIO, &mut 1i32);
             if ret == -1 {
                 return Err(Error::Io(std::io::Error::last_os_error()));
             }
@@ -306,7 +372,7 @@ impl Client {
 
         let pid = std::process::id();
         let mut client = Client {
-            fd: AsyncFd::new(fd)?,
+            fd: NetlinkDatagram(AsyncFd::new(fd)?),
             family_id: 16, // GENL_ID_CTRL
             family_version: 1,
 
@@ -337,13 +403,8 @@ impl Client {
                     match typ {
                         // libc::CTRL_ATTR_FAMILY_ID
                         1 => {
-                            if data.len() < 2 {
-                                continue;
-                            }
-                            let a = data[0];
-                            let b = data[1];
-
-                            family_id = ((b as u16) << 8) | a as u16;
+                            family_id =
+                                u16::from_ne_bytes(data.try_into().map_err(|_| Error::TooShort)?);
                         }
                         // libc::CTRL_ATTR_FAMILY_VERSION
                         3 => {
@@ -367,7 +428,7 @@ impl Client {
         Ok(client)
     }
 
-    pub async fn interfaces(&self) -> Result<Vec<Interface>, Error> {
+    pub async fn interfaces(&mut self) -> Result<Vec<Interface>, Error> {
         let mut interfaces = Vec::new();
 
         self.execute(CMD_GET_INTERFACE, DUMP, &[], |_header, data| {
@@ -415,69 +476,7 @@ impl Client {
         Ok(interfaces)
     }
 
-    async fn execute<F>(&self, cmd: u8, flags: u16, attrs: &[u8], mut f: F) -> Result<(), Error>
-    where
-        F: FnMut(&Header, &[u8]) -> Result<(), Error>,
-    {
-        let len = HEADER_SIZE + 4 + attrs.len();
-        let mut buf = Vec::with_capacity(len);
-
-        // header
-        buf.extend((len as u32).to_ne_bytes());
-        buf.extend(self.family_id.to_ne_bytes());
-        buf.extend((flags | REQUEST).to_ne_bytes());
-        let sequence = self.next_seq();
-        buf.extend(sequence.to_ne_bytes());
-        buf.extend(self.pid.to_ne_bytes());
-
-        // payload
-        buf.extend([cmd, self.family_version, 0, 0]);
-        buf.extend(attrs);
-
-        self.send(&buf).await?;
-
-        loop {
-            let resp = self.receive().await?;
-
-            let mut multiple = false;
-            let msgs = MessageIterator {
-                data: &resp,
-                pos: 0,
-            };
-            for (header, data) in msgs {
-                check_message(header, data)?;
-
-                // skip the final message with multi-part done indicator if present
-                if header.flags & FLAG_MULTI != 0 && header.typ == HEADER_TYPE_DONE {
-                    continue;
-                }
-
-                if header.sequence != sequence {
-                    return Err(Error::SequenceMismatched);
-                }
-
-                f(header, data)?;
-
-                if header.flags & 2 == 0 {
-                    // No, check the next messages
-                    continue;
-                }
-
-                // Does this message indicate the last message in a series of multi-part
-                // messages from a single read?
-                multiple = header.typ != 3
-            }
-
-            if !multiple {
-                // no more messages coming
-                break;
-            }
-        }
-
-        Ok(())
-    }
-
-    pub async fn bss(&self, interface: &Interface) -> Result<BSS, Error> {
+    pub async fn bss(&mut self, interface: &Interface) -> Result<BSS, Error> {
         let mut buf = Vec::with_capacity(20);
 
         // length, type, data
@@ -560,7 +559,7 @@ impl Client {
         }
     }
 
-    pub async fn station_info(&self, interface: &Interface) -> Result<Vec<StationInfo>, Error> {
+    pub async fn station_info(&mut self, interface: &Interface) -> Result<Vec<StationInfo>, Error> {
         let mut buf = Vec::with_capacity(20);
 
         // attributes
@@ -592,103 +591,68 @@ impl Client {
         Ok(infos)
     }
 
-    async fn send(&self, buf: &[u8]) -> Result<usize, Error> {
-        self.fd
-            .writable()
-            .await?
-            .try_io(|fd| {
-                let mut sa = unsafe { std::mem::zeroed::<libc::sockaddr_nl>() };
-                sa.nl_family = libc::AF_NETLINK as u16;
-                let mut iovec = libc::iovec {
-                    iov_base: buf.as_ptr() as *mut _,
-                    iov_len: buf.len(),
-                };
-                let mut msghdr = unsafe { std::mem::zeroed::<libc::msghdr>() };
-                msghdr.msg_name = (&mut sa) as *mut _ as *mut _;
-                msghdr.msg_namelen = size_of::<libc::sockaddr_nl>() as _;
-                msghdr.msg_iov = &mut iovec;
-                msghdr.msg_iovlen = 1;
+    async fn execute<F>(&mut self, cmd: u8, flags: u16, attrs: &[u8], mut f: F) -> Result<(), Error>
+    where
+        F: FnMut(&Header, &[u8]) -> Result<(), Error>,
+    {
+        let mut buf = Vec::with_capacity(MAX_MESSAGES_SIZE);
+        let len = HEADER_SIZE + 4 + attrs.len();
 
-                let ret = unsafe { libc::sendmsg(fd.as_raw_fd(), &msghdr, 0) };
-                if ret == -1 {
-                    return Err(std::io::Error::last_os_error());
-                }
+        // header
+        buf.extend((len as u32).to_ne_bytes());
+        buf.extend(self.family_id.to_ne_bytes());
+        buf.extend((flags | REQUEST).to_ne_bytes());
+        let sequence = self.next_seq();
+        buf.extend(sequence.to_ne_bytes());
+        buf.extend(self.pid.to_ne_bytes());
 
-                Ok(ret as usize)
-            })
-            .expect("sendmsg success")
-            .map_err(Into::into)
-    }
+        // payload
+        buf.extend([cmd, self.family_version, 0, 0]);
+        buf.extend(attrs);
 
-    async fn receive(&self) -> Result<Vec<u8>, Error> {
-        // For most systems, 4096 is one PageSize
-        let mut buf = Vec::<u8>::with_capacity(4096);
+        self.fd.write_all(&buf).await?;
 
         loop {
-            // peek at the buffer to see how many bytes are available.
-            let read = self
-                .fd
-                .readable()
-                .await?
-                .try_io(|fd| {
-                    let mut iovec = libc::iovec {
-                        iov_base: buf.as_mut_ptr() as *mut _,
-                        iov_len: buf.capacity(),
-                    };
-                    let mut sa = unsafe { std::mem::zeroed::<libc::sockaddr_nl>() };
-                    sa.nl_family = libc::AF_NETLINK as u16;
-                    let mut msghdr = unsafe { std::mem::zeroed::<libc::msghdr>() };
-                    msghdr.msg_name = (&mut sa) as *mut _ as *mut _;
-                    msghdr.msg_namelen = size_of::<libc::sockaddr_nl>() as _;
-                    msghdr.msg_iov = &mut iovec;
-                    msghdr.msg_iovlen = 1;
-                    msghdr.msg_flags = libc::MSG_PEEK;
+            buf.clear();
+            let size = self.fd.read_buf(&mut buf).await?;
 
-                    let ret = unsafe { libc::recvmsg(fd.as_raw_fd(), &mut msghdr, libc::MSG_PEEK) };
-                    if ret == -1 {
-                        return Err(std::io::Error::last_os_error());
-                    }
+            let mut multiple = false;
+            let msgs = MessageIterator {
+                data: &buf[..size],
+                pos: 0,
+            };
 
-                    Ok(ret as usize)
-                })
-                .expect("peek response size")?;
+            for (header, data) in msgs {
+                check_message(header, data)?;
 
-            if buf.capacity() > read {
-                unsafe { buf.set_len(read) };
-                break;
-            }
-
-            // double in size if not enough bytes
-            buf.reserve(buf.capacity());
-        }
-
-        let _read = self
-            .fd
-            .readable()
-            .await?
-            .try_io(|fd| {
-                let mut iovec = libc::iovec {
-                    iov_base: buf.as_mut_ptr() as *mut _,
-                    iov_len: buf.capacity(),
-                };
-                let mut sa = unsafe { std::mem::zeroed::<libc::sockaddr_nl>() };
-                sa.nl_family = libc::AF_NETLINK as u16;
-                let mut msghdr = unsafe { std::mem::zeroed::<libc::msghdr>() };
-                msghdr.msg_name = (&mut sa) as *mut _ as *mut _;
-                msghdr.msg_namelen = size_of::<libc::sockaddr_nl>() as _;
-                msghdr.msg_iov = &mut iovec;
-                msghdr.msg_iovlen = 1;
-
-                let ret = unsafe { libc::recvmsg(fd.as_raw_fd(), &mut msghdr, 0) };
-                if ret == -1 {
-                    return Err(std::io::Error::last_os_error());
+                // skip the final message with multi-part done indicator if present
+                if header.flags & FLAG_MULTI != 0 && header.typ == HEADER_TYPE_DONE {
+                    continue;
                 }
 
-                Ok(ret as usize)
-            })
-            .expect("recvmsg success")?;
+                if header.sequence != sequence {
+                    return Err(Error::SequenceMismatched);
+                }
 
-        Ok(buf)
+                f(header, data)?;
+
+                if header.flags & 2 == 0 {
+                    // No, check the next messages
+                    continue;
+                }
+
+                // Does this message indicate the last message in a series of multi-part
+                // messages from a single read?
+                multiple = header.typ != 3
+            }
+
+            if !multiple {
+                // no more messages coming
+                break;
+            }
+        }
+
+        Ok(())
     }
 
     #[inline]
@@ -993,7 +957,7 @@ mod tests {
     #[ignore]
     #[tokio::test]
     async fn dump() {
-        let client = Client::connect().await.unwrap();
+        let mut client = Client::connect().await.unwrap();
 
         let infos = client.interfaces().await.unwrap();
 
