@@ -231,6 +231,7 @@ sources-static_metrics = []
 sources-syslog = ["codecs/syslog"]
 sources-systemd = []
 sources-tail = ["dep:tail", "dep:encoding_rs", "dep:finalize"]
+sources-wireless = []
 sources-zookeeper = []
 
 sources = [
@@ -290,6 +291,7 @@ sources = [
     "sources-syslog",
     "sources-systemd",
     "sources-tail",
+    "sources-wireless",
     "sources-zookeeper",
 ]
 
