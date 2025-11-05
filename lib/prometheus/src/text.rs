@@ -6,6 +6,9 @@ use crate::{
     SimpleMetric, SummaryMetric, SummaryQuantile,
 };
 
+/// Parsing prometheus's simple text-based exposition format
+///
+/// https://prometheus.io/docs/instrumenting/exposition_formats/#text-based-format
 pub fn parse_text(input: &str) -> Result<Vec<MetricGroup>, Error> {
     let mut groups = vec![];
     let mut lines = input.lines().filter(|line| !line.is_empty()).peekable();
@@ -96,7 +99,7 @@ where
             return Ok(group);
         }
 
-        // The next line already peeked, so error should not happened.
+        // The next line already peeked, so error should not happen.
         let line = lines.next().unwrap();
         match line.strip_prefix(prefix) {
             Some(stripped) => {
@@ -252,7 +255,7 @@ fn parse_labels(line: &str) -> Result<(GroupKey, f64), Error> {
             let key_start = pos;
             while pos < length {
                 let c = buf[pos];
-                if c.is_ascii_alphabetic() || c == b'_' {
+                if c.is_ascii_alphanumeric() || c == b'_' {
                     pos += 1;
                     continue;
                 }
@@ -289,9 +292,9 @@ fn parse_labels(line: &str) -> Result<(GroupKey, f64), Error> {
                 pos += 1;
             }
 
-            let key = unsafe { String::from_utf8_unchecked(buf[key_start..key_end].to_vec()) };
-            let value = unsafe { String::from_utf8_unchecked(buf[value_start..pos].to_vec()) };
-            labels.insert(key, value);
+            let key = String::from_utf8_lossy(&buf[key_start..key_end]);
+            let value = String::from_utf8_lossy(&buf[value_start..pos]);
+            labels.insert(key.to_string(), value.to_string());
 
             if pos == length {
                 break;
@@ -336,7 +339,7 @@ fn parse_metric(line: &str) -> Result<(&str, GroupKey, f64), Error> {
     // 1. Take metric name
     while pos < length {
         let c = buf[pos];
-        if c.is_ascii_alphanumeric() || c == b'_' {
+        if c.is_ascii_alphanumeric() || c == b'_' || c == b':' {
             pos += 1;
             continue;
         }
