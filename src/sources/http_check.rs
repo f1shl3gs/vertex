@@ -7,7 +7,6 @@ use std::task::{Context, Poll};
 use std::time::{Duration, Instant, SystemTime};
 
 use bytes::Bytes;
-use chrono::Utc;
 use configurable::configurable_component;
 use event::{Metric, tags};
 use framework::config::{OutputType, ProxyConfig, SourceConfig, SourceContext, default_interval};
@@ -579,14 +578,9 @@ async fn probe(
             }
         };
 
-        let mut first_bytes_arrive = None;
         loop {
             match incoming.frame().await {
                 Some(Ok(frame)) => {
-                    if first_bytes_arrive.is_none() {
-                        first_bytes_arrive = Some(Utc::now());
-                    }
-
                     match frame.data_ref() {
                         Some(_data) => {
                             // trace.resp_bytes += data.len();
