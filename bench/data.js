@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762346502762,
+  "lastUpdate": 1762346525047,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7b39e488a490aeaa11fd0e256d31e318fb653f67",
-          "message": "Merge pull request #2565 from f1shl3gs/dependabot/cargo/typetag-0.2.21\n\nchore(deps): bump typetag from 0.2.20 to 0.2.21",
-          "timestamp": "2025-09-29T22:49:37+08:00",
-          "tree_id": "a4b0278758e220159d259f4f7f51db188658373b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7b39e488a490aeaa11fd0e256d31e318fb653f67"
-        },
-        "date": 1759158028326,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 569,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39491.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "56e9191ed9362438836cb1c97d93e9ed32cf5143",
           "message": "Merge pull request #2564 from f1shl3gs/dependabot/cargo/thiserror-2.0.17\n\nchore(deps): bump thiserror from 2.0.16 to 2.0.17",
           "timestamp": "2025-09-29T22:58:09+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41125,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e6f1d9773617d2c568cc19b1e86e9a62c4f9bdf6",
+          "message": "Merge pull request #2669 from f1shl3gs/lib/configurable-derive/remove_unnecessary_codes\n\nlib/configurable-derive: remove unnecessary code",
+          "timestamp": "2025-11-05T20:30:21+08:00",
+          "tree_id": "b47387cdfe066255cd77d0f4406a40fac30eece3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e6f1d9773617d2c568cc19b1e86e9a62c4f9bdf6"
+        },
+        "date": 1762346503343,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 593,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41125.2,
             "unit": "KiB"
           }
         ]
