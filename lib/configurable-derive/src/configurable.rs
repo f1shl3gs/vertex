@@ -24,22 +24,18 @@ pub fn derive_configurable_impl(input: proc_macro::TokenStream) -> Result<TokenS
     }?;
 
     let configurable_impl = quote!(
-        const _: () = {
-            #[automatically_derived]
-            #[allow(unused_qualifications)]
-            impl #impl_generics ::configurable::Configurable for #name #type_generics #where_clause {
-                fn reference() -> Option<&'static str> {
-                    let self_type_name = ::std::any::type_name::<Self>();
-                    if !self_type_name.starts_with(std::module_path!()) {
-                        Some(std::concat!(std::module_path!(), "::", #ref_name))
-                    } else {
-                        Some(self_type_name)
-                    }
+        impl #impl_generics ::configurable::Configurable for #name #type_generics #where_clause {
+            fn reference() -> Option<&'static str> {
+                let self_type_name = ::std::any::type_name::<Self>();
+                if !self_type_name.starts_with(std::module_path!()) {
+                    Some(std::concat!(std::module_path!(), "::", #ref_name))
+                } else {
+                    Some(self_type_name)
                 }
-
-                #generate_schema
             }
-        };
+
+            #generate_schema
+        }
     );
 
     Ok(configurable_impl)
