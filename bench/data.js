@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762345982371,
+  "lastUpdate": 1762345984293,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d977fed92ed8e140907e6978c94b5c8e5dda04a4",
-          "message": "Merge pull request #2561 from f1shl3gs/dependabot/cargo/serde-1.0.227\n\nchore(deps): bump serde from 1.0.226 to 1.0.227",
-          "timestamp": "2025-09-27T12:42:19+08:00",
-          "tree_id": "7234621609f4444a270239c2e7a0dd58a0a2f5e5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d977fed92ed8e140907e6978c94b5c8e5dda04a4"
-        },
-        "date": 1758948269966,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.345,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 93.73,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 169.29,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 176.13,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e6f1d9773617d2c568cc19b1e86e9a62c4f9bdf6",
+          "message": "Merge pull request #2669 from f1shl3gs/lib/configurable-derive/remove_unnecessary_codes\n\nlib/configurable-derive: remove unnecessary code",
+          "timestamp": "2025-11-05T20:30:21+08:00",
+          "tree_id": "b47387cdfe066255cd77d0f4406a40fac30eece3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e6f1d9773617d2c568cc19b1e86e9a62c4f9bdf6"
+        },
+        "date": 1762345962865,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.553,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 99.846,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 171.97,
             "unit": "ns/op"
           }
         ]
