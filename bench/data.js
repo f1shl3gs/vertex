@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762316763463,
+  "lastUpdate": 1762316819705,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bc0ed79a5ef48e072de87d4da3344a5b22fc2671",
-          "message": "Merge pull request #2567 from f1shl3gs/ci/fix_baseline_failure\n\nci: ensure active toolchain is installed",
-          "timestamp": "2025-09-29T22:34:00+08:00",
-          "tree_id": "6c288c9adb0982a245f43e004ae762b0679085c8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bc0ed79a5ef48e072de87d4da3344a5b22fc2671"
-        },
-        "date": 1759157077385,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 550,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39489,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4e8f3f7d02e236387bb83dd81d93457d78fb2dcd",
           "message": "Merge pull request #2566 from f1shl3gs/dependabot/cargo/quote-1.0.41\n\nchore(deps): bump quote from 1.0.40 to 1.0.41",
           "timestamp": "2025-09-29T22:49:25+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41118.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2b12e3be9e6ad123d4829090375218dd50205f9d",
+          "message": "Merge pull request #2666 from f1shl3gs/sources/http_check/add_tls_timing\n\nsources/http_check: add tls timing",
+          "timestamp": "2025-11-05T12:15:21+08:00",
+          "tree_id": "dd2b0923bacc7a80c236d7aac44502896db746da",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2b12e3be9e6ad123d4829090375218dd50205f9d"
+        },
+        "date": 1762316793373,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 588,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41125.1,
             "unit": "KiB"
           }
         ]
