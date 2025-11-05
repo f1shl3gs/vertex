@@ -128,14 +128,12 @@ async fn run(
     let start = calculate_start(&target, interval);
     let mut ticker = tokio::time::interval_at(start.into(), interval);
 
-    let instance = target.host_str().unwrap_or("");
+    let instance = target.to_string();
 
     loop {
         tokio::select! {
             _ = ticker.tick() => {},
-            _ = &mut shutdown => {
-                break;
-            }
+            _ = &mut shutdown => break
         }
 
         let result = probe(&target, tls.as_ref(), auth.as_ref(), &headers, timeout).await;
@@ -149,7 +147,7 @@ async fn run(
                         "Whether the target is success",
                         1,
                         tags!(
-                            "instance" => instance,
+                            "instance" => instance.clone(),
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -157,7 +155,7 @@ async fn run(
                         "The number of redirects",
                         trace.redirects(),
                         tags!(
-                            "instance" => instance,
+                            "instance" => instance.clone(),
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -166,7 +164,7 @@ async fn run(
                         trace.resolving(),
                         tags!(
                             "phase" => "resolve",
-                            "instance" => instance,
+                            "instance" => instance.clone(),
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -175,7 +173,16 @@ async fn run(
                         trace.connecting(),
                         tags!(
                             "phase" => "connect",
-                            "instance" => instance,
+                            "instance" => instance.clone(),
+                        ),
+                    ),
+                    Metric::gauge_with_tags(
+                        "http_duration_seconds",
+                        "Duration of http request by phase",
+                        trace.tls_handshake(),
+                        tags!(
+                            "phase" => "tls",
+                            "instance" => instance.clone(),
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -184,7 +191,7 @@ async fn run(
                         trace.processing(),
                         tags!(
                             "phase" => "processing",
-                            "instance" => instance,
+                            "instance" => instance.clone(),
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -193,7 +200,7 @@ async fn run(
                         trace.transferring(),
                         tags!(
                             "phase" => "transfer",
-                            "instance" => instance,
+                            "instance" => instance.clone(),
                         ),
                     ),
                 ]);
@@ -211,7 +218,7 @@ async fn run(
                     "Returns the version of HTTP of the probe response",
                     version,
                     tags!(
-                        "instance" => instance,
+                        "instance" => instance.clone(),
                     ),
                 ));
 
@@ -224,7 +231,7 @@ async fn run(
                         "Length of http content response",
                         content_length,
                         tags!(
-                            "instance" => instance,
+                            "instance" => instance.clone(),
                         ),
                     ));
                 }
@@ -239,7 +246,7 @@ async fn run(
                         "Returns the Last-Modified HTTP response header in unixtime",
                         ts.as_secs_f64(),
                         tags!(
-                            "instance" => instance,
+                            "instance" => instance.clone(),
                         ),
                     ));
                 }
@@ -258,7 +265,7 @@ async fn run(
                         "Response HTTP status code",
                         parts.status.as_u16(),
                         tags!(
-                            "instance" => instance,
+                            "instance" => instance.clone(),
                         ),
                     ),
                 ]);
@@ -271,7 +278,7 @@ async fn run(
                     "Whether the target is success",
                     0,
                     tags!(
-                        "instance" => instance,
+                        "instance" => instance.clone(),
                     ),
                 ));
             }
@@ -292,6 +299,9 @@ struct Inner {
     processed: Instant,
     transferred: Instant,
 
+    tls_start: Instant,
+    tls_done: Instant,
+
     redirects: u64,
 }
 
@@ -310,6 +320,10 @@ impl Trace {
             connected: now,
             processed: now,
             transferred: now,
+
+            tls_start: now,
+            tls_done: now,
+
             redirects: 0,
         }))
     }
@@ -349,6 +363,12 @@ impl Trace {
     fn connecting(&self) -> Duration {
         let inner = self.0.borrow();
         inner.connected - inner.resolved
+    }
+
+    #[inline]
+    fn tls_handshake(&self) -> Duration {
+        let inner = self.0.borrow();
+        inner.tls_done - inner.tls_start
     }
 
     #[inline]
@@ -461,6 +481,40 @@ fn get_host_port(dst: &Uri) -> Result<(&str, u16), ConnectError> {
     Ok((host, port))
 }
 
+#[derive(Clone)]
+struct TrackingTlsConnector<T> {
+    inner: T,
+    trace: Arc<Trace>,
+}
+
+impl<T> tower::Service<Uri> for TrackingTlsConnector<T>
+where
+    T: tower::Service<Uri>,
+    T::Future: Send + 'static,
+{
+    type Response = T::Response;
+    type Error = T::Error;
+    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send>>;
+
+    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        self.inner.poll_ready(cx)
+    }
+
+    fn call(&mut self, req: Uri) -> Self::Future {
+        let trace = Arc::clone(&self.trace);
+
+        let fut = self.inner.call(req);
+
+        Box::pin(async move {
+            trace.0.borrow_mut().tls_start = Instant::now();
+            let result = fut.await;
+            trace.0.borrow_mut().tls_done = Instant::now();
+
+            result
+        })
+    }
+}
+
 async fn probe(
     target: &Url,
     tls: Option<&TlsConfig>,
@@ -483,7 +537,10 @@ async fn probe(
                 .map_err(TlsError::NativeCerts)?
                 .with_no_client_auth(),
         };
-        let connector = hyper_rustls::HttpsConnector::from((connector, config));
+        let connector = TrackingTlsConnector {
+            inner: hyper_rustls::HttpsConnector::from((connector, config)),
+            trace: Arc::clone(&trace),
+        };
 
         let client = Client::builder(TokioExecutor::new()).build(connector);
 
