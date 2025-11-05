@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762316346398,
+  "lastUpdate": 1762316647024,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "18d4a56d82413a827bc1273dcec78a2893a54836",
-          "message": "Merge pull request #2558 from f1shl3gs/dependabot/cargo/windows-0.62.1\n\nchore(deps): bump windows from 0.62.0 to 0.62.1",
-          "timestamp": "2025-09-26T03:39:30+08:00",
-          "tree_id": "312e40e50878bfdae45e89d6913eae378e4aa39d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/18d4a56d82413a827bc1273dcec78a2893a54836"
-        },
-        "date": 1758829723919,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14592000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 627720,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.803,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9e190bd583804e9d2c7dff38b4172b146a7570b5",
           "message": "Merge pull request #2559 from f1shl3gs/dependabot/cargo/regex-1.11.3\n\nchore(deps): bump regex from 1.11.2 to 1.11.3",
           "timestamp": "2025-09-26T03:39:21+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.426,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3d090d3fe0bfbb85df88a68b5a9b7bf73c1602d0",
+          "message": "Merge pull request #2667 from f1shl3gs/lib/prometheus/fix_metric_and_label_name_parsing\n\nlib/prometheus: fix metric & label name parsing",
+          "timestamp": "2025-11-05T12:14:23+08:00",
+          "tree_id": "a0044e70e59866a4e9ec1feba8ba2c4ee4cba6f9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3d090d3fe0bfbb85df88a68b5a9b7bf73c1602d0"
+        },
+        "date": 1762316625007,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14882000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 615820,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.691,
             "unit": "ns/op"
           }
         ]
