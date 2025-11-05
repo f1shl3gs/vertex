@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762345959584,
+  "lastUpdate": 1762345972810,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d977fed92ed8e140907e6978c94b5c8e5dda04a4",
-          "message": "Merge pull request #2561 from f1shl3gs/dependabot/cargo/serde-1.0.227\n\nchore(deps): bump serde from 1.0.226 to 1.0.227",
-          "timestamp": "2025-09-27T12:42:19+08:00",
-          "tree_id": "7234621609f4444a270239c2e7a0dd58a0a2f5e5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d977fed92ed8e140907e6978c94b5c8e5dda04a4"
-        },
-        "date": 1758948267962,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 494430,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 512750,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e6f1d9773617d2c568cc19b1e86e9a62c4f9bdf6",
+          "message": "Merge pull request #2669 from f1shl3gs/lib/configurable-derive/remove_unnecessary_codes\n\nlib/configurable-derive: remove unnecessary code",
+          "timestamp": "2025-11-05T20:30:21+08:00",
+          "tree_id": "b47387cdfe066255cd77d0f4406a40fac30eece3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e6f1d9773617d2c568cc19b1e86e9a62c4f9bdf6"
+        },
+        "date": 1762345950648,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 522010,
             "unit": "ns/op"
           }
         ]
