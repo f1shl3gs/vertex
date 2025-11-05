@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762316284734,
+  "lastUpdate": 1762316289152,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "18d4a56d82413a827bc1273dcec78a2893a54836",
-          "message": "Merge pull request #2558 from f1shl3gs/dependabot/cargo/windows-0.62.1\n\nchore(deps): bump windows from 0.62.0 to 0.62.1",
-          "timestamp": "2025-09-26T03:39:30+08:00",
-          "tree_id": "312e40e50878bfdae45e89d6913eae378e4aa39d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/18d4a56d82413a827bc1273dcec78a2893a54836"
-        },
-        "date": 1758829299573,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.415,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 104.49,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 177.18,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 171.23,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2b12e3be9e6ad123d4829090375218dd50205f9d",
+          "message": "Merge pull request #2666 from f1shl3gs/sources/http_check/add_tls_timing\n\nsources/http_check: add tls timing",
+          "timestamp": "2025-11-05T12:15:21+08:00",
+          "tree_id": "dd2b0923bacc7a80c236d7aac44502896db746da",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2b12e3be9e6ad123d4829090375218dd50205f9d"
+        },
+        "date": 1762316266377,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.63,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 99.468,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 183.43,
             "unit": "ns/op"
           }
         ]
