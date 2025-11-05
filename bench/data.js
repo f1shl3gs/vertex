@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762345972810,
+  "lastUpdate": 1762345982371,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "18d4a56d82413a827bc1273dcec78a2893a54836",
-          "message": "Merge pull request #2558 from f1shl3gs/dependabot/cargo/windows-0.62.1\n\nchore(deps): bump windows from 0.62.0 to 0.62.1",
-          "timestamp": "2025-09-26T03:39:30+08:00",
-          "tree_id": "312e40e50878bfdae45e89d6913eae378e4aa39d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/18d4a56d82413a827bc1273dcec78a2893a54836"
-        },
-        "date": 1758829330320,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.917,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 162.39,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 300.41,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 642.16,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8fd1fbd9c7b302b460b3595ff0beeadfbd81f782",
           "message": "Merge pull request #2557 from f1shl3gs/dependabot/cargo/memchr-2.7.6\n\nchore(deps): bump memchr from 2.7.5 to 2.7.6",
           "timestamp": "2025-09-26T03:39:39+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 671.8,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "003fe0f648145d532014676baa0edb2b75cf74c0",
+          "message": "Merge pull request #2668 from f1shl3gs/sources/http_check/remove_unused_code\n\nsources/http_check: remove unused code",
+          "timestamp": "2025-11-05T20:29:59+08:00",
+          "tree_id": "161513e1479d8b7c9c424ef35263f6d61179d1e1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/003fe0f648145d532014676baa0edb2b75cf74c0"
+        },
+        "date": 1762345955322,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 17.837,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 146.4,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 276.15,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 614.01,
             "unit": "ns/op"
           }
         ]
