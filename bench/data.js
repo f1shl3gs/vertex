@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762316215525,
+  "lastUpdate": 1762316218368,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9e190bd583804e9d2c7dff38b4172b146a7570b5",
-          "message": "Merge pull request #2559 from f1shl3gs/dependabot/cargo/regex-1.11.3\n\nchore(deps): bump regex from 1.11.2 to 1.11.3",
-          "timestamp": "2025-09-26T03:39:21+08:00",
-          "tree_id": "17f7bec9c9818136bb787b42a3f2e00024fc6e08",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9e190bd583804e9d2c7dff38b4172b146a7570b5"
-        },
-        "date": 1758829297516,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.434,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 105.9,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 171.98,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 175.21,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3d090d3fe0bfbb85df88a68b5a9b7bf73c1602d0",
+          "message": "Merge pull request #2667 from f1shl3gs/lib/prometheus/fix_metric_and_label_name_parsing\n\nlib/prometheus: fix metric & label name parsing",
+          "timestamp": "2025-11-05T12:14:23+08:00",
+          "tree_id": "a0044e70e59866a4e9ec1feba8ba2c4ee4cba6f9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3d090d3fe0bfbb85df88a68b5a9b7bf73c1602d0"
+        },
+        "date": 1762316196775,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.541,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 100.06,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 171.23,
             "unit": "ns/op"
           }
         ]
