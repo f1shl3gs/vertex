@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762316647024,
+  "lastUpdate": 1762316713681,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9e190bd583804e9d2c7dff38b4172b146a7570b5",
-          "message": "Merge pull request #2559 from f1shl3gs/dependabot/cargo/regex-1.11.3\n\nchore(deps): bump regex from 1.11.2 to 1.11.3",
-          "timestamp": "2025-09-26T03:39:21+08:00",
-          "tree_id": "17f7bec9c9818136bb787b42a3f2e00024fc6e08",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9e190bd583804e9d2c7dff38b4172b146a7570b5"
-        },
-        "date": 1758829731053,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 15552000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 604670,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.111,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8fd1fbd9c7b302b460b3595ff0beeadfbd81f782",
           "message": "Merge pull request #2557 from f1shl3gs/dependabot/cargo/memchr-2.7.6\n\nchore(deps): bump memchr from 2.7.5 to 2.7.6",
           "timestamp": "2025-09-26T03:39:39+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.691,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2b12e3be9e6ad123d4829090375218dd50205f9d",
+          "message": "Merge pull request #2666 from f1shl3gs/sources/http_check/add_tls_timing\n\nsources/http_check: add tls timing",
+          "timestamp": "2025-11-05T12:15:21+08:00",
+          "tree_id": "dd2b0923bacc7a80c236d7aac44502896db746da",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2b12e3be9e6ad123d4829090375218dd50205f9d"
+        },
+        "date": 1762316690638,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14596000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 634040,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.164,
             "unit": "ns/op"
           }
         ]
