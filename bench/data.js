@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762316819705,
+  "lastUpdate": 1762345950477,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8fd1fbd9c7b302b460b3595ff0beeadfbd81f782",
-          "message": "Merge pull request #2557 from f1shl3gs/dependabot/cargo/memchr-2.7.6\n\nchore(deps): bump memchr from 2.7.5 to 2.7.6",
-          "timestamp": "2025-09-26T03:39:39+08:00",
-          "tree_id": "32267046558d6aae71f98ea7248c0f5b23c16c75",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8fd1fbd9c7b302b460b3595ff0beeadfbd81f782"
-        },
-        "date": 1758829306524,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 494820,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 496780,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "003fe0f648145d532014676baa0edb2b75cf74c0",
+          "message": "Merge pull request #2668 from f1shl3gs/sources/http_check/remove_unused_code\n\nsources/http_check: remove unused code",
+          "timestamp": "2025-11-05T20:29:59+08:00",
+          "tree_id": "161513e1479d8b7c9c424ef35263f6d61179d1e1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/003fe0f648145d532014676baa0edb2b75cf74c0"
+        },
+        "date": 1762345928227,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 512750,
             "unit": "ns/op"
           }
         ]
