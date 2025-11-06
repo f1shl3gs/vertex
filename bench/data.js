@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762472335944,
+  "lastUpdate": 1762472360809,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "62753f14f0a7d6dbac6dbcddcc860ba7156f609a",
-          "message": "Merge pull request #2560 from f1shl3gs/dependabot/cargo/tokio-rustls-0.26.4\n\nchore(deps): bump tokio-rustls from 0.26.3 to 0.26.4",
-          "timestamp": "2025-09-27T12:42:37+08:00",
-          "tree_id": "eed402ba474a70f87c1264571a714194de55caaf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/62753f14f0a7d6dbac6dbcddcc860ba7156f609a"
-        },
-        "date": 1758948308254,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.997,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 172.29,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 326.79,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 668.43,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "811514a588c0af4d01d3924f14ac1110cf514443",
           "message": "Merge pull request #2562 from f1shl3gs/dependabot/cargo/serde-1.0.228\n\nchore(deps): bump serde from 1.0.227 to 1.0.228",
           "timestamp": "2025-09-28T23:43:51+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 671.75,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "21bd8bf7a0c19917ba415bcd06acc3a862b3b016",
+          "message": "Merge pull request #2671 from f1shl3gs/dependabot/cargo/quote-1.0.42\n\nchore(deps): bump quote from 1.0.41 to 1.0.42",
+          "timestamp": "2025-11-07T07:36:16+08:00",
+          "tree_id": "7b00059b95754c4c8379e1d01cb94112f31f8ab6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/21bd8bf7a0c19917ba415bcd06acc3a862b3b016"
+        },
+        "date": 1762472339015,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.636,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 169.09,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 319.31,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 705.76,
             "unit": "ns/op"
           }
         ]
