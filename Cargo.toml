@@ -140,10 +140,12 @@ all-integration-tests = [
 
 # Secrets
 secrets-directory = []
+secrets-keyring =[]
 secrets-unencrypted = []
 
 secrets = [
     "secrets-directory",
+    "secrets-keyring",
     "secrets-unencrypted"
 ]
 
