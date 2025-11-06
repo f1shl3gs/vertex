@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762346525047,
+  "lastUpdate": 1762445412700,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "62753f14f0a7d6dbac6dbcddcc860ba7156f609a",
-          "message": "Merge pull request #2560 from f1shl3gs/dependabot/cargo/tokio-rustls-0.26.4\n\nchore(deps): bump tokio-rustls from 0.26.3 to 0.26.4",
-          "timestamp": "2025-09-27T12:42:37+08:00",
-          "tree_id": "eed402ba474a70f87c1264571a714194de55caaf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/62753f14f0a7d6dbac6dbcddcc860ba7156f609a"
-        },
-        "date": 1758948287264,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 495090,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 522010,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "67040ca6c031d9b5b62eb1176cf32d2d5d0bbc07",
+          "message": "Merge pull request #2670 from f1shl3gs/dependabot/cargo/syn-2.0.109\n\nchore(deps): bump syn from 2.0.108 to 2.0.109",
+          "timestamp": "2025-11-07T00:07:38+08:00",
+          "tree_id": "1c98b52753a9ceb95b1bfe83bf2f57ae652dc4b7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/67040ca6c031d9b5b62eb1176cf32d2d5d0bbc07"
+        },
+        "date": 1762445390401,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 520890,
             "unit": "ns/op"
           }
         ]
