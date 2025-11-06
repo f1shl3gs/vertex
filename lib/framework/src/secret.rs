@@ -7,7 +7,7 @@ pub enum Error {
     NotFound(String),
 
     #[error(transparent)]
-    Io(std::io::Error),
+    Io(#[from] std::io::Error),
 }
 
 #[async_trait::async_trait]
