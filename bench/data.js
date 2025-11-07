@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762474119447,
+  "lastUpdate": 1762474503181,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4e8f3f7d02e236387bb83dd81d93457d78fb2dcd",
-          "message": "Merge pull request #2566 from f1shl3gs/dependabot/cargo/quote-1.0.41\n\nchore(deps): bump quote from 1.0.40 to 1.0.41",
-          "timestamp": "2025-09-29T22:49:25+08:00",
-          "tree_id": "35ecf3819d3e01ba9b03e4fd563ed8eb43487bea",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4e8f3f7d02e236387bb83dd81d93457d78fb2dcd"
-        },
-        "date": 1759157954087,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 15499000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 616950,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.14,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7b39e488a490aeaa11fd0e256d31e318fb653f67",
           "message": "Merge pull request #2565 from f1shl3gs/dependabot/cargo/typetag-0.2.21\n\nchore(deps): bump typetag from 0.2.20 to 0.2.21",
           "timestamp": "2025-09-29T22:49:37+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.39,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "171a9d95316d0a28d1e2e815140d1c25f918bc5e",
+          "message": "Merge pull request #2672 from f1shl3gs/secrets/keyring/init\n\nsecrets/keyring: init",
+          "timestamp": "2025-11-07T08:04:48+08:00",
+          "tree_id": "88384d019f6d6da50ac23d9695558b1bfe34177e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/171a9d95316d0a28d1e2e815140d1c25f918bc5e"
+        },
+        "date": 1762474481056,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15067000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 602520,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.555,
             "unit": "ns/op"
           }
         ]
