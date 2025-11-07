@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762474045432,
+  "lastUpdate": 1762474064353,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4e8f3f7d02e236387bb83dd81d93457d78fb2dcd",
-          "message": "Merge pull request #2566 from f1shl3gs/dependabot/cargo/quote-1.0.41\n\nchore(deps): bump quote from 1.0.40 to 1.0.41",
-          "timestamp": "2025-09-29T22:49:25+08:00",
-          "tree_id": "35ecf3819d3e01ba9b03e4fd563ed8eb43487bea",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4e8f3f7d02e236387bb83dd81d93457d78fb2dcd"
-        },
-        "date": 1759157529579,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.436,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 99.288,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 171.56,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 176.45,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "171a9d95316d0a28d1e2e815140d1c25f918bc5e",
+          "message": "Merge pull request #2672 from f1shl3gs/secrets/keyring/init\n\nsecrets/keyring: init",
+          "timestamp": "2025-11-07T08:04:48+08:00",
+          "tree_id": "88384d019f6d6da50ac23d9695558b1bfe34177e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/171a9d95316d0a28d1e2e815140d1c25f918bc5e"
+        },
+        "date": 1762474037101,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 36.808,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 110.04,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 164.02,
             "unit": "ns/op"
           }
         ]
