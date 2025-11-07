@@ -6,7 +6,7 @@ use indexmap::IndexMap;
 use regex::Regex;
 use serde::Deserialize;
 
-use crate::secret::SecretStore;
+use crate::secret::{Error, SecretStore};
 
 // The following regex aims to extract a pair of strings, the first being the secret
 // store name and the second being the secret key. Here are some matching &
@@ -100,13 +100,26 @@ impl SecretLoader {
 
                         entry.extend(partial);
                     }
-                    Err(err) => errs.push(err.to_string()),
+                    Err(err) => {
+                        let err = match err {
+                            Error::NotFound(key) => {
+                                format!("secret {key:?} was not found in {store:?}")
+                            }
+                            Error::Io(err) => err.to_string(),
+                        };
+
+                        errs.push(err);
+                    }
                 },
                 None => {
                     errs.push(format!("secret store {store:?} is not defined"));
                     continue;
                 }
             }
+        }
+
+        if !errs.is_empty() {
+            return Err(errs);
         }
 
         Ok(secrets)
