@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762474503181,
+  "lastUpdate": 1762474583826,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8616728c027e0493db1e3295dca4f6c3e90b65a2",
-          "message": "Merge pull request #2569 from f1shl3gs/lib/resolver/fix_record_type_of_ipv6_lookup\n\nlib/resolver: fix ipv6 lookup's RecordType",
-          "timestamp": "2025-10-02T02:51:23+08:00",
-          "tree_id": "722a35137e705e935e2778f9c3d84d115501e748",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8616728c027e0493db1e3295dca4f6c3e90b65a2"
-        },
-        "date": 1759345306533,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 547,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39501.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1c7175f53f6dbc633aa7f6a00c5994a6168147d1",
           "message": "Merge pull request #2570 from f1shl3gs/lib/resolver/remove_unnecessary_bool_key\n\nlib/resolver: remove unnecessary bool",
           "timestamp": "2025-10-02T05:37:27+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41126.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "171a9d95316d0a28d1e2e815140d1c25f918bc5e",
+          "message": "Merge pull request #2672 from f1shl3gs/secrets/keyring/init\n\nsecrets/keyring: init",
+          "timestamp": "2025-11-07T08:04:48+08:00",
+          "tree_id": "88384d019f6d6da50ac23d9695558b1bfe34177e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/171a9d95316d0a28d1e2e815140d1c25f918bc5e"
+        },
+        "date": 1762474562104,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 585,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41139.4,
             "unit": "KiB"
           }
         ]
