@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762694541817,
+  "lastUpdate": 1762694609601,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1c7175f53f6dbc633aa7f6a00c5994a6168147d1",
-          "message": "Merge pull request #2570 from f1shl3gs/lib/resolver/remove_unnecessary_bool_key\n\nlib/resolver: remove unnecessary bool",
-          "timestamp": "2025-10-02T05:37:27+08:00",
-          "tree_id": "8648c6f796ef6d30d68ce1495ab919c734891cb7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1c7175f53f6dbc633aa7f6a00c5994a6168147d1"
-        },
-        "date": 1759355301458,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 566,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39498.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "99f71baf49c7a7f6f803e308bfada46f551b63c6",
           "message": "Merge pull request #2571 from f1shl3gs/lib/typesize/init\n\nlib/typesize: init",
           "timestamp": "2025-10-02T05:48:04+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41139.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "90b5c5950fe62f6faf876f83f1b6d943d9d1de4e",
+          "message": "Merge pull request #2673 from f1shl3gs/providers/http/simplify_decoder\n\nproviders/http: simplify decoder",
+          "timestamp": "2025-11-09T21:11:50+08:00",
+          "tree_id": "4269761bdb96a8075d7ad9c518d85c90fcdf0ce2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/90b5c5950fe62f6faf876f83f1b6d943d9d1de4e"
+        },
+        "date": 1762694582645,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 588,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41203.9,
             "unit": "KiB"
           }
         ]
