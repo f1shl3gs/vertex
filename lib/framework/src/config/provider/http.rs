@@ -11,14 +11,13 @@ use http::{Request, Response, Uri};
 use http_body_util::{BodyExt, BodyStream, Empty};
 use hyper::body::Incoming;
 use indexmap::IndexMap;
-use memchr::memchr;
 use tokio::time::timeout;
 use tokio_util::codec::{Decoder, FramedRead};
 use tokio_util::io::StreamReader;
 
 use crate::SignalHandler;
 use crate::config::{Builder, ProxyConfig, provider::ProviderConfig};
-use crate::http::HttpClient;
+use crate::http::{Auth, HttpClient};
 use crate::tls::TlsConfig;
 use crate::{config, signal};
 
@@ -33,11 +32,9 @@ struct Config {
     /// The URL to download config
     #[configurable(format = "uri", example = "https://exampel.com/config")]
     #[serde(with = "crate::config::serde_uri")]
-    uri: Uri,
+    endpoint: Uri,
 
-    /// The interval between fetch config.
-    #[serde(default = "default_interval", with = "humanize::duration::serde")]
-    interval: Duration,
+    auth: Option<Auth>,
 
     tls: Option<TlsConfig>,
 
@@ -49,6 +46,10 @@ struct Config {
     /// HTTP headers to add to the request.
     #[serde(default)]
     headers: IndexMap<String, String>,
+
+    /// The interval between fetch config.
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
+    interval: Duration,
 }
 
 #[async_trait::async_trait]
@@ -59,11 +60,12 @@ impl ProviderConfig for Config {
         let proxy = ProxyConfig::from_env().merge(&self.proxy);
 
         let mut cfs = Box::pin(poll_http(
-            self.interval,
-            self.uri.clone(),
+            self.endpoint.clone(),
+            self.auth.clone(),
             self.headers.clone(),
             tls_config,
             proxy,
+            self.interval,
         ));
 
         let builder = match timeout(Duration::from_secs(20), cfs.next()).await {
@@ -82,6 +84,7 @@ impl ProviderConfig for Config {
 /// Makes an HTTP request to the provided endpoint, returning the Body.
 async fn http_request(
     uri: &Uri,
+    auth: Option<&Auth>,
     headers: &IndexMap<String, String>,
     tls_config: Option<&TlsConfig>,
     proxy: &ProxyConfig,
@@ -91,7 +94,10 @@ async fn http_request(
     for (key, value) in headers {
         builder = builder.header(key, value);
     }
-    let req = builder.body(Empty::<Bytes>::default())?;
+    let mut req = builder.body(Empty::<Bytes>::default())?;
+    if let Some(auth) = auth {
+        auth.apply(&mut req);
+    }
 
     client.send(req).await.map_err(Into::into)
 }
@@ -120,11 +126,12 @@ fn config_hash(data: &Bytes) -> u64 {
 
 /// Polls the HTTP endpoint after/every `interval`, returning a stream of `ConfigBuilder`.
 fn poll_http(
-    interval: Duration,
-    uri: Uri,
+    endpoint: Uri,
+    auth: Option<Auth>,
     headers: IndexMap<String, String>,
     tls_config: Option<TlsConfig>,
     proxy: ProxyConfig,
+    interval: Duration,
 ) -> impl Stream<Item = Builder> {
     stream! {
         let mut last_hash = 0u64;
@@ -133,7 +140,7 @@ fn poll_http(
             // Retry loop to fetch config
             let mut backoff = ExponentialBackoff::from_secs(10).max_delay(5 * interval);
             let (parts, incoming) = loop {
-                let resp = match http_request(&uri, &headers, tls_config.as_ref(), &proxy).await {
+                let resp = match http_request(&endpoint, auth.as_ref(), &headers, tls_config.as_ref(), &proxy).await {
                     Ok(resp) => resp,
                     Err(err) => {
                         warn!(
@@ -149,7 +156,7 @@ fn poll_http(
                 if resp.status() != 200 {
                     warn!(
                         message = "fetch config failed, unexpected status code",
-                        ?uri,
+                        ?endpoint,
                         code = ?resp.status(),
                     );
 
@@ -205,7 +212,7 @@ fn poll_http(
                         warn!(
                             message = "load config failed",
                             %err,
-                            %uri,
+                            %endpoint,
                         );
 
                         backoff.wait().await;
@@ -281,21 +288,12 @@ fn poll_http(
     }
 }
 
-#[derive(Default, Debug, PartialEq)]
-enum ChunkedState {
-    #[default]
-    SizeCr,
-    SizeLf,
-    BodyCr,
-    BodyLf,
-}
-
 #[derive(Default)]
 struct ChunkedDecoder {
-    size: usize,
-    state: ChunkedState,
+    state: Option<usize>,
 }
 
+/// https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Transfer-Encoding
 impl Decoder for ChunkedDecoder {
     type Item = Bytes;
     type Error = std::io::Error;
@@ -303,102 +301,66 @@ impl Decoder for ChunkedDecoder {
     fn decode(&mut self, buf: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
         loop {
             match self.state {
-                ChunkedState::SizeCr => match memchr(b'\r', buf) {
-                    None => return Ok(None),
-                    Some(next) => {
-                        let part = buf.split_to(next).freeze();
-
-                        let size = match parse_hex(part.as_ref()) {
-                            Ok(n) => n,
-                            Err(err) => {
-                                return Err(std::io::Error::new(
-                                    std::io::ErrorKind::InvalidData,
-                                    err,
-                                ));
-                            }
-                        };
-
-                        self.size = size as usize;
-                        self.state = ChunkedState::SizeLf;
-                        buf.advance(1);
-                        continue;
-                    }
-                },
-
-                ChunkedState::SizeLf => {
-                    let char = buf[0];
-
-                    if char == b'\n' {
-                        buf.advance(1);
-                        self.state = ChunkedState::BodyCr;
-
-                        continue;
-                    } else {
-                        return Err(std::io::Error::other(format!("Unexpected token {char}")));
-                    }
-                }
-
-                ChunkedState::BodyCr => {
-                    if buf.len() < self.size {
+                Some(size) => {
+                    if buf.len() < size + 2 {
                         return Ok(None);
                     }
 
-                    let data = buf.split_to(self.size).freeze();
-                    buf.advance(1);
-                    self.state = ChunkedState::BodyLf;
-                    self.size = 0;
+                    let data = buf.split_to(size).freeze();
+                    if !buf.ends_with(b"\r\n") {
+                        return Err(std::io::Error::new(
+                            std::io::ErrorKind::InvalidData,
+                            "invalid data",
+                        ));
+                    }
+
+                    buf.advance(2);
+                    self.state = None;
 
                     return Ok(Some(data));
                 }
+                None => {
+                    let end = 18.min(buf.len());
+                    let Some(len) = buf[..end].windows(2).position(|buf| buf == b"\r\n") else {
+                        return Ok(None);
+                    };
 
-                ChunkedState::BodyLf => {
-                    let char = buf[0];
+                    if len == 0 || len > 16 {
+                        return Err(std::io::Error::new(
+                            std::io::ErrorKind::InvalidData,
+                            "invalid data",
+                        ));
+                    }
 
-                    if char == b'\n' {
-                        buf.advance(1);
-                        self.state = ChunkedState::SizeCr;
-
-                        continue;
-                    } else {
-                        return Err(std::io::Error::other(format!("Unexpected token {char}")));
+                    match parse_length(&buf[..len]) {
+                        Ok(size) => {
+                            self.state = Some(size);
+                            buf.advance(len + 2);
+                        }
+                        Err(_pos) => return Err(std::io::Error::other("invalid length")),
                     }
                 }
             }
         }
     }
-
-    fn decode_eof(&mut self, buf: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
-        if self.state == ChunkedState::SizeCr && buf.is_empty() {
-            return Ok(None);
-        }
-
-        Err(std::io::Error::new(
-            std::io::ErrorKind::UnexpectedEof,
-            format!("unexpected eof, want {:?}", self.state),
-        ))
-    }
 }
 
-fn parse_hex(v: &[u8]) -> Result<u64, &str> {
-    if v.len() >= 16 {
-        return Err("http chunk length too large");
-    }
+fn parse_length(buf: &[u8]) -> Result<usize, usize> {
+    let mut len = 0;
 
-    let mut n: u64 = 0;
-    for b in v {
-        let mut b = *b;
-        b = match b {
-            b'0'..=b'9' => b - b'0',
-            b'a'..=b'f' => b - b'a' + 10,
-            b'A'..=b'F' => b - b'A' + 10,
-            _ => return Err("invalid byte in chunk length"),
+    for (index, ch) in buf.iter().enumerate() {
+        let b = match ch {
+            b'0'..=b'9' => *ch - b'0',
+            b'a'..=b'f' => *ch - b'a' + 10,
+            b'A'..=b'F' => *ch - b'A' + 10,
+            _ => return Err(index),
         };
 
-        n <<= 4;
-        n |= b as u64
+        len <<= 4;
+        len |= b as usize
     }
 
-    Ok(n)
+    Ok(len)
 }
 
 #[cfg(test)]
@@ -416,7 +378,7 @@ mod tests {
         let tests = [("0", 0), ("a", 10), ("F", 15), ("10", 16), ("233", 563)];
 
         for (input, want) in tests {
-            let got = parse_hex(input.as_bytes()).unwrap();
+            let got = parse_length(input.as_bytes()).unwrap();
             assert_eq!(want, got, "{input}")
         }
     }
