@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762754801664,
+  "lastUpdate": 1762754812098,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "56e9191ed9362438836cb1c97d93e9ed32cf5143",
-          "message": "Merge pull request #2564 from f1shl3gs/dependabot/cargo/thiserror-2.0.17\n\nchore(deps): bump thiserror from 2.0.16 to 2.0.17",
-          "timestamp": "2025-09-29T22:58:09+08:00",
-          "tree_id": "6fe62e98b63ebb0ee286df5c55838d8a5c369c62",
-          "url": "https://github.com/f1shl3gs/vertex/commit/56e9191ed9362438836cb1c97d93e9ed32cf5143"
-        },
-        "date": 1759158018091,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.42,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 97.021,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 173.18,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 174.64,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "07fc4d7b6b440378302f4e19d927aed0367cb24a",
+          "message": "Merge pull request #2674 from f1shl3gs/dependabot/cargo/syn-2.0.110\n\nchore(deps): bump syn from 2.0.109 to 2.0.110",
+          "timestamp": "2025-11-10T14:04:09+08:00",
+          "tree_id": "a8c7537483a4febf70b23838228c4dd7262d3e31",
+          "url": "https://github.com/f1shl3gs/vertex/commit/07fc4d7b6b440378302f4e19d927aed0367cb24a"
+        },
+        "date": 1762754790439,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.266,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 99.659,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 174.35,
             "unit": "ns/op"
           }
         ]
