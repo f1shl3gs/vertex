@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762755334017,
+  "lastUpdate": 1762944693793,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f6f226722ead238b2557c1c2b51dcaf0690dac29",
-          "message": "Merge pull request #2568 from f1shl3gs/cargo/update\n\ncargo update",
-          "timestamp": "2025-09-30T23:03:29+08:00",
-          "tree_id": "b3c32073437116ef70b5725ba43b327c346f2313",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f6f226722ead238b2557c1c2b51dcaf0690dac29"
-        },
-        "date": 1759244728309,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 491380,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 492430,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7327b3ed499c6d751892dc961a3859acad4db3cb",
+          "message": "Merge pull request #2676 from f1shl3gs/dependabot/cargo/quick-xml-0.38.4\n\nchore(deps): bump quick-xml from 0.38.3 to 0.38.4",
+          "timestamp": "2025-11-12T18:49:01+08:00",
+          "tree_id": "42a7f172ef92a5a5048a546bdd90fd02d2467973",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7327b3ed499c6d751892dc961a3859acad4db3cb"
+        },
+        "date": 1762944671362,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 520450,
             "unit": "ns/op"
           }
         ]
