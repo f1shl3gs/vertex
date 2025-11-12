@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1762944716951,
+  "lastUpdate": 1762944741302,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8616728c027e0493db1e3295dca4f6c3e90b65a2",
-          "message": "Merge pull request #2569 from f1shl3gs/lib/resolver/fix_record_type_of_ipv6_lookup\n\nlib/resolver: fix ipv6 lookup's RecordType",
-          "timestamp": "2025-10-02T02:51:23+08:00",
-          "tree_id": "722a35137e705e935e2778f9c3d84d115501e748",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8616728c027e0493db1e3295dca4f6c3e90b65a2"
-        },
-        "date": 1759344799730,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 490240,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 520450,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "da4b01d4bd87745ed0afdad576531fa80f1f5396",
+          "message": "Merge pull request #2675 from f1shl3gs/dependabot/cargo/hyper-1.8.0\n\nchore(deps): bump hyper from 1.7.0 to 1.8.0",
+          "timestamp": "2025-11-12T18:49:22+08:00",
+          "tree_id": "8320a75fefa9bf34eeaa13c152b215f6e0d04e79",
+          "url": "https://github.com/f1shl3gs/vertex/commit/da4b01d4bd87745ed0afdad576531fa80f1f5396"
+        },
+        "date": 1762944719324,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 523440,
             "unit": "ns/op"
           }
         ]
