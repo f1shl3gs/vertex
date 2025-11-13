@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1763020238660,
+  "lastUpdate": 1763020258296,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "1c7175f53f6dbc633aa7f6a00c5994a6168147d1",
-          "message": "Merge pull request #2570 from f1shl3gs/lib/resolver/remove_unnecessary_bool_key\n\nlib/resolver: remove unnecessary bool",
-          "timestamp": "2025-10-02T05:37:27+08:00",
-          "tree_id": "8648c6f796ef6d30d68ce1495ab919c734891cb7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1c7175f53f6dbc633aa7f6a00c5994a6168147d1"
-        },
-        "date": 1759354781379,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.343,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 96.096,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 178.34,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 178.6,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bb176bce3fe7ff8f4361346dac5f2eabed28e459",
+          "message": "Merge pull request #2677 from f1shl3gs/lib/configurable-derive/remove_unused\n\nlib/configurable-derive: remove unused",
+          "timestamp": "2025-11-13T15:48:10+08:00",
+          "tree_id": "724cf3d29e58920c7581ce4bd7e03471ca76e348",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bb176bce3fe7ff8f4361346dac5f2eabed28e459"
+        },
+        "date": 1763020235605,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.943,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 100.02,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 173.63,
             "unit": "ns/op"
           }
         ]
