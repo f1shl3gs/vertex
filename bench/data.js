@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1763082709482,
+  "lastUpdate": 1763082811025,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "73a83526ec0f399610f240185feb1f5fb5d07f53",
-          "message": "Merge pull request #2577 from f1shl3gs/dependabot/cargo/flate2-1.1.3\n\nchore(deps): bump flate2 from 1.1.2 to 1.1.3",
-          "timestamp": "2025-10-05T19:40:14+08:00",
-          "tree_id": "bbed12023016f256399d58269feb198cc365fa7b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/73a83526ec0f399610f240185feb1f5fb5d07f53"
-        },
-        "date": 1759665071270,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 566,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39507.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4e3cfaf30cdac1195d16d68f32717745f749efb3",
           "message": "Merge pull request #2578 from f1shl3gs/dependabot/cargo/flate2-1.1.4\n\nchore(deps): bump flate2 from 1.1.3 to 1.1.4",
           "timestamp": "2025-10-06T20:56:47+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41248.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "74a5b4a366faa6792e1f9055458472437d698fca",
+          "message": "Merge pull request #2679 from f1shl3gs/dependabot/cargo/hyper-1.8.1\n\nchore(deps): bump hyper from 1.8.0 to 1.8.1",
+          "timestamp": "2025-11-14T09:01:27+08:00",
+          "tree_id": "e531c7a0c93bde2d6068487453665fa8aa80e174",
+          "url": "https://github.com/f1shl3gs/vertex/commit/74a5b4a366faa6792e1f9055458472437d698fca"
+        },
+        "date": 1763082784654,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 595,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41247.1,
             "unit": "KiB"
           }
         ]
