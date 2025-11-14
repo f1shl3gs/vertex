@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1763093032744,
+  "lastUpdate": 1763093113489,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4e3cfaf30cdac1195d16d68f32717745f749efb3",
-          "message": "Merge pull request #2578 from f1shl3gs/dependabot/cargo/flate2-1.1.4\n\nchore(deps): bump flate2 from 1.1.3 to 1.1.4",
-          "timestamp": "2025-10-06T20:56:47+08:00",
-          "tree_id": "725b1ec9fa228bf79ff565106a9567447323187a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4e3cfaf30cdac1195d16d68f32717745f749efb3"
-        },
-        "date": 1759756065629,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 567,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39497.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d07cf33e4564271419a052b038a36d6f3889a773",
           "message": "Merge pull request #2579 from f1shl3gs/dependabot/cargo/windows-0.62.2\n\nchore(deps): bump windows from 0.62.1 to 0.62.2",
           "timestamp": "2025-10-07T17:36:10+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41247.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "621b69bc5c9ae129c5593af9529f5cc9be8a7d1c",
+          "message": "Merge pull request #2680 from f1shl3gs/lib/codecs/fix_logfmt_encoding\n\nlib/codecs: fix logfmt encoding",
+          "timestamp": "2025-11-14T11:53:48+08:00",
+          "tree_id": "a9e581ef47f65cc4bed70bdf23a1240450eaa24a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/621b69bc5c9ae129c5593af9529f5cc9be8a7d1c"
+        },
+        "date": 1763093091806,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 578,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41246.8,
             "unit": "KiB"
           }
         ]
