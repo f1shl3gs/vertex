@@ -1,6 +1,6 @@
 use std::fmt::Write;
 
-use bytes::BytesMut;
+use bytes::{BufMut, BytesMut};
 use event::Event;
 use tokio_util::codec::Encoder;
 
@@ -48,16 +48,16 @@ fn encode_string(output: &mut BytesMut, str: &str) -> Result<(), SerializeError>
         return Ok(());
     }
 
-    output.write_char('"').unwrap();
+    output.put_u8(b'"');
     for c in str.chars() {
         match c {
-            '\\' => output.write_char('\\')?,
-            '"' => output.write_char('\"')?,
-            '\n' => output.write_char('\n')?,
-            _ => output.write_char(c)?,
+            '\\' => output.put_slice(b"\\"),
+            '"' => output.put_slice(b"\""),
+            '\n' => output.put_slice(b"\\n"),
+            _ => output.put_u8(c as u8),
         }
     }
-    output.write_char('"')?;
+    output.put_u8(b'"');
 
     Ok(())
 }
@@ -73,6 +73,8 @@ mod tests {
         let mut s = LogfmtSerializer::new();
         let log = value!({
             "foo": "bar",
+            "whitespace": "1 1",
+            "escapes": "\"\n\\",
             "m1": {},
             "arr": [
                 1
@@ -89,5 +91,7 @@ mod tests {
 
         let mut buf = BytesMut::new();
         s.encode(log.into(), &mut buf).unwrap();
+
+        println!("{}", String::from_utf8_lossy(&buf));
     }
 }
