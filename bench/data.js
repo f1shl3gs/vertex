@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1763079848963,
+  "lastUpdate": 1763079869668,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1c7175f53f6dbc633aa7f6a00c5994a6168147d1",
-          "message": "Merge pull request #2570 from f1shl3gs/lib/resolver/remove_unnecessary_bool_key\n\nlib/resolver: remove unnecessary bool",
-          "timestamp": "2025-10-02T05:37:27+08:00",
-          "tree_id": "8648c6f796ef6d30d68ce1495ab919c734891cb7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1c7175f53f6dbc633aa7f6a00c5994a6168147d1"
-        },
-        "date": 1759354803271,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.906,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 164.13,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 317.57,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 675.85,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "99f71baf49c7a7f6f803e308bfada46f551b63c6",
           "message": "Merge pull request #2571 from f1shl3gs/lib/typesize/init\n\nlib/typesize: init",
           "timestamp": "2025-10-02T05:48:04+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 668.37,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e45efba2a8a231d42da750b7ab4981f9fa4dee2f",
+          "message": "Merge pull request #2678 from f1shl3gs/dependabot/cargo/hyper-util-0.1.18\n\nchore(deps): bump hyper-util from 0.1.17 to 0.1.18",
+          "timestamp": "2025-11-14T08:21:29+08:00",
+          "tree_id": "280a6a53fc5bf5eaccbc07fbcbe8106f35e3bc64",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e45efba2a8a231d42da750b7ab4981f9fa4dee2f"
+        },
+        "date": 1763079848175,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.366,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 171.55,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 328.35,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 688.22,
             "unit": "ns/op"
           }
         ]
