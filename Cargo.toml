@@ -446,7 +446,7 @@ tracing = { version = "0.1.41", default-features = false }
 
 # HTTP
 headers = { version = "0.4.1", default-features = false }
-hyper = { version = "1.8.0", default-features = false, features = ["server"] }
+hyper = { version = "1.8.1", default-features = false, features = ["server"] }
 hyper-rustls = { version = "0.27.7", default-features = false, features = ["rustls-native-certs"] }
 hyper-util = { version = "0.1.18", default-features = false, features = ["client"] }
 http = { version = "1.3.1", default-features = false }
