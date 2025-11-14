@@ -44,7 +44,7 @@ humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = fa
 hostname = { path = "../hostname" }
 http = { version = "1.3.1", default-features = false }
 http-body-util = { version = "0.1.3", default-features = false }
-hyper = { version = "1.8.0", default-features = false, features = ["full"] }
+hyper = { version = "1.8.1", default-features = false, features = ["full"] }
 hyper-rustls = { version = "0.27.7", default-features = false, features = ["rustls-native-certs"] }
 hyper-util = { version = "0.1.17", default-features = false, features = ["client", "http1", "http2", "server"] }
 indexmap = { version = "2.12.0", default-features = false, features = ["serde"] }
