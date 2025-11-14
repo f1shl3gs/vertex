@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1763093113489,
+  "lastUpdate": 1763096026260,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "73a83526ec0f399610f240185feb1f5fb5d07f53",
-          "message": "Merge pull request #2577 from f1shl3gs/dependabot/cargo/flate2-1.1.3\n\nchore(deps): bump flate2 from 1.1.2 to 1.1.3",
-          "timestamp": "2025-10-05T19:40:14+08:00",
-          "tree_id": "bbed12023016f256399d58269feb198cc365fa7b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/73a83526ec0f399610f240185feb1f5fb5d07f53"
-        },
-        "date": 1759664538690,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 489450,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 525510,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "45f23fbcd98d38c6fab69eb60d40aa44cafe8de2",
+          "message": "Merge pull request #2681 from f1shl3gs/lib/codecs/encoding/logfmt/fix_downflow\n\nlib/codecs: fix downflow panic if log have no fields in logfmt encoder",
+          "timestamp": "2025-11-14T12:51:20+08:00",
+          "tree_id": "d77e3b3d22badaec4b1aac353b47d788d9cf79f6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/45f23fbcd98d38c6fab69eb60d40aa44cafe8de2"
+        },
+        "date": 1763096003951,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 523850,
             "unit": "ns/op"
           }
         ]
