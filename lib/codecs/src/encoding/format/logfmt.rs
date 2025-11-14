@@ -1,5 +1,3 @@
-use std::fmt::Write;
-
 use bytes::{BufMut, BytesMut};
 use event::Event;
 use tokio_util::codec::Encoder;
@@ -22,17 +20,22 @@ impl Encoder<Event> for LogfmtSerializer {
 
     fn encode(&mut self, event: Event, dst: &mut BytesMut) -> Result<(), Self::Error> {
         let log = event.into_log();
-        if let Some(fields) = log.all_fields() {
-            for (k, v) in fields {
-                encode_string(dst, k.as_str())?;
-                dst.write_char('=')?;
-                encode_string(dst, v.to_string_lossy().as_ref())?;
-                dst.write_char(' ')?;
-            }
-        }
+        let Some(fields) = log.all_fields() else {
+            return Ok(());
+        };
 
-        // strip the final delimiter
-        dst.truncate(dst.len() - 1);
+        let mut first = true;
+        for (k, v) in fields {
+            if first {
+                first = false;
+            } else {
+                dst.put_u8(b' ');
+            }
+
+            encode_string(dst, k.as_str())?;
+            dst.put_u8(b'=');
+            encode_string(dst, v.to_string_lossy().as_ref())?;
+        }
 
         Ok(())
     }
@@ -44,7 +47,7 @@ fn encode_string(output: &mut BytesMut, str: &str) -> Result<(), SerializeError>
         .any(|c| c.is_whitespace() || c == '"' || c == '=');
 
     if !needs_quoting {
-        output.write_str(str)?;
+        output.put_slice(str.as_bytes());
         return Ok(());
     }
 
