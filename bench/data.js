@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1763080363931,
+  "lastUpdate": 1763082238700,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9ec1ab84947510bf2928e2452f044625668527c3",
-          "message": "Merge pull request #2573 from f1shl3gs/lib/resolver/remove_unused_lint\n\nlib/resolver: remove unused lint",
-          "timestamp": "2025-10-04T02:20:17+08:00",
-          "tree_id": "253421d74cdd5850bae1f04c8e7cbbff31536793",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9ec1ab84947510bf2928e2452f044625668527c3"
-        },
-        "date": 1759515732186,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 503960,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 520980,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "74a5b4a366faa6792e1f9055458472437d698fca",
+          "message": "Merge pull request #2679 from f1shl3gs/dependabot/cargo/hyper-1.8.1\n\nchore(deps): bump hyper from 1.8.0 to 1.8.1",
+          "timestamp": "2025-11-14T09:01:27+08:00",
+          "tree_id": "e531c7a0c93bde2d6068487453665fa8aa80e174",
+          "url": "https://github.com/f1shl3gs/vertex/commit/74a5b4a366faa6792e1f9055458472437d698fca"
+        },
+        "date": 1763082214902,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 526290,
             "unit": "ns/op"
           }
         ]
