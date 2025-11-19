@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1763570198918,
+  "lastUpdate": 1763570301196,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "dbae02d8228a3de3a087fbfaf830c76195cb92e3",
-          "message": "Merge pull request #2583 from f1shl3gs/dependabot/cargo/pem-3.0.6\n\nchore(deps): bump pem from 3.0.5 to 3.0.6",
-          "timestamp": "2025-10-11T21:01:54+08:00",
-          "tree_id": "fef78aead8c153461a5e0aa592fedc67e786685b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/dbae02d8228a3de3a087fbfaf830c76195cb92e3"
-        },
-        "date": 1760188340451,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 545,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39593.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "54f190e18f397ad57ec20d921cf2b4c25fd714e1",
           "message": "Merge pull request #2582 from f1shl3gs/dependabot/cargo/libc-0.2.177\n\nchore(deps): bump libc from 0.2.176 to 0.2.177",
           "timestamp": "2025-10-11T21:02:06+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41276.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5c7320468c55a7778b0fb50ce922f0e5eb566071",
+          "message": "Merge pull request #2684 from f1shl3gs/sources/gnmi\n\nsources/gnmi: init",
+          "timestamp": "2025-11-20T00:26:43+08:00",
+          "tree_id": "9e2839d1de1c79a11d10742162f46228e7d5c407",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5c7320468c55a7778b0fb50ce922f0e5eb566071"
+        },
+        "date": 1763570278283,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 592,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41651.4,
             "unit": "KiB"
           }
         ]
