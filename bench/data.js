@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1763572087082,
+  "lastUpdate": 1763572164971,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "54f190e18f397ad57ec20d921cf2b4c25fd714e1",
-          "message": "Merge pull request #2582 from f1shl3gs/dependabot/cargo/libc-0.2.177\n\nchore(deps): bump libc from 0.2.176 to 0.2.177",
-          "timestamp": "2025-10-11T21:02:06+08:00",
-          "tree_id": "7feba23c24a00927274705484b5b3e413a6e4636",
-          "url": "https://github.com/f1shl3gs/vertex/commit/54f190e18f397ad57ec20d921cf2b4c25fd714e1"
-        },
-        "date": 1760188363809,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 554,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39599.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2823b63de668ed2fc5a61b885a659ea535b0c8ab",
           "message": "Merge pull request #2584 from f1shl3gs/deps/update_humanize\n\ndep: update humanize to latest version",
           "timestamp": "2025-10-11T21:36:48+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 592,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41651.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "767fd64976eec77645e52a392e7763020670bb6e",
+          "message": "Merge pull request #2685 from f1shl3gs/cli/launch/move_tracing_init_to_the_begining\n\ncli/launch: move tracing init to the beginning",
+          "timestamp": "2025-11-20T00:57:56+08:00",
+          "tree_id": "5619cd8e0f21c2ef541a4afa0653054da54b10b4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/767fd64976eec77645e52a392e7763020670bb6e"
+        },
+        "date": 1763572142992,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 585,
             "unit": "s"
           },
           {
