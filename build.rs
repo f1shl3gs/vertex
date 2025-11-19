@@ -141,6 +141,23 @@ fn main() {
             .unwrap();
     }
 
+    #[cfg(feature = "sources-gnmi")]
+    {
+        // Generate proto if needed
+        println!("cargo:rerun-if-changed=src/sources/gnmi/proto/gnmi.proto");
+        println!("cargo:rerun-if-changed=src/sources/gnmi/proto/gnmi_ext.proto");
+
+        let root = std::path::PathBuf::from("src/sources/gnmi/proto");
+
+        tonic_prost_build::configure()
+            .build_client(true)
+            .build_server(false)
+            .message_attribute("PathElem", "#[derive(Eq, Ord, PartialOrd)]")
+            .btree_map("PathElem.key")
+            .compile_protos(&[root.join("gnmi.proto")], &[root])
+            .unwrap();
+    }
+
     #[cfg(feature = "sinks-loki")]
     {
         // Generate proto if needed

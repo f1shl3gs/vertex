@@ -6,7 +6,7 @@ edition = "2024"
 description = "A lightweight and ultra-fast tool for building observability pipelines"
 repository = "https://github.com/f1shl3gs/vertex"
 publish = false
-rust-version = "1.89"
+rust-version = "1.91"
 exclude = [ "tests/node" ]
 
 # Optimized for binary size, and it will take alot time
@@ -191,6 +191,7 @@ sources-elasticsearch = []
 sources-filestats = []
 sources-fluent = ["dep:flate2"]
 sources-generate = []
+sources-gnmi = ["dep:tonic-prost", "tonic/codegen"]
 sources-grpc_check = ["tonic/channel", "dep:tonic-health"]
 sources-haproxy = []
 sources-http = []
@@ -242,7 +243,6 @@ sources = [
     "sources-chrony",
     "sources-consul",
     "sources-clickhouse_metrics",
-    "sources-generate",
     "sources-dnsmasq",
     "sources-dnstap",
     "sources-docker",
@@ -251,6 +251,8 @@ sources = [
     "sources-exec",
     "sources-filestats",
     "sources-fluent",
+    "sources-generate",
+    "sources-gnmi",
     "sources-grpc_check",
     "sources-haproxy",
     "sources-http",
@@ -447,7 +449,7 @@ tracing = { version = "0.1.41", default-features = false }
 # HTTP
 headers = { version = "0.4.1", default-features = false }
 hyper = { version = "1.8.1", default-features = false, features = ["server"] }
-hyper-rustls = { version = "0.27.7", default-features = false, features = ["rustls-native-certs"] }
+hyper-rustls = { version = "0.27.7", default-features = false, features = ["rustls-native-certs", "http2"] }
 hyper-util = { version = "0.1.18", default-features = false, features = ["client"] }
 http = { version = "1.3.1", default-features = false }
 httpdate = { version = "1.0.3", default-features = false, optional = true }

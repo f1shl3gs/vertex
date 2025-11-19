@@ -1,0 +1,19 @@
+sources:
+  routers:
+    type: gnmi
+    endpoints:
+      - https://172.20.20.2:57400
+    auth:
+      username: admin
+      password: NokiaSrl1!
+    tls:
+      verify_certificate: false
+    subscriptions:
+      - path: /openconfig/interfaces/interface/state/counters
+      - path: /openconfig/lldp/state/counters
+      - path: /openconfig/interfaces/interface/subinterfaces/subinterface/state/counters
+sinks:
+  prom:
+    type: prometheus_exporter
+    inputs:
+      - routers
