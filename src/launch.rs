@@ -120,6 +120,10 @@ impl RootCommand {
             return Ok(());
         }
 
+        let log_level = std::env::var("VERTEX_LOG").unwrap_or(self.log_level.clone());
+        let color = std::io::stdout().is_terminal();
+        framework::trace::init(color, false, &log_level, 10);
+
         let Some(mut config_paths) = config::process_paths(&self.configs) else {
             return Err(exitcode::CONFIG);
         };
@@ -141,10 +145,6 @@ impl RootCommand {
             .enable_time()
             .build()
             .unwrap();
-
-        let log_level = std::env::var("VERTEX_LOG").unwrap_or(self.log_level.clone());
-        let color = std::io::stdout().is_terminal();
-        framework::trace::init(color, false, &log_level, 10);
 
         // Note: `block_on` will spawn another worker thread too. so actual running
         // threads is always >= threads + 1.
