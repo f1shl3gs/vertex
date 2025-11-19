@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1763571701020,
+  "lastUpdate": 1763572087082,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "cc284ceb13fc94f8b085c2a6fa91476754589c79",
-          "message": "Merge pull request #2580 from f1shl3gs/sources/podman/init\n\nsources/podman: init",
-          "timestamp": "2025-10-08T03:08:28+08:00",
-          "tree_id": "0bcc67538ae82c9e5cd4e0755e544ec4b1c1d1b1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cc284ceb13fc94f8b085c2a6fa91476754589c79"
-        },
-        "date": 1759864704915,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 16821000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 606510,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.567,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "035bab2f15f7ed26742131f086b62d44a8064f85",
           "message": "Merge pull request #2581 from f1shl3gs/lib/value/implement_typesize_for_value\n\nlib/value: implement TypeSize for Value",
           "timestamp": "2025-10-09T17:03:09+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.444,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "767fd64976eec77645e52a392e7763020670bb6e",
+          "message": "Merge pull request #2685 from f1shl3gs/cli/launch/move_tracing_init_to_the_begining\n\ncli/launch: move tracing init to the beginning",
+          "timestamp": "2025-11-20T00:57:56+08:00",
+          "tree_id": "5619cd8e0f21c2ef541a4afa0653054da54b10b4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/767fd64976eec77645e52a392e7763020670bb6e"
+        },
+        "date": 1763572064919,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14983000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 632080,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.914,
             "unit": "ns/op"
           }
         ]
