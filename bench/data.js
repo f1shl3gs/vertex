@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1763571631373,
+  "lastUpdate": 1763571647923,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d07cf33e4564271419a052b038a36d6f3889a773",
-          "message": "Merge pull request #2579 from f1shl3gs/dependabot/cargo/windows-0.62.2\n\nchore(deps): bump windows from 0.62.1 to 0.62.2",
-          "timestamp": "2025-10-07T17:36:10+08:00",
-          "tree_id": "7c22d2ff37571a6b499c1b7bf951371542eba7c0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d07cf33e4564271419a052b038a36d6f3889a773"
-        },
-        "date": 1759829933066,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.396,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 179.51,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 655.82,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 696.73,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "cc284ceb13fc94f8b085c2a6fa91476754589c79",
           "message": "Merge pull request #2580 from f1shl3gs/sources/podman/init\n\nsources/podman: init",
           "timestamp": "2025-10-08T03:08:28+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 703.26,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "767fd64976eec77645e52a392e7763020670bb6e",
+          "message": "Merge pull request #2685 from f1shl3gs/cli/launch/move_tracing_init_to_the_begining\n\ncli/launch: move tracing init to the beginning",
+          "timestamp": "2025-11-20T00:57:56+08:00",
+          "tree_id": "5619cd8e0f21c2ef541a4afa0653054da54b10b4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/767fd64976eec77645e52a392e7763020670bb6e"
+        },
+        "date": 1763571625193,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.537,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 174.5,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 361.33,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 698.81,
             "unit": "ns/op"
           }
         ]
