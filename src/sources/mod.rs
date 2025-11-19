@@ -26,6 +26,8 @@ mod filestats;
 mod fluent;
 #[cfg(feature = "sources-generate")]
 mod generate;
+#[cfg(feature = "sources-gnmi")]
+mod gnmi;
 #[cfg(feature = "sources-grpc_check")]
 mod grpc_check;
 #[cfg(feature = "sources-haproxy")]
