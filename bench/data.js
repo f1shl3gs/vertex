@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1763641360762,
+  "lastUpdate": 1763641490227,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13212,40 +13212,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "52dc4ac13e3dbf3a8a4c336de9cf37b73a49c3c2",
-          "message": "Merge pull request #2585 from f1shl3gs/dependabot/cargo/regex-1.12.1\n\nchore(deps): bump regex from 1.11.3 to 1.12.1",
-          "timestamp": "2025-10-11T21:47:36+08:00",
-          "tree_id": "1c736d2c91351e4b7e9ad3d229a554fffab5a4d4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/52dc4ac13e3dbf3a8a4c336de9cf37b73a49c3c2"
-        },
-        "date": 1760191083978,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 551,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39596.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41651.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b3708b1c1303a402be77c1a1992c87f6d47b4cef",
+          "message": "Merge pull request #2687 from f1shl3gs/cargo/update\n\ncargo update",
+          "timestamp": "2025-11-20T20:13:05+08:00",
+          "tree_id": "8a2acddf4fd0825eb378448ec146296383b3f8eb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b3708b1c1303a402be77c1a1992c87f6d47b4cef"
+        },
+        "date": 1763641468440,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 603,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41641.6,
             "unit": "KiB"
           }
         ]
