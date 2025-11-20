@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1763572164971,
+  "lastUpdate": 1763640708875,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2823b63de668ed2fc5a61b885a659ea535b0c8ab",
-          "message": "Merge pull request #2584 from f1shl3gs/deps/update_humanize\n\ndep: update humanize to latest version",
-          "timestamp": "2025-10-11T21:36:48+08:00",
-          "tree_id": "448fc7d98d98ec7ce8d3ed94b6b582b2164134a0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2823b63de668ed2fc5a61b885a659ea535b0c8ab"
-        },
-        "date": 1760190423784,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 542,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39597.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "52dc4ac13e3dbf3a8a4c336de9cf37b73a49c3c2",
           "message": "Merge pull request #2585 from f1shl3gs/dependabot/cargo/regex-1.12.1\n\nchore(deps): bump regex from 1.11.3 to 1.12.1",
           "timestamp": "2025-10-11T21:47:36+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 585,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41651.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f9787c5ee9b1c341ffffd61c69637f9ea3ca5f12",
+          "message": "Merge pull request #2686 from f1shl3gs/examples/rename_zpages_to_tap\n\nexample: rename zpages.yaml to tap.yaml",
+          "timestamp": "2025-11-20T20:00:20+08:00",
+          "tree_id": "a18f2b1bb741d059d7c0f512f20d74942bdc6489",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f9787c5ee9b1c341ffffd61c69637f9ea3ca5f12"
+        },
+        "date": 1763640686435,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 584,
             "unit": "s"
           },
           {
