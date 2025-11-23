@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1763726208585,
+  "lastUpdate": 1763897665121,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2823b63de668ed2fc5a61b885a659ea535b0c8ab",
-          "message": "Merge pull request #2584 from f1shl3gs/deps/update_humanize\n\ndep: update humanize to latest version",
-          "timestamp": "2025-10-11T21:36:48+08:00",
-          "tree_id": "448fc7d98d98ec7ce8d3ed94b6b582b2164134a0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2823b63de668ed2fc5a61b885a659ea535b0c8ab"
-        },
-        "date": 1760189933383,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 496380,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 500280,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "49397a542fdeaee71be5438e0894fbf839f7c503",
+          "message": "Merge pull request #2690 from f1shl3gs/dependabot/cargo/syn-2.0.111\n\nchore(deps): bump syn from 2.0.110 to 2.0.111",
+          "timestamp": "2025-11-23T19:32:04+08:00",
+          "tree_id": "19ca2bf084076b7e56cb14e489922dc696acbc79",
+          "url": "https://github.com/f1shl3gs/vertex/commit/49397a542fdeaee71be5438e0894fbf839f7c503"
+        },
+        "date": 1763897643415,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 529290,
             "unit": "ns/op"
           }
         ]
