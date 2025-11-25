@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764107130748,
+  "lastUpdate": 1764107161715,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20516,50 +20516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "52dc4ac13e3dbf3a8a4c336de9cf37b73a49c3c2",
-          "message": "Merge pull request #2585 from f1shl3gs/dependabot/cargo/regex-1.12.1\n\nchore(deps): bump regex from 1.11.3 to 1.12.1",
-          "timestamp": "2025-10-11T21:47:36+08:00",
-          "tree_id": "1c736d2c91351e4b7e9ad3d229a554fffab5a4d4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/52dc4ac13e3dbf3a8a4c336de9cf37b73a49c3c2"
-        },
-        "date": 1760190609329,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.203,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 171.39,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 340.54,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 684.85,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 672.43,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2fedf1a478c282d717378042c9d0703155799459",
+          "message": "Merge pull request #2692 from f1shl3gs/sources/netflow/simplify\n\nsources/netflow: simplify log building process",
+          "timestamp": "2025-11-26T05:43:10+08:00",
+          "tree_id": "79d03fa85d152ab3f7d395a9198ecd9b4307e19a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2fedf1a478c282d717378042c9d0703155799459"
+        },
+        "date": 1764107139910,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.658,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 174.23,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 334.08,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 690.54,
             "unit": "ns/op"
           }
         ]
