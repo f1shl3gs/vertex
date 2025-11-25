@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764057787575,
+  "lastUpdate": 1764057807607,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2823b63de668ed2fc5a61b885a659ea535b0c8ab",
-          "message": "Merge pull request #2584 from f1shl3gs/deps/update_humanize\n\ndep: update humanize to latest version",
-          "timestamp": "2025-10-11T21:36:48+08:00",
-          "tree_id": "448fc7d98d98ec7ce8d3ed94b6b582b2164134a0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2823b63de668ed2fc5a61b885a659ea535b0c8ab"
-        },
-        "date": 1760189964248,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.311,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 175,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 338.51,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 670.94,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "52dc4ac13e3dbf3a8a4c336de9cf37b73a49c3c2",
           "message": "Merge pull request #2585 from f1shl3gs/dependabot/cargo/regex-1.12.1\n\nchore(deps): bump regex from 1.11.3 to 1.12.1",
           "timestamp": "2025-10-11T21:47:36+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 692.19,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b74ce119323993723d868b9153d749d42e7280b7",
+          "message": "Merge pull request #2691 from f1shl3gs/dependabot/cargo/http-1.4.0\n\nchore(deps): bump http from 1.3.1 to 1.4.0",
+          "timestamp": "2025-11-25T16:00:39+08:00",
+          "tree_id": "edc06350a8a89b877581ecd0e9dd1daa6390ad1b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b74ce119323993723d868b9153d749d42e7280b7"
+        },
+        "date": 1764057785877,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.627,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 175.83,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 328.34,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 672.43,
             "unit": "ns/op"
           }
         ]
