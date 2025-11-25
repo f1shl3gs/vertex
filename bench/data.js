@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764057852924,
+  "lastUpdate": 1764058240393,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "52dc4ac13e3dbf3a8a4c336de9cf37b73a49c3c2",
-          "message": "Merge pull request #2585 from f1shl3gs/dependabot/cargo/regex-1.12.1\n\nchore(deps): bump regex from 1.11.3 to 1.12.1",
-          "timestamp": "2025-10-11T21:47:36+08:00",
-          "tree_id": "1c736d2c91351e4b7e9ad3d229a554fffab5a4d4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/52dc4ac13e3dbf3a8a4c336de9cf37b73a49c3c2"
-        },
-        "date": 1760191005060,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14940000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 647260,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.53,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.871,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b74ce119323993723d868b9153d749d42e7280b7",
+          "message": "Merge pull request #2691 from f1shl3gs/dependabot/cargo/http-1.4.0\n\nchore(deps): bump http from 1.3.1 to 1.4.0",
+          "timestamp": "2025-11-25T16:00:39+08:00",
+          "tree_id": "edc06350a8a89b877581ecd0e9dd1daa6390ad1b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b74ce119323993723d868b9153d749d42e7280b7"
+        },
+        "date": 1764058218246,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15662000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 651480,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.34,
             "unit": "ns/op"
           }
         ]
