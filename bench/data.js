@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764107126443,
+  "lastUpdate": 1764107130748,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "distinct": true,
-          "id": "3188a05dc38a0a4b962cb856da8a4361cc668f6d",
-          "message": "switch serde to serde_core",
-          "timestamp": "2025-10-12T21:21:59+08:00",
-          "tree_id": "00034d5b3844d0b77d18223a7c792dd44eaa4edf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3188a05dc38a0a4b962cb856da8a4361cc668f6d"
-        },
-        "date": 1760275456200,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.408,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 95.803,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 175.59,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 181.7,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2fedf1a478c282d717378042c9d0703155799459",
+          "message": "Merge pull request #2692 from f1shl3gs/sources/netflow/simplify\n\nsources/netflow: simplify log building process",
+          "timestamp": "2025-11-26T05:43:10+08:00",
+          "tree_id": "79d03fa85d152ab3f7d395a9198ecd9b4307e19a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2fedf1a478c282d717378042c9d0703155799459"
+        },
+        "date": 1764107109086,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.911,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 98.377,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 186.21,
             "unit": "ns/op"
           }
         ]
