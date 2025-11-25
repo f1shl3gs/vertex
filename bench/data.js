@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764107197036,
+  "lastUpdate": 1764107584304,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16614,45 +16614,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "distinct": true,
-          "id": "3188a05dc38a0a4b962cb856da8a4361cc668f6d",
-          "message": "switch serde to serde_core",
-          "timestamp": "2025-10-12T21:21:59+08:00",
-          "tree_id": "00034d5b3844d0b77d18223a7c792dd44eaa4edf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3188a05dc38a0a4b962cb856da8a4361cc668f6d"
-        },
-        "date": 1760275908179,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 15168000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 619520,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.446,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "26081140+f1shl3gs@users.noreply.github.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.34,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2fedf1a478c282d717378042c9d0703155799459",
+          "message": "Merge pull request #2692 from f1shl3gs/sources/netflow/simplify\n\nsources/netflow: simplify log building process",
+          "timestamp": "2025-11-26T05:43:10+08:00",
+          "tree_id": "79d03fa85d152ab3f7d395a9198ecd9b4307e19a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2fedf1a478c282d717378042c9d0703155799459"
+        },
+        "date": 1764107556806,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 17836000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 411420,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 48.158,
             "unit": "ns/op"
           }
         ]
