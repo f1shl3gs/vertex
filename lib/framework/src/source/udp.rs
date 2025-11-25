@@ -7,7 +7,9 @@ use crate::config::SourceContext;
 use crate::{Source, udp};
 
 pub trait UdpSource: Sized + Send + Sync + 'static {
-    fn build_events(&self, peer: SocketAddr, data: &[u8]) -> Result<Events, crate::Error>;
+    type Error: std::error::Error + Send + Sync + 'static;
+
+    fn build_events(&self, peer: SocketAddr, data: &[u8]) -> Result<Events, Self::Error>;
 
     fn run(
         self,
@@ -47,9 +49,7 @@ pub trait UdpSource: Sized + Send + Sync + 'static {
             let mut buf = [0u8; u16::MAX as usize];
             loop {
                 let (size, peer) = tokio::select! {
-                    _ = &mut shutdown => {
-                        break
-                    },
+                    _ = &mut shutdown => break,
 
                     result = socket.recv_from(&mut buf) => match result {
                         Ok(pair) => pair,
