@@ -1,4 +1,6 @@
 use std::io::{BufRead, Cursor};
+use std::net::Ipv6Addr;
+use std::string::FromUtf8Error;
 
 use bytes::Buf;
 
@@ -14,6 +16,9 @@ pub enum Error {
     #[error("datagram is too short")]
     DatagramTooShort,
 
+    #[error("incompatible version {0}")]
+    IncompatibleVersion(u16),
+
     #[error("no field in template")]
     NoFieldInTemplate,
 
@@ -25,6 +30,9 @@ pub enum Error {
 
     #[error("unknown flow set id {0}")]
     UnknownFlowSetID(u16),
+
+    #[error(transparent)]
+    Utf8(FromUtf8Error),
 }
 
 impl From<std::io::Error> for Error {
@@ -38,6 +46,54 @@ pub struct DataField<'a> {
     pub typ: u16,
     // https://datatracker.ietf.org/doc/html/rfc7011#section-6.1
     pub data: &'a [u8],
+}
+
+impl DataField<'_> {
+    pub fn to_u16(&self) -> Result<u16, Error> {
+        let slice: [u8; 2] = self.data.try_into().map_err(|_| Error::DatagramTooShort)?;
+
+        Ok(u16::from_be_bytes(slice))
+    }
+
+    pub fn to_u32(&self) -> Result<u32, Error> {
+        let slice: [u8; 4] = self.data.try_into().map_err(|_| Error::DatagramTooShort)?;
+
+        Ok(u32::from_be_bytes(slice))
+    }
+
+    pub fn to_u64(&self) -> Result<u64, Error> {
+        let slice: [u8; 8] = self.data.try_into().map_err(|_| Error::DatagramTooShort)?;
+
+        Ok(u64::from_be_bytes(slice))
+    }
+
+    pub fn to_i32(&self) -> Result<i32, Error> {
+        let slice: [u8; 4] = self.data.try_into().map_err(|_| Error::DatagramTooShort)?;
+
+        Ok(i32::from_be_bytes(slice))
+    }
+
+    pub fn to_i64(&self) -> Result<i64, Error> {
+        let slice: [u8; 8] = self.data.try_into().map_err(|_| Error::DatagramTooShort)?;
+
+        Ok(i64::from_be_bytes(slice))
+    }
+
+    pub fn to_f64(&self) -> Result<f64, Error> {
+        let slice: [u8; 8] = self.data.try_into().map_err(|_| Error::DatagramTooShort)?;
+
+        Ok(f64::from_be_bytes(slice))
+    }
+
+    pub fn ipv6(&self) -> Result<Ipv6Addr, Error> {
+        let slice: [u8; 16] = self.data.try_into().map_err(|_| Error::DatagramTooShort)?;
+
+        Ok(Ipv6Addr::from(slice))
+    }
+
+    pub fn string(&self) -> Result<String, Error> {
+        String::from_utf8(self.data.into()).map_err(Error::Utf8)
+    }
 }
 
 pub fn decode_template_records(

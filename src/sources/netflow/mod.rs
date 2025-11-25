@@ -4,17 +4,16 @@ mod ipfix;
 mod netflow;
 mod template;
 
-use std::net::Ipv6Addr;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::ops::DerefMut;
 use std::sync::Arc;
 
 use configurable::configurable_component;
-use decode::DataField;
+use decode::{DataField, Error};
 use event::{Events, LogRecord};
+use framework::Source;
 use framework::config::{OutputType, Resource, SourceConfig, SourceContext};
 use framework::source::udp::UdpSource;
-use framework::{Error, Source};
 use ipfix::{DataRecord, FlowSet, IpFix, OptionsDataRecord};
 use netflow::NetFlow;
 use parking_lot::RwLock;
@@ -66,9 +65,14 @@ impl<T> UdpSource for NetFlowSource<T>
 where
     T: TemplateSystem + Send + Sync + 'static,
 {
-    fn build_events(&self, peer: SocketAddr, data: &[u8]) -> Result<Events, Error> {
-        let version = u16::from_be_bytes(data[0..2].try_into()?);
+    type Error = Error;
 
+    fn build_events(&self, peer: SocketAddr, data: &[u8]) -> Result<Events, Error> {
+        if data.len() < 2 {
+            return Err(Error::DatagramTooShort);
+        }
+
+        let version = u16::from_be_bytes(data[..2].try_into().unwrap());
         let value = match version {
             10 => {
                 // IPFIX
@@ -86,17 +90,17 @@ where
                     NetFlow::decode(data, templates.deref_mut())?
                 };
 
-                convert_netflow(netflow)
+                convert_netflow(netflow)?
             }
-            _ => {
+            version => {
                 warn!(
                     message = "invalid version of datagram",
                     %peer,
-                    %version,
+                    version,
                     internal_log_rate_secs = 30
                 );
 
-                return Err(Error::from("unknown version"));
+                return Err(Error::IncompatibleVersion(version));
             }
         };
 
@@ -110,7 +114,7 @@ where
     }
 }
 
-fn convert_netflow(netflow: NetFlow) -> Value {
+fn convert_netflow(netflow: NetFlow) -> Result<Value, Error> {
     let mut value = Value::Object(Default::default());
 
     value.insert("version", netflow.version);
@@ -155,7 +159,7 @@ fn convert_netflow(netflow: NetFlow) -> Value {
 
     value.insert("flow_sets", flow_sets);
 
-    value
+    Ok(value)
 }
 
 fn convert_ipfix(packet: IpFix) -> Value {
@@ -246,22 +250,13 @@ fn convert_options_data_records(records: &[OptionsDataRecord]) -> Vec<Value> {
 fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
     match field.typ {
         1 => {
-            value.insert(
-                "octetDeltaCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("octetDeltaCount", field.to_u64()?);
         }
         2 => {
-            value.insert(
-                "packetDeltaCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("packetDeltaCount", field.to_u64()?);
         }
         3 => {
-            value.insert(
-                "deltaFlowCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("deltaFlowCount", field.to_u64()?);
         }
         4 => {
             value.insert("protocolIdentifier", field.data[0]);
@@ -270,16 +265,10 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("ipClassOfService", field.data[0]);
         }
         6 => {
-            value.insert(
-                "tcpControlBits",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("tcpControlBits", field.to_u16()?);
         }
         7 => {
-            value.insert(
-                "sourceTransportPort",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("sourceTransportPort", field.to_u16()?);
         }
         8 => {
             value.insert(
@@ -294,16 +283,10 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("sourceIPv4PrefixLength", field.data[0]);
         }
         10 => {
-            value.insert(
-                "ingressInterface",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("ingressInterface", field.to_u32()?);
         }
         11 => {
-            value.insert(
-                "destinationTransportPort",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("destinationTransportPort", field.to_u16()?);
         }
         12 => {
             value.insert(
@@ -318,10 +301,7 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("destinationIPv4PrefixLength", field.data[0]);
         }
         14 => {
-            value.insert(
-                "egressInterface",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("egressInterface", field.to_u32()?);
         }
         15 => {
             value.insert(
@@ -333,16 +313,10 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             );
         }
         16 => {
-            value.insert(
-                "bgpSourceAsNumber",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("bgpSourceAsNumber", field.to_u32()?);
         }
         17 => {
-            value.insert(
-                "bgpDestinationAsNumber",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("bgpDestinationAsNumber", field.to_u32()?);
         }
         18 => {
             value.insert(
@@ -354,64 +328,34 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             );
         }
         19 => {
-            value.insert(
-                "postMCastPacketDeltaCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("postMCastPacketDeltaCount", field.to_u64()?);
         }
         20 => {
-            value.insert(
-                "postMCastOctetDeltaCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("postMCastOctetDeltaCount", field.to_u64()?);
         }
         21 => {
-            value.insert(
-                "flowEndSysUpTime",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowEndSysUpTime", field.to_u32()?);
         }
         22 => {
-            value.insert(
-                "flowStartSysUpTime",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowStartSysUpTime", field.to_u32()?);
         }
         23 => {
-            value.insert(
-                "postOctetDeltaCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("postOctetDeltaCount", field.to_u64()?);
         }
         24 => {
-            value.insert(
-                "postPacketDeltaCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("postPacketDeltaCount", field.to_u64()?);
         }
         25 => {
-            value.insert(
-                "minimumIpTotalLength",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("minimumIpTotalLength", field.to_u64()?);
         }
         26 => {
-            value.insert(
-                "maximumIpTotalLength",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("maximumIpTotalLength", field.to_u64()?);
         }
         27 => {
-            value.insert(
-                "sourceIPv6Address",
-                Ipv6Addr::from(TryInto::<[u8; 16]>::try_into(field.data)?).to_string(),
-            );
+            value.insert("sourceIPv6Address", field.ipv6()?.to_string());
         }
         28 => {
-            value.insert(
-                "destinationIPv6Address",
-                Ipv6Addr::from(TryInto::<[u8; 16]>::try_into(field.data)?).to_string(),
-            );
+            value.insert("destinationIPv6Address", field.ipv6()?.to_string());
         }
         29 => {
             value.insert("sourceIPv6PrefixLength", field.data[0]);
@@ -420,40 +364,25 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("destinationIPv6PrefixLength", field.data[0]);
         }
         31 => {
-            value.insert(
-                "flowLabelIPv6",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowLabelIPv6", field.to_u32()?);
         }
         32 => {
-            value.insert(
-                "icmpTypeCodeIPv4",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("icmpTypeCodeIPv4", field.to_u16()?);
         }
         33 => {
             value.insert("igmpType", field.data[0]);
         }
         34 => {
-            value.insert(
-                "samplingInterval",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("samplingInterval", field.to_u32()?);
         }
         35 => {
             value.insert("samplingAlgorithm", field.data[0]);
         }
         36 => {
-            value.insert(
-                "flowActiveTimeout",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowActiveTimeout", field.to_u16()?);
         }
         37 => {
-            value.insert(
-                "flowIdleTimeout",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowIdleTimeout", field.to_u16()?);
         }
         38 => {
             value.insert("engineType", field.data[0]);
@@ -462,22 +391,13 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("engineId", field.data[0]);
         }
         40 => {
-            value.insert(
-                "exportedOctetTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("exportedOctetTotalCount", field.to_u64()?);
         }
         41 => {
-            value.insert(
-                "exportedMessageTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("exportedMessageTotalCount", field.to_u64()?);
         }
         42 => {
-            value.insert(
-                "exportedFlowRecordTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("exportedFlowRecordTotalCount", field.to_u64()?);
         }
         43 => {
             value.insert(
@@ -525,10 +445,7 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("samplerMode", field.data[0]);
         }
         50 => {
-            value.insert(
-                "samplerRandomInterval",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("samplerRandomInterval", field.to_u32()?);
         }
         51 => {
             value.insert("classId", field.data[0]);
@@ -540,10 +457,7 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("maximumTTL", field.data[0]);
         }
         54 => {
-            value.insert(
-                "fragmentIdentification",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("fragmentIdentification", field.to_u32()?);
         }
         55 => {
             value.insert("postIpClassOfService", field.data[0]);
@@ -577,16 +491,10 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             );
         }
         58 => {
-            value.insert(
-                "vlanId",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("vlanId", field.to_u16()?);
         }
         59 => {
-            value.insert(
-                "postVlanId",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("postVlanId", field.to_u16()?);
         }
         60 => {
             value.insert("ipVersion", field.data[0]);
@@ -595,22 +503,13 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("flowDirection", field.data[0]);
         }
         62 => {
-            value.insert(
-                "ipNextHopIPv6Address",
-                Ipv6Addr::from(TryInto::<[u8; 16]>::try_into(field.data)?).to_string(),
-            );
+            value.insert("ipNextHopIPv6Address", field.ipv6()?.to_string());
         }
         63 => {
-            value.insert(
-                "bgpNextHopIPv6Address",
-                Ipv6Addr::from(TryInto::<[u8; 16]>::try_into(field.data)?).to_string(),
-            );
+            value.insert("bgpNextHopIPv6Address", field.ipv6()?.to_string());
         }
         64 => {
-            value.insert(
-                "ipv6ExtensionHeaders",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("ipv6ExtensionHeaders", field.to_u32()?);
         }
         70 => {
             value.insert("mplsTopLabelStackSection", field.data);
@@ -671,46 +570,28 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             );
         }
         82 => {
-            value.insert("interfaceName", String::from_utf8(field.data.into())?);
+            value.insert("interfaceName", field.string()?);
         }
         83 => {
-            value.insert(
-                "interfaceDescription",
-                String::from_utf8(field.data.into())?,
-            );
+            value.insert("interfaceDescription", field.string()?);
         }
         84 => {
-            value.insert("samplerName", String::from_utf8(field.data.into())?);
+            value.insert("samplerName", field.string()?);
         }
         85 => {
-            value.insert(
-                "octetTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("octetTotalCount", field.to_u64()?);
         }
         86 => {
-            value.insert(
-                "packetTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("packetTotalCount", field.to_u64()?);
         }
         87 => {
-            value.insert(
-                "flagsAndSamplerId",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flagsAndSamplerId", field.to_u32()?);
         }
         88 => {
-            value.insert(
-                "fragmentOffset",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("fragmentOffset", field.to_u16()?);
         }
         89 => {
-            value.insert(
-                "forwardingStatus",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("forwardingStatus", field.to_u32()?);
         }
         90 => {
             value.insert("mplsVpnRouteDistinguisher", field.data);
@@ -719,70 +600,46 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("mplsTopLabelPrefixLength", field.data[0]);
         }
         92 => {
-            value.insert(
-                "srcTrafficIndex",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("srcTrafficIndex", field.to_u32()?);
         }
         93 => {
-            value.insert(
-                "dstTrafficIndex",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("dstTrafficIndex", field.to_u32()?);
         }
         94 => {
-            value.insert(
-                "applicationDescription",
-                String::from_utf8(field.data.into())?,
-            );
+            value.insert("applicationDescription", field.string()?);
         }
         95 => {
             value.insert("applicationId", field.data);
         }
         96 => {
-            value.insert("applicationName", String::from_utf8(field.data.into())?);
+            value.insert("applicationName", field.string()?);
         }
         98 => {
             value.insert("postIpDiffServCodePoint", field.data[0]);
         }
         99 => {
-            value.insert(
-                "multicastReplicationFactor",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("multicastReplicationFactor", field.to_u32()?);
         }
         100 => {
-            value.insert("className", String::from_utf8(field.data.into())?);
+            value.insert("className", field.string()?);
         }
         101 => {
             value.insert("classificationEngineId", field.data[0]);
         }
         102 => {
-            value.insert(
-                "layer2packetSectionOffset",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("layer2packetSectionOffset", field.to_u16()?);
         }
         103 => {
-            value.insert(
-                "layer2packetSectionSize",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("layer2packetSectionSize", field.to_u16()?);
         }
         104 => {
             value.insert("layer2packetSectionData", field.data);
         }
         128 => {
-            value.insert(
-                "bgpNextAdjacentAsNumber",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("bgpNextAdjacentAsNumber", field.to_u32()?);
         }
         129 => {
-            value.insert(
-                "bgpPrevAdjacentAsNumber",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("bgpPrevAdjacentAsNumber", field.to_u32()?);
         }
         130 => {
             value.insert(
@@ -794,265 +651,139 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             );
         }
         131 => {
-            value.insert(
-                "exporterIPv6Address",
-                Ipv6Addr::from(TryInto::<[u8; 16]>::try_into(field.data)?).to_string(),
-            );
+            value.insert("exporterIPv6Address", field.ipv6()?.to_string());
         }
         132 => {
-            value.insert(
-                "droppedOctetDeltaCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("droppedOctetDeltaCount", field.to_u64()?);
         }
         133 => {
-            value.insert(
-                "droppedPacketDeltaCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("droppedPacketDeltaCount", field.to_u64()?);
         }
         134 => {
-            value.insert(
-                "droppedOctetTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("droppedOctetTotalCount", field.to_u64()?);
         }
         135 => {
-            value.insert(
-                "droppedPacketTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("droppedPacketTotalCount", field.to_u64()?);
         }
         136 => {
             value.insert("flowEndReason", field.data[0]);
         }
         137 => {
-            value.insert(
-                "commonPropertiesId",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("commonPropertiesId", field.to_u64()?);
         }
         138 => {
-            value.insert(
-                "observationPointId",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("observationPointId", field.to_u64()?);
         }
         139 => {
-            value.insert(
-                "icmpTypeCodeIPv6",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("icmpTypeCodeIPv6", field.to_u16()?);
         }
         140 => {
-            value.insert(
-                "mplsTopLabelIPv6Address",
-                Ipv6Addr::from(TryInto::<[u8; 16]>::try_into(field.data)?).to_string(),
-            );
+            value.insert("mplsTopLabelIPv6Address", field.ipv6()?.to_string());
         }
         141 => {
-            value.insert(
-                "lineCardId",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("lineCardId", field.to_u32()?);
         }
         142 => {
-            value.insert(
-                "portId",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("portId", field.to_u32()?);
         }
         143 => {
-            value.insert(
-                "meteringProcessId",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("meteringProcessId", field.to_u32()?);
         }
         144 => {
-            value.insert(
-                "exportingProcessId",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("exportingProcessId", field.to_u32()?);
         }
         145 => {
-            value.insert(
-                "templateId",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("templateId", field.to_u16()?);
         }
         146 => {
             value.insert("wlanChannelId", field.data[0]);
         }
         147 => {
-            value.insert("wlanSSID", String::from_utf8(field.data.into())?);
+            value.insert("wlanSSID", field.string()?);
         }
         148 => {
-            value.insert(
-                "flowId",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowId", field.to_u64()?);
         }
         149 => {
-            value.insert(
-                "observationDomainId",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("observationDomainId", field.to_u32()?);
         }
         150 => {
-            value.insert(
-                "flowStartSeconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowStartSeconds", field.to_i32()?);
         }
         151 => {
-            value.insert(
-                "flowEndSeconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowEndSeconds", field.to_i32()?);
         }
         152 => {
-            value.insert(
-                "flowStartMilliseconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowStartMilliseconds", field.to_i32()?);
         }
         153 => {
-            value.insert(
-                "flowEndMilliseconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowEndMilliseconds", field.to_i32()?);
         }
         154 => {
-            value.insert(
-                "flowStartMicroseconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowStartMicroseconds", field.to_i32()?);
         }
         155 => {
-            value.insert(
-                "flowEndMicroseconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowEndMicroseconds", field.to_i32()?);
         }
         156 => {
-            value.insert(
-                "flowStartNanoseconds",
-                i64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowStartNanoseconds", field.to_i64()?);
         }
         157 => {
-            value.insert(
-                "flowEndNanoseconds",
-                i64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowEndNanoseconds", field.to_i64()?);
         }
         158 => {
-            value.insert(
-                "flowStartDeltaMicroseconds",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowStartDeltaMicroseconds", field.to_u32()?);
         }
         159 => {
-            value.insert(
-                "flowEndDeltaMicroseconds",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowEndDeltaMicroseconds", field.to_u32()?);
         }
         160 => {
-            value.insert(
-                "systemInitTimeMilliseconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("systemInitTimeMilliseconds", field.to_i32()?);
         }
         161 => {
-            value.insert(
-                "flowDurationMilliseconds",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowDurationMilliseconds", field.to_u32()?);
         }
         162 => {
-            value.insert(
-                "flowDurationMicroseconds",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowDurationMicroseconds", field.to_u32()?);
         }
         163 => {
-            value.insert(
-                "observedFlowTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("observedFlowTotalCount", field.to_u64()?);
         }
         164 => {
-            value.insert(
-                "ignoredPacketTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("ignoredPacketTotalCount", field.to_u64()?);
         }
         165 => {
-            value.insert(
-                "ignoredOctetTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("ignoredOctetTotalCount", field.to_u64()?);
         }
         166 => {
-            value.insert(
-                "notSentFlowTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("notSentFlowTotalCount", field.to_u64()?);
         }
         167 => {
-            value.insert(
-                "notSentPacketTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("notSentPacketTotalCount", field.to_u64()?);
         }
         168 => {
-            value.insert(
-                "notSentOctetTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("notSentOctetTotalCount", field.to_u64()?);
         }
         169 => {
-            value.insert(
-                "destinationIPv6Prefix",
-                Ipv6Addr::from(TryInto::<[u8; 16]>::try_into(field.data)?).to_string(),
-            );
+            value.insert("destinationIPv6Prefix", field.ipv6()?.to_string());
         }
         170 => {
-            value.insert(
-                "sourceIPv6Prefix",
-                Ipv6Addr::from(TryInto::<[u8; 16]>::try_into(field.data)?).to_string(),
-            );
+            value.insert("sourceIPv6Prefix", field.ipv6()?.to_string());
         }
         171 => {
-            value.insert(
-                "postOctetTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("postOctetTotalCount", field.to_u64()?);
         }
         172 => {
-            value.insert(
-                "postPacketTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("postPacketTotalCount", field.to_u64()?);
         }
         173 => {
-            value.insert(
-                "flowKeyIndicator",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowKeyIndicator", field.to_u64()?);
         }
         174 => {
-            value.insert(
-                "postMCastPacketTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("postMCastPacketTotalCount", field.to_u64()?);
         }
         175 => {
-            value.insert(
-                "postMCastOctetTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("postMCastOctetTotalCount", field.to_u64()?);
         }
         176 => {
             value.insert("icmpTypeIPv4", field.data[0]);
@@ -1067,52 +798,28 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("icmpCodeIPv6", field.data[0]);
         }
         180 => {
-            value.insert(
-                "udpSourcePort",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("udpSourcePort", field.to_u16()?);
         }
         181 => {
-            value.insert(
-                "udpDestinationPort",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("udpDestinationPort", field.to_u16()?);
         }
         182 => {
-            value.insert(
-                "tcpSourcePort",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("tcpSourcePort", field.to_u16()?);
         }
         183 => {
-            value.insert(
-                "tcpDestinationPort",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("tcpDestinationPort", field.to_u16()?);
         }
         184 => {
-            value.insert(
-                "tcpSequenceNumber",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("tcpSequenceNumber", field.to_u32()?);
         }
         185 => {
-            value.insert(
-                "tcpAcknowledgementNumber",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("tcpAcknowledgementNumber", field.to_u32()?);
         }
         186 => {
-            value.insert(
-                "tcpWindowSize",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("tcpWindowSize", field.to_u16()?);
         }
         187 => {
-            value.insert(
-                "tcpUrgentPointer",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("tcpUrgentPointer", field.to_u16()?);
         }
         188 => {
             value.insert("tcpHeaderLength", field.data[0]);
@@ -1121,16 +828,10 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("ipHeaderLength", field.data[0]);
         }
         190 => {
-            value.insert(
-                "totalLengthIPv4",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("totalLengthIPv4", field.to_u16()?);
         }
         191 => {
-            value.insert(
-                "payloadLengthIPv6",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("payloadLengthIPv6", field.to_u16()?);
         }
         192 => {
             value.insert("ipTTL", field.data[0]);
@@ -1139,10 +840,7 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("nextHeaderIPv6", field.data[0]);
         }
         194 => {
-            value.insert(
-                "mplsPayloadLength",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("mplsPayloadLength", field.to_u32()?);
         }
         195 => {
             value.insert("ipDiffServCodePoint", field.data[0]);
@@ -1154,46 +852,28 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("fragmentFlags", field.data[0]);
         }
         198 => {
-            value.insert(
-                "octetDeltaSumOfSquares",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("octetDeltaSumOfSquares", field.to_u64()?);
         }
         199 => {
-            value.insert(
-                "octetTotalSumOfSquares",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("octetTotalSumOfSquares", field.to_u64()?);
         }
         200 => {
             value.insert("mplsTopLabelTTL", field.data[0]);
         }
         201 => {
-            value.insert(
-                "mplsLabelStackLength",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("mplsLabelStackLength", field.to_u32()?);
         }
         202 => {
-            value.insert(
-                "mplsLabelStackDepth",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("mplsLabelStackDepth", field.to_u32()?);
         }
         203 => {
             value.insert("mplsTopLabelExp", field.data[0]);
         }
         204 => {
-            value.insert(
-                "ipPayloadLength",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("ipPayloadLength", field.to_u32()?);
         }
         205 => {
-            value.insert(
-                "udpMessageLength",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("udpMessageLength", field.to_u16()?);
         }
         206 => {
             value.insert("isMulticast", field.data[0]);
@@ -1202,16 +882,10 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("ipv4IHL", field.data[0]);
         }
         208 => {
-            value.insert(
-                "ipv4Options",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("ipv4Options", field.to_u32()?);
         }
         209 => {
-            value.insert(
-                "tcpOptions",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("tcpOptions", field.to_u64()?);
         }
         210 => {
             value.insert("paddingOctets", field.data);
@@ -1226,16 +900,10 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             );
         }
         212 => {
-            value.insert(
-                "collectorIPv6Address",
-                Ipv6Addr::from(TryInto::<[u8; 16]>::try_into(field.data)?).to_string(),
-            );
+            value.insert("collectorIPv6Address", field.ipv6()?.to_string());
         }
         213 => {
-            value.insert(
-                "exportInterface",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("exportInterface", field.to_u32()?);
         }
         214 => {
             value.insert("exportProtocolVersion", field.data[0]);
@@ -1244,58 +912,31 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("exportTransportProtocol", field.data[0]);
         }
         216 => {
-            value.insert(
-                "collectorTransportPort",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("collectorTransportPort", field.to_u16()?);
         }
         217 => {
-            value.insert(
-                "exporterTransportPort",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("exporterTransportPort", field.to_u16()?);
         }
         218 => {
-            value.insert(
-                "tcpSynTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("tcpSynTotalCount", field.to_u64()?);
         }
         219 => {
-            value.insert(
-                "tcpFinTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("tcpFinTotalCount", field.to_u64()?);
         }
         220 => {
-            value.insert(
-                "tcpRstTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("tcpRstTotalCount", field.to_u64()?);
         }
         221 => {
-            value.insert(
-                "tcpPshTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("tcpPshTotalCount", field.to_u64()?);
         }
         222 => {
-            value.insert(
-                "tcpAckTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("tcpAckTotalCount", field.to_u64()?);
         }
         223 => {
-            value.insert(
-                "tcpUrgTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("tcpUrgTotalCount", field.to_u64()?);
         }
         224 => {
-            value.insert(
-                "ipTotalLength",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("ipTotalLength", field.to_u64()?);
         }
         225 => {
             value.insert(
@@ -1316,16 +957,10 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             );
         }
         227 => {
-            value.insert(
-                "postNAPTSourceTransportPort",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("postNAPTSourceTransportPort", field.to_u16()?);
         }
         228 => {
-            value.insert(
-                "postNAPTDestinationTransportPort",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("postNAPTDestinationTransportPort", field.to_u16()?);
         }
         229 => {
             value.insert("natOriginatingAddressRealm", field.data[0]);
@@ -1334,43 +969,28 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("natEvent", field.data[0]);
         }
         231 => {
-            value.insert(
-                "initiatorOctets",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("initiatorOctets", field.to_u64()?);
         }
         232 => {
-            value.insert(
-                "responderOctets",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("responderOctets", field.to_u64()?);
         }
         233 => {
             value.insert("firewallEvent", field.data[0]);
         }
         234 => {
-            value.insert(
-                "ingressVRFID",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("ingressVRFID", field.to_u32()?);
         }
         235 => {
-            value.insert(
-                "egressVRFID",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("egressVRFID", field.to_u32()?);
         }
         236 => {
-            value.insert("VRFname", String::from_utf8(field.data.into())?);
+            value.insert("VRFname", field.string()?);
         }
         237 => {
             value.insert("postMplsTopLabelExp", field.data[0]);
         }
         238 => {
-            value.insert(
-                "tcpWindowScale",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("tcpWindowScale", field.to_u16()?);
         }
         239 => {
             value.insert("biflowDirection", field.data[0]);
@@ -1379,115 +999,67 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("ethernetHeaderLength", field.data[0]);
         }
         241 => {
-            value.insert(
-                "ethernetPayloadLength",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("ethernetPayloadLength", field.to_u16()?);
         }
         242 => {
-            value.insert(
-                "ethernetTotalLength",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("ethernetTotalLength", field.to_u16()?);
         }
         243 => {
-            value.insert(
-                "dot1qVlanId",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("dot1qVlanId", field.to_u16()?);
         }
         244 => {
             value.insert("dot1qPriority", field.data[0]);
         }
         245 => {
-            value.insert(
-                "dot1qCustomerVlanId",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("dot1qCustomerVlanId", field.to_u16()?);
         }
         246 => {
             value.insert("dot1qCustomerPriority", field.data[0]);
         }
         247 => {
-            value.insert("metroEvcId", String::from_utf8(field.data.into())?);
+            value.insert("metroEvcId", field.string()?);
         }
         248 => {
             value.insert("metroEvcType", field.data[0]);
         }
         249 => {
-            value.insert(
-                "pseudoWireId",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("pseudoWireId", field.to_u32()?);
         }
         250 => {
-            value.insert(
-                "pseudoWireType",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("pseudoWireType", field.to_u16()?);
         }
         251 => {
-            value.insert(
-                "pseudoWireControlWord",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("pseudoWireControlWord", field.to_u32()?);
         }
         252 => {
-            value.insert(
-                "ingressPhysicalInterface",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("ingressPhysicalInterface", field.to_u32()?);
         }
         253 => {
-            value.insert(
-                "egressPhysicalInterface",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("egressPhysicalInterface", field.to_u32()?);
         }
         254 => {
-            value.insert(
-                "postDot1qVlanId",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("postDot1qVlanId", field.to_u16()?);
         }
         255 => {
-            value.insert(
-                "postDot1qCustomerVlanId",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("postDot1qCustomerVlanId", field.to_u16()?);
         }
         256 => {
-            value.insert(
-                "ethernetType",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("ethernetType", field.to_u16()?);
         }
         257 => {
             value.insert("postIpPrecedence", field.data[0]);
         }
         258 => {
-            value.insert(
-                "collectionTimeMilliseconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("collectionTimeMilliseconds", field.to_i32()?);
         }
         259 => {
-            value.insert(
-                "exportSctpStreamId",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("exportSctpStreamId", field.to_u16()?);
         }
         260 => {
-            value.insert(
-                "maxExportSeconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("maxExportSeconds", field.to_i32()?);
         }
         261 => {
-            value.insert(
-                "maxFlowEndSeconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("maxFlowEndSeconds", field.to_i32()?);
         }
         262 => {
             value.insert("messageMD5Checksum", field.data);
@@ -1496,16 +1068,10 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("messageScope", field.data[0]);
         }
         264 => {
-            value.insert(
-                "minExportSeconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("minExportSeconds", field.to_i32()?);
         }
         265 => {
-            value.insert(
-                "minFlowStartSeconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("minFlowStartSeconds", field.to_i32()?);
         }
         266 => {
             value.insert("opaqueOctets", field.data);
@@ -1514,40 +1080,22 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("sessionScope", field.data[0]);
         }
         268 => {
-            value.insert(
-                "maxFlowEndMicroseconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("maxFlowEndMicroseconds", field.to_i32()?);
         }
         269 => {
-            value.insert(
-                "maxFlowEndMilliseconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("maxFlowEndMilliseconds", field.to_i32()?);
         }
         270 => {
-            value.insert(
-                "maxFlowEndNanoseconds",
-                i64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("maxFlowEndNanoseconds", field.to_i64()?);
         }
         271 => {
-            value.insert(
-                "minFlowStartMicroseconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("minFlowStartMicroseconds", field.to_i32()?);
         }
         272 => {
-            value.insert(
-                "minFlowStartMilliseconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("minFlowStartMilliseconds", field.to_i32()?);
         }
         273 => {
-            value.insert(
-                "minFlowStartNanoseconds",
-                i64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("minFlowStartNanoseconds", field.to_i64()?);
         }
         274 => {
             value.insert("collectorCertificate", field.data);
@@ -1562,178 +1110,100 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("observationPointType", field.data[0]);
         }
         278 => {
-            value.insert(
-                "newConnectionDeltaCount",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("newConnectionDeltaCount", field.to_u32()?);
         }
         279 => {
-            value.insert(
-                "connectionSumDurationSeconds",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("connectionSumDurationSeconds", field.to_u64()?);
         }
         280 => {
-            value.insert(
-                "connectionTransactionId",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("connectionTransactionId", field.to_u64()?);
         }
         281 => {
-            value.insert(
-                "postNATSourceIPv6Address",
-                Ipv6Addr::from(TryInto::<[u8; 16]>::try_into(field.data)?).to_string(),
-            );
+            value.insert("postNATSourceIPv6Address", field.ipv6()?.to_string());
         }
         282 => {
-            value.insert(
-                "postNATDestinationIPv6Address",
-                Ipv6Addr::from(TryInto::<[u8; 16]>::try_into(field.data)?).to_string(),
-            );
+            value.insert("postNATDestinationIPv6Address", field.ipv6()?.to_string());
         }
         283 => {
-            value.insert(
-                "natPoolId",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("natPoolId", field.to_u32()?);
         }
         284 => {
-            value.insert("natPoolName", String::from_utf8(field.data.into())?);
+            value.insert("natPoolName", field.string()?);
         }
         285 => {
-            value.insert(
-                "anonymizationFlags",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("anonymizationFlags", field.to_u16()?);
         }
         286 => {
-            value.insert(
-                "anonymizationTechnique",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("anonymizationTechnique", field.to_u16()?);
         }
         287 => {
-            value.insert(
-                "informationElementIndex",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("informationElementIndex", field.to_u16()?);
         }
         288 => {
-            value.insert("p2pTechnology", String::from_utf8(field.data.into())?);
+            value.insert("p2pTechnology", field.string()?);
         }
         289 => {
-            value.insert("tunnelTechnology", String::from_utf8(field.data.into())?);
+            value.insert("tunnelTechnology", field.string()?);
         }
         290 => {
-            value.insert("encryptedTechnology", String::from_utf8(field.data.into())?);
+            value.insert("encryptedTechnology", field.string()?);
         }
         294 => {
             value.insert("bgpValidityState", field.data[0]);
         }
         295 => {
-            value.insert(
-                "IPSecSPI",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("IPSecSPI", field.to_u32()?);
         }
         296 => {
-            value.insert(
-                "greKey",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("greKey", field.to_u32()?);
         }
         297 => {
             value.insert("natType", field.data[0]);
         }
         298 => {
-            value.insert(
-                "initiatorPackets",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("initiatorPackets", field.to_u64()?);
         }
         299 => {
-            value.insert(
-                "responderPackets",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("responderPackets", field.to_u64()?);
         }
         300 => {
-            value.insert(
-                "observationDomainName",
-                String::from_utf8(field.data.into())?,
-            );
+            value.insert("observationDomainName", field.string()?);
         }
         301 => {
-            value.insert(
-                "selectionSequenceId",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("selectionSequenceId", field.to_u64()?);
         }
         302 => {
-            value.insert(
-                "selectorId",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("selectorId", field.to_u64()?);
         }
         303 => {
-            value.insert(
-                "informationElementId",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("informationElementId", field.to_u16()?);
         }
         304 => {
-            value.insert(
-                "selectorAlgorithm",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("selectorAlgorithm", field.to_u16()?);
         }
         305 => {
-            value.insert(
-                "samplingPacketInterval",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("samplingPacketInterval", field.to_u32()?);
         }
         306 => {
-            value.insert(
-                "samplingPacketSpace",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("samplingPacketSpace", field.to_u32()?);
         }
         307 => {
-            value.insert(
-                "samplingTimeInterval",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("samplingTimeInterval", field.to_u32()?);
         }
         308 => {
-            value.insert(
-                "samplingTimeSpace",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("samplingTimeSpace", field.to_u32()?);
         }
         309 => {
-            value.insert(
-                "samplingSize",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("samplingSize", field.to_u32()?);
         }
         310 => {
-            value.insert(
-                "samplingPopulation",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("samplingPopulation", field.to_u32()?);
         }
         311 => {
-            value.insert(
-                "samplingProbability",
-                f64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("samplingProbability", field.to_f64()?);
         }
         312 => {
-            value.insert(
-                "dataLinkFrameSize",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("dataLinkFrameSize", field.to_u16()?);
         }
         313 => {
             value.insert("ipHeaderPacketSection", field.data);
@@ -1751,265 +1221,145 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("mplsPayloadPacketSection", field.data);
         }
         318 => {
-            value.insert(
-                "selectorIdTotalPktsObserved",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("selectorIdTotalPktsObserved", field.to_u64()?);
         }
         319 => {
-            value.insert(
-                "selectorIdTotalPktsSelected",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("selectorIdTotalPktsSelected", field.to_u64()?);
         }
         320 => {
-            value.insert(
-                "absoluteError",
-                f64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("absoluteError", field.to_f64()?);
         }
         321 => {
-            value.insert(
-                "relativeError",
-                f64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("relativeError", field.to_f64()?);
         }
         322 => {
-            value.insert(
-                "observationTimeSeconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("observationTimeSeconds", field.to_i32()?);
         }
         323 => {
-            value.insert(
-                "observationTimeMilliseconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("observationTimeMilliseconds", field.to_i32()?);
         }
         324 => {
-            value.insert(
-                "observationTimeMicroseconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("observationTimeMicroseconds", field.to_i32()?);
         }
         325 => {
-            value.insert(
-                "observationTimeNanoseconds",
-                i64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("observationTimeNanoseconds", field.to_i64()?);
         }
         326 => {
-            value.insert(
-                "digestHashValue",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("digestHashValue", field.to_u64()?);
         }
         327 => {
-            value.insert(
-                "hashIPPayloadOffset",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("hashIPPayloadOffset", field.to_u64()?);
         }
         328 => {
-            value.insert(
-                "hashIPPayloadSize",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("hashIPPayloadSize", field.to_u64()?);
         }
         329 => {
-            value.insert(
-                "hashOutputRangeMin",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("hashOutputRangeMin", field.to_u64()?);
         }
         330 => {
-            value.insert(
-                "hashOutputRangeMax",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("hashOutputRangeMax", field.to_u64()?);
         }
         331 => {
-            value.insert(
-                "hashSelectedRangeMin",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("hashSelectedRangeMin", field.to_u64()?);
         }
         332 => {
-            value.insert(
-                "hashSelectedRangeMax",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("hashSelectedRangeMax", field.to_u64()?);
         }
         333 => {
             value.insert("hashDigestOutput", field.data[0] == 1);
         }
         334 => {
-            value.insert(
-                "hashInitialiserValue",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("hashInitialiserValue", field.to_u64()?);
         }
         335 => {
-            value.insert("selectorName", String::from_utf8(field.data.into())?);
+            value.insert("selectorName", field.string()?);
         }
         336 => {
-            value.insert(
-                "upperCILimit",
-                f64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("upperCILimit", field.to_f64()?);
         }
         337 => {
-            value.insert(
-                "lowerCILimit",
-                f64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("lowerCILimit", field.to_f64()?);
         }
         338 => {
-            value.insert(
-                "confidenceLevel",
-                f64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("confidenceLevel", field.to_f64()?);
         }
         339 => {
             value.insert("informationElementDataType", field.data[0]);
         }
         340 => {
-            value.insert(
-                "informationElementDescription",
-                String::from_utf8(field.data.into())?,
-            );
+            value.insert("informationElementDescription", field.string()?);
         }
         341 => {
-            value.insert(
-                "informationElementName",
-                String::from_utf8(field.data.into())?,
-            );
+            value.insert("informationElementName", field.string()?);
         }
         342 => {
-            value.insert(
-                "informationElementRangeBegin",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("informationElementRangeBegin", field.to_u64()?);
         }
         343 => {
-            value.insert(
-                "informationElementRangeEnd",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("informationElementRangeEnd", field.to_u64()?);
         }
         344 => {
             value.insert("informationElementSemantics", field.data[0]);
         }
         345 => {
-            value.insert(
-                "informationElementUnits",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("informationElementUnits", field.to_u16()?);
         }
         346 => {
-            value.insert(
-                "privateEnterpriseNumber",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("privateEnterpriseNumber", field.to_u32()?);
         }
         347 => {
             value.insert("virtualStationInterfaceId", field.data);
         }
         348 => {
-            value.insert(
-                "virtualStationInterfaceName",
-                String::from_utf8(field.data.into())?,
-            );
+            value.insert("virtualStationInterfaceName", field.string()?);
         }
         349 => {
             value.insert("virtualStationUUID", field.data);
         }
         350 => {
-            value.insert("virtualStationName", String::from_utf8(field.data.into())?);
+            value.insert("virtualStationName", field.string()?);
         }
         351 => {
-            value.insert(
-                "layer2SegmentId",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("layer2SegmentId", field.to_u64()?);
         }
         352 => {
-            value.insert(
-                "layer2OctetDeltaCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("layer2OctetDeltaCount", field.to_u64()?);
         }
         353 => {
-            value.insert(
-                "layer2OctetTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("layer2OctetTotalCount", field.to_u64()?);
         }
         354 => {
-            value.insert(
-                "ingressUnicastPacketTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("ingressUnicastPacketTotalCount", field.to_u64()?);
         }
         355 => {
-            value.insert(
-                "ingressMulticastPacketTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("ingressMulticastPacketTotalCount", field.to_u64()?);
         }
         356 => {
-            value.insert(
-                "ingressBroadcastPacketTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("ingressBroadcastPacketTotalCount", field.to_u64()?);
         }
         357 => {
-            value.insert(
-                "egressUnicastPacketTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("egressUnicastPacketTotalCount", field.to_u64()?);
         }
         358 => {
-            value.insert(
-                "egressBroadcastPacketTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("egressBroadcastPacketTotalCount", field.to_u64()?);
         }
         359 => {
-            value.insert(
-                "monitoringIntervalStartMilliSeconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("monitoringIntervalStartMilliSeconds", field.to_i32()?);
         }
         360 => {
-            value.insert(
-                "monitoringIntervalEndMilliSeconds",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("monitoringIntervalEndMilliSeconds", field.to_i32()?);
         }
         361 => {
-            value.insert(
-                "portRangeStart",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("portRangeStart", field.to_u16()?);
         }
         362 => {
-            value.insert(
-                "portRangeEnd",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("portRangeEnd", field.to_u16()?);
         }
         363 => {
-            value.insert(
-                "portRangeStepSize",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("portRangeStepSize", field.to_u16()?);
         }
         364 => {
-            value.insert(
-                "portRangeNumPorts",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("portRangeNumPorts", field.to_u16()?);
         }
         365 => {
             value.insert(
@@ -2049,118 +1399,64 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             );
         }
         368 => {
-            value.insert(
-                "ingressInterfaceType",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("ingressInterfaceType", field.to_u32()?);
         }
         369 => {
-            value.insert(
-                "egressInterfaceType",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("egressInterfaceType", field.to_u32()?);
         }
         370 => {
-            value.insert(
-                "rtpSequenceNumber",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("rtpSequenceNumber", field.to_u16()?);
         }
         371 => {
-            value.insert("userName", String::from_utf8(field.data.into())?);
+            value.insert("userName", field.string()?);
         }
         372 => {
-            value.insert(
-                "applicationCategoryName",
-                String::from_utf8(field.data.into())?,
-            );
+            value.insert("applicationCategoryName", field.string()?);
         }
         373 => {
-            value.insert(
-                "applicationSubCategoryName",
-                String::from_utf8(field.data.into())?,
-            );
+            value.insert("applicationSubCategoryName", field.string()?);
         }
         374 => {
-            value.insert(
-                "applicationGroupName",
-                String::from_utf8(field.data.into())?,
-            );
+            value.insert("applicationGroupName", field.string()?);
         }
         375 => {
-            value.insert(
-                "originalFlowsPresent",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("originalFlowsPresent", field.to_u64()?);
         }
         376 => {
-            value.insert(
-                "originalFlowsInitiated",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("originalFlowsInitiated", field.to_u64()?);
         }
         377 => {
-            value.insert(
-                "originalFlowsCompleted",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("originalFlowsCompleted", field.to_u64()?);
         }
         378 => {
-            value.insert(
-                "distinctCountOfSourceIPAddress",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("distinctCountOfSourceIPAddress", field.to_u64()?);
         }
         379 => {
-            value.insert(
-                "distinctCountOfDestinationIPAddress",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("distinctCountOfDestinationIPAddress", field.to_u64()?);
         }
         380 => {
-            value.insert(
-                "distinctCountOfSourceIPv4Address",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("distinctCountOfSourceIPv4Address", field.to_u32()?);
         }
         381 => {
-            value.insert(
-                "distinctCountOfDestinationIPv4Address",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("distinctCountOfDestinationIPv4Address", field.to_u32()?);
         }
         382 => {
-            value.insert(
-                "distinctCountOfSourceIPv6Address",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("distinctCountOfSourceIPv6Address", field.to_u64()?);
         }
         383 => {
-            value.insert(
-                "distinctCountOfDestinationIPv6Address",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("distinctCountOfDestinationIPv6Address", field.to_u64()?);
         }
         384 => {
             value.insert("valueDistributionMethod", field.data[0]);
         }
         385 => {
-            value.insert(
-                "rfc3550JitterMilliseconds",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("rfc3550JitterMilliseconds", field.to_u32()?);
         }
         386 => {
-            value.insert(
-                "rfc3550JitterMicroseconds",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("rfc3550JitterMicroseconds", field.to_u32()?);
         }
         387 => {
-            value.insert(
-                "rfc3550JitterNanoseconds",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("rfc3550JitterNanoseconds", field.to_u32()?);
         }
         388 => {
             value.insert("dot1qDEI", field.data[0] == 1);
@@ -2169,82 +1465,43 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("dot1qCustomerDEI", field.data[0] == 1);
         }
         390 => {
-            value.insert(
-                "flowSelectorAlgorithm",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowSelectorAlgorithm", field.to_u16()?);
         }
         391 => {
-            value.insert(
-                "flowSelectedOctetDeltaCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowSelectedOctetDeltaCount", field.to_u64()?);
         }
         392 => {
-            value.insert(
-                "flowSelectedPacketDeltaCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowSelectedPacketDeltaCount", field.to_u64()?);
         }
         393 => {
-            value.insert(
-                "flowSelectedFlowDeltaCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowSelectedFlowDeltaCount", field.to_u64()?);
         }
         394 => {
-            value.insert(
-                "selectorIDTotalFlowsObserved",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("selectorIDTotalFlowsObserved", field.to_u64()?);
         }
         395 => {
-            value.insert(
-                "selectorIDTotalFlowsSelected",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("selectorIDTotalFlowsSelected", field.to_u64()?);
         }
         396 => {
-            value.insert(
-                "samplingFlowInterval",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("samplingFlowInterval", field.to_u64()?);
         }
         397 => {
-            value.insert(
-                "samplingFlowSpacing",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("samplingFlowSpacing", field.to_u64()?);
         }
         398 => {
-            value.insert(
-                "flowSamplingTimeInterval",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowSamplingTimeInterval", field.to_u64()?);
         }
         399 => {
-            value.insert(
-                "flowSamplingTimeSpacing",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("flowSamplingTimeSpacing", field.to_u64()?);
         }
         400 => {
-            value.insert(
-                "hashFlowDomain",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("hashFlowDomain", field.to_u16()?);
         }
         401 => {
-            value.insert(
-                "transportOctetDeltaCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("transportOctetDeltaCount", field.to_u64()?);
         }
         402 => {
-            value.insert(
-                "transportPacketDeltaCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("transportPacketDeltaCount", field.to_u64()?);
         }
         403 => {
             value.insert(
@@ -2256,55 +1513,31 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             );
         }
         404 => {
-            value.insert(
-                "originalExporterIPv6Address",
-                Ipv6Addr::from(TryInto::<[u8; 16]>::try_into(field.data)?).to_string(),
-            );
+            value.insert("originalExporterIPv6Address", field.ipv6()?.to_string());
         }
         405 => {
-            value.insert(
-                "originalObservationDomainId",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("originalObservationDomainId", field.to_u32()?);
         }
         406 => {
-            value.insert(
-                "intermediateProcessId",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("intermediateProcessId", field.to_u32()?);
         }
         407 => {
-            value.insert(
-                "ignoredDataRecordTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("ignoredDataRecordTotalCount", field.to_u64()?);
         }
         408 => {
-            value.insert(
-                "dataLinkFrameType",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("dataLinkFrameType", field.to_u16()?);
         }
         409 => {
-            value.insert(
-                "sectionOffset",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("sectionOffset", field.to_u16()?);
         }
         410 => {
-            value.insert(
-                "sectionExportedOctets",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("sectionExportedOctets", field.to_u16()?);
         }
         411 => {
             value.insert("dot1qServiceInstanceTag", field.data);
         }
         412 => {
-            value.insert(
-                "dot1qServiceInstanceId",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("dot1qServiceInstanceId", field.to_u32()?);
         }
         413 => {
             value.insert("dot1qServiceInstancePriority", field.data[0]);
@@ -2338,88 +1571,46 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             );
         }
         417 => {
-            value.insert(
-                "postLayer2OctetDeltaCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("postLayer2OctetDeltaCount", field.to_u64()?);
         }
         418 => {
-            value.insert(
-                "postMCastLayer2OctetDeltaCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("postMCastLayer2OctetDeltaCount", field.to_u64()?);
         }
         420 => {
-            value.insert(
-                "postLayer2OctetTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("postLayer2OctetTotalCount", field.to_u64()?);
         }
         421 => {
-            value.insert(
-                "postMCastLayer2OctetTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("postMCastLayer2OctetTotalCount", field.to_u64()?);
         }
         422 => {
-            value.insert(
-                "minimumLayer2TotalLength",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("minimumLayer2TotalLength", field.to_u64()?);
         }
         423 => {
-            value.insert(
-                "maximumLayer2TotalLength",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("maximumLayer2TotalLength", field.to_u64()?);
         }
         424 => {
-            value.insert(
-                "droppedLayer2OctetDeltaCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("droppedLayer2OctetDeltaCount", field.to_u64()?);
         }
         425 => {
-            value.insert(
-                "droppedLayer2OctetTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("droppedLayer2OctetTotalCount", field.to_u64()?);
         }
         426 => {
-            value.insert(
-                "ignoredLayer2OctetTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("ignoredLayer2OctetTotalCount", field.to_u64()?);
         }
         427 => {
-            value.insert(
-                "notSentLayer2OctetTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("notSentLayer2OctetTotalCount", field.to_u64()?);
         }
         428 => {
-            value.insert(
-                "layer2OctetDeltaSumOfSquares",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("layer2OctetDeltaSumOfSquares", field.to_u64()?);
         }
         429 => {
-            value.insert(
-                "layer2OctetTotalSumOfSquares",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("layer2OctetTotalSumOfSquares", field.to_u64()?);
         }
         430 => {
-            value.insert(
-                "layer2FrameDeltaCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("layer2FrameDeltaCount", field.to_u64()?);
         }
         431 => {
-            value.insert(
-                "layer2FrameTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("layer2FrameTotalCount", field.to_u64()?);
         }
         432 => {
             value.insert(
@@ -2431,16 +1622,10 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             );
         }
         433 => {
-            value.insert(
-                "ignoredLayer2FrameTotalCount",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("ignoredLayer2FrameTotalCount", field.to_u64()?);
         }
         434 => {
-            value.insert(
-                "mibObjectValueInteger",
-                i32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("mibObjectValueInteger", field.to_i32()?);
         }
         435 => {
             value.insert("mibObjectValueOctetString", field.data);
@@ -2461,43 +1646,25 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             );
         }
         439 => {
-            value.insert(
-                "mibObjectValueCounter",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("mibObjectValueCounter", field.to_u64()?);
         }
         440 => {
-            value.insert(
-                "mibObjectValueGauge",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("mibObjectValueGauge", field.to_u32()?);
         }
         441 => {
-            value.insert(
-                "mibObjectValueTimeTicks",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("mibObjectValueTimeTicks", field.to_u32()?);
         }
         442 => {
-            value.insert(
-                "mibObjectValueUnsigned",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("mibObjectValueUnsigned", field.to_u32()?);
         }
         445 => {
             value.insert("mibObjectIdentifier", field.data);
         }
         446 => {
-            value.insert(
-                "mibSubIdentifier",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("mibSubIdentifier", field.to_u32()?);
         }
         447 => {
-            value.insert(
-                "mibIndexIndicator",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("mibIndexIndicator", field.to_u64()?);
         }
         448 => {
             value.insert("mibCaptureTimeSemantics", field.data[0]);
@@ -2506,58 +1673,46 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("mibContextEngineID", field.data);
         }
         450 => {
-            value.insert("mibContextName", String::from_utf8(field.data.into())?);
+            value.insert("mibContextName", field.string()?);
         }
         451 => {
-            value.insert("mibObjectName", String::from_utf8(field.data.into())?);
+            value.insert("mibObjectName", field.string()?);
         }
         452 => {
-            value.insert(
-                "mibObjectDescription",
-                String::from_utf8(field.data.into())?,
-            );
+            value.insert("mibObjectDescription", field.string()?);
         }
         453 => {
-            value.insert("mibObjectSyntax", String::from_utf8(field.data.into())?);
+            value.insert("mibObjectSyntax", field.string()?);
         }
         454 => {
-            value.insert("mibModuleName", String::from_utf8(field.data.into())?);
+            value.insert("mibModuleName", field.string()?);
         }
         455 => {
-            value.insert("mobileIMSI", String::from_utf8(field.data.into())?);
+            value.insert("mobileIMSI", field.string()?);
         }
         456 => {
-            value.insert("mobileMSISDN", String::from_utf8(field.data.into())?);
+            value.insert("mobileMSISDN", field.string()?);
         }
         457 => {
-            value.insert(
-                "httpStatusCode",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("httpStatusCode", field.to_u16()?);
         }
         458 => {
-            value.insert(
-                "sourceTransportPortsLimit",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("sourceTransportPortsLimit", field.to_u16()?);
         }
         459 => {
-            value.insert("httpRequestMethod", String::from_utf8(field.data.into())?);
+            value.insert("httpRequestMethod", field.string()?);
         }
         460 => {
-            value.insert("httpRequestHost", String::from_utf8(field.data.into())?);
+            value.insert("httpRequestHost", field.string()?);
         }
         461 => {
-            value.insert("httpRequestTarget", String::from_utf8(field.data.into())?);
+            value.insert("httpRequestTarget", field.string()?);
         }
         462 => {
-            value.insert("httpMessageVersion", String::from_utf8(field.data.into())?);
+            value.insert("httpMessageVersion", field.string()?);
         }
         463 => {
-            value.insert(
-                "natInstanceID",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("natInstanceID", field.to_u32()?);
         }
         464 => {
             value.insert("internalAddressRealm", field.data);
@@ -2566,100 +1721,58 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("externalAddressRealm", field.data);
         }
         466 => {
-            value.insert(
-                "natQuotaExceededEvent",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("natQuotaExceededEvent", field.to_u32()?);
         }
         467 => {
-            value.insert(
-                "natThresholdEvent",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("natThresholdEvent", field.to_u32()?);
         }
         468 => {
-            value.insert("httpUserAgent", String::from_utf8(field.data.into())?);
+            value.insert("httpUserAgent", field.string()?);
         }
         469 => {
-            value.insert("httpContentType", String::from_utf8(field.data.into())?);
+            value.insert("httpContentType", field.string()?);
         }
         470 => {
-            value.insert("httpReasonPhrase", String::from_utf8(field.data.into())?);
+            value.insert("httpReasonPhrase", field.string()?);
         }
         471 => {
-            value.insert(
-                "maxSessionEntries",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("maxSessionEntries", field.to_u32()?);
         }
         472 => {
-            value.insert(
-                "maxBIBEntries",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("maxBIBEntries", field.to_u32()?);
         }
         473 => {
-            value.insert(
-                "maxEntriesPerUser",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("maxEntriesPerUser", field.to_u32()?);
         }
         474 => {
-            value.insert(
-                "maxSubscribers",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("maxSubscribers", field.to_u32()?);
         }
         475 => {
-            value.insert(
-                "maxFragmentsPendingReassembly",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("maxFragmentsPendingReassembly", field.to_u32()?);
         }
         476 => {
-            value.insert(
-                "addressPoolHighThreshold",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("addressPoolHighThreshold", field.to_u32()?);
         }
         477 => {
-            value.insert(
-                "addressPoolLowThreshold",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("addressPoolLowThreshold", field.to_u32()?);
         }
         478 => {
-            value.insert(
-                "addressPortMappingHighThreshold",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("addressPortMappingHighThreshold", field.to_u32()?);
         }
         479 => {
-            value.insert(
-                "addressPortMappingLowThreshold",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("addressPortMappingLowThreshold", field.to_u32()?);
         }
         480 => {
-            value.insert(
-                "addressPortMappingPerUserHighThreshold",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("addressPortMappingPerUserHighThreshold", field.to_u32()?);
         }
         481 => {
-            value.insert(
-                "globalAddressMappingHighThreshold",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("globalAddressMappingHighThreshold", field.to_u32()?);
         }
         482 => {
             value.insert("vpnIdentifier", field.data);
         }
         483 => {
-            value.insert(
-                "bgpCommunity",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("bgpCommunity", field.to_u32()?);
         }
         486 => {
             value.insert("bgpExtendedCommunity", field.data);
@@ -2671,22 +1784,13 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("srhFlagsIPv6", field.data[0]);
         }
         493 => {
-            value.insert(
-                "srhTagIPv6",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("srhTagIPv6", field.to_u16()?);
         }
         494 => {
-            value.insert(
-                "srhSegmentIPv6",
-                Ipv6Addr::from(TryInto::<[u8; 16]>::try_into(field.data)?).to_string(),
-            );
+            value.insert("srhSegmentIPv6", field.ipv6()?.to_string());
         }
         495 => {
-            value.insert(
-                "srhActiveSegmentIPv6",
-                Ipv6Addr::from(TryInto::<[u8; 16]>::try_into(field.data)?).to_string(),
-            );
+            value.insert("srhActiveSegmentIPv6", field.ipv6()?.to_string());
         }
         497 => {
             value.insert("srhSegmentIPv6ListSection", field.data);
@@ -2704,16 +1808,10 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("srhSegmentIPv6LocatorLength", field.data[0]);
         }
         502 => {
-            value.insert(
-                "srhSegmentIPv6EndpointBehavior",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("srhSegmentIPv6EndpointBehavior", field.to_u16()?);
         }
         503 => {
-            value.insert(
-                "transportChecksum",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("transportChecksum", field.to_u16()?);
         }
         504 => {
             value.insert("icmpHeaderPacketSection", field.data);
@@ -2725,16 +1823,10 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("gtpuMsgType", field.data[0]);
         }
         507 => {
-            value.insert(
-                "gtpuTEid",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("gtpuTEid", field.to_u32()?);
         }
         508 => {
-            value.insert(
-                "gtpuSequenceNum",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("gtpuSequenceNum", field.to_u16()?);
         }
         509 => {
             value.insert("gtpuQFI", field.data[0]);
@@ -2752,34 +1844,19 @@ fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
             value.insert("ipv6ExtensionHeadersLimit", field.data[0] == 1);
         }
         518 => {
-            value.insert(
-                "ipv6ExtensionHeadersChainLength",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("ipv6ExtensionHeadersChainLength", field.to_u32()?);
         }
         521 => {
-            value.insert(
-                "tcpSharedOptionExID16",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("tcpSharedOptionExID16", field.to_u16()?);
         }
         522 => {
-            value.insert(
-                "tcpSharedOptionExID32",
-                u32::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("tcpSharedOptionExID32", field.to_u32()?);
         }
         526 => {
-            value.insert(
-                "udpUnsafeOptions",
-                u64::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("udpUnsafeOptions", field.to_u64()?);
         }
         527 => {
-            value.insert(
-                "udpExID",
-                u16::from_be_bytes(field.data.try_into().map_err(|_err| "invalid data value")?),
-            );
+            value.insert("udpExID", field.to_u16()?);
         }
 
         _ => {}
