@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764245429305,
+  "lastUpdate": 1764245533701,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "788f657f07c6190fe04a40f5930d57b40e14a491",
-          "message": "Merge pull request #2592 from f1shl3gs/dependabot/cargo/tokio-1.48.0\n\nchore(deps): bump tokio from 1.47.1 to 1.48.0",
-          "timestamp": "2025-10-14T23:37:56+08:00",
-          "tree_id": "14f670486aff767dd8829fcce3750dfa4031ae65",
-          "url": "https://github.com/f1shl3gs/vertex/commit/788f657f07c6190fe04a40f5930d57b40e14a491"
-        },
-        "date": 1760456922031,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 560,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39603,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0b9236bb563827120f7cc7ecccb97ca023da395e",
           "message": "Merge pull request #2591 from f1shl3gs/misc/improve_docs\n\nmisc: improve docs",
           "timestamp": "2025-10-14T23:41:06+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41632.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "83a052122ccc47a24e9708f07fb97d601d7f73f3",
+          "message": "Merge pull request #2693 from f1shl3gs/dependabot/cargo/tracing-core-0.1.35\n\nchore(deps): bump tracing-core from 0.1.34 to 0.1.35",
+          "timestamp": "2025-11-27T20:00:19+08:00",
+          "tree_id": "e9abfd28458b42704234dc0930cdb2feda35e873",
+          "url": "https://github.com/f1shl3gs/vertex/commit/83a052122ccc47a24e9708f07fb97d601d7f73f3"
+        },
+        "date": 1764245505626,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 600,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41655.6,
             "unit": "KiB"
           }
         ]
