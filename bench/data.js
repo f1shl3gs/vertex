@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764245035364,
+  "lastUpdate": 1764245429305,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e13ea971ecd3869d1cadf79a3bee2cd2364da3e5",
-          "message": "Merge pull request #2586 from f1shl3gs/deps/update_humanize\n\ndeps/humanize: update humanize to latest commit, which remove `alloc` feature of serde_core",
-          "timestamp": "2025-10-12T21:56:03+08:00",
-          "tree_id": "80d690d18381cf3ba5c94b12f435b08abf42e2c2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e13ea971ecd3869d1cadf79a3bee2cd2364da3e5"
-        },
-        "date": 1760277931890,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14793000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 613880,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.891,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "09932c6915d4cf0ad3bcfe7965df76badda29a26",
           "message": "Merge pull request #2587 from f1shl3gs/lib/vtl/remove_serde_derive_for_target\n\nlib/vtl: remove serde from `TargetValue`",
           "timestamp": "2025-10-13T07:13:07+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 48.158,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "83a052122ccc47a24e9708f07fb97d601d7f73f3",
+          "message": "Merge pull request #2693 from f1shl3gs/dependabot/cargo/tracing-core-0.1.35\n\nchore(deps): bump tracing-core from 0.1.34 to 0.1.35",
+          "timestamp": "2025-11-27T20:00:19+08:00",
+          "tree_id": "e9abfd28458b42704234dc0930cdb2feda35e873",
+          "url": "https://github.com/f1shl3gs/vertex/commit/83a052122ccc47a24e9708f07fb97d601d7f73f3"
+        },
+        "date": 1764245406965,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15723000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 663230,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 53.461,
             "unit": "ns/op"
           }
         ]
