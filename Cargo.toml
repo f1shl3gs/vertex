@@ -444,7 +444,7 @@ tokio = { version = "1.48.0", default-features = false, features = ["time", "net
 tokio-util = { version = "0.7.17", default-features = false, features = ["codec", "time", "net"] }
 
 # Tracing
-tracing = { version = "0.1.41", default-features = false }
+tracing = { version = "0.1.43", default-features = false }
 
 # HTTP
 headers = { version = "0.4.1", default-features = false }
