@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764330068091,
+  "lastUpdate": 1764330095268,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "09932c6915d4cf0ad3bcfe7965df76badda29a26",
-          "message": "Merge pull request #2587 from f1shl3gs/lib/vtl/remove_serde_derive_for_target\n\nlib/vtl: remove serde from `TargetValue`",
-          "timestamp": "2025-10-13T07:13:07+08:00",
-          "tree_id": "558425e3bd3a25b1fd28954e21e4d31e5119d37b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/09932c6915d4cf0ad3bcfe7965df76badda29a26"
-        },
-        "date": 1760310939135,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.12,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 181.87,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 325.89,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 719.96,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c72969daa2d4b5dad7d4c98404cd11b5b8fc7ad3",
           "message": "Merge pull request #2590 from f1shl3gs/dependabot/cargo/socket2-0.6.1\n\nchore(deps): bump socket2 from 0.6.0 to 0.6.1",
           "timestamp": "2025-10-14T08:40:45+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 681.52,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d32dfc2d147d5639c66aa0d2df9bad214cf22602",
+          "message": "Merge pull request #2695 from f1shl3gs/deps/bump_tracing_subscriber_to_0.3.30\n\ndeps: bump tracing-subscriber to 0.3.22",
+          "timestamp": "2025-11-28T19:38:41+08:00",
+          "tree_id": "9045f326b61254419ce7056156b228645ea11e98",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d32dfc2d147d5639c66aa0d2df9bad214cf22602"
+        },
+        "date": 1764330072768,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.062,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 166.05,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 316.56,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 681.58,
             "unit": "ns/op"
           }
         ]
