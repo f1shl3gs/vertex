@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764328844856,
+  "lastUpdate": 1764329216149,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "09932c6915d4cf0ad3bcfe7965df76badda29a26",
-          "message": "Merge pull request #2587 from f1shl3gs/lib/vtl/remove_serde_derive_for_target\n\nlib/vtl: remove serde from `TargetValue`",
-          "timestamp": "2025-10-13T07:13:07+08:00",
-          "tree_id": "558425e3bd3a25b1fd28954e21e4d31e5119d37b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/09932c6915d4cf0ad3bcfe7965df76badda29a26"
-        },
-        "date": 1760311363271,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14605000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 630230,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.28,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c72969daa2d4b5dad7d4c98404cd11b5b8fc7ad3",
           "message": "Merge pull request #2590 from f1shl3gs/dependabot/cargo/socket2-0.6.1\n\nchore(deps): bump socket2 from 0.6.0 to 0.6.1",
           "timestamp": "2025-10-14T08:40:45+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 53.461,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b0c0782ec8b8419e7d77c64bd7bf26f6bb0094d9",
+          "message": "Merge pull request #2694 from f1shl3gs/dependabot/cargo/tracing-0.1.43\n\nchore(deps): bump tracing from 0.1.41 to 0.1.43",
+          "timestamp": "2025-11-28T19:17:00+08:00",
+          "tree_id": "57daeac639eff96ff3946955c4d4071e57cb01db",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b0c0782ec8b8419e7d77c64bd7bf26f6bb0094d9"
+        },
+        "date": 1764329193869,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15791000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 631610,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.932,
             "unit": "ns/op"
           }
         ]
