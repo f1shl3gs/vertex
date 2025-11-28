@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764336770671,
+  "lastUpdate": 1764336782194,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ef9ffe920bcb6b01ce04d10fe894175764863148",
-          "message": "Merge pull request #2589 from f1shl3gs/dependabot/cargo/regex-1.12.2\n\nchore(deps): bump regex from 1.12.1 to 1.12.2",
-          "timestamp": "2025-10-14T08:41:14+08:00",
-          "tree_id": "69a433507891afb8ee3a126a063a579677550f4d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ef9ffe920bcb6b01ce04d10fe894175764863148"
-        },
-        "date": 1760402599155,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.502,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 96.635,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 178.37,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 178.03,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "53a97c87e43f17a810a2131b9f1182ffe323ec27",
+          "message": "Merge pull request #2696 from f1shl3gs/lib/framework/remove_unused_memchr\n\nlib/framework: remove memchr",
+          "timestamp": "2025-11-28T21:30:26+08:00",
+          "tree_id": "6b5edb8c64678b944e3fa0c22e046cbf6861b78c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/53a97c87e43f17a810a2131b9f1182ffe323ec27"
+        },
+        "date": 1764336760321,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.916,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 98.363,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 180.1,
             "unit": "ns/op"
           }
         ]
