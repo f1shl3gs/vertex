@@ -1204,7 +1204,6 @@ dependencies = [
  "libc",
  "listenfd",
  "log_schema",
- "memchr",
  "metrics",
  "pem",
  "percent-encoding",
