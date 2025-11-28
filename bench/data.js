@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764329284791,
+  "lastUpdate": 1764330066760,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c72969daa2d4b5dad7d4c98404cd11b5b8fc7ad3",
-          "message": "Merge pull request #2590 from f1shl3gs/dependabot/cargo/socket2-0.6.1\n\nchore(deps): bump socket2 from 0.6.0 to 0.6.1",
-          "timestamp": "2025-10-14T08:40:45+08:00",
-          "tree_id": "0eba58d6d349e85aa6d04a16d98f8bceae9700fc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c72969daa2d4b5dad7d4c98404cd11b5b8fc7ad3"
-        },
-        "date": 1760402575825,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.461,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 95.38,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 164.44,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 181.93,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d32dfc2d147d5639c66aa0d2df9bad214cf22602",
+          "message": "Merge pull request #2695 from f1shl3gs/deps/bump_tracing_subscriber_to_0.3.30\n\ndeps: bump tracing-subscriber to 0.3.22",
+          "timestamp": "2025-11-28T19:38:41+08:00",
+          "tree_id": "9045f326b61254419ce7056156b228645ea11e98",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d32dfc2d147d5639c66aa0d2df9bad214cf22602"
+        },
+        "date": 1764330044984,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.056,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 99.076,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 178.03,
             "unit": "ns/op"
           }
         ]
