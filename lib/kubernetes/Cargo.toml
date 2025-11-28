@@ -8,7 +8,7 @@ default = []
 
 [dev-dependencies]
 tokio = { version = "1.48.0", default-features = false, features = ["macros", "rt-multi-thread"] }
-tracing-subscriber = { version = "0.3.20", default-features = false, features = ["fmt"] }
+tracing-subscriber = { version = "0.3.22", default-features = false, features = ["fmt"] }
 
 [dependencies]
 base64 = { version = "0.22.1", default-features = false }
