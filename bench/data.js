@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764329216149,
+  "lastUpdate": 1764329284791,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0b9236bb563827120f7cc7ecccb97ca023da395e",
-          "message": "Merge pull request #2591 from f1shl3gs/misc/improve_docs\n\nmisc: improve docs",
-          "timestamp": "2025-10-14T23:41:06+08:00",
-          "tree_id": "ae2e7565629ec741fe075f13c681c0869a9b7961",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0b9236bb563827120f7cc7ecccb97ca023da395e"
-        },
-        "date": 1760457099056,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 553,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39606.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "fbada39da8ebce596241fd21cd7a04a5a1cbc877",
           "message": "Merge pull request #2595 from f1shl3gs/dependabot/cargo/lru-0.16.2\n\nchore(deps): bump lru from 0.16.1 to 0.16.2",
           "timestamp": "2025-10-15T02:38:16+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41655.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b0c0782ec8b8419e7d77c64bd7bf26f6bb0094d9",
+          "message": "Merge pull request #2694 from f1shl3gs/dependabot/cargo/tracing-0.1.43\n\nchore(deps): bump tracing from 0.1.41 to 0.1.43",
+          "timestamp": "2025-11-28T19:17:00+08:00",
+          "tree_id": "57daeac639eff96ff3946955c4d4071e57cb01db",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b0c0782ec8b8419e7d77c64bd7bf26f6bb0094d9"
+        },
+        "date": 1764329262654,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 564,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41251.3,
             "unit": "KiB"
           }
         ]
