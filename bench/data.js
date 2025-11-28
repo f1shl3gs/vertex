@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764328774967,
+  "lastUpdate": 1764328783666,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e13ea971ecd3869d1cadf79a3bee2cd2364da3e5",
-          "message": "Merge pull request #2586 from f1shl3gs/deps/update_humanize\n\ndeps/humanize: update humanize to latest commit, which remove `alloc` feature of serde_core",
-          "timestamp": "2025-10-12T21:56:03+08:00",
-          "tree_id": "80d690d18381cf3ba5c94b12f435b08abf42e2c2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e13ea971ecd3869d1cadf79a3bee2cd2364da3e5"
-        },
-        "date": 1760277523725,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.296,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 173.8,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 308.42,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 678.47,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "09932c6915d4cf0ad3bcfe7965df76badda29a26",
           "message": "Merge pull request #2587 from f1shl3gs/lib/vtl/remove_serde_derive_for_target\n\nlib/vtl: remove serde from `TargetValue`",
           "timestamp": "2025-10-13T07:13:07+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 701.63,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b0c0782ec8b8419e7d77c64bd7bf26f6bb0094d9",
+          "message": "Merge pull request #2694 from f1shl3gs/dependabot/cargo/tracing-0.1.43\n\nchore(deps): bump tracing from 0.1.41 to 0.1.43",
+          "timestamp": "2025-11-28T19:17:00+08:00",
+          "tree_id": "57daeac639eff96ff3946955c4d4071e57cb01db",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b0c0782ec8b8419e7d77c64bd7bf26f6bb0094d9"
+        },
+        "date": 1764328762011,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.464,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 162.49,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 293.24,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 681.52,
             "unit": "ns/op"
           }
         ]
