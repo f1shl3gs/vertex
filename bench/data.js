@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764330553100,
+  "lastUpdate": 1764330590040,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fbada39da8ebce596241fd21cd7a04a5a1cbc877",
-          "message": "Merge pull request #2595 from f1shl3gs/dependabot/cargo/lru-0.16.2\n\nchore(deps): bump lru from 0.16.1 to 0.16.2",
-          "timestamp": "2025-10-15T02:38:16+08:00",
-          "tree_id": "66e4f438c6da679b7e3383a233752b104a4cb631",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fbada39da8ebce596241fd21cd7a04a5a1cbc877"
-        },
-        "date": 1760467736479,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 557,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39606.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8f474181ba55d3a627e3eefcf90e2092535c9347",
           "message": "Merge pull request #2594 from f1shl3gs/sources/selfstat/disable_proc_path_if_not_linux\n\nsources/selfstat: add target_os attr for `proc_path`",
           "timestamp": "2025-10-15T02:38:36+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41251.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d32dfc2d147d5639c66aa0d2df9bad214cf22602",
+          "message": "Merge pull request #2695 from f1shl3gs/deps/bump_tracing_subscriber_to_0.3.30\n\ndeps: bump tracing-subscriber to 0.3.22",
+          "timestamp": "2025-11-28T19:38:41+08:00",
+          "tree_id": "9045f326b61254419ce7056156b228645ea11e98",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d32dfc2d147d5639c66aa0d2df9bad214cf22602"
+        },
+        "date": 1764330568472,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 565,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41251.2,
             "unit": "KiB"
           }
         ]
