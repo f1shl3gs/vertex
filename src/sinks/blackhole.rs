@@ -2,6 +2,7 @@ use std::time::{Duration, Instant};
 
 use configurable::configurable_component;
 use event::Events;
+use finalize::{EventStatus, Finalizable};
 use framework::config::{InputType, SinkConfig, SinkContext};
 use framework::{Healthcheck, Sink, StreamSink};
 use futures::{FutureExt, StreamExt, stream::BoxStream};
@@ -52,7 +53,7 @@ impl BlackholeSink {
 #[async_trait::async_trait]
 impl StreamSink for BlackholeSink {
     async fn run(mut self: Box<Self>, mut input: BoxStream<'_, Events>) -> Result<(), ()> {
-        while let Some(events) = input.next().await {
+        while let Some(mut events) = input.next().await {
             if let Some(rate) = self.rate {
                 let factor: f32 = 1.0 / rate as f32;
                 let secs: f32 = factor * (events.len() as f32);
@@ -61,7 +62,9 @@ impl StreamSink for BlackholeSink {
                 self.last = Some(until);
             }
 
-            // events dropped
+            events
+                .take_finalizers()
+                .update_status(EventStatus::Delivered);
         }
 
         Ok(())
