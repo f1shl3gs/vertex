@@ -14,7 +14,7 @@ default = []
 test = ["value/string_path"]
 
 [dev-dependencies]
-criterion = { version = "0.7.0", default-features = false }
+criterion = { version = "0.8.0", default-features = false }
 
 [dependencies]
 buffer = { path = "../buffer" }
