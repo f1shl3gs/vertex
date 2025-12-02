@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764656503092,
+  "lastUpdate": 1764656526181,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "788f657f07c6190fe04a40f5930d57b40e14a491",
-          "message": "Merge pull request #2592 from f1shl3gs/dependabot/cargo/tokio-1.48.0\n\nchore(deps): bump tokio from 1.47.1 to 1.48.0",
-          "timestamp": "2025-10-14T23:37:56+08:00",
-          "tree_id": "14f670486aff767dd8829fcce3750dfa4031ae65",
-          "url": "https://github.com/f1shl3gs/vertex/commit/788f657f07c6190fe04a40f5930d57b40e14a491"
-        },
-        "date": 1760456423074,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.325,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 158.37,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 320.35,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 664.87,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0b9236bb563827120f7cc7ecccb97ca023da395e",
           "message": "Merge pull request #2591 from f1shl3gs/misc/improve_docs\n\nmisc: improve docs",
           "timestamp": "2025-10-14T23:41:06+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 718.19,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "406190a50c4dd0e2a8572d724cf099a355d945d6",
+          "message": "Merge pull request #2698 from f1shl3gs/dependabot/cargo/criterion-0.8.0\n\nchore(deps): bump criterion from 0.7.0 to 0.8.0",
+          "timestamp": "2025-12-02T14:19:10+08:00",
+          "tree_id": "a49b84db2b95bcb95b91ffe409890b69dd452f3f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/406190a50c4dd0e2a8572d724cf099a355d945d6"
+        },
+        "date": 1764656504490,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.539,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 163.43,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 305.53,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 660.88,
             "unit": "ns/op"
           }
         ]
