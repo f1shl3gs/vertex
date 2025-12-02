@@ -73,9 +73,11 @@ impl ExtensionConfig for Config {
 
             if let Some(http) = http {
                 let shutdown = shutdown.clone();
+                let authorizer = http.auth.as_ref().map(|auth| auth.authorizer());
+
                 tasks.spawn(async move {
                     if let Err(err) =
-                        http::serve(http.listen, http.tls.as_ref(), http.auth, shutdown).await
+                        http::serve(http.listen, http.tls.as_ref(), authorizer, shutdown).await
                     {
                         warn!(message = "HTTP server error", ?err);
                     }
@@ -90,7 +92,7 @@ impl ExtensionConfig for Config {
                 });
             }
 
-            while (tasks.join_next().await).is_some() {}
+            while tasks.join_next().await.is_some() {}
 
             Ok(())
         }))
