@@ -4,64 +4,31 @@ use std::sync::atomic::Ordering;
 
 use bytes::Bytes;
 use framework::ShutdownSignal;
-use framework::http::Auth;
+use framework::http::Authorizer;
 use framework::tls::{MaybeTlsListener, TlsConfig};
-use headers::Authorization;
-use headers::authorization::Credentials;
-use http::header::AUTHORIZATION;
-use http::{HeaderMap, HeaderValue, Request, Response, StatusCode};
+use http::{Request, Response, StatusCode};
 use http_body_util::Full;
 use hyper::body::Incoming;
 use hyper::service::service_fn;
 
 use super::READINESS;
 
-enum HttpAuth {
-    Basic(HeaderValue),
-
-    Bearer(HeaderValue),
-
-    None,
-}
-
-impl HttpAuth {
-    pub fn handle(&self, headers: &HeaderMap) -> bool {
-        match self {
-            HttpAuth::None => true,
-            HttpAuth::Basic(expect) | HttpAuth::Bearer(expect) => {
-                if let Some(got) = headers.get(AUTHORIZATION) {
-                    return got == expect;
-                }
-
-                false
-            }
-        }
-    }
-}
-
 pub async fn serve(
     addr: SocketAddr,
     tls: Option<&TlsConfig>,
-    auth: Option<Auth>,
+    auth: Option<Authorizer>,
     shutdown: ShutdownSignal,
 ) -> Result<(), crate::Error> {
     let listener = MaybeTlsListener::bind(&addr, tls).await?;
 
-    let auth = Arc::new(match auth {
-        Some(auth) => match &auth {
-            Auth::Basic { user, password } => {
-                HttpAuth::Basic(Authorization::basic(user, password).0.encode())
-            }
-            Auth::Bearer { token } => HttpAuth::Bearer(Authorization::bearer(token)?.0.encode()),
-        },
-        None => HttpAuth::None,
-    });
-
+    let auth = Arc::new(auth);
     let service = service_fn(move |req: Request<Incoming>| {
         let auth = Arc::clone(&auth);
 
         async move {
-            if !auth.handle(req.headers()) {
+            if let Some(authorizer) = auth.as_ref()
+                && !authorizer.authorized(&req)
+            {
                 return Ok(Response::builder()
                     .status(StatusCode::UNAUTHORIZED)
                     .body(Full::from("Unauthorized"))
@@ -157,7 +124,7 @@ mod tests {
         let addr = testify::next_addr();
 
         let (trigger, shutdown, _) = ShutdownSignal::new_wired();
-        let srv_auth = auth.clone();
+        let srv_auth = auth.as_ref().map(|a| a.authorizer());
         tokio::spawn(async move { serve(addr, None, srv_auth, shutdown).await.unwrap() });
 
         wait_for_tcp(addr).await;
@@ -202,7 +169,9 @@ mod tests {
             let auth = Auth::Basic {
                 user: "foo".into(),
                 password: "bar".into(),
-            };
+            }
+            .authorizer();
+
             serve(addr, None, Some(auth), shutdown).await.unwrap()
         });
 

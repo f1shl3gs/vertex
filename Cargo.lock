@@ -4804,7 +4804,6 @@ dependencies = [
  "futures",
  "gcra",
  "glob",
- "headers",
  "hostname",
  "http",
  "http-body-util",
