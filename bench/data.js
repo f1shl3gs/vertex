@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764796861629,
+  "lastUpdate": 1764796874570,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8ddfea108e6bf8902f78c8ee341b2dfe717c50fa",
-          "message": "Merge pull request #2599 from f1shl3gs/cargo/update\n\ncargo update",
-          "timestamp": "2025-10-15T04:48:34+08:00",
-          "tree_id": "f70546fbec00eb413418d8a6e2716cb2a65c4751",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8ddfea108e6bf8902f78c8ee341b2dfe717c50fa"
-        },
-        "date": 1760475057079,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.198,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 164.42,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 328.75,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 691.47,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "665b23d29a6252f3a58b259e0c7c1b4638945568",
           "message": "Merge pull request #2598 from f1shl3gs/sources/kafka/fix_deserializing_for_fetch_wait_max\n\nsources/kafka: fix deserializing for fetch_wait_max",
           "timestamp": "2025-10-15T04:49:04+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 607.59,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7494e148d8ee4e60566c2643af476445fd922c42",
+          "message": "Merge pull request #2704 from f1shl3gs/misc/add_default_can_acknowledge_implement\n\nmisc: add default `SourceConfig::can_acknowledge` implement",
+          "timestamp": "2025-12-04T05:18:22+08:00",
+          "tree_id": "d360d916aedcbd62ca0daf1980d55545e2d079f1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7494e148d8ee4e60566c2643af476445fd922c42"
+        },
+        "date": 1764796852640,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.561,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 149.89,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 324.82,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 679.23,
             "unit": "ns/op"
           }
         ]
