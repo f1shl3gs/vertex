@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764795709975,
+  "lastUpdate": 1764796080080,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8ddfea108e6bf8902f78c8ee341b2dfe717c50fa",
-          "message": "Merge pull request #2599 from f1shl3gs/cargo/update\n\ncargo update",
-          "timestamp": "2025-10-15T04:48:34+08:00",
-          "tree_id": "f70546fbec00eb413418d8a6e2716cb2a65c4751",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8ddfea108e6bf8902f78c8ee341b2dfe717c50fa"
-        },
-        "date": 1760475485443,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 15066000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 629080,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.516,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "665b23d29a6252f3a58b259e0c7c1b4638945568",
           "message": "Merge pull request #2598 from f1shl3gs/sources/kafka/fix_deserializing_for_fetch_wait_max\n\nsources/kafka: fix deserializing for fetch_wait_max",
           "timestamp": "2025-10-15T04:49:04+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.178,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ee91beed797c4f0aa7f3a847ef58b3abca163151",
+          "message": "Merge pull request #2703 from f1shl3gs/misc/fix_internal_log_rate_limit\n\nmisc: fix `internal_log_rate_limit`",
+          "timestamp": "2025-12-04T04:58:22+08:00",
+          "tree_id": "2108e4151a296cd140fbe54a7995f169da2ab4f8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ee91beed797c4f0aa7f3a847ef58b3abca163151"
+        },
+        "date": 1764796057069,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14960000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 636240,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 53.225,
             "unit": "ns/op"
           }
         ]
