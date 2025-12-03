@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764788325347,
+  "lastUpdate": 1764788345311,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8f474181ba55d3a627e3eefcf90e2092535c9347",
-          "message": "Merge pull request #2594 from f1shl3gs/sources/selfstat/disable_proc_path_if_not_linux\n\nsources/selfstat: add target_os attr for `proc_path`",
-          "timestamp": "2025-10-15T02:38:36+08:00",
-          "tree_id": "d183d3c59353d0926ba618d569743f41e27d6b23",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8f474181ba55d3a627e3eefcf90e2092535c9347"
-        },
-        "date": 1760467266579,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.125,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 164.91,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 317.42,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 702.82,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5ede5bde9f943da9a3b724b3336a0f430eed6c67",
           "message": "Merge pull request #2596 from f1shl3gs/lib/vtl/avoid_alloc_when_diagnostic\n\nlib/vtl: avoid `alloc` when diagnostic",
           "timestamp": "2025-10-15T03:55:03+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 623.6,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "864320e2b3c9c258ba498831fe75d02e3af334db",
+          "message": "Merge pull request #2701 from f1shl3gs/dependabot/cargo/hyper-util-0.1.19\n\nchore(deps): bump hyper-util from 0.1.18 to 0.1.19",
+          "timestamp": "2025-12-04T02:56:15+08:00",
+          "tree_id": "3752866ee4b3f02039cbb13f9cdc567046057f69",
+          "url": "https://github.com/f1shl3gs/vertex/commit/864320e2b3c9c258ba498831fe75d02e3af334db"
+        },
+        "date": 1764788322373,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.568,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 171.14,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 306.67,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 621.41,
             "unit": "ns/op"
           }
         ]
