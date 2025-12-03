@@ -96,10 +96,6 @@ impl SourceConfig for Config {
     fn outputs(&self) -> Vec<OutputType> {
         vec![OutputType::log()]
     }
-
-    fn can_acknowledge(&self) -> bool {
-        false
-    }
 }
 
 fn parse_line(buf: &[u8]) -> Result<(u8, u64, u64, String), ()> {

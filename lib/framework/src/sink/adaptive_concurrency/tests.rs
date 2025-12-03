@@ -499,10 +499,6 @@ mod mock {
         fn outputs(&self) -> Vec<OutputType> {
             vec![OutputType::log()]
         }
-
-        fn can_acknowledge(&self) -> bool {
-            false
-        }
     }
 
     async fn mock_logs_source(

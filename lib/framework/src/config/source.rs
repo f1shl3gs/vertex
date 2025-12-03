@@ -94,7 +94,9 @@ pub trait SourceConfig: NamedComponent + Debug + Send + Sync {
     /// to the source, as well as emit contextual warnings when end-to-end
     /// acknowledgements are enabled, but the topology as configured does not actually
     /// support the use of end-to-end acknowledgements.
-    fn can_acknowledge(&self) -> bool;
+    fn can_acknowledge(&self) -> bool {
+        false
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]

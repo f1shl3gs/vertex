@@ -194,10 +194,6 @@ impl SourceConfig for Config {
     fn outputs(&self) -> Vec<OutputType> {
         vec![OutputType::metric()]
     }
-
-    fn can_acknowledge(&self) -> bool {
-        false
-    }
 }
 
 pub async fn gather(instance: &str, pool: Pool<MySql>) -> Result<Vec<Metric>, MysqlError> {

@@ -27,10 +27,6 @@ impl SourceConfig for Config {
     fn outputs(&self) -> Vec<OutputType> {
         vec![OutputType::log()]
     }
-
-    fn can_acknowledge(&self) -> bool {
-        false
-    }
 }
 
 /// `run` start a read only connection, and receive audit events

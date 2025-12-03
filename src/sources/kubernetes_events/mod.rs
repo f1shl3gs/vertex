@@ -75,10 +75,6 @@ impl SourceConfig for Config {
     fn outputs(&self) -> Vec<OutputType> {
         vec![OutputType::log()]
     }
-
-    fn can_acknowledge(&self) -> bool {
-        false
-    }
 }
 
 async fn watch(

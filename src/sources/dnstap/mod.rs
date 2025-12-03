@@ -80,10 +80,6 @@ impl SourceConfig for Config {
 
         vec![resource]
     }
-
-    fn can_acknowledge(&self) -> bool {
-        false
-    }
 }
 
 #[rustfmt::skip]

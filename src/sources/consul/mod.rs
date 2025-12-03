@@ -98,10 +98,6 @@ impl SourceConfig for Config {
     fn outputs(&self) -> Vec<OutputType> {
         vec![OutputType::metric()]
     }
-
-    fn can_acknowledge(&self) -> bool {
-        false
-    }
 }
 
 async fn gather(client: &Client, health_summary: bool, opts: &Option<QueryOptions>) -> Vec<Metric> {
