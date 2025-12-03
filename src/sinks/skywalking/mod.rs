@@ -161,7 +161,7 @@ impl StreamSink for SkyWalkingSink {
                     warn!(
                         message = "collect call failed",
                         status = ?status,
-                        internal_log_rate_secs = 10
+                        internal_log_rate_limit = 10
                     );
 
                     finalizers.update_status(EventStatus::Errored);

@@ -202,7 +202,7 @@ async fn check_capabilities(client: &mut GnmiClient) -> Option<i32> {
             warn!(
                 message = "get capabilities failed",
                 ?status,
-                internal_log_rate_secs = 30
+                internal_log_rate_limit = 30
             );
             return None;
         }

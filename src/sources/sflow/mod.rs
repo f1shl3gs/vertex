@@ -116,7 +116,7 @@ async fn run(
                     message = "build events failed",
                     %err,
                     %peer,
-                    internal_log_rate_secs = 30,
+                    internal_log_rate_limit = 30,
                 );
 
                 // println!("{:?}", &buf[..size]);

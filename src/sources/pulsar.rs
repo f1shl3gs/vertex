@@ -273,7 +273,7 @@ async fn run(
                             error!(
                                 message = "decode message failed",
                                 ?err,
-                                internal_log_rate_secs = 30
+                                internal_log_rate_limit = 30
                             );
                         }
                     }
@@ -282,7 +282,7 @@ async fn run(
                     error!(
                         message = "failed to read message",
                         %err,
-                        internal_log_rate_secs = 30
+                        internal_log_rate_limit = 30
                     );
                 }
             }
@@ -308,7 +308,7 @@ async fn handle_ack(
                     ?err,
                     topic = entry.topic.as_str(),
                     message = ?entry.message_id,
-                    internal_log_rate_secs = 30,
+                    internal_log_rate_limit = 30,
                 )
             }
         }
@@ -322,7 +322,7 @@ async fn handle_ack(
                     ?err,
                     topic = entry.topic.as_str(),
                     message = ?entry.message_id,
-                    internal_log_rate_secs = 30
+                    internal_log_rate_limit = 30
                 );
             }
         }

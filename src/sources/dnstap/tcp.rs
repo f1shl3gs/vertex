@@ -62,7 +62,7 @@ impl Config {
                     warn!(
                         message = "setting TCP keepalive failed",
                         ?err,
-                        internal_log_rate_secs = 30,
+                        internal_log_rate_limit = 30,
                     );
                 }
 
@@ -72,7 +72,7 @@ impl Config {
                     warn!(
                         message = "setting receive buffer bytes failed",
                         ?err,
-                        internal_log_rate_secs = 30,
+                        internal_log_rate_limit = 30,
                     );
                 }
 
