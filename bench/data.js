@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764752178240,
+  "lastUpdate": 1764752534148,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fbada39da8ebce596241fd21cd7a04a5a1cbc877",
-          "message": "Merge pull request #2595 from f1shl3gs/dependabot/cargo/lru-0.16.2\n\nchore(deps): bump lru from 0.16.1 to 0.16.2",
-          "timestamp": "2025-10-15T02:38:16+08:00",
-          "tree_id": "66e4f438c6da679b7e3383a233752b104a4cb631",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fbada39da8ebce596241fd21cd7a04a5a1cbc877"
-        },
-        "date": 1760467701550,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 15573000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 666700,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.313,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5ede5bde9f943da9a3b724b3336a0f430eed6c67",
           "message": "Merge pull request #2596 from f1shl3gs/lib/vtl/avoid_alloc_when_diagnostic\n\nlib/vtl: avoid `alloc` when diagnostic",
           "timestamp": "2025-10-15T03:55:03+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.826,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "79b169b7337f216409684ace4ada528f0e7ef22f",
+          "message": "Merge pull request #2700 from f1shl3gs/dependabot/cargo/libc-0.2.178\n\nchore(deps): bump libc from 0.2.177 to 0.2.178",
+          "timestamp": "2025-12-03T16:52:37+08:00",
+          "tree_id": "fe062c28bc4325555c593b1710eccb126db026ca",
+          "url": "https://github.com/f1shl3gs/vertex/commit/79b169b7337f216409684ace4ada528f0e7ef22f"
+        },
+        "date": 1764752510880,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14631000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 653040,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.825,
             "unit": "ns/op"
           }
         ]
