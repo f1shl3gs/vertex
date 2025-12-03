@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764797380173,
+  "lastUpdate": 1764800347242,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e30d6feeba340f901841db7e24610aa6808a14bc",
-          "message": "Merge pull request #2600 from f1shl3gs/dependabot/cargo/rustls-native-certs-0.8.2\n\nchore(deps): bump rustls-native-certs from 0.8.1 to 0.8.2",
-          "timestamp": "2025-10-15T18:55:59+08:00",
-          "tree_id": "a2a9d1b7829dbf13189e02ac29ce4dd2a988f05e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e30d6feeba340f901841db7e24610aa6808a14bc"
-        },
-        "date": 1760525880654,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 493090,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 532620,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c82c1c344ab87028cdf723c3dfa0dac2e0fce788",
+          "message": "Merge pull request #2705 from f1shl3gs/lib/buffer/add_derive_feature_to_serde\n\nlib/buffer: add `derive` feature to serde",
+          "timestamp": "2025-12-04T06:16:46+08:00",
+          "tree_id": "f97442614cc59c7264c0e7dfe71d959de7597477",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c82c1c344ab87028cdf723c3dfa0dac2e0fce788"
+        },
+        "date": 1764800325278,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 524130,
             "unit": "ns/op"
           }
         ]
