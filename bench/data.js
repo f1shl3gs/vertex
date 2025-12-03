@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764789687642,
+  "lastUpdate": 1764789749045,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b29612ffe48084f2bed061780d0e4fbb14e89444",
-          "message": "Merge pull request #2601 from f1shl3gs/sources/node/implement_configurable_for_collectors\n\nsources/node: implement configurable for Collectors",
-          "timestamp": "2025-10-16T00:05:53+08:00",
-          "tree_id": "3174925dd2e37cf9e6aa22d91b4b31439811ecff",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b29612ffe48084f2bed061780d0e4fbb14e89444"
-        },
-        "date": 1760544988231,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 554,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39772.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "01e2958da5f4956d79520e2c51dbc845ba8d77db",
           "message": "Merge pull request #2602 from f1shl3gs/extensions/exec_observer/remove_args\n\nextensions/exec_observer: remove args from config",
           "timestamp": "2025-10-16T00:53:46+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41257.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f749b60e9ac0cf108e0b9c981140456aff7ab595",
+          "message": "Merge pull request #2702 from f1shl3gs/sources/netflow/refactor\n\nsources/netflow: refactor",
+          "timestamp": "2025-12-04T03:11:18+08:00",
+          "tree_id": "f4ffc641ff570aebda4301747c7c117baa938695",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f749b60e9ac0cf108e0b9c981140456aff7ab595"
+        },
+        "date": 1764789726650,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 570,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41233.3,
             "unit": "KiB"
           }
         ]
