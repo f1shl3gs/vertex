@@ -49,7 +49,7 @@ fn handle_decode_error(encoding: &str, err: impl std::error::Error) -> ErrorMess
         message = "Failed decompressing payload",
         %err,
         encoding,
-        internal_log_rate_secs = 30
+        internal_log_rate_limit = 30
     );
 
     ErrorMessage::new(

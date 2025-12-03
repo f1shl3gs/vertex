@@ -267,7 +267,7 @@ async fn recv_loop(
                     warn!(
                         message = "Error receiving from socket",
                         %err,
-                        internal_log_rate_secs = 30
+                        internal_log_rate_limit = 30
                     );
 
                     continue
@@ -297,7 +297,7 @@ async fn recv_loop(
                 warn!(
                     message = "unknown tracker id in the EchoReply response",
                     ?peer,
-                    internal_log_rate_secs = 30
+                    internal_log_rate_limit = 30
                 );
             }
         }

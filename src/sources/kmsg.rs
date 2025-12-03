@@ -47,7 +47,7 @@ impl SourceConfig for Config {
                         warn!(
                             message = "Error reading from /dev/kmsg",
                             ?err,
-                            internal_log_rate_secs = 30
+                            internal_log_rate_limit = 30
                         );
 
                         continue;
@@ -83,7 +83,7 @@ impl SourceConfig for Config {
                         warn!(
                             message = "Error while save checkpoint for kmsg",
                             ?err,
-                            internal_log_rate_secs = 30
+                            internal_log_rate_limit = 30
                         );
                     }
                 }

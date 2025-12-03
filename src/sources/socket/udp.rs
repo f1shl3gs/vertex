@@ -105,7 +105,7 @@ pub fn udp(
                             message = "receiving udp frame",
                             %err,
                             %peer,
-                            internal_log_rate_secs = 10,
+                            internal_log_rate_limit = 10,
                         );
 
                         break;
