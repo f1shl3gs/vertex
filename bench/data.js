@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764796080080,
+  "lastUpdate": 1764796183860,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "01e2958da5f4956d79520e2c51dbc845ba8d77db",
-          "message": "Merge pull request #2602 from f1shl3gs/extensions/exec_observer/remove_args\n\nextensions/exec_observer: remove args from config",
-          "timestamp": "2025-10-16T00:53:46+08:00",
-          "tree_id": "7f79d110c71bf0224178ba9926f68f0410a9b86a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/01e2958da5f4956d79520e2c51dbc845ba8d77db"
-        },
-        "date": 1760547867253,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 560,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39770.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7a29f401d1e8b49ee1e5cf555a334d6fd0b2a2f4",
           "message": "Merge pull request #2603 from f1shl3gs/sources/exec/validate_command\n\nsources/exec: validate command value",
           "timestamp": "2025-10-16T01:19:45+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 570,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41233.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ee91beed797c4f0aa7f3a847ef58b3abca163151",
+          "message": "Merge pull request #2703 from f1shl3gs/misc/fix_internal_log_rate_limit\n\nmisc: fix `internal_log_rate_limit`",
+          "timestamp": "2025-12-04T04:58:22+08:00",
+          "tree_id": "2108e4151a296cd140fbe54a7995f169da2ab4f8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ee91beed797c4f0aa7f3a847ef58b3abca163151"
+        },
+        "date": 1764796161644,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 580,
             "unit": "s"
           },
           {
