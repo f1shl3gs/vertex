@@ -95,6 +95,11 @@ impl typesize::TypeSize for Value {
 }
 
 impl Value {
+    #[inline]
+    pub fn object() -> Self {
+        Self::Object(BTreeMap::new())
+    }
+
     /// Returns a reference to a field value specified by a path iter.
     pub fn get<'a>(&self, path: impl ValuePath<'a>) -> Option<&Self> {
         crud::get(self, path.segment_iter())
