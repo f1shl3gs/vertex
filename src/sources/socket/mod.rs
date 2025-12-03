@@ -86,10 +86,6 @@ impl SourceConfig for Config {
             }
         }
     }
-
-    fn can_acknowledge(&self) -> bool {
-        false
-    }
 }
 
 #[cfg(test)]

@@ -123,10 +123,6 @@ impl SourceConfig for Config {
     fn outputs(&self) -> Vec<OutputType> {
         vec![OutputType::metric()]
     }
-
-    fn can_acknowledge(&self) -> bool {
-        false
-    }
 }
 
 async fn scrap(client: &HttpClient, uri: &Uri, auth: Option<Auth>) -> Result<Vec<Metric>, Error> {

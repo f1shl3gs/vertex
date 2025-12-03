@@ -65,10 +65,6 @@ impl SourceConfig for Config {
     fn outputs(&self) -> Vec<OutputType> {
         vec![OutputType::trace()]
     }
-
-    fn can_acknowledge(&self) -> bool {
-        false
-    }
 }
 
 #[cfg(test)]
