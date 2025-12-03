@@ -1,27 +1,20 @@
-mod decode;
-mod ipfix;
-#[allow(clippy::module_inception)]
-mod netflow;
+mod format;
 mod template;
 
-use std::net::{IpAddr, Ipv4Addr, SocketAddr};
-use std::ops::DerefMut;
-use std::sync::Arc;
+use std::net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr};
 
 use configurable::configurable_component;
-use decode::{DataField, Error};
-use event::{Events, LogRecord};
-use framework::Source;
+use event::LogRecord;
+use format::{DataField, Error, FlowSet, OptionsDataRecord};
+use format::{parse_ipfix_packet, parse_netflow_v9};
 use framework::config::{OutputType, Resource, SourceConfig, SourceContext};
-use framework::source::udp::UdpSource;
-use ipfix::{DataRecord, FlowSet, IpFix, OptionsDataRecord};
-use netflow::NetFlow;
-use parking_lot::RwLock;
-use template::{BasicTemplateSystem, TemplateSystem};
-use value::Value;
+use framework::{Pipeline, ShutdownSignal, Source, udp};
+use template::TemplateCache;
+use tokio::net::UdpSocket;
+use value::{Value, value};
 
 fn default_listen() -> SocketAddr {
-    SocketAddr::new(IpAddr::V4(Ipv4Addr::UNSPECIFIED), 4739)
+    SocketAddr::new(IpAddr::V4(Ipv4Addr::UNSPECIFIED), 2055)
 }
 
 #[configurable_component(source, name = "netflow")]
@@ -37,11 +30,29 @@ struct Config {
 #[typetag::serde(name = "netflow")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let source = NetFlowSource {
-            templates: Arc::new(RwLock::new(BasicTemplateSystem::default())),
+        let socket = match UdpSocket::bind(&self.listen).await {
+            Ok(socket) => socket,
+            Err(err) => {
+                error!(
+                    message = "bind UDP failed",
+                    listen = %self.listen,
+                    %err
+                );
+                return Err(err.into());
+            }
         };
 
-        source.run(self.listen, self.receive_buffer_size, cx)
+        if let Some(receive_buffer_size) = &self.receive_buffer_size
+            && let Err(err) = udp::set_receive_buffer_size(&socket, *receive_buffer_size)
+        {
+            warn!(
+                message = "failed configure receive buffer size on UDP socket",
+                listen = %self.listen,
+                %err
+            );
+        }
+
+        Ok(Box::pin(run(socket, cx.output, cx.shutdown)))
     }
 
     fn outputs(&self) -> Vec<OutputType> {
@@ -57,1813 +68,984 @@ impl SourceConfig for Config {
     }
 }
 
-struct NetFlowSource<T> {
-    templates: Arc<RwLock<T>>,
-}
+async fn run(
+    listener: UdpSocket,
+    mut output: Pipeline,
+    mut shutdown: ShutdownSignal,
+) -> Result<(), ()> {
+    let mut buf = [0u8; u16::MAX as usize];
+    let mut templates = TemplateCache::default();
 
-impl<T> UdpSource for NetFlowSource<T>
-where
-    T: TemplateSystem + Send + Sync + 'static,
-{
-    type Error = Error;
+    loop {
+        let (size, peer) = tokio::select! {
+            _ = &mut shutdown => break,
+            result = listener.recv_from(&mut buf) => {
+                match result {
+                    Ok(res) => res,
+                    Err(err) => {
+                        warn!(
+                            message = "error receiving data from socket",
+                            ?err
+                        );
 
-    fn build_events(&self, peer: SocketAddr, data: &[u8]) -> Result<Events, Error> {
-        if data.len() < 2 {
-            return Err(Error::DatagramTooShort);
-        }
-
-        let version = u16::from_be_bytes(data[..2].try_into().unwrap());
-        let value = match version {
-            10 => {
-                // IPFIX
-                let ipfix = {
-                    let mut templates = self.templates.write();
-                    IpFix::decode(data, templates.deref_mut())?
-                };
-
-                convert_ipfix(ipfix)
+                        return Err(())
+                    }
+                }
             }
-            9 => {
-                // NetFlow v9
-                let netflow = {
-                    let mut templates = self.templates.write();
-                    NetFlow::decode(data, templates.deref_mut())?
-                };
+        };
 
-                convert_netflow(netflow)?
+        match build(&buf[..size], &mut templates) {
+            Ok(logs) => {
+                if logs.is_empty() {
+                    continue;
+                }
+
+                if let Err(_err) = output.send(logs).await {
+                    break;
+                }
             }
-            version => {
+            Err(err) => {
                 warn!(
-                    message = "invalid version of datagram",
+                    message = "build flow logs failed",
                     %peer,
-                    version,
-                    internal_log_rate_secs = 30
+                    %err,
+                    internal_log_rate_limit = 30
                 );
 
-                return Err(Error::IncompatibleVersion(version));
+                continue;
             }
-        };
-
-        let mut log = LogRecord::from(value);
-        let metadata = log.metadata_mut().value_mut();
-
-        metadata.insert("netflow.version", version);
-        metadata.insert("netflow.peer", peer.to_string());
-
-        Ok(log.into())
-    }
-}
-
-fn convert_netflow(netflow: NetFlow) -> Result<Value, Error> {
-    let mut value = Value::Object(Default::default());
-
-    value.insert("version", netflow.version);
-    value.insert("count", netflow.count);
-    value.insert("system_uptime", netflow.system_uptime);
-    value.insert("unix_seconds", netflow.unix_seconds);
-    value.insert("sequence_number", netflow.sequence_number);
-    value.insert("source_id", netflow.source_id);
-
-    let mut flow_sets = Vec::with_capacity(netflow.flow_sets.len());
-    for flow_set in netflow.flow_sets {
-        let set = match flow_set {
-            netflow::FlowSet::Data {
-                template_id,
-                length,
-                records,
-            } => {
-                let mut value = Value::Object(Default::default());
-
-                value.insert("template_id", template_id);
-                value.insert("length", length);
-                value.insert("records", convert_data_records(&records));
-
-                value
-            }
-            netflow::FlowSet::OptionsData {
-                template_id,
-                records,
-            } => {
-                let mut value = Value::Object(Default::default());
-
-                value.insert("template_id", template_id);
-                value.insert("records", convert_options_data_records(&records));
-
-                value
-            }
-            _ => continue,
-        };
-
-        flow_sets.push(set);
-    }
-
-    value.insert("flow_sets", flow_sets);
-
-    Ok(value)
-}
-
-fn convert_ipfix(packet: IpFix) -> Value {
-    let mut value = Value::Object(Default::default());
-
-    value.insert("version", packet.version);
-    value.insert("length", packet.length);
-    value.insert("export_time", packet.export_time); // convert timestamp!?
-    value.insert("sequence_number", packet.sequence_number);
-    value.insert("observation_domain_id", packet.observation_domain_id);
-
-    let mut flow_sets = Vec::with_capacity(packet.flow_sets.len());
-    for flow_set in packet.flow_sets {
-        let set = match flow_set {
-            FlowSet::Data {
-                template_id,
-                length,
-                records,
-            } => {
-                let mut set = Value::Object(Default::default());
-
-                set.insert("template_id", template_id);
-                set.insert("length", length);
-                set.insert("records", convert_data_records(&records));
-
-                set
-            }
-            FlowSet::OptionsData {
-                template_id,
-                length,
-                records,
-            } => {
-                let mut set = Value::Object(Default::default());
-
-                set.insert("template_id", template_id);
-                set.insert("length", length);
-                set.insert("records", convert_options_data_records(&records));
-
-                set
-            }
-            _ => continue,
-        };
-
-        flow_sets.push(set);
-    }
-
-    value.insert("flow_sets", flow_sets);
-
-    value
-}
-
-fn convert_data_records(records: &[DataRecord]) -> Vec<Value> {
-    let mut array = Vec::with_capacity(records.len());
-
-    for record in records {
-        let mut value = Value::Object(Default::default());
-        for field in &record.fields {
-            let _ = set_property(&mut value, field);
         }
-
-        array.push(value);
-    }
-
-    array
-}
-
-fn convert_options_data_records(records: &[OptionsDataRecord]) -> Vec<Value> {
-    let mut array = Vec::with_capacity(records.len());
-
-    for record in records {
-        let mut value = Value::Object(Default::default());
-
-        for field in &record.options {
-            let _ = set_property(&mut value, field);
-        }
-
-        for field in &record.scopes {
-            let _ = set_property(&mut value, field);
-        }
-
-        array.push(value);
-    }
-
-    array
-}
-
-/// https://www.iana.org/assignments/ipfix/ipfix.xhtml
-fn set_property(value: &mut Value, field: &DataField) -> Result<(), Error> {
-    match field.typ {
-        1 => {
-            value.insert("octetDeltaCount", field.to_u64()?);
-        }
-        2 => {
-            value.insert("packetDeltaCount", field.to_u64()?);
-        }
-        3 => {
-            value.insert("deltaFlowCount", field.to_u64()?);
-        }
-        4 => {
-            value.insert("protocolIdentifier", field.data[0]);
-        }
-        5 => {
-            value.insert("ipClassOfService", field.data[0]);
-        }
-        6 => {
-            value.insert("tcpControlBits", field.to_u16()?);
-        }
-        7 => {
-            value.insert("sourceTransportPort", field.to_u16()?);
-        }
-        8 => {
-            value.insert(
-                "sourceIPv4Address",
-                format!(
-                    "{}.{}.{}.{}",
-                    field.data[0], field.data[1], field.data[2], field.data[3]
-                ),
-            );
-        }
-        9 => {
-            value.insert("sourceIPv4PrefixLength", field.data[0]);
-        }
-        10 => {
-            value.insert("ingressInterface", field.to_u32()?);
-        }
-        11 => {
-            value.insert("destinationTransportPort", field.to_u16()?);
-        }
-        12 => {
-            value.insert(
-                "destinationIPv4Address",
-                format!(
-                    "{}.{}.{}.{}",
-                    field.data[0], field.data[1], field.data[2], field.data[3]
-                ),
-            );
-        }
-        13 => {
-            value.insert("destinationIPv4PrefixLength", field.data[0]);
-        }
-        14 => {
-            value.insert("egressInterface", field.to_u32()?);
-        }
-        15 => {
-            value.insert(
-                "ipNextHopIPv4Address",
-                format!(
-                    "{}.{}.{}.{}",
-                    field.data[0], field.data[1], field.data[2], field.data[3]
-                ),
-            );
-        }
-        16 => {
-            value.insert("bgpSourceAsNumber", field.to_u32()?);
-        }
-        17 => {
-            value.insert("bgpDestinationAsNumber", field.to_u32()?);
-        }
-        18 => {
-            value.insert(
-                "bgpNextHopIPv4Address",
-                format!(
-                    "{}.{}.{}.{}",
-                    field.data[0], field.data[1], field.data[2], field.data[3]
-                ),
-            );
-        }
-        19 => {
-            value.insert("postMCastPacketDeltaCount", field.to_u64()?);
-        }
-        20 => {
-            value.insert("postMCastOctetDeltaCount", field.to_u64()?);
-        }
-        21 => {
-            value.insert("flowEndSysUpTime", field.to_u32()?);
-        }
-        22 => {
-            value.insert("flowStartSysUpTime", field.to_u32()?);
-        }
-        23 => {
-            value.insert("postOctetDeltaCount", field.to_u64()?);
-        }
-        24 => {
-            value.insert("postPacketDeltaCount", field.to_u64()?);
-        }
-        25 => {
-            value.insert("minimumIpTotalLength", field.to_u64()?);
-        }
-        26 => {
-            value.insert("maximumIpTotalLength", field.to_u64()?);
-        }
-        27 => {
-            value.insert("sourceIPv6Address", field.ipv6()?.to_string());
-        }
-        28 => {
-            value.insert("destinationIPv6Address", field.ipv6()?.to_string());
-        }
-        29 => {
-            value.insert("sourceIPv6PrefixLength", field.data[0]);
-        }
-        30 => {
-            value.insert("destinationIPv6PrefixLength", field.data[0]);
-        }
-        31 => {
-            value.insert("flowLabelIPv6", field.to_u32()?);
-        }
-        32 => {
-            value.insert("icmpTypeCodeIPv4", field.to_u16()?);
-        }
-        33 => {
-            value.insert("igmpType", field.data[0]);
-        }
-        34 => {
-            value.insert("samplingInterval", field.to_u32()?);
-        }
-        35 => {
-            value.insert("samplingAlgorithm", field.data[0]);
-        }
-        36 => {
-            value.insert("flowActiveTimeout", field.to_u16()?);
-        }
-        37 => {
-            value.insert("flowIdleTimeout", field.to_u16()?);
-        }
-        38 => {
-            value.insert("engineType", field.data[0]);
-        }
-        39 => {
-            value.insert("engineId", field.data[0]);
-        }
-        40 => {
-            value.insert("exportedOctetTotalCount", field.to_u64()?);
-        }
-        41 => {
-            value.insert("exportedMessageTotalCount", field.to_u64()?);
-        }
-        42 => {
-            value.insert("exportedFlowRecordTotalCount", field.to_u64()?);
-        }
-        43 => {
-            value.insert(
-                "ipv4RouterSc",
-                format!(
-                    "{}.{}.{}.{}",
-                    field.data[0], field.data[1], field.data[2], field.data[3]
-                ),
-            );
-        }
-        44 => {
-            value.insert(
-                "sourceIPv4Prefix",
-                format!(
-                    "{}.{}.{}.{}",
-                    field.data[0], field.data[1], field.data[2], field.data[3]
-                ),
-            );
-        }
-        45 => {
-            value.insert(
-                "destinationIPv4Prefix",
-                format!(
-                    "{}.{}.{}.{}",
-                    field.data[0], field.data[1], field.data[2], field.data[3]
-                ),
-            );
-        }
-        46 => {
-            value.insert("mplsTopLabelType", field.data[0]);
-        }
-        47 => {
-            value.insert(
-                "mplsTopLabelIPv4Address",
-                format!(
-                    "{}.{}.{}.{}",
-                    field.data[0], field.data[1], field.data[2], field.data[3]
-                ),
-            );
-        }
-        48 => {
-            value.insert("samplerId", field.data[0]);
-        }
-        49 => {
-            value.insert("samplerMode", field.data[0]);
-        }
-        50 => {
-            value.insert("samplerRandomInterval", field.to_u32()?);
-        }
-        51 => {
-            value.insert("classId", field.data[0]);
-        }
-        52 => {
-            value.insert("minimumTTL", field.data[0]);
-        }
-        53 => {
-            value.insert("maximumTTL", field.data[0]);
-        }
-        54 => {
-            value.insert("fragmentIdentification", field.to_u32()?);
-        }
-        55 => {
-            value.insert("postIpClassOfService", field.data[0]);
-        }
-        56 => {
-            value.insert(
-                "sourceMacAddress",
-                format!(
-                    "{:<02X}:{:<02X}:{:<02X}:{:<02X}:{:<02X}:{:<02X}",
-                    field.data[0],
-                    field.data[1],
-                    field.data[2],
-                    field.data[3],
-                    field.data[4],
-                    field.data[5]
-                ),
-            );
-        }
-        57 => {
-            value.insert(
-                "postDestinationMacAddress",
-                format!(
-                    "{:<02X}:{:<02X}:{:<02X}:{:<02X}:{:<02X}:{:<02X}",
-                    field.data[0],
-                    field.data[1],
-                    field.data[2],
-                    field.data[3],
-                    field.data[4],
-                    field.data[5]
-                ),
-            );
-        }
-        58 => {
-            value.insert("vlanId", field.to_u16()?);
-        }
-        59 => {
-            value.insert("postVlanId", field.to_u16()?);
-        }
-        60 => {
-            value.insert("ipVersion", field.data[0]);
-        }
-        61 => {
-            value.insert("flowDirection", field.data[0]);
-        }
-        62 => {
-            value.insert("ipNextHopIPv6Address", field.ipv6()?.to_string());
-        }
-        63 => {
-            value.insert("bgpNextHopIPv6Address", field.ipv6()?.to_string());
-        }
-        64 => {
-            value.insert("ipv6ExtensionHeaders", field.to_u32()?);
-        }
-        70 => {
-            value.insert("mplsTopLabelStackSection", field.data);
-        }
-        71 => {
-            value.insert("mplsLabelStackSection2", field.data);
-        }
-        72 => {
-            value.insert("mplsLabelStackSection3", field.data);
-        }
-        73 => {
-            value.insert("mplsLabelStackSection4", field.data);
-        }
-        74 => {
-            value.insert("mplsLabelStackSection5", field.data);
-        }
-        75 => {
-            value.insert("mplsLabelStackSection6", field.data);
-        }
-        76 => {
-            value.insert("mplsLabelStackSection7", field.data);
-        }
-        77 => {
-            value.insert("mplsLabelStackSection8", field.data);
-        }
-        78 => {
-            value.insert("mplsLabelStackSection9", field.data);
-        }
-        79 => {
-            value.insert("mplsLabelStackSection10", field.data);
-        }
-        80 => {
-            value.insert(
-                "destinationMacAddress",
-                format!(
-                    "{:<02X}:{:<02X}:{:<02X}:{:<02X}:{:<02X}:{:<02X}",
-                    field.data[0],
-                    field.data[1],
-                    field.data[2],
-                    field.data[3],
-                    field.data[4],
-                    field.data[5]
-                ),
-            );
-        }
-        81 => {
-            value.insert(
-                "postSourceMacAddress",
-                format!(
-                    "{:<02X}:{:<02X}:{:<02X}:{:<02X}:{:<02X}:{:<02X}",
-                    field.data[0],
-                    field.data[1],
-                    field.data[2],
-                    field.data[3],
-                    field.data[4],
-                    field.data[5]
-                ),
-            );
-        }
-        82 => {
-            value.insert("interfaceName", field.string()?);
-        }
-        83 => {
-            value.insert("interfaceDescription", field.string()?);
-        }
-        84 => {
-            value.insert("samplerName", field.string()?);
-        }
-        85 => {
-            value.insert("octetTotalCount", field.to_u64()?);
-        }
-        86 => {
-            value.insert("packetTotalCount", field.to_u64()?);
-        }
-        87 => {
-            value.insert("flagsAndSamplerId", field.to_u32()?);
-        }
-        88 => {
-            value.insert("fragmentOffset", field.to_u16()?);
-        }
-        89 => {
-            value.insert("forwardingStatus", field.to_u32()?);
-        }
-        90 => {
-            value.insert("mplsVpnRouteDistinguisher", field.data);
-        }
-        91 => {
-            value.insert("mplsTopLabelPrefixLength", field.data[0]);
-        }
-        92 => {
-            value.insert("srcTrafficIndex", field.to_u32()?);
-        }
-        93 => {
-            value.insert("dstTrafficIndex", field.to_u32()?);
-        }
-        94 => {
-            value.insert("applicationDescription", field.string()?);
-        }
-        95 => {
-            value.insert("applicationId", field.data);
-        }
-        96 => {
-            value.insert("applicationName", field.string()?);
-        }
-        98 => {
-            value.insert("postIpDiffServCodePoint", field.data[0]);
-        }
-        99 => {
-            value.insert("multicastReplicationFactor", field.to_u32()?);
-        }
-        100 => {
-            value.insert("className", field.string()?);
-        }
-        101 => {
-            value.insert("classificationEngineId", field.data[0]);
-        }
-        102 => {
-            value.insert("layer2packetSectionOffset", field.to_u16()?);
-        }
-        103 => {
-            value.insert("layer2packetSectionSize", field.to_u16()?);
-        }
-        104 => {
-            value.insert("layer2packetSectionData", field.data);
-        }
-        128 => {
-            value.insert("bgpNextAdjacentAsNumber", field.to_u32()?);
-        }
-        129 => {
-            value.insert("bgpPrevAdjacentAsNumber", field.to_u32()?);
-        }
-        130 => {
-            value.insert(
-                "exporterIPv4Address",
-                format!(
-                    "{}.{}.{}.{}",
-                    field.data[0], field.data[1], field.data[2], field.data[3]
-                ),
-            );
-        }
-        131 => {
-            value.insert("exporterIPv6Address", field.ipv6()?.to_string());
-        }
-        132 => {
-            value.insert("droppedOctetDeltaCount", field.to_u64()?);
-        }
-        133 => {
-            value.insert("droppedPacketDeltaCount", field.to_u64()?);
-        }
-        134 => {
-            value.insert("droppedOctetTotalCount", field.to_u64()?);
-        }
-        135 => {
-            value.insert("droppedPacketTotalCount", field.to_u64()?);
-        }
-        136 => {
-            value.insert("flowEndReason", field.data[0]);
-        }
-        137 => {
-            value.insert("commonPropertiesId", field.to_u64()?);
-        }
-        138 => {
-            value.insert("observationPointId", field.to_u64()?);
-        }
-        139 => {
-            value.insert("icmpTypeCodeIPv6", field.to_u16()?);
-        }
-        140 => {
-            value.insert("mplsTopLabelIPv6Address", field.ipv6()?.to_string());
-        }
-        141 => {
-            value.insert("lineCardId", field.to_u32()?);
-        }
-        142 => {
-            value.insert("portId", field.to_u32()?);
-        }
-        143 => {
-            value.insert("meteringProcessId", field.to_u32()?);
-        }
-        144 => {
-            value.insert("exportingProcessId", field.to_u32()?);
-        }
-        145 => {
-            value.insert("templateId", field.to_u16()?);
-        }
-        146 => {
-            value.insert("wlanChannelId", field.data[0]);
-        }
-        147 => {
-            value.insert("wlanSSID", field.string()?);
-        }
-        148 => {
-            value.insert("flowId", field.to_u64()?);
-        }
-        149 => {
-            value.insert("observationDomainId", field.to_u32()?);
-        }
-        150 => {
-            value.insert("flowStartSeconds", field.to_i32()?);
-        }
-        151 => {
-            value.insert("flowEndSeconds", field.to_i32()?);
-        }
-        152 => {
-            value.insert("flowStartMilliseconds", field.to_i32()?);
-        }
-        153 => {
-            value.insert("flowEndMilliseconds", field.to_i32()?);
-        }
-        154 => {
-            value.insert("flowStartMicroseconds", field.to_i32()?);
-        }
-        155 => {
-            value.insert("flowEndMicroseconds", field.to_i32()?);
-        }
-        156 => {
-            value.insert("flowStartNanoseconds", field.to_i64()?);
-        }
-        157 => {
-            value.insert("flowEndNanoseconds", field.to_i64()?);
-        }
-        158 => {
-            value.insert("flowStartDeltaMicroseconds", field.to_u32()?);
-        }
-        159 => {
-            value.insert("flowEndDeltaMicroseconds", field.to_u32()?);
-        }
-        160 => {
-            value.insert("systemInitTimeMilliseconds", field.to_i32()?);
-        }
-        161 => {
-            value.insert("flowDurationMilliseconds", field.to_u32()?);
-        }
-        162 => {
-            value.insert("flowDurationMicroseconds", field.to_u32()?);
-        }
-        163 => {
-            value.insert("observedFlowTotalCount", field.to_u64()?);
-        }
-        164 => {
-            value.insert("ignoredPacketTotalCount", field.to_u64()?);
-        }
-        165 => {
-            value.insert("ignoredOctetTotalCount", field.to_u64()?);
-        }
-        166 => {
-            value.insert("notSentFlowTotalCount", field.to_u64()?);
-        }
-        167 => {
-            value.insert("notSentPacketTotalCount", field.to_u64()?);
-        }
-        168 => {
-            value.insert("notSentOctetTotalCount", field.to_u64()?);
-        }
-        169 => {
-            value.insert("destinationIPv6Prefix", field.ipv6()?.to_string());
-        }
-        170 => {
-            value.insert("sourceIPv6Prefix", field.ipv6()?.to_string());
-        }
-        171 => {
-            value.insert("postOctetTotalCount", field.to_u64()?);
-        }
-        172 => {
-            value.insert("postPacketTotalCount", field.to_u64()?);
-        }
-        173 => {
-            value.insert("flowKeyIndicator", field.to_u64()?);
-        }
-        174 => {
-            value.insert("postMCastPacketTotalCount", field.to_u64()?);
-        }
-        175 => {
-            value.insert("postMCastOctetTotalCount", field.to_u64()?);
-        }
-        176 => {
-            value.insert("icmpTypeIPv4", field.data[0]);
-        }
-        177 => {
-            value.insert("icmpCodeIPv4", field.data[0]);
-        }
-        178 => {
-            value.insert("icmpTypeIPv6", field.data[0]);
-        }
-        179 => {
-            value.insert("icmpCodeIPv6", field.data[0]);
-        }
-        180 => {
-            value.insert("udpSourcePort", field.to_u16()?);
-        }
-        181 => {
-            value.insert("udpDestinationPort", field.to_u16()?);
-        }
-        182 => {
-            value.insert("tcpSourcePort", field.to_u16()?);
-        }
-        183 => {
-            value.insert("tcpDestinationPort", field.to_u16()?);
-        }
-        184 => {
-            value.insert("tcpSequenceNumber", field.to_u32()?);
-        }
-        185 => {
-            value.insert("tcpAcknowledgementNumber", field.to_u32()?);
-        }
-        186 => {
-            value.insert("tcpWindowSize", field.to_u16()?);
-        }
-        187 => {
-            value.insert("tcpUrgentPointer", field.to_u16()?);
-        }
-        188 => {
-            value.insert("tcpHeaderLength", field.data[0]);
-        }
-        189 => {
-            value.insert("ipHeaderLength", field.data[0]);
-        }
-        190 => {
-            value.insert("totalLengthIPv4", field.to_u16()?);
-        }
-        191 => {
-            value.insert("payloadLengthIPv6", field.to_u16()?);
-        }
-        192 => {
-            value.insert("ipTTL", field.data[0]);
-        }
-        193 => {
-            value.insert("nextHeaderIPv6", field.data[0]);
-        }
-        194 => {
-            value.insert("mplsPayloadLength", field.to_u32()?);
-        }
-        195 => {
-            value.insert("ipDiffServCodePoint", field.data[0]);
-        }
-        196 => {
-            value.insert("ipPrecedence", field.data[0]);
-        }
-        197 => {
-            value.insert("fragmentFlags", field.data[0]);
-        }
-        198 => {
-            value.insert("octetDeltaSumOfSquares", field.to_u64()?);
-        }
-        199 => {
-            value.insert("octetTotalSumOfSquares", field.to_u64()?);
-        }
-        200 => {
-            value.insert("mplsTopLabelTTL", field.data[0]);
-        }
-        201 => {
-            value.insert("mplsLabelStackLength", field.to_u32()?);
-        }
-        202 => {
-            value.insert("mplsLabelStackDepth", field.to_u32()?);
-        }
-        203 => {
-            value.insert("mplsTopLabelExp", field.data[0]);
-        }
-        204 => {
-            value.insert("ipPayloadLength", field.to_u32()?);
-        }
-        205 => {
-            value.insert("udpMessageLength", field.to_u16()?);
-        }
-        206 => {
-            value.insert("isMulticast", field.data[0]);
-        }
-        207 => {
-            value.insert("ipv4IHL", field.data[0]);
-        }
-        208 => {
-            value.insert("ipv4Options", field.to_u32()?);
-        }
-        209 => {
-            value.insert("tcpOptions", field.to_u64()?);
-        }
-        210 => {
-            value.insert("paddingOctets", field.data);
-        }
-        211 => {
-            value.insert(
-                "collectorIPv4Address",
-                format!(
-                    "{}.{}.{}.{}",
-                    field.data[0], field.data[1], field.data[2], field.data[3]
-                ),
-            );
-        }
-        212 => {
-            value.insert("collectorIPv6Address", field.ipv6()?.to_string());
-        }
-        213 => {
-            value.insert("exportInterface", field.to_u32()?);
-        }
-        214 => {
-            value.insert("exportProtocolVersion", field.data[0]);
-        }
-        215 => {
-            value.insert("exportTransportProtocol", field.data[0]);
-        }
-        216 => {
-            value.insert("collectorTransportPort", field.to_u16()?);
-        }
-        217 => {
-            value.insert("exporterTransportPort", field.to_u16()?);
-        }
-        218 => {
-            value.insert("tcpSynTotalCount", field.to_u64()?);
-        }
-        219 => {
-            value.insert("tcpFinTotalCount", field.to_u64()?);
-        }
-        220 => {
-            value.insert("tcpRstTotalCount", field.to_u64()?);
-        }
-        221 => {
-            value.insert("tcpPshTotalCount", field.to_u64()?);
-        }
-        222 => {
-            value.insert("tcpAckTotalCount", field.to_u64()?);
-        }
-        223 => {
-            value.insert("tcpUrgTotalCount", field.to_u64()?);
-        }
-        224 => {
-            value.insert("ipTotalLength", field.to_u64()?);
-        }
-        225 => {
-            value.insert(
-                "postNATSourceIPv4Address",
-                format!(
-                    "{}.{}.{}.{}",
-                    field.data[0], field.data[1], field.data[2], field.data[3]
-                ),
-            );
-        }
-        226 => {
-            value.insert(
-                "postNATDestinationIPv4Address",
-                format!(
-                    "{}.{}.{}.{}",
-                    field.data[0], field.data[1], field.data[2], field.data[3]
-                ),
-            );
-        }
-        227 => {
-            value.insert("postNAPTSourceTransportPort", field.to_u16()?);
-        }
-        228 => {
-            value.insert("postNAPTDestinationTransportPort", field.to_u16()?);
-        }
-        229 => {
-            value.insert("natOriginatingAddressRealm", field.data[0]);
-        }
-        230 => {
-            value.insert("natEvent", field.data[0]);
-        }
-        231 => {
-            value.insert("initiatorOctets", field.to_u64()?);
-        }
-        232 => {
-            value.insert("responderOctets", field.to_u64()?);
-        }
-        233 => {
-            value.insert("firewallEvent", field.data[0]);
-        }
-        234 => {
-            value.insert("ingressVRFID", field.to_u32()?);
-        }
-        235 => {
-            value.insert("egressVRFID", field.to_u32()?);
-        }
-        236 => {
-            value.insert("VRFname", field.string()?);
-        }
-        237 => {
-            value.insert("postMplsTopLabelExp", field.data[0]);
-        }
-        238 => {
-            value.insert("tcpWindowScale", field.to_u16()?);
-        }
-        239 => {
-            value.insert("biflowDirection", field.data[0]);
-        }
-        240 => {
-            value.insert("ethernetHeaderLength", field.data[0]);
-        }
-        241 => {
-            value.insert("ethernetPayloadLength", field.to_u16()?);
-        }
-        242 => {
-            value.insert("ethernetTotalLength", field.to_u16()?);
-        }
-        243 => {
-            value.insert("dot1qVlanId", field.to_u16()?);
-        }
-        244 => {
-            value.insert("dot1qPriority", field.data[0]);
-        }
-        245 => {
-            value.insert("dot1qCustomerVlanId", field.to_u16()?);
-        }
-        246 => {
-            value.insert("dot1qCustomerPriority", field.data[0]);
-        }
-        247 => {
-            value.insert("metroEvcId", field.string()?);
-        }
-        248 => {
-            value.insert("metroEvcType", field.data[0]);
-        }
-        249 => {
-            value.insert("pseudoWireId", field.to_u32()?);
-        }
-        250 => {
-            value.insert("pseudoWireType", field.to_u16()?);
-        }
-        251 => {
-            value.insert("pseudoWireControlWord", field.to_u32()?);
-        }
-        252 => {
-            value.insert("ingressPhysicalInterface", field.to_u32()?);
-        }
-        253 => {
-            value.insert("egressPhysicalInterface", field.to_u32()?);
-        }
-        254 => {
-            value.insert("postDot1qVlanId", field.to_u16()?);
-        }
-        255 => {
-            value.insert("postDot1qCustomerVlanId", field.to_u16()?);
-        }
-        256 => {
-            value.insert("ethernetType", field.to_u16()?);
-        }
-        257 => {
-            value.insert("postIpPrecedence", field.data[0]);
-        }
-        258 => {
-            value.insert("collectionTimeMilliseconds", field.to_i32()?);
-        }
-        259 => {
-            value.insert("exportSctpStreamId", field.to_u16()?);
-        }
-        260 => {
-            value.insert("maxExportSeconds", field.to_i32()?);
-        }
-        261 => {
-            value.insert("maxFlowEndSeconds", field.to_i32()?);
-        }
-        262 => {
-            value.insert("messageMD5Checksum", field.data);
-        }
-        263 => {
-            value.insert("messageScope", field.data[0]);
-        }
-        264 => {
-            value.insert("minExportSeconds", field.to_i32()?);
-        }
-        265 => {
-            value.insert("minFlowStartSeconds", field.to_i32()?);
-        }
-        266 => {
-            value.insert("opaqueOctets", field.data);
-        }
-        267 => {
-            value.insert("sessionScope", field.data[0]);
-        }
-        268 => {
-            value.insert("maxFlowEndMicroseconds", field.to_i32()?);
-        }
-        269 => {
-            value.insert("maxFlowEndMilliseconds", field.to_i32()?);
-        }
-        270 => {
-            value.insert("maxFlowEndNanoseconds", field.to_i64()?);
-        }
-        271 => {
-            value.insert("minFlowStartMicroseconds", field.to_i32()?);
-        }
-        272 => {
-            value.insert("minFlowStartMilliseconds", field.to_i32()?);
-        }
-        273 => {
-            value.insert("minFlowStartNanoseconds", field.to_i64()?);
-        }
-        274 => {
-            value.insert("collectorCertificate", field.data);
-        }
-        275 => {
-            value.insert("exporterCertificate", field.data);
-        }
-        276 => {
-            value.insert("dataRecordsReliability", field.data[0] == 1);
-        }
-        277 => {
-            value.insert("observationPointType", field.data[0]);
-        }
-        278 => {
-            value.insert("newConnectionDeltaCount", field.to_u32()?);
-        }
-        279 => {
-            value.insert("connectionSumDurationSeconds", field.to_u64()?);
-        }
-        280 => {
-            value.insert("connectionTransactionId", field.to_u64()?);
-        }
-        281 => {
-            value.insert("postNATSourceIPv6Address", field.ipv6()?.to_string());
-        }
-        282 => {
-            value.insert("postNATDestinationIPv6Address", field.ipv6()?.to_string());
-        }
-        283 => {
-            value.insert("natPoolId", field.to_u32()?);
-        }
-        284 => {
-            value.insert("natPoolName", field.string()?);
-        }
-        285 => {
-            value.insert("anonymizationFlags", field.to_u16()?);
-        }
-        286 => {
-            value.insert("anonymizationTechnique", field.to_u16()?);
-        }
-        287 => {
-            value.insert("informationElementIndex", field.to_u16()?);
-        }
-        288 => {
-            value.insert("p2pTechnology", field.string()?);
-        }
-        289 => {
-            value.insert("tunnelTechnology", field.string()?);
-        }
-        290 => {
-            value.insert("encryptedTechnology", field.string()?);
-        }
-        294 => {
-            value.insert("bgpValidityState", field.data[0]);
-        }
-        295 => {
-            value.insert("IPSecSPI", field.to_u32()?);
-        }
-        296 => {
-            value.insert("greKey", field.to_u32()?);
-        }
-        297 => {
-            value.insert("natType", field.data[0]);
-        }
-        298 => {
-            value.insert("initiatorPackets", field.to_u64()?);
-        }
-        299 => {
-            value.insert("responderPackets", field.to_u64()?);
-        }
-        300 => {
-            value.insert("observationDomainName", field.string()?);
-        }
-        301 => {
-            value.insert("selectionSequenceId", field.to_u64()?);
-        }
-        302 => {
-            value.insert("selectorId", field.to_u64()?);
-        }
-        303 => {
-            value.insert("informationElementId", field.to_u16()?);
-        }
-        304 => {
-            value.insert("selectorAlgorithm", field.to_u16()?);
-        }
-        305 => {
-            value.insert("samplingPacketInterval", field.to_u32()?);
-        }
-        306 => {
-            value.insert("samplingPacketSpace", field.to_u32()?);
-        }
-        307 => {
-            value.insert("samplingTimeInterval", field.to_u32()?);
-        }
-        308 => {
-            value.insert("samplingTimeSpace", field.to_u32()?);
-        }
-        309 => {
-            value.insert("samplingSize", field.to_u32()?);
-        }
-        310 => {
-            value.insert("samplingPopulation", field.to_u32()?);
-        }
-        311 => {
-            value.insert("samplingProbability", field.to_f64()?);
-        }
-        312 => {
-            value.insert("dataLinkFrameSize", field.to_u16()?);
-        }
-        313 => {
-            value.insert("ipHeaderPacketSection", field.data);
-        }
-        314 => {
-            value.insert("ipPayloadPacketSection", field.data);
-        }
-        315 => {
-            value.insert("dataLinkFrameSection", field.data);
-        }
-        316 => {
-            value.insert("mplsLabelStackSection", field.data);
-        }
-        317 => {
-            value.insert("mplsPayloadPacketSection", field.data);
-        }
-        318 => {
-            value.insert("selectorIdTotalPktsObserved", field.to_u64()?);
-        }
-        319 => {
-            value.insert("selectorIdTotalPktsSelected", field.to_u64()?);
-        }
-        320 => {
-            value.insert("absoluteError", field.to_f64()?);
-        }
-        321 => {
-            value.insert("relativeError", field.to_f64()?);
-        }
-        322 => {
-            value.insert("observationTimeSeconds", field.to_i32()?);
-        }
-        323 => {
-            value.insert("observationTimeMilliseconds", field.to_i32()?);
-        }
-        324 => {
-            value.insert("observationTimeMicroseconds", field.to_i32()?);
-        }
-        325 => {
-            value.insert("observationTimeNanoseconds", field.to_i64()?);
-        }
-        326 => {
-            value.insert("digestHashValue", field.to_u64()?);
-        }
-        327 => {
-            value.insert("hashIPPayloadOffset", field.to_u64()?);
-        }
-        328 => {
-            value.insert("hashIPPayloadSize", field.to_u64()?);
-        }
-        329 => {
-            value.insert("hashOutputRangeMin", field.to_u64()?);
-        }
-        330 => {
-            value.insert("hashOutputRangeMax", field.to_u64()?);
-        }
-        331 => {
-            value.insert("hashSelectedRangeMin", field.to_u64()?);
-        }
-        332 => {
-            value.insert("hashSelectedRangeMax", field.to_u64()?);
-        }
-        333 => {
-            value.insert("hashDigestOutput", field.data[0] == 1);
-        }
-        334 => {
-            value.insert("hashInitialiserValue", field.to_u64()?);
-        }
-        335 => {
-            value.insert("selectorName", field.string()?);
-        }
-        336 => {
-            value.insert("upperCILimit", field.to_f64()?);
-        }
-        337 => {
-            value.insert("lowerCILimit", field.to_f64()?);
-        }
-        338 => {
-            value.insert("confidenceLevel", field.to_f64()?);
-        }
-        339 => {
-            value.insert("informationElementDataType", field.data[0]);
-        }
-        340 => {
-            value.insert("informationElementDescription", field.string()?);
-        }
-        341 => {
-            value.insert("informationElementName", field.string()?);
-        }
-        342 => {
-            value.insert("informationElementRangeBegin", field.to_u64()?);
-        }
-        343 => {
-            value.insert("informationElementRangeEnd", field.to_u64()?);
-        }
-        344 => {
-            value.insert("informationElementSemantics", field.data[0]);
-        }
-        345 => {
-            value.insert("informationElementUnits", field.to_u16()?);
-        }
-        346 => {
-            value.insert("privateEnterpriseNumber", field.to_u32()?);
-        }
-        347 => {
-            value.insert("virtualStationInterfaceId", field.data);
-        }
-        348 => {
-            value.insert("virtualStationInterfaceName", field.string()?);
-        }
-        349 => {
-            value.insert("virtualStationUUID", field.data);
-        }
-        350 => {
-            value.insert("virtualStationName", field.string()?);
-        }
-        351 => {
-            value.insert("layer2SegmentId", field.to_u64()?);
-        }
-        352 => {
-            value.insert("layer2OctetDeltaCount", field.to_u64()?);
-        }
-        353 => {
-            value.insert("layer2OctetTotalCount", field.to_u64()?);
-        }
-        354 => {
-            value.insert("ingressUnicastPacketTotalCount", field.to_u64()?);
-        }
-        355 => {
-            value.insert("ingressMulticastPacketTotalCount", field.to_u64()?);
-        }
-        356 => {
-            value.insert("ingressBroadcastPacketTotalCount", field.to_u64()?);
-        }
-        357 => {
-            value.insert("egressUnicastPacketTotalCount", field.to_u64()?);
-        }
-        358 => {
-            value.insert("egressBroadcastPacketTotalCount", field.to_u64()?);
-        }
-        359 => {
-            value.insert("monitoringIntervalStartMilliSeconds", field.to_i32()?);
-        }
-        360 => {
-            value.insert("monitoringIntervalEndMilliSeconds", field.to_i32()?);
-        }
-        361 => {
-            value.insert("portRangeStart", field.to_u16()?);
-        }
-        362 => {
-            value.insert("portRangeEnd", field.to_u16()?);
-        }
-        363 => {
-            value.insert("portRangeStepSize", field.to_u16()?);
-        }
-        364 => {
-            value.insert("portRangeNumPorts", field.to_u16()?);
-        }
-        365 => {
-            value.insert(
-                "staMacAddress",
-                format!(
-                    "{:<02X}:{:<02X}:{:<02X}:{:<02X}:{:<02X}:{:<02X}",
-                    field.data[0],
-                    field.data[1],
-                    field.data[2],
-                    field.data[3],
-                    field.data[4],
-                    field.data[5]
-                ),
-            );
-        }
-        366 => {
-            value.insert(
-                "staIPv4Address",
-                format!(
-                    "{}.{}.{}.{}",
-                    field.data[0], field.data[1], field.data[2], field.data[3]
-                ),
-            );
-        }
-        367 => {
-            value.insert(
-                "wtpMacAddress",
-                format!(
-                    "{:<02X}:{:<02X}:{:<02X}:{:<02X}:{:<02X}:{:<02X}",
-                    field.data[0],
-                    field.data[1],
-                    field.data[2],
-                    field.data[3],
-                    field.data[4],
-                    field.data[5]
-                ),
-            );
-        }
-        368 => {
-            value.insert("ingressInterfaceType", field.to_u32()?);
-        }
-        369 => {
-            value.insert("egressInterfaceType", field.to_u32()?);
-        }
-        370 => {
-            value.insert("rtpSequenceNumber", field.to_u16()?);
-        }
-        371 => {
-            value.insert("userName", field.string()?);
-        }
-        372 => {
-            value.insert("applicationCategoryName", field.string()?);
-        }
-        373 => {
-            value.insert("applicationSubCategoryName", field.string()?);
-        }
-        374 => {
-            value.insert("applicationGroupName", field.string()?);
-        }
-        375 => {
-            value.insert("originalFlowsPresent", field.to_u64()?);
-        }
-        376 => {
-            value.insert("originalFlowsInitiated", field.to_u64()?);
-        }
-        377 => {
-            value.insert("originalFlowsCompleted", field.to_u64()?);
-        }
-        378 => {
-            value.insert("distinctCountOfSourceIPAddress", field.to_u64()?);
-        }
-        379 => {
-            value.insert("distinctCountOfDestinationIPAddress", field.to_u64()?);
-        }
-        380 => {
-            value.insert("distinctCountOfSourceIPv4Address", field.to_u32()?);
-        }
-        381 => {
-            value.insert("distinctCountOfDestinationIPv4Address", field.to_u32()?);
-        }
-        382 => {
-            value.insert("distinctCountOfSourceIPv6Address", field.to_u64()?);
-        }
-        383 => {
-            value.insert("distinctCountOfDestinationIPv6Address", field.to_u64()?);
-        }
-        384 => {
-            value.insert("valueDistributionMethod", field.data[0]);
-        }
-        385 => {
-            value.insert("rfc3550JitterMilliseconds", field.to_u32()?);
-        }
-        386 => {
-            value.insert("rfc3550JitterMicroseconds", field.to_u32()?);
-        }
-        387 => {
-            value.insert("rfc3550JitterNanoseconds", field.to_u32()?);
-        }
-        388 => {
-            value.insert("dot1qDEI", field.data[0] == 1);
-        }
-        389 => {
-            value.insert("dot1qCustomerDEI", field.data[0] == 1);
-        }
-        390 => {
-            value.insert("flowSelectorAlgorithm", field.to_u16()?);
-        }
-        391 => {
-            value.insert("flowSelectedOctetDeltaCount", field.to_u64()?);
-        }
-        392 => {
-            value.insert("flowSelectedPacketDeltaCount", field.to_u64()?);
-        }
-        393 => {
-            value.insert("flowSelectedFlowDeltaCount", field.to_u64()?);
-        }
-        394 => {
-            value.insert("selectorIDTotalFlowsObserved", field.to_u64()?);
-        }
-        395 => {
-            value.insert("selectorIDTotalFlowsSelected", field.to_u64()?);
-        }
-        396 => {
-            value.insert("samplingFlowInterval", field.to_u64()?);
-        }
-        397 => {
-            value.insert("samplingFlowSpacing", field.to_u64()?);
-        }
-        398 => {
-            value.insert("flowSamplingTimeInterval", field.to_u64()?);
-        }
-        399 => {
-            value.insert("flowSamplingTimeSpacing", field.to_u64()?);
-        }
-        400 => {
-            value.insert("hashFlowDomain", field.to_u16()?);
-        }
-        401 => {
-            value.insert("transportOctetDeltaCount", field.to_u64()?);
-        }
-        402 => {
-            value.insert("transportPacketDeltaCount", field.to_u64()?);
-        }
-        403 => {
-            value.insert(
-                "originalExporterIPv4Address",
-                format!(
-                    "{}.{}.{}.{}",
-                    field.data[0], field.data[1], field.data[2], field.data[3]
-                ),
-            );
-        }
-        404 => {
-            value.insert("originalExporterIPv6Address", field.ipv6()?.to_string());
-        }
-        405 => {
-            value.insert("originalObservationDomainId", field.to_u32()?);
-        }
-        406 => {
-            value.insert("intermediateProcessId", field.to_u32()?);
-        }
-        407 => {
-            value.insert("ignoredDataRecordTotalCount", field.to_u64()?);
-        }
-        408 => {
-            value.insert("dataLinkFrameType", field.to_u16()?);
-        }
-        409 => {
-            value.insert("sectionOffset", field.to_u16()?);
-        }
-        410 => {
-            value.insert("sectionExportedOctets", field.to_u16()?);
-        }
-        411 => {
-            value.insert("dot1qServiceInstanceTag", field.data);
-        }
-        412 => {
-            value.insert("dot1qServiceInstanceId", field.to_u32()?);
-        }
-        413 => {
-            value.insert("dot1qServiceInstancePriority", field.data[0]);
-        }
-        414 => {
-            value.insert(
-                "dot1qCustomerSourceMacAddress",
-                format!(
-                    "{:<02X}:{:<02X}:{:<02X}:{:<02X}:{:<02X}:{:<02X}",
-                    field.data[0],
-                    field.data[1],
-                    field.data[2],
-                    field.data[3],
-                    field.data[4],
-                    field.data[5]
-                ),
-            );
-        }
-        415 => {
-            value.insert(
-                "dot1qCustomerDestinationMacAddress",
-                format!(
-                    "{:<02X}:{:<02X}:{:<02X}:{:<02X}:{:<02X}:{:<02X}",
-                    field.data[0],
-                    field.data[1],
-                    field.data[2],
-                    field.data[3],
-                    field.data[4],
-                    field.data[5]
-                ),
-            );
-        }
-        417 => {
-            value.insert("postLayer2OctetDeltaCount", field.to_u64()?);
-        }
-        418 => {
-            value.insert("postMCastLayer2OctetDeltaCount", field.to_u64()?);
-        }
-        420 => {
-            value.insert("postLayer2OctetTotalCount", field.to_u64()?);
-        }
-        421 => {
-            value.insert("postMCastLayer2OctetTotalCount", field.to_u64()?);
-        }
-        422 => {
-            value.insert("minimumLayer2TotalLength", field.to_u64()?);
-        }
-        423 => {
-            value.insert("maximumLayer2TotalLength", field.to_u64()?);
-        }
-        424 => {
-            value.insert("droppedLayer2OctetDeltaCount", field.to_u64()?);
-        }
-        425 => {
-            value.insert("droppedLayer2OctetTotalCount", field.to_u64()?);
-        }
-        426 => {
-            value.insert("ignoredLayer2OctetTotalCount", field.to_u64()?);
-        }
-        427 => {
-            value.insert("notSentLayer2OctetTotalCount", field.to_u64()?);
-        }
-        428 => {
-            value.insert("layer2OctetDeltaSumOfSquares", field.to_u64()?);
-        }
-        429 => {
-            value.insert("layer2OctetTotalSumOfSquares", field.to_u64()?);
-        }
-        430 => {
-            value.insert("layer2FrameDeltaCount", field.to_u64()?);
-        }
-        431 => {
-            value.insert("layer2FrameTotalCount", field.to_u64()?);
-        }
-        432 => {
-            value.insert(
-                "pseudoWireDestinationIPv4Address",
-                format!(
-                    "{}.{}.{}.{}",
-                    field.data[0], field.data[1], field.data[2], field.data[3]
-                ),
-            );
-        }
-        433 => {
-            value.insert("ignoredLayer2FrameTotalCount", field.to_u64()?);
-        }
-        434 => {
-            value.insert("mibObjectValueInteger", field.to_i32()?);
-        }
-        435 => {
-            value.insert("mibObjectValueOctetString", field.data);
-        }
-        436 => {
-            value.insert("mibObjectValueOID", field.data);
-        }
-        437 => {
-            value.insert("mibObjectValueBits", field.data);
-        }
-        438 => {
-            value.insert(
-                "mibObjectValueIPAddress",
-                format!(
-                    "{}.{}.{}.{}",
-                    field.data[0], field.data[1], field.data[2], field.data[3]
-                ),
-            );
-        }
-        439 => {
-            value.insert("mibObjectValueCounter", field.to_u64()?);
-        }
-        440 => {
-            value.insert("mibObjectValueGauge", field.to_u32()?);
-        }
-        441 => {
-            value.insert("mibObjectValueTimeTicks", field.to_u32()?);
-        }
-        442 => {
-            value.insert("mibObjectValueUnsigned", field.to_u32()?);
-        }
-        445 => {
-            value.insert("mibObjectIdentifier", field.data);
-        }
-        446 => {
-            value.insert("mibSubIdentifier", field.to_u32()?);
-        }
-        447 => {
-            value.insert("mibIndexIndicator", field.to_u64()?);
-        }
-        448 => {
-            value.insert("mibCaptureTimeSemantics", field.data[0]);
-        }
-        449 => {
-            value.insert("mibContextEngineID", field.data);
-        }
-        450 => {
-            value.insert("mibContextName", field.string()?);
-        }
-        451 => {
-            value.insert("mibObjectName", field.string()?);
-        }
-        452 => {
-            value.insert("mibObjectDescription", field.string()?);
-        }
-        453 => {
-            value.insert("mibObjectSyntax", field.string()?);
-        }
-        454 => {
-            value.insert("mibModuleName", field.string()?);
-        }
-        455 => {
-            value.insert("mobileIMSI", field.string()?);
-        }
-        456 => {
-            value.insert("mobileMSISDN", field.string()?);
-        }
-        457 => {
-            value.insert("httpStatusCode", field.to_u16()?);
-        }
-        458 => {
-            value.insert("sourceTransportPortsLimit", field.to_u16()?);
-        }
-        459 => {
-            value.insert("httpRequestMethod", field.string()?);
-        }
-        460 => {
-            value.insert("httpRequestHost", field.string()?);
-        }
-        461 => {
-            value.insert("httpRequestTarget", field.string()?);
-        }
-        462 => {
-            value.insert("httpMessageVersion", field.string()?);
-        }
-        463 => {
-            value.insert("natInstanceID", field.to_u32()?);
-        }
-        464 => {
-            value.insert("internalAddressRealm", field.data);
-        }
-        465 => {
-            value.insert("externalAddressRealm", field.data);
-        }
-        466 => {
-            value.insert("natQuotaExceededEvent", field.to_u32()?);
-        }
-        467 => {
-            value.insert("natThresholdEvent", field.to_u32()?);
-        }
-        468 => {
-            value.insert("httpUserAgent", field.string()?);
-        }
-        469 => {
-            value.insert("httpContentType", field.string()?);
-        }
-        470 => {
-            value.insert("httpReasonPhrase", field.string()?);
-        }
-        471 => {
-            value.insert("maxSessionEntries", field.to_u32()?);
-        }
-        472 => {
-            value.insert("maxBIBEntries", field.to_u32()?);
-        }
-        473 => {
-            value.insert("maxEntriesPerUser", field.to_u32()?);
-        }
-        474 => {
-            value.insert("maxSubscribers", field.to_u32()?);
-        }
-        475 => {
-            value.insert("maxFragmentsPendingReassembly", field.to_u32()?);
-        }
-        476 => {
-            value.insert("addressPoolHighThreshold", field.to_u32()?);
-        }
-        477 => {
-            value.insert("addressPoolLowThreshold", field.to_u32()?);
-        }
-        478 => {
-            value.insert("addressPortMappingHighThreshold", field.to_u32()?);
-        }
-        479 => {
-            value.insert("addressPortMappingLowThreshold", field.to_u32()?);
-        }
-        480 => {
-            value.insert("addressPortMappingPerUserHighThreshold", field.to_u32()?);
-        }
-        481 => {
-            value.insert("globalAddressMappingHighThreshold", field.to_u32()?);
-        }
-        482 => {
-            value.insert("vpnIdentifier", field.data);
-        }
-        483 => {
-            value.insert("bgpCommunity", field.to_u32()?);
-        }
-        486 => {
-            value.insert("bgpExtendedCommunity", field.data);
-        }
-        489 => {
-            value.insert("bgpLargeCommunity", field.data);
-        }
-        492 => {
-            value.insert("srhFlagsIPv6", field.data[0]);
-        }
-        493 => {
-            value.insert("srhTagIPv6", field.to_u16()?);
-        }
-        494 => {
-            value.insert("srhSegmentIPv6", field.ipv6()?.to_string());
-        }
-        495 => {
-            value.insert("srhActiveSegmentIPv6", field.ipv6()?.to_string());
-        }
-        497 => {
-            value.insert("srhSegmentIPv6ListSection", field.data);
-        }
-        498 => {
-            value.insert("srhSegmentsIPv6Left", field.data[0]);
-        }
-        499 => {
-            value.insert("srhIPv6Section", field.data);
-        }
-        500 => {
-            value.insert("srhIPv6ActiveSegmentType", field.data[0]);
-        }
-        501 => {
-            value.insert("srhSegmentIPv6LocatorLength", field.data[0]);
-        }
-        502 => {
-            value.insert("srhSegmentIPv6EndpointBehavior", field.to_u16()?);
-        }
-        503 => {
-            value.insert("transportChecksum", field.to_u16()?);
-        }
-        504 => {
-            value.insert("icmpHeaderPacketSection", field.data);
-        }
-        505 => {
-            value.insert("gtpuFlags", field.data[0]);
-        }
-        506 => {
-            value.insert("gtpuMsgType", field.data[0]);
-        }
-        507 => {
-            value.insert("gtpuTEid", field.to_u32()?);
-        }
-        508 => {
-            value.insert("gtpuSequenceNum", field.to_u16()?);
-        }
-        509 => {
-            value.insert("gtpuQFI", field.data[0]);
-        }
-        510 => {
-            value.insert("gtpuPduType", field.data[0]);
-        }
-        513 => {
-            value.insert("ipv6ExtensionHeaderType", field.data[0]);
-        }
-        514 => {
-            value.insert("ipv6ExtensionHeaderCount", field.data[0]);
-        }
-        517 => {
-            value.insert("ipv6ExtensionHeadersLimit", field.data[0] == 1);
-        }
-        518 => {
-            value.insert("ipv6ExtensionHeadersChainLength", field.to_u32()?);
-        }
-        521 => {
-            value.insert("tcpSharedOptionExID16", field.to_u16()?);
-        }
-        522 => {
-            value.insert("tcpSharedOptionExID32", field.to_u32()?);
-        }
-        526 => {
-            value.insert("udpUnsafeOptions", field.to_u64()?);
-        }
-        527 => {
-            value.insert("udpExID", field.to_u16()?);
-        }
-
-        _ => {}
     }
 
     Ok(())
 }
+
+fn build(buf: &[u8], templates: &mut TemplateCache) -> Result<Vec<LogRecord>, Error> {
+    if buf.len() < 2 {
+        return Err(Error::UnexpectedEof);
+    }
+
+    let version = (buf[0] as u16) << 8 | (buf[1] as u16);
+    let (odid, metadata, flow_sets) = match version {
+        // NetFlow v9
+        9 => {
+            let (header, flow_sets) = parse_netflow_v9(buf, templates)?;
+            if flow_sets.is_empty() {
+                return Ok(Vec::new());
+            }
+
+            let metadata = value!({
+                "version": "netflow_v9",
+                "observation_domain_id": header.source_id,
+                "system_uptime": header.system_uptime,
+                "unix_secs": header.unix_secs,
+                "sequence_number": header.sequence_number,
+            });
+
+            (header.source_id, metadata, flow_sets)
+        }
+        // IPFIX
+        10 => {
+            let (header, flow_sets) = parse_ipfix_packet(buf, templates)?;
+            if flow_sets.is_empty() {
+                return Ok(Vec::new());
+            }
+
+            let metadata = value!({
+                "version": "ipfix",
+                "observation_domain_id": header.odid,
+                "export_time": header.export_time,
+                "sequence_number": header.sequence_number,
+            });
+
+            (header.odid, metadata, flow_sets)
+        }
+        _ => return Err(Error::IncompatibleVersion(version)),
+    };
+
+    let mut logs = Vec::with_capacity(flow_sets.len());
+    for set in flow_sets {
+        match set {
+            FlowSet::Data { template, records } => {
+                let mut flow = metadata.clone();
+                flow.insert("template", template);
+                let mut value = value!({
+                    "flow": flow,
+                });
+
+                for record in records {
+                    if let Err(err) = set_properties(&record.fields, &mut value, version) {
+                        warn!(
+                            message = "set ipfix properties failed",
+                            odid,
+                            %err,
+                            internal_log_rate_limit = true
+                        );
+                    }
+                }
+
+                logs.push(LogRecord::from(value));
+            }
+            FlowSet::OptionsData { template, records } => {
+                let mut flow = metadata.clone();
+                flow.insert("template", template);
+
+                let mut scopes_value = Value::object();
+                let mut options_value = Value::object();
+                for OptionsDataRecord { scopes, options } in records {
+                    if let Err(err) = set_properties(&scopes, &mut scopes_value, version) {
+                        warn!(
+                            message = "set ipfix scopes properties failed",
+                            odid,
+                            template,
+                            %err,
+                            internal_log_rate_limit = true
+                        );
+                    }
+
+                    if let Err(err) = set_properties(&options, &mut options_value, version) {
+                        warn!(
+                            message = "set ipfix options properties failed",
+                            odid,
+                            template,
+                            %err,
+                            internal_log_rate_limit = true
+                        );
+                    }
+                }
+
+                logs.push(LogRecord::from(value!({
+                    "flow": flow,
+                    "options": options_value,
+                    "scopes": scopes_value,
+                })));
+            }
+        }
+    }
+
+    Ok(logs)
+}
+
+fn set_properties(fields: &[DataField], value: &mut Value, version: u16) -> Result<(), Error> {
+    fn set_property(field: &DataField, value: &mut Value) -> Result<(), Error> {
+        let Ok(index) =
+            FLOW_SET_PROPERTIES.binary_search_by(|(id, _name, _typ)| id.cmp(&field.typ))
+        else {
+            return Err(Error::UnknownFieldType(field.typ));
+        };
+
+        let (_id, name, typ) = unsafe { FLOW_SET_PROPERTIES.get_unchecked(index) };
+        match typ {
+            DataType::Unsigned8 => {
+                if field.data.len() != 1 {
+                    return Err(Error::UnexpectedEof);
+                }
+
+                value.insert(*name, field.data[0]);
+            }
+            DataType::Unsigned16 => {
+                if field.data.len() < 2 {
+                    return Err(Error::UnexpectedEof);
+                }
+
+                let num =
+                    unsafe { std::ptr::read_unaligned(field.data.as_ptr() as *const u16).to_be() };
+                value.insert(*name, num);
+            }
+            DataType::Unsigned32 => {
+                if field.data.len() < 4 {
+                    return Err(Error::UnexpectedEof);
+                }
+
+                let num =
+                    unsafe { std::ptr::read_unaligned(field.data.as_ptr() as *const u32).to_be() };
+                value.insert(*name, num);
+            }
+            DataType::Unsigned64 => {
+                if field.data.len() < 8 {
+                    return Err(Error::UnexpectedEof);
+                }
+
+                let num =
+                    unsafe { std::ptr::read_unaligned(field.data.as_ptr() as *const u64).to_be() };
+                value.insert(*name, num);
+            }
+            DataType::Signed8 => {
+                if field.data.is_empty() {
+                    return Err(Error::UnexpectedEof);
+                }
+
+                value.insert(*name, field.data[0] as i8);
+            }
+            DataType::Signed16 => {
+                if field.data.len() < 2 {
+                    return Err(Error::UnexpectedEof);
+                }
+
+                let num =
+                    unsafe { std::ptr::read_unaligned(field.data.as_ptr() as *const i16).to_be() };
+                value.insert(*name, num);
+            }
+            DataType::Signed32 => {
+                if field.data.len() < 4 {
+                    return Err(Error::UnexpectedEof);
+                }
+
+                let num =
+                    unsafe { std::ptr::read_unaligned(field.data.as_ptr() as *const i32).to_be() };
+                value.insert(*name, num);
+            }
+            DataType::Signed64
+            | DataType::DateTimeSeconds
+            | DataType::DateTimeMilliseconds
+            | DataType::DateTimeMicroseconds
+            | DataType::DateTimeNanoseconds => {
+                if field.data.len() < 8 {
+                    return Err(Error::UnexpectedEof);
+                }
+
+                let num =
+                    unsafe { std::ptr::read_unaligned(field.data.as_ptr() as *const i64).to_be() };
+                value.insert(*name, num);
+            }
+            DataType::Float32 => {
+                if field.data.len() < 4 {
+                    return Err(Error::UnexpectedEof);
+                }
+
+                let num =
+                    unsafe { std::ptr::read_unaligned(field.data.as_ptr() as *const u32).to_be() };
+                let num = f32::from_bits(num);
+                value.insert(*name, num);
+            }
+            DataType::Float64 => {
+                if field.data.len() < 8 {
+                    return Err(Error::UnexpectedEof);
+                }
+
+                let num =
+                    unsafe { std::ptr::read_unaligned(field.data.as_ptr() as *const u64).to_be() };
+                let num = f64::from_bits(num);
+                value.insert(*name, num);
+            }
+            DataType::Boolean => {
+                if field.data.is_empty() {
+                    return Err(Error::UnexpectedEof);
+                }
+
+                value.insert(*name, field.data[0] != 0);
+            }
+            DataType::MacAddress => {
+                if field.data.len() < 6 {
+                    return Err(Error::UnexpectedEof);
+                }
+
+                value.insert(
+                    *name,
+                    format!(
+                        "{:<02X}:{:<02X}:{:<02X}:{:<02X}:{:<02X}:{:<02X}",
+                        field.data[0],
+                        field.data[1],
+                        field.data[2],
+                        field.data[3],
+                        field.data[4],
+                        field.data[5]
+                    ),
+                );
+            }
+            DataType::OctetArray | DataType::String => {
+                value.insert(*name, field.data);
+            }
+            DataType::Ipv4Address => {
+                if field.data.len() < 4 {
+                    return Err(Error::UnexpectedEof);
+                }
+
+                let num =
+                    unsafe { std::ptr::read_unaligned(field.data.as_ptr() as *const u32).to_be() };
+                let addr = Ipv4Addr::from_bits(num);
+
+                value.insert(*name, addr.to_string());
+            }
+            DataType::Ipv6Address => {
+                if field.data.len() < 16 {
+                    return Err(Error::UnexpectedEof);
+                }
+
+                let num =
+                    unsafe { std::ptr::read_unaligned(field.data.as_ptr() as *const u128).to_be() };
+                let addr = Ipv6Addr::from_bits(num);
+
+                value.insert(*name, addr.to_string());
+            }
+        }
+
+        Ok(())
+    }
+
+    for field in fields {
+        if let Err(err) = set_property(field, value) {
+            warn!(
+                message = "failed to set property",
+                %err,
+                version,
+                id = field.typ,
+                length = field.data.len(),
+                internal_log_rate_limit = true
+            );
+        }
+    }
+
+    Ok(())
+}
+
+#[allow(dead_code)]
+enum DataType {
+    Unsigned8,
+    Unsigned16,
+    Unsigned32,
+    Unsigned64,
+    Signed8,
+    Signed16,
+    Signed32,
+    Signed64,
+    Float32,
+    Float64,
+    Boolean,
+    MacAddress,
+    OctetArray,
+    String,
+    DateTimeSeconds,
+    DateTimeMilliseconds,
+    DateTimeMicroseconds,
+    DateTimeNanoseconds,
+    Ipv4Address,
+    Ipv6Address,
+}
+
+// https://www.rfc-editor.org/rfc/rfc5102.html
+const FLOW_SET_PROPERTIES: &[(u16, &str, DataType)] = &[
+    // (0, "Reserved", ),
+    (1, "octetDeltaCount", DataType::Unsigned64),
+    (2, "packetDeltaCount", DataType::Unsigned64),
+    (3, "deltaFlowCount", DataType::Unsigned64),
+    (4, "protocolIdentifier", DataType::Unsigned8),
+    (5, "ipClassOfService", DataType::Unsigned8),
+    // TCP control bits observed for packets of this Flow.  The
+    // information is encoded in a set of bit fields.  For each TCP
+    // control bit, there is a bit in this set.  A bit is set to 1 if any
+    // observed packet of this Flow has the corresponding TCP control bit
+    // set to 1.  A value of 0 for a bit indicates that the corresponding
+    // bit was not set in any of the observed packets of this Flow.
+    //
+    //     0     1     2     3     4     5     6     7
+    // +-----+-----+-----+-----+-----+-----+-----+-----+
+    // |  Reserved | URG | ACK | PSH | RST | SYN | FIN |
+    // +-----+-----+-----+-----+-----+-----+-----+-----+
+    //
+    // Reserved:  Reserved for future use by TCP.  Must be zero.
+    //      URG:  Urgent Pointer field significant
+    //      ACK:  Acknowledgment field significant
+    //      PSH:  Push Function
+    //      RST:  Reset the connection
+    //      SYN:  Synchronize sequence numbers
+    //      FIN:  No more data from sender
+    (6, "tcpControlBits", DataType::Unsigned8),
+    (7, "sourceTransportPort", DataType::Unsigned16),
+    (8, "sourceIPv4Address", DataType::Ipv4Address),
+    (9, "sourceIPv4PrefixLength", DataType::Unsigned8),
+    (10, "ingressInterface", DataType::Unsigned32),
+    (11, "destinationTransportPort", DataType::Unsigned16),
+    (12, "destinationIPv4Address", DataType::Ipv4Address),
+    (13, "destinationIPv4PrefixLength", DataType::Unsigned8),
+    (14, "egressInterface", DataType::Unsigned32),
+    (15, "ipNextHopIPv4Address", DataType::Ipv4Address),
+    (16, "bgpSourceAsNumber", DataType::Unsigned32),
+    (17, "bgpDestinationAsNumber", DataType::Unsigned32),
+    (18, "bgpNextHopIPv4Address", DataType::Ipv4Address),
+    (19, "postMCastPacketDeltaCount", DataType::Unsigned64),
+    (20, "postMCastOctetDeltaCount", DataType::Unsigned64),
+    (21, "flowEndSysUpTime", DataType::Unsigned32),
+    (22, "flowStartSysUpTime", DataType::Unsigned32),
+    (23, "postOctetDeltaCount", DataType::Unsigned64),
+    (24, "postPacketDeltaCount", DataType::Unsigned64),
+    (25, "minimumIpTotalLength", DataType::Unsigned64),
+    (26, "maximumIpTotalLength", DataType::Unsigned64),
+    (27, "sourceIPv6Address", DataType::Ipv6Address),
+    (28, "destinationIPv6Address", DataType::Ipv6Address),
+    (29, "sourceIPv6PrefixLength", DataType::Unsigned8),
+    (30, "destinationIPv6PrefixLength", DataType::Unsigned8),
+    (31, "flowLabelIPv6", DataType::Unsigned32),
+    (32, "icmpTypeCodeIPv4", DataType::Unsigned16),
+    (33, "igmpType", DataType::Unsigned8),
+    (34, "samplingInterval", DataType::Unsigned32),
+    (35, "samplingAlgorithm", DataType::Unsigned8),
+    (36, "flowActiveTimeout", DataType::Unsigned16),
+    (37, "flowIdleTimeout", DataType::Unsigned16),
+    (38, "engineType", DataType::Unsigned8),
+    (39, "engineId", DataType::Unsigned8),
+    (40, "exportedOctetTotalCount", DataType::Unsigned64),
+    (41, "exportedMessageTotalCount", DataType::Unsigned64),
+    (42, "exportedFlowRecordTotalCount", DataType::Unsigned64),
+    (43, "ipv4RouterSc", DataType::Ipv4Address),
+    (44, "sourceIPv4Prefix", DataType::Ipv4Address),
+    (45, "destinationIPv4Prefix", DataType::Ipv4Address),
+    (46, "mplsTopLabelType", DataType::Unsigned8),
+    (47, "mplsTopLabelIPv4Address", DataType::Ipv4Address),
+    (48, "samplerId", DataType::Unsigned8),
+    (49, "samplerMode", DataType::Unsigned8),
+    (50, "samplerRandomInterval", DataType::Unsigned32),
+    (51, "classId", DataType::Unsigned8),
+    (52, "minimumTTL", DataType::Unsigned8),
+    (53, "maximumTTL", DataType::Unsigned8),
+    (54, "fragmentIdentification", DataType::Unsigned32),
+    (55, "postIpClassOfService", DataType::Unsigned8),
+    (56, "sourceMacAddress", DataType::MacAddress),
+    (57, "postDestinationMacAddress", DataType::MacAddress),
+    (58, "vlanId", DataType::Unsigned16),
+    (59, "postVlanId", DataType::Unsigned16),
+    (60, "ipVersion", DataType::Unsigned8),
+    (61, "flowDirection", DataType::Unsigned8),
+    (62, "ipNextHopIPv6Address", DataType::Ipv6Address),
+    (63, "bgpNextHopIPv6Address", DataType::Ipv6Address),
+    (64, "ipv6ExtensionHeaders", DataType::Unsigned32),
+    // (65-69, "Assigned for NetFlow v9 compatibility", ),
+    (70, "mplsTopLabelStackSection", DataType::OctetArray),
+    (71, "mplsLabelStackSection2", DataType::OctetArray),
+    (72, "mplsLabelStackSection3", DataType::OctetArray),
+    (73, "mplsLabelStackSection4", DataType::OctetArray),
+    (74, "mplsLabelStackSection5", DataType::OctetArray),
+    (75, "mplsLabelStackSection6", DataType::OctetArray),
+    (76, "mplsLabelStackSection7", DataType::OctetArray),
+    (77, "mplsLabelStackSection8", DataType::OctetArray),
+    (78, "mplsLabelStackSection9", DataType::OctetArray),
+    (79, "mplsLabelStackSection10", DataType::OctetArray),
+    (80, "destinationMacAddress", DataType::MacAddress),
+    (81, "postSourceMacAddress", DataType::MacAddress),
+    (82, "interfaceName", DataType::String),
+    (83, "interfaceDescription", DataType::String),
+    (84, "samplerName", DataType::String),
+    (85, "octetTotalCount", DataType::Unsigned64),
+    (86, "packetTotalCount", DataType::Unsigned64),
+    (87, "flagsAndSamplerId", DataType::Unsigned32),
+    (88, "fragmentOffset", DataType::Unsigned16),
+    (89, "forwardingStatus", DataType::Unsigned32),
+    (90, "mplsVpnRouteDistinguisher", DataType::OctetArray),
+    (91, "mplsTopLabelPrefixLength", DataType::Unsigned8),
+    (92, "srcTrafficIndex", DataType::Unsigned32),
+    (93, "dstTrafficIndex", DataType::Unsigned32),
+    (94, "applicationDescription", DataType::String),
+    (95, "applicationId", DataType::OctetArray),
+    (96, "applicationName", DataType::String),
+    // (97, "Assigned for NetFlow v9 compatibility", ),
+    (98, "postIpDiffServCodePoint", DataType::Unsigned8),
+    (99, "multicastReplicationFactor", DataType::Unsigned32),
+    (100, "className", DataType::String),
+    (101, "classificationEngineId", DataType::Unsigned8),
+    (102, "layer2packetSectionOffset", DataType::Unsigned16),
+    (103, "layer2packetSectionSize", DataType::Unsigned16),
+    (104, "layer2packetSectionData", DataType::OctetArray),
+    // (105-127, "Assigned for NetFlow v9 compatibility", ),
+    (128, "bgpNextAdjacentAsNumber", DataType::Unsigned32),
+    (129, "bgpPrevAdjacentAsNumber", DataType::Unsigned32),
+    (130, "exporterIPv4Address", DataType::Ipv4Address),
+    (131, "exporterIPv6Address", DataType::Ipv6Address),
+    (132, "droppedOctetDeltaCount", DataType::Unsigned64),
+    (133, "droppedPacketDeltaCount", DataType::Unsigned64),
+    (134, "droppedOctetTotalCount", DataType::Unsigned64),
+    (135, "droppedPacketTotalCount", DataType::Unsigned64),
+    (136, "flowEndReason", DataType::Unsigned8),
+    (137, "commonPropertiesId", DataType::Unsigned64),
+    (138, "observationPointId", DataType::Unsigned64),
+    (139, "icmpTypeCodeIPv6", DataType::Unsigned16),
+    (140, "mplsTopLabelIPv6Address", DataType::Ipv6Address),
+    (141, "lineCardId", DataType::Unsigned32),
+    (142, "portId", DataType::Unsigned32),
+    (143, "meteringProcessId", DataType::Unsigned32),
+    (144, "exportingProcessId", DataType::Unsigned32),
+    (145, "templateId", DataType::Unsigned16),
+    (146, "wlanChannelId", DataType::Unsigned8),
+    (147, "wlanSSID", DataType::String),
+    (148, "flowId", DataType::Unsigned64),
+    (149, "observationDomainId", DataType::Unsigned32),
+    (150, "flowStartSeconds", DataType::DateTimeSeconds),
+    (151, "flowEndSeconds", DataType::DateTimeSeconds),
+    (152, "flowStartMilliseconds", DataType::DateTimeMilliseconds),
+    (153, "flowEndMilliseconds", DataType::DateTimeMilliseconds),
+    (154, "flowStartMicroseconds", DataType::DateTimeMicroseconds),
+    (155, "flowEndMicroseconds", DataType::DateTimeMicroseconds),
+    (156, "flowStartNanoseconds", DataType::DateTimeNanoseconds),
+    (157, "flowEndNanoseconds", DataType::DateTimeNanoseconds),
+    (158, "flowStartDeltaMicroseconds", DataType::Unsigned32),
+    (159, "flowEndDeltaMicroseconds", DataType::Unsigned32),
+    (
+        160,
+        "systemInitTimeMilliseconds",
+        DataType::DateTimeMilliseconds,
+    ),
+    (161, "flowDurationMilliseconds", DataType::Unsigned32),
+    (162, "flowDurationMicroseconds", DataType::Unsigned32),
+    (163, "observedFlowTotalCount", DataType::Unsigned64),
+    (164, "ignoredPacketTotalCount", DataType::Unsigned64),
+    (165, "ignoredOctetTotalCount", DataType::Unsigned64),
+    (166, "notSentFlowTotalCount", DataType::Unsigned64),
+    (167, "notSentPacketTotalCount", DataType::Unsigned64),
+    (168, "notSentOctetTotalCount", DataType::Unsigned64),
+    (169, "destinationIPv6Prefix", DataType::Ipv6Address),
+    (170, "sourceIPv6Prefix", DataType::Ipv6Address),
+    (171, "postOctetTotalCount", DataType::Unsigned64),
+    (172, "postPacketTotalCount", DataType::Unsigned64),
+    (173, "flowKeyIndicator", DataType::Unsigned64),
+    (174, "postMCastPacketTotalCount", DataType::Unsigned64),
+    (175, "postMCastOctetTotalCount", DataType::Unsigned64),
+    (176, "icmpTypeIPv4", DataType::Unsigned8),
+    (177, "icmpCodeIPv4", DataType::Unsigned8),
+    (178, "icmpTypeIPv6", DataType::Unsigned8),
+    (179, "icmpCodeIPv6", DataType::Unsigned8),
+    (180, "udpSourcePort", DataType::Unsigned16),
+    (181, "udpDestinationPort", DataType::Unsigned16),
+    (182, "tcpSourcePort", DataType::Unsigned16),
+    (183, "tcpDestinationPort", DataType::Unsigned16),
+    (184, "tcpSequenceNumber", DataType::Unsigned32),
+    (185, "tcpAcknowledgementNumber", DataType::Unsigned32),
+    (186, "tcpWindowSize", DataType::Unsigned16),
+    (187, "tcpUrgentPointer", DataType::Unsigned16),
+    (188, "tcpHeaderLength", DataType::Unsigned8),
+    (189, "ipHeaderLength", DataType::Unsigned8),
+    (190, "totalLengthIPv4", DataType::Unsigned16),
+    (191, "payloadLengthIPv6", DataType::Unsigned16),
+    (192, "ipTTL", DataType::Unsigned8),
+    (193, "nextHeaderIPv6", DataType::Unsigned8),
+    (194, "mplsPayloadLength", DataType::Unsigned32),
+    (195, "ipDiffServCodePoint", DataType::Unsigned8),
+    (196, "ipPrecedence", DataType::Unsigned8),
+    (197, "fragmentFlags", DataType::Unsigned8),
+    (198, "octetDeltaSumOfSquares", DataType::Unsigned64),
+    (199, "octetTotalSumOfSquares", DataType::Unsigned64),
+    (200, "mplsTopLabelTTL", DataType::Unsigned8),
+    (201, "mplsLabelStackLength", DataType::Unsigned32),
+    (202, "mplsLabelStackDepth", DataType::Unsigned32),
+    (203, "mplsTopLabelExp", DataType::Unsigned8),
+    (204, "ipPayloadLength", DataType::Unsigned32),
+    (205, "udpMessageLength", DataType::Unsigned16),
+    (206, "isMulticast", DataType::Unsigned8),
+    (207, "ipv4IHL", DataType::Unsigned8),
+    (208, "ipv4Options", DataType::Unsigned32),
+    (209, "tcpOptions", DataType::Unsigned64),
+    (210, "paddingOctets", DataType::OctetArray),
+    (211, "collectorIPv4Address", DataType::Ipv4Address),
+    (212, "collectorIPv6Address", DataType::Ipv6Address),
+    (213, "exportInterface", DataType::Unsigned32),
+    (214, "exportProtocolVersion", DataType::Unsigned8),
+    (215, "exportTransportProtocol", DataType::Unsigned8),
+    (216, "collectorTransportPort", DataType::Unsigned16),
+    (217, "exporterTransportPort", DataType::Unsigned16),
+    (218, "tcpSynTotalCount", DataType::Unsigned64),
+    (219, "tcpFinTotalCount", DataType::Unsigned64),
+    (220, "tcpRstTotalCount", DataType::Unsigned64),
+    (221, "tcpPshTotalCount", DataType::Unsigned64),
+    (222, "tcpAckTotalCount", DataType::Unsigned64),
+    (223, "tcpUrgTotalCount", DataType::Unsigned64),
+    (224, "ipTotalLength", DataType::Unsigned64),
+    (225, "postNATSourceIPv4Address", DataType::Ipv4Address),
+    (226, "postNATDestinationIPv4Address", DataType::Ipv4Address),
+    (227, "postNAPTSourceTransportPort", DataType::Unsigned16),
+    (
+        228,
+        "postNAPTDestinationTransportPort",
+        DataType::Unsigned16,
+    ),
+    (229, "natOriginatingAddressRealm", DataType::Unsigned8),
+    (230, "natEvent", DataType::Unsigned8),
+    (231, "initiatorOctets", DataType::Unsigned64),
+    (232, "responderOctets", DataType::Unsigned64),
+    (233, "firewallEvent", DataType::Unsigned8),
+    (234, "ingressVRFID", DataType::Unsigned32),
+    (235, "egressVRFID", DataType::Unsigned32),
+    (236, "VRFname", DataType::String),
+    (237, "postMplsTopLabelExp", DataType::Unsigned8),
+    (238, "tcpWindowScale", DataType::Unsigned16),
+    (239, "biflowDirection", DataType::Unsigned8),
+    (240, "ethernetHeaderLength", DataType::Unsigned8),
+    (241, "ethernetPayloadLength", DataType::Unsigned16),
+    (242, "ethernetTotalLength", DataType::Unsigned16),
+    (243, "dot1qVlanId", DataType::Unsigned16),
+    (244, "dot1qPriority", DataType::Unsigned8),
+    (245, "dot1qCustomerVlanId", DataType::Unsigned16),
+    (246, "dot1qCustomerPriority", DataType::Unsigned8),
+    (247, "metroEvcId", DataType::String),
+    (248, "metroEvcType", DataType::Unsigned8),
+    (249, "pseudoWireId", DataType::Unsigned32),
+    (250, "pseudoWireType", DataType::Unsigned16),
+    (251, "pseudoWireControlWord", DataType::Unsigned32),
+    (252, "ingressPhysicalInterface", DataType::Unsigned32),
+    (253, "egressPhysicalInterface", DataType::Unsigned32),
+    (254, "postDot1qVlanId", DataType::Unsigned16),
+    (255, "postDot1qCustomerVlanId", DataType::Unsigned16),
+    (256, "ethernetType", DataType::Unsigned16),
+    (257, "postIpPrecedence", DataType::Unsigned8),
+    (
+        258,
+        "collectionTimeMilliseconds",
+        DataType::DateTimeMilliseconds,
+    ),
+    (259, "exportSctpStreamId", DataType::Unsigned16),
+    (260, "maxExportSeconds", DataType::DateTimeSeconds),
+    (261, "maxFlowEndSeconds", DataType::DateTimeSeconds),
+    (262, "messageMD5Checksum", DataType::OctetArray),
+    (263, "messageScope", DataType::Unsigned8),
+    (264, "minExportSeconds", DataType::DateTimeSeconds),
+    (265, "minFlowStartSeconds", DataType::DateTimeSeconds),
+    (266, "opaqueOctets", DataType::OctetArray),
+    (267, "sessionScope", DataType::Unsigned8),
+    (
+        268,
+        "maxFlowEndMicroseconds",
+        DataType::DateTimeMicroseconds,
+    ),
+    (
+        269,
+        "maxFlowEndMilliseconds",
+        DataType::DateTimeMilliseconds,
+    ),
+    (270, "maxFlowEndNanoseconds", DataType::DateTimeNanoseconds),
+    (
+        271,
+        "minFlowStartMicroseconds",
+        DataType::DateTimeMicroseconds,
+    ),
+    (
+        272,
+        "minFlowStartMilliseconds",
+        DataType::DateTimeMilliseconds,
+    ),
+    (
+        273,
+        "minFlowStartNanoseconds",
+        DataType::DateTimeNanoseconds,
+    ),
+    (274, "collectorCertificate", DataType::OctetArray),
+    (275, "exporterCertificate", DataType::OctetArray),
+    (276, "dataRecordsReliability", DataType::Boolean),
+    (277, "observationPointType", DataType::Unsigned8),
+    (278, "newConnectionDeltaCount", DataType::Unsigned32),
+    (279, "connectionSumDurationSeconds", DataType::Unsigned64),
+    (280, "connectionTransactionId", DataType::Unsigned64),
+    (281, "postNATSourceIPv6Address", DataType::Ipv6Address),
+    (282, "postNATDestinationIPv6Address", DataType::Ipv6Address),
+    (283, "natPoolId", DataType::Unsigned32),
+    (284, "natPoolName", DataType::String),
+    (285, "anonymizationFlags", DataType::Unsigned16),
+    (286, "anonymizationTechnique", DataType::Unsigned16),
+    (287, "informationElementIndex", DataType::Unsigned16),
+    (288, "p2pTechnology", DataType::String),
+    (289, "tunnelTechnology", DataType::String),
+    (290, "encryptedTechnology", DataType::String),
+    // (291, "basicList", basicList),
+    // (292, "subTemplateList", subTemplateList),
+    // (293, "subTemplateMultiList", subTemplateMultiList),
+    (294, "bgpValidityState", DataType::Unsigned8),
+    (295, "IPSecSPI", DataType::Unsigned32),
+    (296, "greKey", DataType::Unsigned32),
+    (297, "natType", DataType::Unsigned8),
+    (298, "initiatorPackets", DataType::Unsigned64),
+    (299, "responderPackets", DataType::Unsigned64),
+    (300, "observationDomainName", DataType::String),
+    (301, "selectionSequenceId", DataType::Unsigned64),
+    (302, "selectorId", DataType::Unsigned64),
+    (303, "informationElementId", DataType::Unsigned16),
+    (304, "selectorAlgorithm", DataType::Unsigned16),
+    (305, "samplingPacketInterval", DataType::Unsigned32),
+    (306, "samplingPacketSpace", DataType::Unsigned32),
+    (307, "samplingTimeInterval", DataType::Unsigned32),
+    (308, "samplingTimeSpace", DataType::Unsigned32),
+    (309, "samplingSize", DataType::Unsigned32),
+    (310, "samplingPopulation", DataType::Unsigned32),
+    (311, "samplingProbability", DataType::Float64),
+    (312, "dataLinkFrameSize", DataType::Unsigned16),
+    (313, "ipHeaderPacketSection", DataType::OctetArray),
+    (314, "ipPayloadPacketSection", DataType::OctetArray),
+    (315, "dataLinkFrameSection", DataType::OctetArray),
+    (316, "mplsLabelStackSection", DataType::OctetArray),
+    (317, "mplsPayloadPacketSection", DataType::OctetArray),
+    (318, "selectorIdTotalPktsObserved", DataType::Unsigned64),
+    (319, "selectorIdTotalPktsSelected", DataType::Unsigned64),
+    (320, "absoluteError", DataType::Float64),
+    (321, "relativeError", DataType::Float64),
+    (322, "observationTimeSeconds", DataType::DateTimeSeconds),
+    (
+        323,
+        "observationTimeMilliseconds",
+        DataType::DateTimeMilliseconds,
+    ),
+    (
+        324,
+        "observationTimeMicroseconds",
+        DataType::DateTimeMicroseconds,
+    ),
+    (
+        325,
+        "observationTimeNanoseconds",
+        DataType::DateTimeNanoseconds,
+    ),
+    (326, "digestHashValue", DataType::Unsigned64),
+    (327, "hashIPPayloadOffset", DataType::Unsigned64),
+    (328, "hashIPPayloadSize", DataType::Unsigned64),
+    (329, "hashOutputRangeMin", DataType::Unsigned64),
+    (330, "hashOutputRangeMax", DataType::Unsigned64),
+    (331, "hashSelectedRangeMin", DataType::Unsigned64),
+    (332, "hashSelectedRangeMax", DataType::Unsigned64),
+    (333, "hashDigestOutput", DataType::Boolean),
+    (334, "hashInitialiserValue", DataType::Unsigned64),
+    (335, "selectorName", DataType::String),
+    (336, "upperCILimit", DataType::Float64),
+    (337, "lowerCILimit", DataType::Float64),
+    (338, "confidenceLevel", DataType::Float64),
+    (339, "informationElementDataType", DataType::Unsigned8),
+    (340, "informationElementDescription", DataType::String),
+    (341, "informationElementName", DataType::String),
+    (342, "informationElementRangeBegin", DataType::Unsigned64),
+    (343, "informationElementRangeEnd", DataType::Unsigned64),
+    (344, "informationElementSemantics", DataType::Unsigned8),
+    (345, "informationElementUnits", DataType::Unsigned16),
+    (346, "privateEnterpriseNumber", DataType::Unsigned32),
+    (347, "virtualStationInterfaceId", DataType::OctetArray),
+    (348, "virtualStationInterfaceName", DataType::String),
+    (349, "virtualStationUUID", DataType::OctetArray),
+    (350, "virtualStationName", DataType::String),
+    (351, "layer2SegmentId", DataType::Unsigned64),
+    (352, "layer2OctetDeltaCount", DataType::Unsigned64),
+    (353, "layer2OctetTotalCount", DataType::Unsigned64),
+    (354, "ingressUnicastPacketTotalCount", DataType::Unsigned64),
+    (
+        355,
+        "ingressMulticastPacketTotalCount",
+        DataType::Unsigned64,
+    ),
+    (
+        356,
+        "ingressBroadcastPacketTotalCount",
+        DataType::Unsigned64,
+    ),
+    (357, "egressUnicastPacketTotalCount", DataType::Unsigned64),
+    (358, "egressBroadcastPacketTotalCount", DataType::Unsigned64),
+    (
+        359,
+        "monitoringIntervalStartMilliSeconds",
+        DataType::DateTimeMilliseconds,
+    ),
+    (
+        360,
+        "monitoringIntervalEndMilliSeconds",
+        DataType::DateTimeMilliseconds,
+    ),
+    (361, "portRangeStart", DataType::Unsigned16),
+    (362, "portRangeEnd", DataType::Unsigned16),
+    (363, "portRangeStepSize", DataType::Unsigned16),
+    (364, "portRangeNumPorts", DataType::Unsigned16),
+    (365, "staMacAddress", DataType::MacAddress),
+    (366, "staIPv4Address", DataType::Ipv4Address),
+    (367, "wtpMacAddress", DataType::MacAddress),
+    (368, "ingressInterfaceType", DataType::Unsigned32),
+    (369, "egressInterfaceType", DataType::Unsigned32),
+    (370, "rtpSequenceNumber", DataType::Unsigned16),
+    (371, "userName", DataType::String),
+    (372, "applicationCategoryName", DataType::String),
+    (373, "applicationSubCategoryName", DataType::String),
+    (374, "applicationGroupName", DataType::String),
+    (375, "originalFlowsPresent", DataType::Unsigned64),
+    (376, "originalFlowsInitiated", DataType::Unsigned64),
+    (377, "originalFlowsCompleted", DataType::Unsigned64),
+    (378, "distinctCountOfSourceIPAddress", DataType::Unsigned64),
+    (
+        379,
+        "distinctCountOfDestinationIPAddress",
+        DataType::Unsigned64,
+    ),
+    (
+        380,
+        "distinctCountOfSourceIPv4Address",
+        DataType::Unsigned32,
+    ),
+    (
+        381,
+        "distinctCountOfDestinationIPv4Address",
+        DataType::Unsigned32,
+    ),
+    (
+        382,
+        "distinctCountOfSourceIPv6Address",
+        DataType::Unsigned64,
+    ),
+    (
+        383,
+        "distinctCountOfDestinationIPv6Address",
+        DataType::Unsigned64,
+    ),
+    (384, "valueDistributionMethod", DataType::Unsigned8),
+    (385, "rfc3550JitterMilliseconds", DataType::Unsigned32),
+    (386, "rfc3550JitterMicroseconds", DataType::Unsigned32),
+    (387, "rfc3550JitterNanoseconds", DataType::Unsigned32),
+    (388, "dot1qDEI", DataType::Boolean),
+    (389, "dot1qCustomerDEI", DataType::Boolean),
+    (390, "flowSelectorAlgorithm", DataType::Unsigned16),
+    (391, "flowSelectedOctetDeltaCount", DataType::Unsigned64),
+    (392, "flowSelectedPacketDeltaCount", DataType::Unsigned64),
+    (393, "flowSelectedFlowDeltaCount", DataType::Unsigned64),
+    (394, "selectorIDTotalFlowsObserved", DataType::Unsigned64),
+    (395, "selectorIDTotalFlowsSelected", DataType::Unsigned64),
+    (396, "samplingFlowInterval", DataType::Unsigned64),
+    (397, "samplingFlowSpacing", DataType::Unsigned64),
+    (398, "flowSamplingTimeInterval", DataType::Unsigned64),
+    (399, "flowSamplingTimeSpacing", DataType::Unsigned64),
+    (400, "hashFlowDomain", DataType::Unsigned16),
+    (401, "transportOctetDeltaCount", DataType::Unsigned64),
+    (402, "transportPacketDeltaCount", DataType::Unsigned64),
+    (403, "originalExporterIPv4Address", DataType::Ipv4Address),
+    (404, "originalExporterIPv6Address", DataType::Ipv6Address),
+    (405, "originalObservationDomainId", DataType::Unsigned32),
+    (406, "intermediateProcessId", DataType::Unsigned32),
+    (407, "ignoredDataRecordTotalCount", DataType::Unsigned64),
+    (408, "dataLinkFrameType", DataType::Unsigned16),
+    (409, "sectionOffset", DataType::Unsigned16),
+    (410, "sectionExportedOctets", DataType::Unsigned16),
+    (411, "dot1qServiceInstanceTag", DataType::OctetArray),
+    (412, "dot1qServiceInstanceId", DataType::Unsigned32),
+    (413, "dot1qServiceInstancePriority", DataType::Unsigned8),
+    (414, "dot1qCustomerSourceMacAddress", DataType::MacAddress),
+    (
+        415,
+        "dot1qCustomerDestinationMacAddress",
+        DataType::MacAddress,
+    ),
+    // (416, "", ),
+    (417, "postLayer2OctetDeltaCount", DataType::Unsigned64),
+    (418, "postMCastLayer2OctetDeltaCount", DataType::Unsigned64),
+    // (419, "", ),
+    (420, "postLayer2OctetTotalCount", DataType::Unsigned64),
+    (421, "postMCastLayer2OctetTotalCount", DataType::Unsigned64),
+    (422, "minimumLayer2TotalLength", DataType::Unsigned64),
+    (423, "maximumLayer2TotalLength", DataType::Unsigned64),
+    (424, "droppedLayer2OctetDeltaCount", DataType::Unsigned64),
+    (425, "droppedLayer2OctetTotalCount", DataType::Unsigned64),
+    (426, "ignoredLayer2OctetTotalCount", DataType::Unsigned64),
+    (427, "notSentLayer2OctetTotalCount", DataType::Unsigned64),
+    (428, "layer2OctetDeltaSumOfSquares", DataType::Unsigned64),
+    (429, "layer2OctetTotalSumOfSquares", DataType::Unsigned64),
+    (430, "layer2FrameDeltaCount", DataType::Unsigned64),
+    (431, "layer2FrameTotalCount", DataType::Unsigned64),
+    (
+        432,
+        "pseudoWireDestinationIPv4Address",
+        DataType::Ipv4Address,
+    ),
+    (433, "ignoredLayer2FrameTotalCount", DataType::Unsigned64),
+    (434, "mibObjectValueInteger", DataType::Signed32),
+    (435, "mibObjectValueOctetString", DataType::OctetArray),
+    (436, "mibObjectValueOID", DataType::OctetArray),
+    (437, "mibObjectValueBits", DataType::OctetArray),
+    (438, "mibObjectValueIPAddress", DataType::Ipv4Address),
+    (439, "mibObjectValueCounter", DataType::Unsigned64),
+    (440, "mibObjectValueGauge", DataType::Unsigned32),
+    (441, "mibObjectValueTimeTicks", DataType::Unsigned32),
+    (442, "mibObjectValueUnsigned", DataType::Unsigned32),
+    // (443, "mibObjectValueTable", subTemplateList),
+    // (444, "mibObjectValueRow", subTemplateList),
+    (445, "mibObjectIdentifier", DataType::OctetArray),
+    (446, "mibSubIdentifier", DataType::Unsigned32),
+    (447, "mibIndexIndicator", DataType::Unsigned64),
+    (448, "mibCaptureTimeSemantics", DataType::Unsigned8),
+    (449, "mibContextEngineID", DataType::OctetArray),
+    (450, "mibContextName", DataType::String),
+    (451, "mibObjectName", DataType::String),
+    (452, "mibObjectDescription", DataType::String),
+    (453, "mibObjectSyntax", DataType::String),
+    (454, "mibModuleName", DataType::String),
+    (455, "mobileIMSI", DataType::String),
+    (456, "mobileMSISDN", DataType::String),
+    (457, "httpStatusCode", DataType::Unsigned16),
+    (458, "sourceTransportPortsLimit", DataType::Unsigned16),
+    (459, "httpRequestMethod", DataType::String),
+    (460, "httpRequestHost", DataType::String),
+    (461, "httpRequestTarget", DataType::String),
+    (462, "httpMessageVersion", DataType::String),
+    (463, "natInstanceID", DataType::Unsigned32),
+    (464, "internalAddressRealm", DataType::OctetArray),
+    (465, "externalAddressRealm", DataType::OctetArray),
+    (466, "natQuotaExceededEvent", DataType::Unsigned32),
+    (467, "natThresholdEvent", DataType::Unsigned32),
+    (468, "httpUserAgent", DataType::String),
+    (469, "httpContentType", DataType::String),
+    (470, "httpReasonPhrase", DataType::String),
+    (471, "maxSessionEntries", DataType::Unsigned32),
+    (472, "maxBIBEntries", DataType::Unsigned32),
+    (473, "maxEntriesPerUser", DataType::Unsigned32),
+    (474, "maxSubscribers", DataType::Unsigned32),
+    (475, "maxFragmentsPendingReassembly", DataType::Unsigned32),
+    (476, "addressPoolHighThreshold", DataType::Unsigned32),
+    (477, "addressPoolLowThreshold", DataType::Unsigned32),
+    (478, "addressPortMappingHighThreshold", DataType::Unsigned32),
+    (479, "addressPortMappingLowThreshold", DataType::Unsigned32),
+    (
+        480,
+        "addressPortMappingPerUserHighThreshold",
+        DataType::Unsigned32,
+    ),
+    (
+        481,
+        "globalAddressMappingHighThreshold",
+        DataType::Unsigned32,
+    ),
+    (482, "vpnIdentifier", DataType::OctetArray),
+    (483, "bgpCommunity", DataType::Unsigned32),
+    // (484, "bgpSourceCommunityList", basicList),
+    // (485, "bgpDestinationCommunityList", basicList),
+    (486, "bgpExtendedCommunity", DataType::OctetArray),
+    // (487, "bgpSourceExtendedCommunityList", basicList),
+    // (488, "bgpDestinationExtendedCommunityList", basicList),
+    (489, "bgpLargeCommunity", DataType::OctetArray),
+    // (490, "bgpSourceLargeCommunityList", basicList),
+    // (491, "bgpDestinationLargeCommunityList", basicList),
+    (492, "srhFlagsIPv6", DataType::Unsigned8),
+    (493, "srhTagIPv6", DataType::Unsigned16),
+    (494, "srhSegmentIPv6", DataType::Ipv6Address),
+    (495, "srhActiveSegmentIPv6", DataType::Ipv6Address),
+    // (496, "srhSegmentIPv6BasicList", basicList),
+    (497, "srhSegmentIPv6ListSection", DataType::OctetArray),
+    (498, "srhSegmentsIPv6Left", DataType::Unsigned8),
+    (499, "srhIPv6Section", DataType::OctetArray),
+    (500, "srhIPv6ActiveSegmentType", DataType::Unsigned8),
+    (501, "srhSegmentIPv6LocatorLength", DataType::Unsigned8),
+    (502, "srhSegmentIPv6EndpointBehavior", DataType::Unsigned16),
+    (503, "transportChecksum", DataType::Unsigned16),
+    (504, "icmpHeaderPacketSection", DataType::OctetArray),
+    (505, "gtpuFlags", DataType::Unsigned8),
+    (506, "gtpuMsgType", DataType::Unsigned8),
+    (507, "gtpuTEid", DataType::Unsigned32),
+    (508, "gtpuSequenceNum", DataType::Unsigned16),
+    (509, "gtpuQFI", DataType::Unsigned8),
+    (510, "gtpuPduType", DataType::Unsigned8),
+    // (511, "bgpSourceAsPathList", basicList),
+    // (512, "bgpDestinationAsPathList", basicList),
+    (513, "ipv6ExtensionHeaderType", DataType::Unsigned8),
+    (514, "ipv6ExtensionHeaderCount", DataType::Unsigned8),
+    // (515, "ipv6ExtensionHeadersFull", unsigned256),
+    // (516, "ipv6ExtensionHeaderTypeCountList", subTemplateList),
+    (517, "ipv6ExtensionHeadersLimit", DataType::Boolean),
+    (518, "ipv6ExtensionHeadersChainLength", DataType::Unsigned32),
+    // (519, "ipv6ExtensionHeaderChainLengthList", subTemplateList),
+    // (520, "tcpOptionsFull", unsigned256),
+    (521, "tcpSharedOptionExID16", DataType::Unsigned16),
+    (522, "tcpSharedOptionExID32", DataType::Unsigned32),
+    // (523, "tcpSharedOptionExID16List", basicList),
+    // (524, "tcpSharedOptionExID32List", basicList),
+    // (525, "udpSafeOptions", unsigned256),
+    (526, "udpUnsafeOptions", DataType::Unsigned64),
+    (527, "udpExID", DataType::Unsigned16),
+    // (528, "udpSafeExIDList", basicList),
+    // (529, "udpUnsafeExIDList", basicList),
+    // (530-32767, "Unassigned", ),
+];
 
 #[cfg(test)]
 mod tests {
