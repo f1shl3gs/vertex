@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764859496435,
+  "lastUpdate": 1764859513185,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b29612ffe48084f2bed061780d0e4fbb14e89444",
-          "message": "Merge pull request #2601 from f1shl3gs/sources/node/implement_configurable_for_collectors\n\nsources/node: implement configurable for Collectors",
-          "timestamp": "2025-10-16T00:05:53+08:00",
-          "tree_id": "3174925dd2e37cf9e6aa22d91b4b31439811ecff",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b29612ffe48084f2bed061780d0e4fbb14e89444"
-        },
-        "date": 1760544505724,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.295,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 174.28,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 329.33,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 682.06,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "01e2958da5f4956d79520e2c51dbc845ba8d77db",
           "message": "Merge pull request #2602 from f1shl3gs/extensions/exec_observer/remove_args\n\nextensions/exec_observer: remove args from config",
           "timestamp": "2025-10-16T00:53:46+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 631.42,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1d51e1ee4daec904964ebc17c3c5edf3a89a6284",
+          "message": "Merge pull request #2707 from f1shl3gs/deps/bump_humanize_to_latest_version\n\ndeps: bump `humanize` to latest version",
+          "timestamp": "2025-12-04T22:42:16+08:00",
+          "tree_id": "624af05fb2db1bd28c7f5434b47e039acc056c39",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1d51e1ee4daec904964ebc17c3c5edf3a89a6284"
+        },
+        "date": 1764859490517,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.472,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 172.38,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 339.28,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 678.78,
             "unit": "ns/op"
           }
         ]
