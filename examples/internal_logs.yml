@@ -1,0 +1,11 @@
+sources:
+  logs:
+    type: internal_logs
+
+sinks:
+  console:
+    type: console
+    inputs:
+      - logs
+    encoding:
+      codec: json
