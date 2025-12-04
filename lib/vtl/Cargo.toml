@@ -21,7 +21,7 @@ bytes = { version = "1.11.0", default-features = false }
 chrono = { version = "0.4.42", default-features = false, features = ["now"] }
 dyn-clone = { version = "1.0.20", default-features = false }
 hostname = { path = "../hostname" }
-humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes", "duration"], rev = "0a339868275ad042c53e8802fc5b4564d216cce9" }
+humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes", "duration"], rev = "29e9225d05de76c6d48134497aa4a94c2cd08380" }
 regex = { version = "1.12.2", default-features = false, features = ["unicode"] }
 serde_json = { version = "1.0.145", default-features = false }
 twox-hash = { version = "2.1.2", default-features = false, features = ["xxhash64"] }
