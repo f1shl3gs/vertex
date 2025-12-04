@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764856973891,
+  "lastUpdate": 1764857066543,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "80e44d5e591ccb72a3e50eb7b593b293c853af98",
-          "message": "Merge pull request #2605 from f1shl3gs/dependabot/cargo/tikv-jemallocator-0.6.1\n\nchore(deps): bump tikv-jemallocator from 0.6.0 to 0.6.1",
-          "timestamp": "2025-10-17T21:43:56+08:00",
-          "tree_id": "5c238f8d663b334a0dd16ce6b9afc997154b4ef8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/80e44d5e591ccb72a3e50eb7b593b293c853af98"
-        },
-        "date": 1760709290673,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 562,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 39770.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "363b2138368c5f72c62c4dfc56e8b23ea151dacd",
           "message": "Merge pull request #2606 from f1shl3gs/dependabot/cargo/rustls-0.23.33\n\nchore(deps): bump rustls from 0.23.32 to 0.23.33",
           "timestamp": "2025-10-17T22:07:37+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41233.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0af7dbf4404d173a2a85367df36343a2afe539b2",
+          "message": "Merge pull request #2706 from f1shl3gs/sources/internal_logs/fix_err_handling\n\nsources/internal_logs: fix err handling",
+          "timestamp": "2025-12-04T21:53:15+08:00",
+          "tree_id": "38a1d793f908f953bc8020261c1138831db170f1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0af7dbf4404d173a2a85367df36343a2afe539b2"
+        },
+        "date": 1764857044718,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 570,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41231.7,
             "unit": "KiB"
           }
         ]
