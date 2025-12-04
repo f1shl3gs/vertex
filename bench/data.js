@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764859482830,
+  "lastUpdate": 1764859496435,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "01e2958da5f4956d79520e2c51dbc845ba8d77db",
-          "message": "Merge pull request #2602 from f1shl3gs/extensions/exec_observer/remove_args\n\nextensions/exec_observer: remove args from config",
-          "timestamp": "2025-10-16T00:53:46+08:00",
-          "tree_id": "7f79d110c71bf0224178ba9926f68f0410a9b86a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/01e2958da5f4956d79520e2c51dbc845ba8d77db"
-        },
-        "date": 1760547362966,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.422,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 96.429,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 169.16,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 186.47,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1d51e1ee4daec904964ebc17c3c5edf3a89a6284",
+          "message": "Merge pull request #2707 from f1shl3gs/deps/bump_humanize_to_latest_version\n\ndeps: bump `humanize` to latest version",
+          "timestamp": "2025-12-04T22:42:16+08:00",
+          "tree_id": "624af05fb2db1bd28c7f5434b47e039acc056c39",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1d51e1ee4daec904964ebc17c3c5edf3a89a6284"
+        },
+        "date": 1764859473898,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.108,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 100.53,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 176.97,
             "unit": "ns/op"
           }
         ]
