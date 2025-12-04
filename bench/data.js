@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1764800883353,
+  "lastUpdate": 1764856539548,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b29612ffe48084f2bed061780d0e4fbb14e89444",
-          "message": "Merge pull request #2601 from f1shl3gs/sources/node/implement_configurable_for_collectors\n\nsources/node: implement configurable for Collectors",
-          "timestamp": "2025-10-16T00:05:53+08:00",
-          "tree_id": "3174925dd2e37cf9e6aa22d91b4b31439811ecff",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b29612ffe48084f2bed061780d0e4fbb14e89444"
-        },
-        "date": 1760544472006,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 494900,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 524130,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0af7dbf4404d173a2a85367df36343a2afe539b2",
+          "message": "Merge pull request #2706 from f1shl3gs/sources/internal_logs/fix_err_handling\n\nsources/internal_logs: fix err handling",
+          "timestamp": "2025-12-04T21:53:15+08:00",
+          "tree_id": "38a1d793f908f953bc8020261c1138831db170f1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0af7dbf4404d173a2a85367df36343a2afe539b2"
+        },
+        "date": 1764856517852,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 530130,
             "unit": "ns/op"
           }
         ]
