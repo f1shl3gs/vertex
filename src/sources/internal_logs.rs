@@ -76,13 +76,11 @@ async fn run(
                 log.insert(key, pid);
             }
 
-            log.insert(log_schema().source_type_key(), "internal_log");
             log.insert(log_schema().timestamp_key(), timestamp);
         });
 
-        if let Err(err) = output.send_batch(logs).await {
-            error!(message = "Error sending log", %err);
-            return Err(());
+        if let Err(_err) = output.send_batch(logs).await {
+            break;
         }
     }
 
