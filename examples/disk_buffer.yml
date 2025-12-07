@@ -1,0 +1,17 @@
+data_dir: temp
+
+sources:
+  logs:
+    type: generate
+    count: 5
+
+sinks:
+  stdout:
+    inputs:
+      - logs
+    type: console
+    stream: stdout
+    encoding:
+      codec: text
+    buffer:
+      disk: {}
