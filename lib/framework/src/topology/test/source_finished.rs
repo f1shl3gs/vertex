@@ -1,30 +1,16 @@
-use tokio::time::{timeout, Duration};
+use tokio::time::{Duration, timeout};
 
-use crate::{
-    config::Config,
-    sinks::{
-        console::{ConsoleSinkConfig, Target},
-        util::encoding::StandardEncodings,
-    },
-    sources::generate::DemoLogsConfig,
-    test_util::start_topology,
-};
+use crate::config::Config;
+use crate::topology::test::{GenerateLogSource, NullSinkConfig, start_topology};
 
 #[tokio::test]
 async fn sources_finished() {
     let mut old_config = Config::builder();
-    let demo_logs = DemoLogsConfig::repeat(vec!["text".to_owned()], 1, 0.0);
-    old_config.add_source("in", demo_logs);
-    old_config.add_sink(
-        "out",
-        &["in"],
-        ConsoleSinkConfig {
-            target: Target::Stdout,
-            encoding: StandardEncodings::Text.into(),
-        },
-    );
+    let source = GenerateLogSource { count: 1 };
+    old_config.add_source("in", source);
+    old_config.add_sink("out", &["in"], NullSinkConfig {});
 
-    let (topology, _crash) = start_topology(old_config.build().unwrap(), false).await;
+    let (topology, _crash) = start_topology(old_config.compile().unwrap(), false).await;
 
     timeout(Duration::from_secs(2), topology.sources_finished())
         .await
