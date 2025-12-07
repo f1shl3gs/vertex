@@ -176,8 +176,8 @@ impl<T: Encodable> Future for RecvFuture<'_, T> {
 
                 return Poll::Ready(Some(item));
             }
+            // the queue is empty
             Ok(None) => {
-                // the queue is empty
                 if receiver.inner.semaphore.closed() {
                     return Poll::Ready(None);
                 }

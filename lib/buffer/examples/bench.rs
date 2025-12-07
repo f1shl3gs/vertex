@@ -174,7 +174,7 @@ fn setup(typ: BufferType) -> (BufferSender<Message>, BufferReceiver<Message>, Pa
         when_full: Default::default(),
         typ,
     }
-    .build(id, root)
+    .build(&id, root)
     .unwrap();
 
     (tx, rx, path)

@@ -18,8 +18,11 @@ pub enum Error {
     #[error("create directory {0:?} failed, {1}")]
     CreateRootDirectory(PathBuf, std::io::Error),
 
-    #[error("build disk buffer, {0}")]
-    Io(std::io::Error),
+    #[error("open reader failed, {0}")]
+    Reader(std::io::Error),
+
+    #[error("open writer failed, {0}")]
+    Writer(std::io::Error),
 }
 
 #[derive(Copy, Clone, Debug, Default, Deserialize, Serialize, PartialEq)]
@@ -238,7 +241,7 @@ impl BufferConfig {
     /// buffer implementation.
     pub fn build<T: Encodable + Unpin>(
         &self,
-        id: String,
+        id: &str,
         root: PathBuf,
     ) -> Result<(BufferSender<T>, BufferReceiver<T>), Error> {
         match self.typ {

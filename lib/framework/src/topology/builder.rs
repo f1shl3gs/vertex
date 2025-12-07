@@ -556,7 +556,7 @@ pub async fn build_pieces(
         } else {
             let result = sink
                 .buffer
-                .build(name.to_string(), config.global.data_dir.clone().unwrap());
+                .build(name.id(), config.global.data_dir.clone().unwrap());
 
             match result {
                 Ok((tx, rx)) => (tx, Arc::new(Mutex::new(Some(rx.into_stream())))),
