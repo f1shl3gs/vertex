@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1765136796951,
+  "lastUpdate": 1765136810171,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "80e44d5e591ccb72a3e50eb7b593b293c853af98",
-          "message": "Merge pull request #2605 from f1shl3gs/dependabot/cargo/tikv-jemallocator-0.6.1\n\nchore(deps): bump tikv-jemallocator from 0.6.0 to 0.6.1",
-          "timestamp": "2025-10-17T21:43:56+08:00",
-          "tree_id": "5c238f8d663b334a0dd16ce6b9afc997154b4ef8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/80e44d5e591ccb72a3e50eb7b593b293c853af98"
-        },
-        "date": 1760708774760,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.461,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 96.67,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 173.69,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 174.87,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c52f976cd5cd3cfddcd034d7eeb5675ff356bbee",
+          "message": "Merge pull request #2711 from f1shl3gs/lib/buffer/fix_reader_shutdown\n\nlib/buffer: fix reader shutdown",
+          "timestamp": "2025-12-08T03:44:10+08:00",
+          "tree_id": "2ec67d5f7277fce71c68eec4f3fb5f335f6bcedc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c52f976cd5cd3cfddcd034d7eeb5675ff356bbee"
+        },
+        "date": 1765136787871,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.094,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 99.166,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 174.42,
             "unit": "ns/op"
           }
         ]
