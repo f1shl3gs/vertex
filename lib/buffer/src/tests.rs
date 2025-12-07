@@ -141,7 +141,7 @@ async fn build_buffer<T: Encodable + Unpin>(
         .collect::<String>();
 
     config
-        .build(id, std::env::temp_dir().join("buffer_tests"))
+        .build(&id, std::env::temp_dir().join("buffer_tests"))
         .unwrap()
 }
 

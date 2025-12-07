@@ -277,9 +277,7 @@ impl<T: Encodable> Reader<T> {
             if filled == 0 {
                 let reader_file_id = self.ledger.get_current_reader_file_id();
                 let writer_file_id = self.ledger.get_current_writer_file_id();
-                let finalized = reader_file_id != writer_file_id;
-
-                if finalized {
+                if reader_file_id != writer_file_id {
                     debug!(
                         message = "reached the end of current chunk file",
                         reader_file_id, writer_file_id,
@@ -287,11 +285,14 @@ impl<T: Encodable> Reader<T> {
 
                     self.roll_to_next_chunk_file()?;
                     maybe_chunk = Some(self.config.chunk_path(reader_file_id));
-                } else {
-                    self.ledger.wait_for_read().await;
+                    continue;
                 }
 
-                continue;
+                if self.ledger.done() {
+                    return Ok(None);
+                }
+
+                self.ledger.wait_for_read().await;
             }
         };
 

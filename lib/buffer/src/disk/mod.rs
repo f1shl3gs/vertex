@@ -61,8 +61,8 @@ impl Config {
             .map(Arc::new)
             .map_err(Error::Ledger)?;
 
-        let writer = Writer::new(self.clone(), Arc::clone(&ledger)).map_err(Error::Io)?;
-        let reader = Reader::new(self, ledger).map_err(Error::Io)?;
+        let writer = Writer::new(self.clone(), Arc::clone(&ledger)).map_err(Error::Writer)?;
+        let reader = Reader::new(self, ledger).map_err(Error::Reader)?;
 
         Ok((writer, reader))
     }
