@@ -224,7 +224,7 @@ impl<T> SinkOuter<T> {
         let mut resources = self.inner.resources();
 
         match self.buffer.typ {
-            BufferType::Memory { .. } => {}
+            BufferType::Memory => {}
             BufferType::Disk { .. } => resources.push(Resource::DiskBuffer(id.to_string())),
         }
 

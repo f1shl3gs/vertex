@@ -706,9 +706,9 @@ async fn disk_buffer_flushes_on_idle() {
         Box::new(sink1),
     );
     sink1_outer.buffer = BufferConfig {
+        max_size: 268435488,
         when_full: WhenFull::DropNewest,
         typ: BufferType::Disk {
-            max_size: 268435488,
             max_record_size: 4 * 1024 * 1024,
             max_chunk_size: 128 * 1024 * 1024,
         },
