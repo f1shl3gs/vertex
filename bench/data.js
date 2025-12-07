@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1765137216701,
+  "lastUpdate": 1765137321764,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3ac4816c02724e0de8a2a9fd289c84d5d1c7fae7",
-          "message": "Merge pull request #2609 from f1shl3gs/dependabot/cargo/syn-2.0.107\n\nchore(deps): bump syn from 2.0.106 to 2.0.107",
-          "timestamp": "2025-10-19T22:21:00+08:00",
-          "tree_id": "1520e2dd8b4524aec61c98c1ea1abfe5e8a7c13d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3ac4816c02724e0de8a2a9fd289c84d5d1c7fae7"
-        },
-        "date": 1760884322469,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 569,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40133.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "328fd09af0c250a02e5becde67287bdc075046ff",
           "message": "Merge pull request #2610 from f1shl3gs/sources/bind/drop_xml_v2_and_add_json_v1\n\nsources/bind: support multiple endpoints; add json v1 and remove xml v2",
           "timestamp": "2025-10-20T21:54:35+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41230.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c52f976cd5cd3cfddcd034d7eeb5675ff356bbee",
+          "message": "Merge pull request #2711 from f1shl3gs/lib/buffer/fix_reader_shutdown\n\nlib/buffer: fix reader shutdown",
+          "timestamp": "2025-12-08T03:44:10+08:00",
+          "tree_id": "2ec67d5f7277fce71c68eec4f3fb5f335f6bcedc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c52f976cd5cd3cfddcd034d7eeb5675ff356bbee"
+        },
+        "date": 1765137299536,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 575,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41229.3,
             "unit": "KiB"
           }
         ]
