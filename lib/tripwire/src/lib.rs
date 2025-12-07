@@ -27,6 +27,7 @@ fn inc_next_id(data: u64) -> u64 {
     data + (1 << 1)
 }
 
+#[derive(Debug)]
 struct Shared {
     // `state` uses 1 bits to store cancellation state,
     // the reset of the bits are used to store the next
@@ -114,6 +115,7 @@ impl Drop for Trigger {
 /// which is then used to signal that all the associated streams should be terminated.
 ///
 /// The `Tripwire` future resolves if the stream should be considered closed.
+#[derive(Debug)]
 pub struct Tripwire {
     /// id used to indicate the waker store in `Shared`.
     id: u64,
