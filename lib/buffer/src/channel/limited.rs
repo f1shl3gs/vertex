@@ -14,6 +14,8 @@ use crate::queue::Queue;
 /// limited returns an unbounded, bytes limited MPSC channel
 #[must_use]
 pub fn limited<T>(limited: usize) -> (LimitedSender<T>, LimitedReceiver<T>) {
+    assert!(limited > 0);
+
     let inner = Arc::new(Inner {
         queue: Queue::default(),
         semaphore: Semaphore::new(limited),

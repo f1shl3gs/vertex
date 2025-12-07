@@ -162,19 +162,18 @@ async fn block_when_writer_hit_buffer_limit() {
     run_cases::<_, Message>(
         vec![
             BufferConfig {
+                // memory based variant has no header, of course, so the byte_size
+                // is the Message's size, 35 is enough for 3.5 messages
+                max_size: 35,
                 when_full: WhenFull::Block,
-                typ: BufferType::Memory {
-                    // memory based variant has no header, of cause, so the byte_size
-                    // is the Message's size, 35 is enough for 3.5 messages
-                    max_size: 35,
-                },
+                typ: BufferType::Memory,
             },
             BufferConfig {
+                // record header length is added, so the actual record size is
+                // Message.size + 4 + 4 + 8
+                max_size: 100,
                 when_full: WhenFull::Block,
                 typ: BufferType::Disk {
-                    // record header length is added, so the actual record size is
-                    // Message.size + 4 + 4 + 8
-                    max_size: 100,
                     max_chunk_size: 1000,
                     max_record_size: 1000,
                 },
@@ -197,11 +196,11 @@ async fn block_when_writer_hit_buffer_limit() {
 #[tokio::test]
 async fn disk_reader_skip_decode_error() {
     let config = BufferConfig {
+        // record header length is added, so the actual record size is
+        // Message.size + 4 + 4 + 8
+        max_size: 100,
         when_full: WhenFull::Block,
         typ: BufferType::Disk {
-            // record header length is added, so the actual record size is
-            // Message.size + 4 + 4 + 8
-            max_size: 100,
             max_chunk_size: 1000,
             max_record_size: 1000,
         },

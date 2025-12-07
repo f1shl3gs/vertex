@@ -269,7 +269,7 @@ impl Output {
         self.sent_bytes.inc(byte_size as u64);
 
         trace!(
-            message = "Events send failed",
+            message = "Events send success",
             %count,
             %byte_size
         );

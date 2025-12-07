@@ -54,9 +54,7 @@ async fn main() {
     bench(
         max_records,
         &[128, 256, 512, 1024, 2048, 4096],
-        BufferType::Memory {
-            max_size: 4 * 1024 * 1024,
-        },
+        BufferType::Memory,
     )
     .await;
 
@@ -65,7 +63,6 @@ async fn main() {
             max_records,
             &[128, 256, 512, 1024, 2048, 4096 /*8192, 16384*/],
             BufferType::Disk {
-                max_size: 4 * 1024 * 1024 * 1024,  // 4G
                 max_record_size: 4 * 1024 * 1024,  // 4M
                 max_chunk_size: 128 * 1024 * 1024, // 128M
             },
@@ -101,7 +98,7 @@ async fn profile(f: impl AsyncFn()) {
 
 async fn bench(records: usize, record_sizes: &[usize], variant: BufferType) {
     let variant_str = match &variant {
-        BufferType::Memory { .. } => "Memory",
+        BufferType::Memory => "Memory",
         BufferType::Disk { .. } => "Disk",
     };
 
@@ -168,7 +165,12 @@ fn setup(typ: BufferType) -> (BufferSender<Message>, BufferReceiver<Message>, Pa
     let path = root.join(&id);
     std::fs::create_dir_all(&path).unwrap();
 
+    let max_size = match typ {
+        BufferType::Memory => 4 * 1024 * 1024 * 1024,
+        BufferType::Disk { .. } => 16 * 1024 * 1024 * 1024,
+    };
     let (tx, rx) = BufferConfig {
+        max_size,
         when_full: Default::default(),
         typ,
     }
