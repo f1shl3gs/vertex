@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1765126848214,
+  "lastUpdate": 1765126854279,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9eefa68c59db5a3764383ed2571877f398206f23",
-          "message": "Merge pull request #2604 from f1shl3gs/dependabot/cargo/tikv-jemalloc-ctl-0.6.1\n\nchore(deps): bump tikv-jemalloc-ctl from 0.6.0 to 0.6.1",
-          "timestamp": "2025-10-17T16:54:19+08:00",
-          "tree_id": "b17dcf5f2acef80e1f5a411d76cadab45b66b1c1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9eefa68c59db5a3764383ed2571877f398206f23"
-        },
-        "date": 1760691401326,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.404,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 96.867,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 175.33,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 174.23,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6c951fbae8ab39fe8fcc2e5801465e1824f54985",
+          "message": "Merge pull request #2710 from f1shl3gs/lib/buffer/simplify_config\n\nlib/buffer: simplify BufferConfig",
+          "timestamp": "2025-12-08T00:58:26+08:00",
+          "tree_id": "47da9cf219fd521c0df36d8719287a26bc629316",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6c951fbae8ab39fe8fcc2e5801465e1824f54985"
+        },
+        "date": 1765126831707,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.029,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 100.2,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 174.87,
             "unit": "ns/op"
           }
         ]
