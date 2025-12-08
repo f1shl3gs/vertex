@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1765207630077,
+  "lastUpdate": 1765207688767,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "328fd09af0c250a02e5becde67287bdc075046ff",
-          "message": "Merge pull request #2610 from f1shl3gs/sources/bind/drop_xml_v2_and_add_json_v1\n\nsources/bind: support multiple endpoints; add json v1 and remove xml v2",
-          "timestamp": "2025-10-20T21:54:35+08:00",
-          "tree_id": "4c866f2212138b341ad409aed223dba81705b92a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/328fd09af0c250a02e5becde67287bdc075046ff"
-        },
-        "date": 1760969140754,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 570,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40290.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "68bc8a665d317fc39d7a91f9ad728af26e75e905",
           "message": "Merge pull request #2611 from f1shl3gs/sources/redis/support_multiple_endpoints\n\nsources/redis: support multiple endpoints",
           "timestamp": "2025-10-21T01:26:03+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 575,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41229.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "94b621ce8e9f867946e1572a1e4f5451eeaeedc4",
+          "message": "Merge pull request #2712 from f1shl3gs/dependabot/cargo/criterion-0.8.1\n\nchore(deps): bump criterion from 0.8.0 to 0.8.1",
+          "timestamp": "2025-12-08T23:16:51+08:00",
+          "tree_id": "ec1515b75c6c1476a096acbaaeede5df855a2493",
+          "url": "https://github.com/f1shl3gs/vertex/commit/94b621ce8e9f867946e1572a1e4f5451eeaeedc4"
+        },
+        "date": 1765207666541,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 567,
             "unit": "s"
           },
           {
