@@ -102,9 +102,8 @@ impl<T: Encodable> BufferSender<T> {
 
                 match err {
                     Error::Closed(_) | Error::LimitExceeded(_) => Err(err),
-                    err @ Error::Write(_) => {
+                    Error::Write(err) => {
                         trace!(message = "drop newest item", ?err);
-
                         Ok(())
                     }
                 }
