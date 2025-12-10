@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1765333938496,
+  "lastUpdate": 1765334320887,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "dcba3a6849bad5d12764500256b5d5959a296cf6",
-          "message": "Merge pull request #2607 from f1shl3gs/dependabot/cargo/indexmap-2.12.0\n\nchore(deps): bump indexmap from 2.11.4 to 2.12.0",
-          "timestamp": "2025-10-18T19:04:03+08:00",
-          "tree_id": "1574b28da6c9634cb486ffe9cbe2392caa5a7b19",
-          "url": "https://github.com/f1shl3gs/vertex/commit/dcba3a6849bad5d12764500256b5d5959a296cf6"
-        },
-        "date": 1760785988269,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14726000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 621850,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.676,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "14d5b7ee6710fa5d0895b6f3d854a32a395e322b",
           "message": "Merge pull request #2608 from f1shl3gs/sources/nats_metrics/init\n\nsources/nats_metrics: init",
           "timestamp": "2025-10-18T21:17:07+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.992,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "db35751171505b9aabb16a9508fbad09401f3bc1",
+          "message": "Merge pull request #2713 from f1shl3gs/lib/buffer/fix_flush\n\nlib/buffer: fix flush",
+          "timestamp": "2025-12-10T10:28:48+08:00",
+          "tree_id": "aa9b7b842f8de81c8ecdb919cb7383a652e15721",
+          "url": "https://github.com/f1shl3gs/vertex/commit/db35751171505b9aabb16a9508fbad09401f3bc1"
+        },
+        "date": 1765334298501,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14813000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 603500,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.655,
             "unit": "ns/op"
           }
         ]
