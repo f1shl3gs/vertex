@@ -164,7 +164,6 @@ impl<T: Encodable> Writer<T> {
 
     pub async fn write(&mut self, mut record: T) -> Result<usize, Error<T>> {
         let required = self.encode(&record)?;
-
         if required > self.config.max_record_size {
             return Err(Error::RecordTooLarge {
                 limit: self.config.max_record_size,
@@ -348,7 +347,7 @@ impl<T: Encodable> Writer<T> {
         self.unflushed_bytes = 0;
         self.unflushed_records = 0;
 
-        self.inner.flush()
+        self.inner.sync_data()
     }
 }
 
