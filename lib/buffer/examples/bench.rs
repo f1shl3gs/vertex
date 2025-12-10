@@ -103,9 +103,11 @@ async fn bench(records: usize, record_sizes: &[usize], variant: BufferType) {
     };
 
     println!(
-        "------------------------------------ {variant_str:^6} --------------------------------------"
+        "------------------------------------------- {variant_str:^6} ------------------------------------------"
     );
-    println!(" RECORD_SIZE   BYTES    RECORDS_PER_SEC  BYTES_PER_SEC     TIME  USER_CPU  SYS_CPU");
+    println!(
+        " RECORD_SIZE   BYTES    RECORDS_PER_SEC  BYTES_PER_SEC     TIME  USER_CPU  SYS_CPU  TOTAL_CPU"
+    );
     for record_size in record_sizes {
         let (user, system) = get_cpu_time();
         let elapsed = write_and_read(*record_size, records, variant.clone()).await;
@@ -117,14 +119,15 @@ async fn bench(records: usize, record_sizes: &[usize], variant: BufferType) {
         let bps = (record_size * records) as f64 / 1024.0 / 1024.0 / elapsed.as_secs_f64();
 
         println!(
-            "{:12}{:>8}{:>15.2} r/s  {:>9.2} M/s{:>8.2}s {:>8.2}%{:>8.2}%",
+            "{:12}{:>8}{:>15.2} r/s  {:>9.2} M/s{:>8.2}s {:>8.2}%{:>8.2}%{:>10.2}%",
             record_size,
             humanize::bytes::bytes(record_size * records),
             rps,
             bps,
             elapsed.as_secs_f64(),
             user_time / elapsed.as_secs_f64(),
-            system_time / elapsed.as_secs_f64()
+            system_time / elapsed.as_secs_f64(),
+            (user_time + system_time) / elapsed.as_secs_f64(),
         );
     }
 }
