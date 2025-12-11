@@ -6,7 +6,7 @@ use std::sync::atomic::{AtomicBool, AtomicU16, AtomicU64, AtomicUsize, Ordering}
 
 use memmap2::MmapMut;
 use tokio::sync::Notify;
-use tracing::{debug, error};
+use tracing::debug;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
