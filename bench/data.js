@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1765471572338,
+  "lastUpdate": 1765471661683,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a4605316f767baa91cded5319976e16a94bf4d2c",
-          "message": "Merge pull request #2612 from f1shl3gs/lib/configurable-derive/fix_required_of_no_attrs_fields\n\nlib/configurable-derive: fix required value of non-attributes field",
-          "timestamp": "2025-10-21T02:00:18+08:00",
-          "tree_id": "77a9b5e97f4bfb1ad980dada9122f8539458f277",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a4605316f767baa91cded5319976e16a94bf4d2c"
-        },
-        "date": 1760983860915,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 567,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40339.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "501b5d3307f340a1e7c34865ce778cda27e9ed58",
           "message": "Merge pull request #2613 from f1shl3gs/lib/event/add_alloc_feature_to_serde\n\nlib/event: add `alloc` feature to serde",
           "timestamp": "2025-10-21T02:48:22+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41229.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "69ee5e62903bf60a8fa32e51c33111acef48e66a",
+          "message": "Merge pull request #2714 from f1shl3gs/toolchain/1.92.0\n\ntoolchain: bump to 1.92.0",
+          "timestamp": "2025-12-12T00:36:15+08:00",
+          "tree_id": "daca759010186752aa9bcbe87487c6f557a598f4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/69ee5e62903bf60a8fa32e51c33111acef48e66a"
+        },
+        "date": 1765471639636,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 575,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41073.6,
             "unit": "KiB"
           }
         ]
