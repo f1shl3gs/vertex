@@ -4,7 +4,7 @@ use std::marker::PhantomData;
 use std::sync::Arc;
 
 use bytes::BufMut;
-use tracing::{debug, error, trace, warn};
+use tracing::{debug, trace, warn};
 
 use super::record::validate_last_write;
 use super::{Config, Ledger};

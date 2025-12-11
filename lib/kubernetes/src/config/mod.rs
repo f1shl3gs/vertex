@@ -11,7 +11,6 @@ use std::time::{Duration, Instant};
 
 use headers::{Authorization, HeaderMapExt};
 use http::Request;
-use tracing::error;
 
 /// Errors from loading data from a base64 string or a file
 #[derive(Debug, thiserror::Error)]
