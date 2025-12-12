@@ -6,12 +6,12 @@ use event::Event;
 use tokio_util::codec::Encoder as _;
 
 /// TrackWriter is a thin wrapper to track written bytes.
-pub struct TrackWriter<W> {
+pub struct TrackedWriter<W> {
     writer: W,
     written: usize,
 }
 
-impl<W> TrackWriter<W>
+impl<W> TrackedWriter<W>
 where
     W: Write,
 {
@@ -25,15 +25,14 @@ where
     }
 }
 
-impl<W> Write for TrackWriter<W>
-where
-    W: Write,
-{
+impl<W: Write> Write for TrackedWriter<W> {
     fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
-        #[allow(clippy::disallowed_methods)]
-        let n = self.writer.write(buf)?;
-        self.written += n;
-        Ok(n)
+        let count = buf.len();
+
+        self.writer.write_all(buf)?;
+        self.written += count;
+
+        Ok(count)
     }
 
     fn flush(&mut self) -> io::Result<()> {
@@ -109,27 +108,9 @@ where
     F: FnOnce(&mut dyn Write, I) -> Result<(), E>,
     E: Into<io::Error> + 'static,
 {
-    struct Tracked<'inner> {
-        count: usize,
-        inner: &'inner mut dyn Write,
-    }
-
-    impl Write for Tracked<'_> {
-        fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
-            #[allow(clippy::disallowed_methods)] // We pass on the result of `write` to the caller.
-            let n = self.inner.write(buf)?;
-            self.count += n;
-            Ok(n)
-        }
-
-        fn flush(&mut self) -> io::Result<()> {
-            self.inner.flush()
-        }
-    }
-
-    let mut tracked = Tracked { count: 0, inner };
-    f(&mut tracked, input).map_err(|e| e.into())?;
-    Ok(tracked.count)
+    let mut tracked = TrackedWriter::new(inner);
+    f(&mut tracked, input).map_err(|err| err.into())?;
+    Ok(tracked.written)
 }
 
 /// NoopEncoder is a no op encoder for Encoder implement, it is very useful
