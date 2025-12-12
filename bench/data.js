@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1765568326190,
+  "lastUpdate": 1765568439264,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "afa551ccf8719f4d1e4d0a9864c13bfed44b863f",
-          "message": "Merge pull request #2615 from f1shl3gs/lib/vtl/fix_get_set_return_value\n\nlib/vtl: fix get & set return value",
-          "timestamp": "2025-10-21T05:04:28+08:00",
-          "tree_id": "bcaef62edc9aa873086856fbb5d28dcb45172575",
-          "url": "https://github.com/f1shl3gs/vertex/commit/afa551ccf8719f4d1e4d0a9864c13bfed44b863f"
-        },
-        "date": 1760994919949,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 566,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40357.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8cb71b843793878a0f6e511752f5ac62d45abdc3",
           "message": "Merge pull request #2617 from f1shl3gs/dependabot/cargo/memmap2-0.9.9\n\nchore(deps): bump memmap2 from 0.9.8 to 0.9.9",
           "timestamp": "2025-10-22T18:59:51+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41285.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7aba6f9593c4c5337095bf0053be17f9080ddfb3",
+          "message": "Merge pull request #2717 from f1shl3gs/lib/framework/simplify_tracked_writer\n\nlib/framework: simplify TrackedWriter",
+          "timestamp": "2025-12-13T03:28:55+08:00",
+          "tree_id": "95e402175e7210793334a194d5d6371d12c4c5d2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7aba6f9593c4c5337095bf0053be17f9080ddfb3"
+        },
+        "date": 1765568416283,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 589,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41283.7,
             "unit": "KiB"
           }
         ]
