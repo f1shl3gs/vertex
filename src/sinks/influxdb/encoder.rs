@@ -2,7 +2,7 @@ use std::fmt;
 use std::io::Write;
 
 use event::{Metric, MetricValue};
-use framework::sink::encoding::{Encoder, TrackWriter};
+use framework::sink::encoding::{Encoder, TrackedWriter};
 
 // https://docs.influxdata.com/influxdb/cloud/reference/syntax/line-protocol/#special-characters
 const COMMA_EQ_SPACE: [char; 3] = [',', '=', ' '];
@@ -15,7 +15,7 @@ pub struct LineProtocolEncoder;
 
 impl Encoder<Vec<Metric>> for LineProtocolEncoder {
     fn encode(&self, metrics: Vec<Metric>, writer: &mut dyn Write) -> std::io::Result<usize> {
-        let mut writer = TrackWriter::new(writer);
+        let mut writer = TrackedWriter::new(writer);
 
         for metric in &metrics {
             write!(writer, "{}", escape(metric.name(), COMMA_SPACE))?;
