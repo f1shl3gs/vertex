@@ -1,0 +1,27 @@
+sources:
+  logs:
+    type: generate
+    decoding:
+      codec: json
+
+sinks:
+  alertmanager:
+    type: alertmanager
+    inputs:
+      - logs
+    endpoint: http://localhost:9093
+    labels:
+      alertname: method
+    annotations:
+      uri: request_uri
+      remote: remote_addr
+      referer: http_referer
+    batch:
+      max_events: 3
+
+  # console:
+  #   type: console
+  #   inputs:
+  #     - logs
+  #   encoding:
+  #     codec: json

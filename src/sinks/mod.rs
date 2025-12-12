@@ -1,3 +1,5 @@
+#[cfg(feature = "sinks-alertmanager")]
+mod alertmanager;
 #[cfg(feature = "sinks-blackhole")]
 pub mod blackhole;
 #[cfg(feature = "sinks-clickhouse")]
