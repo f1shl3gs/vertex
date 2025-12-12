@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1765560428277,
+  "lastUpdate": 1765560511020,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3e0579ddb22e6e02817a0ee679508e6093e3aca9",
-          "message": "Merge pull request #2614 from f1shl3gs/sources/zookeeper/support_multiple_endpoints\n\nsources/zookeeper: support multiple endpoints",
-          "timestamp": "2025-10-21T04:07:09+08:00",
-          "tree_id": "390b6d8cdb1f9a60454685d4f2891a37efefa578",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3e0579ddb22e6e02817a0ee679508e6093e3aca9"
-        },
-        "date": 1760991540869,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 596,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40356.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "afa551ccf8719f4d1e4d0a9864c13bfed44b863f",
           "message": "Merge pull request #2615 from f1shl3gs/lib/vtl/fix_get_set_return_value\n\nlib/vtl: fix get & set return value",
           "timestamp": "2025-10-21T05:04:28+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41073.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ab695c814e992c4cdeaeebd2f8a50a29df9af6e5",
+          "message": "Merge pull request #2716 from f1shl3gs/sinks/alertmanager/init\n\nsinks/alertmanager: init",
+          "timestamp": "2025-12-13T01:17:02+08:00",
+          "tree_id": "ed3ea8aa49cce8c1f862b53ec562c074b7dde4e0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ab695c814e992c4cdeaeebd2f8a50a29df9af6e5"
+        },
+        "date": 1765560488368,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 576,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41285.9,
             "unit": "KiB"
           }
         ]
