@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1765560511020,
+  "lastUpdate": 1765567889943,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "68bc8a665d317fc39d7a91f9ad728af26e75e905",
-          "message": "Merge pull request #2611 from f1shl3gs/sources/redis/support_multiple_endpoints\n\nsources/redis: support multiple endpoints",
-          "timestamp": "2025-10-21T01:26:03+08:00",
-          "tree_id": "44f7431c0aa5f0a0344c52af4be40e0e029e5adc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/68bc8a665d317fc39d7a91f9ad728af26e75e905"
-        },
-        "date": 1760981294542,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 500010,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 541640,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7aba6f9593c4c5337095bf0053be17f9080ddfb3",
+          "message": "Merge pull request #2717 from f1shl3gs/lib/framework/simplify_tracked_writer\n\nlib/framework: simplify TrackedWriter",
+          "timestamp": "2025-12-13T03:28:55+08:00",
+          "tree_id": "95e402175e7210793334a194d5d6371d12c4c5d2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7aba6f9593c4c5337095bf0053be17f9080ddfb3"
+        },
+        "date": 1765567867771,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 538190,
             "unit": "ns/op"
           }
         ]
