@@ -1,28 +1,35 @@
+extensions:
+  pprof:
+    type: pprof
+    listen: 0.0.0.0:9091
+
 sources:
   selfstat:
     type: selfstat
     interval: 5s
-
+  internal:
+    type: internal_metrics
   http_source:
     type:             http
-    acknowledgements: false
+    # acknowledgements: false
     listen:           0.0.0.0:8282
 
 sinks:
   prometheus:
-    type:    "prometheus_exporter"
-    inputs: [ "selfstat" ]
-    endpoint: 0.0.0.0:9100
+    type:    prometheus_exporter
+    inputs:
+      - selfstat
+      - internal
+    listen: 0.0.0.0:9100
 
   http_sink:
     type: http
     inputs: [ "http_source" ]
-    uri:  "http://lading:8080"
+    endpoint:  "http://lading:8080"
     method: POST
     encoding:
       codec: "text"
     healthcheck:
       enabled: false
     buffer:
-      type:       "memory"
-      max_events: 50000  # buffer 50 payloads at a time
+      max_size: 512 MiB  # make sure this is big enough

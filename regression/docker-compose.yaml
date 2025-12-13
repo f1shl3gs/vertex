@@ -4,6 +4,9 @@ services:
     ports:
       - 9100:9100 # prometheus exporter
       - 9091:9091 # pprof
+    environment:
+      # VERTEX_LOG: trace
+      MALLOC_CONF: "prof:true,prof_prefix:jeprof.out"
     deploy:
       resources:
         limits:
@@ -14,7 +17,7 @@ services:
       - data:/data
 
   lading:
-    image: ghcr.io/datadog/lading:0.25.4
+    image: ghcr.io/datadog/lading:0.30.0
     depends_on:
       - vertex
     deploy:
