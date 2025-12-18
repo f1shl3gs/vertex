@@ -10,7 +10,7 @@ memchr = { version = "2.7.6", default-features = false, features = ["alloc"] }
 pin-project-lite = { version = "0.2.16", default-features = false }
 tokio = { version = "1.48.0", default-features = false, features = ["net", "rt", "sync", "time"] }
 tokio-util = { version = "0.7.17", default-features = false, features = ["codec"]}
-tracing = { version = "0.1.43", default-features = false }
+tracing = { version = "0.1.44", default-features = false }
 
 [target.'cfg(not(windows))'.dependencies]
 libc = { version = "0.2.178", default-features = false }
