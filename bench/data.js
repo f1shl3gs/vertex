@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1766222682601,
+  "lastUpdate": 1766222699734,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "68bc8a665d317fc39d7a91f9ad728af26e75e905",
-          "message": "Merge pull request #2611 from f1shl3gs/sources/redis/support_multiple_endpoints\n\nsources/redis: support multiple endpoints",
-          "timestamp": "2025-10-21T01:26:03+08:00",
-          "tree_id": "44f7431c0aa5f0a0344c52af4be40e0e029e5adc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/68bc8a665d317fc39d7a91f9ad728af26e75e905"
-        },
-        "date": 1760981303026,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.318,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 158.04,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 301.51,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 638.77,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a4605316f767baa91cded5319976e16a94bf4d2c",
           "message": "Merge pull request #2612 from f1shl3gs/lib/configurable-derive/fix_required_of_no_attrs_fields\n\nlib/configurable-derive: fix required value of non-attributes field",
           "timestamp": "2025-10-21T02:00:18+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 683.97,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fe1fd40e9006bd17ec973ecf194a2beca3a0ac9e",
+          "message": "Merge pull request #2719 from f1shl3gs/dependabot/cargo/tracing-0.1.44\n\nchore(deps): bump tracing from 0.1.43 to 0.1.44",
+          "timestamp": "2025-12-20T17:21:59+08:00",
+          "tree_id": "cf63f167b4de5db53f6cb4bb84e6941d22ca349a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fe1fd40e9006bd17ec973ecf194a2beca3a0ac9e"
+        },
+        "date": 1766222672188,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 18.252,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 146.4,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 290.5,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 642.1,
             "unit": "ns/op"
           }
         ]
