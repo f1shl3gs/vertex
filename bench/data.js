@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1766222725242,
+  "lastUpdate": 1766223104349,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a4605316f767baa91cded5319976e16a94bf4d2c",
-          "message": "Merge pull request #2612 from f1shl3gs/lib/configurable-derive/fix_required_of_no_attrs_fields\n\nlib/configurable-derive: fix required value of non-attributes field",
-          "timestamp": "2025-10-21T02:00:18+08:00",
-          "tree_id": "77a9b5e97f4bfb1ad980dada9122f8539458f277",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a4605316f767baa91cded5319976e16a94bf4d2c"
-        },
-        "date": 1760983780009,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14794000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 573670,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.287,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "501b5d3307f340a1e7c34865ce778cda27e9ed58",
           "message": "Merge pull request #2613 from f1shl3gs/lib/event/add_alloc_feature_to_serde\n\nlib/event: add `alloc` feature to serde",
           "timestamp": "2025-10-21T02:48:22+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.782,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fe1fd40e9006bd17ec973ecf194a2beca3a0ac9e",
+          "message": "Merge pull request #2719 from f1shl3gs/dependabot/cargo/tracing-0.1.44\n\nchore(deps): bump tracing from 0.1.43 to 0.1.44",
+          "timestamp": "2025-12-20T17:21:59+08:00",
+          "tree_id": "cf63f167b4de5db53f6cb4bb84e6941d22ca349a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fe1fd40e9006bd17ec973ecf194a2beca3a0ac9e"
+        },
+        "date": 1766223076580,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 15942000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 387640,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 48.003,
             "unit": "ns/op"
           }
         ]
