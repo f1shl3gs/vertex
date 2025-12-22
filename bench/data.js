@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1766411965412,
+  "lastUpdate": 1766411980995,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a4605316f767baa91cded5319976e16a94bf4d2c",
-          "message": "Merge pull request #2612 from f1shl3gs/lib/configurable-derive/fix_required_of_no_attrs_fields\n\nlib/configurable-derive: fix required value of non-attributes field",
-          "timestamp": "2025-10-21T02:00:18+08:00",
-          "tree_id": "77a9b5e97f4bfb1ad980dada9122f8539458f277",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a4605316f767baa91cded5319976e16a94bf4d2c"
-        },
-        "date": 1760983374936,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.388,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 167.56,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 324.29,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 695.56,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "501b5d3307f340a1e7c34865ce778cda27e9ed58",
           "message": "Merge pull request #2613 from f1shl3gs/lib/event/add_alloc_feature_to_serde\n\nlib/event: add `alloc` feature to serde",
           "timestamp": "2025-10-21T02:48:22+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 642.1,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a364678075a8298bbd28e7cb76fe59d01615f24d",
+          "message": "Merge pull request #2721 from f1shl3gs/dependabot/cargo/serde_json-1.0.146\n\nchore(deps): bump serde_json from 1.0.145 to 1.0.146",
+          "timestamp": "2025-12-22T21:56:40+08:00",
+          "tree_id": "5bfebb2fe7fec13fcae6bc2c2e81e76cb036cf4a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a364678075a8298bbd28e7cb76fe59d01615f24d"
+        },
+        "date": 1766411958641,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.753,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 165.25,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 330.11,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 685.2,
             "unit": "ns/op"
           }
         ]
