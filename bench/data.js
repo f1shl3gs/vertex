@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1766412469909,
+  "lastUpdate": 1766576360002,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3e0579ddb22e6e02817a0ee679508e6093e3aca9",
-          "message": "Merge pull request #2614 from f1shl3gs/sources/zookeeper/support_multiple_endpoints\n\nsources/zookeeper: support multiple endpoints",
-          "timestamp": "2025-10-21T04:07:09+08:00",
-          "tree_id": "390b6d8cdb1f9a60454685d4f2891a37efefa578",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3e0579ddb22e6e02817a0ee679508e6093e3aca9"
-        },
-        "date": 1760990960321,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 499750,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 527590,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "534bbb060e2463c1c41232a21c7d3a5caf4583a4",
+          "message": "Merge pull request #2722 from f1shl3gs/dependabot/cargo/serde_json-1.0.147\n\nchore(deps): bump serde_json from 1.0.146 to 1.0.147",
+          "timestamp": "2025-12-24T19:36:57+08:00",
+          "tree_id": "8f46e9243e33be848afb7dad990fabeb3cdfbe55",
+          "url": "https://github.com/f1shl3gs/vertex/commit/534bbb060e2463c1c41232a21c7d3a5caf4583a4"
+        },
+        "date": 1766576337301,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 537870,
             "unit": "ns/op"
           }
         ]
