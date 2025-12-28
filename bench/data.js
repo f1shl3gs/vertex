@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1766924902818,
+  "lastUpdate": 1766925254007,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8cb71b843793878a0f6e511752f5ac62d45abdc3",
-          "message": "Merge pull request #2617 from f1shl3gs/dependabot/cargo/memmap2-0.9.9\n\nchore(deps): bump memmap2 from 0.9.8 to 0.9.9",
-          "timestamp": "2025-10-22T18:59:51+08:00",
-          "tree_id": "ff63cea9106d3857b4d07a310289d922dbeb6aed",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8cb71b843793878a0f6e511752f5ac62d45abdc3"
-        },
-        "date": 1761131367578,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 15414000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 615980,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.72,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "180184f52f4ed29216e5f7f7a23fe1d1ef277e06",
           "message": "Merge pull request #2616 from f1shl3gs/cargo/update\n\ncargo update",
           "timestamp": "2025-10-22T18:59:29+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.547,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "63ffb642230b3ebe632e0a6a3218cc42c20529f9",
+          "message": "Merge pull request #2724 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.104\n\nchore(deps): bump proc-macro2 from 1.0.103 to 1.0.104",
+          "timestamp": "2025-12-28T20:24:42+08:00",
+          "tree_id": "d133ff1f21e3649e0050e3dae67eed84beb52142",
+          "url": "https://github.com/f1shl3gs/vertex/commit/63ffb642230b3ebe632e0a6a3218cc42c20529f9"
+        },
+        "date": 1766925230525,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14980000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 638540,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.495,
             "unit": "ns/op"
           }
         ]
