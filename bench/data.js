@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1766924843804,
+  "lastUpdate": 1766924860532,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "afa551ccf8719f4d1e4d0a9864c13bfed44b863f",
-          "message": "Merge pull request #2615 from f1shl3gs/lib/vtl/fix_get_set_return_value\n\nlib/vtl: fix get & set return value",
-          "timestamp": "2025-10-21T05:04:28+08:00",
-          "tree_id": "bcaef62edc9aa873086856fbb5d28dcb45172575",
-          "url": "https://github.com/f1shl3gs/vertex/commit/afa551ccf8719f4d1e4d0a9864c13bfed44b863f"
-        },
-        "date": 1760994427249,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.341,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 174.92,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 337.65,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 719.37,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "180184f52f4ed29216e5f7f7a23fe1d1ef277e06",
           "message": "Merge pull request #2616 from f1shl3gs/cargo/update\n\ncargo update",
           "timestamp": "2025-10-22T18:59:29+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 705.07,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "63ffb642230b3ebe632e0a6a3218cc42c20529f9",
+          "message": "Merge pull request #2724 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.104\n\nchore(deps): bump proc-macro2 from 1.0.103 to 1.0.104",
+          "timestamp": "2025-12-28T20:24:42+08:00",
+          "tree_id": "d133ff1f21e3649e0050e3dae67eed84beb52142",
+          "url": "https://github.com/f1shl3gs/vertex/commit/63ffb642230b3ebe632e0a6a3218cc42c20529f9"
+        },
+        "date": 1766924838486,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.579,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 172,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 341.15,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 681.08,
             "unit": "ns/op"
           }
         ]
