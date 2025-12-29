@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1767022088312,
+  "lastUpdate": 1767022094326,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8cb71b843793878a0f6e511752f5ac62d45abdc3",
-          "message": "Merge pull request #2617 from f1shl3gs/dependabot/cargo/memmap2-0.9.9\n\nchore(deps): bump memmap2 from 0.9.8 to 0.9.9",
-          "timestamp": "2025-10-22T18:59:51+08:00",
-          "tree_id": "ff63cea9106d3857b4d07a310289d922dbeb6aed",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8cb71b843793878a0f6e511752f5ac62d45abdc3"
-        },
-        "date": 1761130935348,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.35,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 94.612,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 180.97,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 178.16,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d99c4171d46f7d8b9552b83633ad5b2a47d78ce2",
+          "message": "Merge pull request #2725 from f1shl3gs/dependabot/cargo/rustls-native-certs-0.8.3\n\nchore(deps): bump rustls-native-certs from 0.8.2 to 0.8.3",
+          "timestamp": "2025-12-29T23:25:31+08:00",
+          "tree_id": "682965638e2f27a65c93744f34e3a4735697d04f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d99c4171d46f7d8b9552b83633ad5b2a47d78ce2"
+        },
+        "date": 1767022071986,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.563,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 98.321,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 173.7,
             "unit": "ns/op"
           }
         ]
