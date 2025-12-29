@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1767022508789,
+  "lastUpdate": 1767022625958,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "318efaeea6d0cf875a37940f06c0bfbee1abc103",
-          "message": "Merge pull request #2622 from f1shl3gs/misc/cleanup_unnecessary_required\n\nmisc: remove unnecessary required",
-          "timestamp": "2025-10-22T21:44:27+08:00",
-          "tree_id": "dc1a03e0a3732d20ea84cc51705959eb0671d0fa",
-          "url": "https://github.com/f1shl3gs/vertex/commit/318efaeea6d0cf875a37940f06c0bfbee1abc103"
-        },
-        "date": 1761141346444,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 575,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40350.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "18221739aeaa421b12b1aa28a1a0b65d2f92b146",
           "message": "Merge pull request #2623 from f1shl3gs/cli/vtl/print_return_value_as_output\n\ncli/vtl: print returned value rather than target",
           "timestamp": "2025-10-22T21:55:32+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41289.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d99c4171d46f7d8b9552b83633ad5b2a47d78ce2",
+          "message": "Merge pull request #2725 from f1shl3gs/dependabot/cargo/rustls-native-certs-0.8.3\n\nchore(deps): bump rustls-native-certs from 0.8.2 to 0.8.3",
+          "timestamp": "2025-12-29T23:25:31+08:00",
+          "tree_id": "682965638e2f27a65c93744f34e3a4735697d04f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d99c4171d46f7d8b9552b83633ad5b2a47d78ce2"
+        },
+        "date": 1767022603681,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 593,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41291.5,
             "unit": "KiB"
           }
         ]
