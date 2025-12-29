@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1767022154739,
+  "lastUpdate": 1767022508789,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "180184f52f4ed29216e5f7f7a23fe1d1ef277e06",
-          "message": "Merge pull request #2616 from f1shl3gs/cargo/update\n\ncargo update",
-          "timestamp": "2025-10-22T18:59:29+08:00",
-          "tree_id": "ca24ba171b742a20b978abbd1bd8191013cbfb7b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/180184f52f4ed29216e5f7f7a23fe1d1ef277e06"
-        },
-        "date": 1761131368035,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14810000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 636930,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.813,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d4717cf19ebe68cb4fbc5754e865aa8c54dd630e",
           "message": "Merge pull request #2618 from f1shl3gs/dependabot/cargo/rustls-0.23.34\n\nchore(deps): bump rustls from 0.23.33 to 0.23.34",
           "timestamp": "2025-10-22T19:14:00+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.495,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d99c4171d46f7d8b9552b83633ad5b2a47d78ce2",
+          "message": "Merge pull request #2725 from f1shl3gs/dependabot/cargo/rustls-native-certs-0.8.3\n\nchore(deps): bump rustls-native-certs from 0.8.2 to 0.8.3",
+          "timestamp": "2025-12-29T23:25:31+08:00",
+          "tree_id": "682965638e2f27a65c93744f34e3a4735697d04f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d99c4171d46f7d8b9552b83633ad5b2a47d78ce2"
+        },
+        "date": 1767022485580,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 14660000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 612050,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.908,
             "unit": "ns/op"
           }
         ]
