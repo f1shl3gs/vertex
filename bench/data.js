@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1767303404309,
+  "lastUpdate": 1767303418261,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "eb84db66a347b76f38b2625b88c7703fac0afc99",
-          "message": "Merge pull request #2619 from f1shl3gs/misc/switch_to_calculate_start\n\nmisc: switch offset to calculate_start*",
-          "timestamp": "2025-10-22T19:23:52+08:00",
-          "tree_id": "56c59d549753220763896dfa38c5fb3df433f092",
-          "url": "https://github.com/f1shl3gs/vertex/commit/eb84db66a347b76f38b2625b88c7703fac0afc99"
-        },
-        "date": 1761132378378,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.412,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 95.787,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 184.17,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 180.72,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0f4b4f2b550cf9e22910e55593dc45e20d6d0881",
+          "message": "Merge pull request #2727 from f1shl3gs/lib/buffer/fix_blocking\n\nlib/buffer: simplify & fix memory channel blocking",
+          "timestamp": "2026-01-02T05:34:22+08:00",
+          "tree_id": "13a2088fc8baf7c9b80d48454fa2902acb79f252",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0f4b4f2b550cf9e22910e55593dc45e20d6d0881"
+        },
+        "date": 1767303393215,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.545,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 98.635,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 180.4,
             "unit": "ns/op"
           }
         ]
