@@ -150,3 +150,74 @@ impl Semaphore {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use tokio_test::task::spawn;
+    use tokio_test::{assert_pending, assert_ready, assert_ready_err};
+
+    use super::*;
+
+    #[tokio::test]
+    async fn simple() {
+        let sem = Semaphore::new(10);
+
+        let mut acquire = spawn(async { sem.acquire(1).await.unwrap() });
+        assert_ready!(acquire.poll());
+        let mut acquire = spawn(async { sem.acquire(10).await.unwrap() });
+        assert_pending!(acquire.poll());
+
+        sem.release(1);
+
+        assert_ready!(acquire.poll());
+    }
+
+    #[tokio::test]
+    async fn available_permits() {
+        let semaphore = Semaphore::new(10);
+        assert_eq!(semaphore.available_permits(), 10);
+
+        semaphore.acquire(1).await.unwrap();
+        assert_eq!(semaphore.available_permits(), 9);
+        semaphore.acquire(1).await.unwrap();
+        assert_eq!(semaphore.available_permits(), 8);
+
+        semaphore.release(1);
+        assert_eq!(semaphore.available_permits(), 9);
+        semaphore.release(1);
+        assert_eq!(semaphore.available_permits(), 10);
+    }
+
+    #[tokio::test]
+    async fn waits() {
+        let semaphore = Semaphore::new(10);
+        assert_eq!(semaphore.available_permits(), 10);
+
+        semaphore.acquire(10).await.unwrap();
+        assert_eq!(semaphore.available_permits(), 0);
+
+        let tasks = (0..10)
+            .map(|_| spawn(async { semaphore.acquire(1).await }))
+            .collect::<Vec<_>>();
+
+        for mut task in tasks {
+            assert_pending!(task.poll())
+        }
+    }
+
+    #[tokio::test]
+    async fn close() {
+        let semaphore = Semaphore::new(5);
+        assert_eq!(semaphore.available_permits(), 5);
+
+        semaphore.acquire(1).await.unwrap();
+        assert_eq!(semaphore.available_permits(), 4);
+
+        let mut waiting = spawn(async { semaphore.acquire(5).await });
+        assert_pending!(waiting.poll());
+
+        semaphore.close();
+        assert!(semaphore.acquire(1).await.is_err());
+        assert_ready_err!(waiting.poll());
+    }
+}
