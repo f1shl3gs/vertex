@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1767303853704,
+  "lastUpdate": 1767303937432,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "30a0dfcaa7aef171b83ab5eab41e7726c1f14539",
-          "message": "Merge pull request #2624 from f1shl3gs/sinks/http/remove_unnecessary_pub\n\nsinks/http: remove unnecessary pub",
-          "timestamp": "2025-10-23T01:30:39+08:00",
-          "tree_id": "ddf4f0d709b4b860b96cb625d83e89f3cb2acad3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/30a0dfcaa7aef171b83ab5eab41e7726c1f14539"
-        },
-        "date": 1761154893339,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 564,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40354.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c9b9a323347783b415f2da1b34e00c32d2230340",
           "message": "Merge pull request #2625 from f1shl3gs/sources/jaeger/unify_listen\n\nsources/jaeger: unify listen name",
           "timestamp": "2025-10-23T01:34:30+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41291.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0f4b4f2b550cf9e22910e55593dc45e20d6d0881",
+          "message": "Merge pull request #2727 from f1shl3gs/lib/buffer/fix_blocking\n\nlib/buffer: simplify & fix memory channel blocking",
+          "timestamp": "2026-01-02T05:34:22+08:00",
+          "tree_id": "13a2088fc8baf7c9b80d48454fa2902acb79f252",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0f4b4f2b550cf9e22910e55593dc45e20d6d0881"
+        },
+        "date": 1767303914897,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 574,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41294.4,
             "unit": "KiB"
           }
         ]
