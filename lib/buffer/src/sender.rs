@@ -57,7 +57,7 @@ impl<T: Encodable> Adapter<T> {
 
     async fn try_send(&self, item: T) -> Result<(), Error<T>> {
         match self {
-            Self::Memory(tx) => tx.try_send(item).await?,
+            Self::Memory(tx) => tx.try_send(item)?,
             Self::Disk(writer) => {
                 let mut writer = writer.lock().await;
 

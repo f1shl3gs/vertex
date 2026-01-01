@@ -1,5 +1,5 @@
+use futures::StreamExt;
 use std::time::{Duration, Instant};
-
 use tokio::task::JoinSet;
 
 const MESSAGES: usize = 100_000_000;
@@ -67,17 +67,11 @@ async fn main() {
     let (tx, mut rx) = buffer::limited(u32::MAX as usize);
     let mut tasks = JoinSet::new();
 
-    let sender = tx.clone();
     tokio::spawn(async move {
         let mut ticker = tokio::time::interval(Duration::from_secs(1));
 
         loop {
             ticker.tick().await;
-
-            println!(
-                "buffered bytes {}",
-                u32::MAX as usize - sender.available_bytes()
-            );
         }
     });
 
@@ -94,7 +88,7 @@ async fn main() {
     }
 
     for _ in 0..MESSAGES {
-        rx.recv().await.unwrap();
+        rx.next().await.unwrap();
     }
 
     tasks.join_all().await;

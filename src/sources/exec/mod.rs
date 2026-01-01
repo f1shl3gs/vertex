@@ -351,7 +351,7 @@ mod tests {
 
         tokio::time::sleep(Duration::from_secs(2)).await;
 
-        let stdout = rx.recv().await.unwrap();
+        let stdout = rx.next().await.unwrap();
         let binding = stdout.into_logs().unwrap();
         let log = binding.first().unwrap();
         assert_eq!(
@@ -359,7 +359,7 @@ mod tests {
             Some(&Value::from(Bytes::from_static(b"stdout")))
         );
 
-        let stderr = rx.recv().await.unwrap();
+        let stderr = rx.next().await.unwrap();
         let binding = stderr.into_logs().unwrap();
         let log = binding.first().unwrap();
         assert_eq!(

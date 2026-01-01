@@ -147,6 +147,7 @@ impl<T> Queue<T> {
         }
     }
 
+    #[cfg(test)]
     pub fn is_empty(&self) -> bool {
         self.head.load(Ordering::Acquire) == unsafe { *self.tail.get() }
     }
