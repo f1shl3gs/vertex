@@ -124,7 +124,9 @@ pub struct LimitedReceiver<T> {
 
 impl<T> Debug for LimitedReceiver<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("LimitedReceiver").finish()
+        f.debug_struct("LimitedReceiver")
+            .field("semaphore", &self.inner.semaphore.available_permits())
+            .finish()
     }
 }
 

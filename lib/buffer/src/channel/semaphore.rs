@@ -9,47 +9,7 @@ const MAX_PERMITS: usize = usize::MAX >> 3;
 const PERMIT_SHIFT: usize = 1;
 const CLOSED: usize = 1;
 
-pub struct AcquireFuture<'a> {
-    amount: usize,
-    semaphore: &'a Semaphore,
-}
-
-impl<'a> Future for AcquireFuture<'a> {
-    type Output = Result<(), ()>;
-
-    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-        let needed = self.amount << PERMIT_SHIFT;
-        let mut current = self.semaphore.state.load(Ordering::Acquire);
-        loop {
-            if current & CLOSED == CLOSED {
-                return Poll::Ready(Err(()));
-            }
-
-            let next = if current >= needed {
-                current - needed
-            } else {
-                // add this task to pending queue, and it will be waked when
-                // receiver got a msg
-                self.semaphore
-                    .pending
-                    .push((self.amount, cx.waker().clone()));
-
-                return Poll::Pending;
-            };
-
-            match self.semaphore.state.compare_exchange(
-                current,
-                next,
-                Ordering::AcqRel,
-                Ordering::Acquire,
-            ) {
-                Ok(_) => return Poll::Ready(Ok(())),
-                Err(actual) => current = actual,
-            }
-        }
-    }
-}
-
+/// An asynchronous counting semaphore which permits waiting on multiple permits at once.
 pub struct Semaphore {
     /// a state to track permits and close flag
     /// | 0 ... 62 |   63   |
@@ -82,7 +42,7 @@ impl Semaphore {
         }
     }
 
-    #[cfg(test)]
+    #[inline]
     pub fn available_permits(&self) -> usize {
         self.state.load(Ordering::Acquire) >> PERMIT_SHIFT
     }
@@ -90,6 +50,16 @@ impl Semaphore {
     #[inline]
     pub fn close(&self) {
         self.state.fetch_or(CLOSED, Ordering::AcqRel);
+
+        loop {
+            match self.pending.pop() {
+                Ok(Some((_, waker))) => waker.wake(),
+                Ok(None) => break,
+                Err(_) => {
+                    std::hint::spin_loop();
+                }
+            }
+        }
     }
 
     pub fn closed(&self) -> bool {
@@ -116,11 +86,12 @@ impl Semaphore {
                 return Err(());
             }
 
-            let next = current - needed;
-            match self
-                .state
-                .compare_exchange(current, next, Ordering::AcqRel, Ordering::Acquire)
-            {
+            match self.state.compare_exchange(
+                current,
+                current - needed,
+                Ordering::AcqRel,
+                Ordering::Acquire,
+            ) {
                 Ok(_) => return Ok(()),
                 Err(actual) => current = actual,
             }
@@ -146,6 +117,49 @@ impl Semaphore {
                     // inconsistent
                     std::hint::spin_loop();
                 }
+            }
+        }
+    }
+}
+
+pub struct AcquireFuture<'a> {
+    amount: usize,
+    semaphore: &'a Semaphore,
+}
+
+impl<'a> Future for AcquireFuture<'a> {
+    type Output = Result<(), ()>;
+
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
+        let needed = self.amount << PERMIT_SHIFT;
+
+        // First, try to take the requested number of permits from the semaphore
+        let mut current = self.semaphore.state.load(Ordering::Acquire);
+        loop {
+            if current & CLOSED == CLOSED {
+                return Poll::Ready(Err(()));
+            }
+
+            let next = if current >= needed {
+                current - needed
+            } else {
+                // add this task to pending queue, and it will be waked when
+                // receiver got a msg
+                self.semaphore
+                    .pending
+                    .push((self.amount, cx.waker().clone()));
+
+                return Poll::Pending;
+            };
+
+            match self.semaphore.state.compare_exchange(
+                current,
+                next,
+                Ordering::AcqRel,
+                Ordering::Acquire,
+            ) {
+                Ok(_) => return Poll::Ready(Ok(())),
+                Err(actual) => current = actual,
             }
         }
     }
