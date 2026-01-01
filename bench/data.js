@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1767303418261,
+  "lastUpdate": 1767303442012,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d4717cf19ebe68cb4fbc5754e865aa8c54dd630e",
-          "message": "Merge pull request #2618 from f1shl3gs/dependabot/cargo/rustls-0.23.34\n\nchore(deps): bump rustls from 0.23.33 to 0.23.34",
-          "timestamp": "2025-10-22T19:14:00+08:00",
-          "tree_id": "0173bbc916a6b8f3b332f4efddcc5365090ae8ea",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d4717cf19ebe68cb4fbc5754e865aa8c54dd630e"
-        },
-        "date": 1761131805012,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.984,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 178.12,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 314.07,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 651.93,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "eb84db66a347b76f38b2625b88c7703fac0afc99",
           "message": "Merge pull request #2619 from f1shl3gs/misc/switch_to_calculate_start\n\nmisc: switch offset to calculate_start*",
           "timestamp": "2025-10-22T19:23:52+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 683.21,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0f4b4f2b550cf9e22910e55593dc45e20d6d0881",
+          "message": "Merge pull request #2727 from f1shl3gs/lib/buffer/fix_blocking\n\nlib/buffer: simplify & fix memory channel blocking",
+          "timestamp": "2026-01-02T05:34:22+08:00",
+          "tree_id": "13a2088fc8baf7c9b80d48454fa2902acb79f252",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0f4b4f2b550cf9e22910e55593dc45e20d6d0881"
+        },
+        "date": 1767303419916,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.496,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 173.05,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 336.55,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 686.38,
             "unit": "ns/op"
           }
         ]
