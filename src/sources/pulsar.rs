@@ -460,7 +460,7 @@ mod integration_tests {
                     .await
                     .unwrap();
 
-                let events = rx.recv().await.unwrap();
+                let events = rx.next().await.unwrap();
 
                 assert_eq!(
                     events.into_logs().unwrap().first().unwrap()["message"].to_string_lossy(),

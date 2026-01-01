@@ -11,20 +11,19 @@ use super::semaphore::Semaphore;
 use crate::Encodable;
 use crate::queue::Queue;
 
-/// limited returns an unbounded, bytes limited MPSC channel
-#[must_use]
-pub fn limited<T>(limited: usize) -> (LimitedSender<T>, LimitedReceiver<T>) {
-    assert!(limited > 0);
-
+/// `limited` returns a bounded, bytes limited FIFO MPSC channel
+pub fn limited<T>(limit: usize) -> (LimitedSender<T>, LimitedReceiver<T>) {
+    let semaphore = Semaphore::new(limit);
     let inner = Arc::new(Inner {
+        semaphore,
         queue: Queue::default(),
-        semaphore: Semaphore::new(limited),
-        senders: AtomicUsize::new(1),
         recv: AtomicWaker::new(),
     });
 
     (
         LimitedSender {
+            limit,
+            senders: Arc::new(AtomicUsize::new(1)),
             inner: Arc::clone(&inner),
         },
         LimitedReceiver { inner },
@@ -40,22 +39,27 @@ pub enum Error<T> {
 }
 
 struct Inner<T> {
-    queue: Queue<T>,
+    queue: Queue<(usize, T)>,
+
     semaphore: Semaphore,
-    senders: AtomicUsize,
 
     recv: AtomicWaker,
 }
 
 pub struct LimitedSender<T> {
+    limit: usize,
+    senders: Arc<AtomicUsize>,
+
     inner: Arc<Inner<T>>,
 }
 
 impl<T> Clone for LimitedSender<T> {
     fn clone(&self) -> Self {
-        self.inner.senders.fetch_add(1, Ordering::SeqCst);
+        self.senders.fetch_add(1, Ordering::SeqCst);
 
         Self {
+            limit: self.limit,
+            senders: Arc::clone(&self.senders),
             inner: Arc::clone(&self.inner),
         }
     }
@@ -65,14 +69,14 @@ impl<T> Debug for LimitedSender<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("LimitedSender")
             .field("semaphore", &self.inner.semaphore)
-            .field("senders", &self.inner.senders)
+            .field("senders", &self.senders.load(Ordering::Acquire))
             .finish()
     }
 }
 
 impl<T> Drop for LimitedSender<T> {
     fn drop(&mut self) {
-        if self.inner.senders.fetch_sub(1, Ordering::SeqCst) == 1 {
+        if self.senders.fetch_sub(1, Ordering::SeqCst) == 1 {
             self.inner.semaphore.close();
             self.inner.recv.wake();
         }
@@ -80,53 +84,37 @@ impl<T> Drop for LimitedSender<T> {
 }
 
 impl<T: Encodable> LimitedSender<T> {
-    /// Sends an item into the channel
-    ///
-    /// # Errors
-    ///
-    /// If the receiver has disconnected (does not exist anymore), then `Error::Closed(T)`
-    /// be returned with the given `item`
     pub async fn send(&self, item: T) -> Result<(), Error<T>> {
-        let bytes = item.byte_size();
+        let amount = item.byte_size();
+        if amount > self.limit {
+            return Err(Error::LimitExceeded(item));
+        }
 
-        if self.inner.semaphore.acquire(bytes).await.is_err() {
+        if self.inner.semaphore.acquire(amount).await.is_err() {
             return Err(Error::Closed(item));
         }
 
-        self.inner.queue.push(item);
-
-        // wake receiver if possible
+        self.inner.queue.push((amount, item));
         self.inner.recv.wake();
 
         Ok(())
     }
 
-    /// Attempts to send an item into the channel
-    ///
-    /// # Errors
-    ///
-    /// If the receiver has disconnected (does not exist anymore), then `Error::Closed(T)` will
-    /// be returned with the given `item`.
-    ///
-    /// If the channel has insufficient capacity for the item, then `Error::LimitExceeded(T)`
-    /// will be returned with the given `Item`
-    pub async fn try_send(&self, item: T) -> Result<(), Error<T>> {
-        let bytes = item.byte_size();
-
-        if let Err(_err) = self.inner.semaphore.try_acquire(bytes) {
-            return Err(Error::Closed(item));
+    pub fn try_send(&self, item: T) -> Result<(), Error<T>> {
+        let amount = item.byte_size();
+        if amount > self.limit {
+            return Err(Error::LimitExceeded(item));
         }
 
-        self.inner.queue.push(item);
-        // wake receiver if possible
-        self.inner.recv.wake();
+        match self.inner.semaphore.try_acquire(amount) {
+            Ok(_) => {
+                self.inner.queue.push((amount, item));
+                self.inner.recv.wake();
 
-        Ok(())
-    }
-
-    #[inline]
-    pub fn available_bytes(&self) -> usize {
-        self.inner.semaphore.available_permits()
+                Ok(())
+            }
+            Err(_) => Err(Error::LimitExceeded(item)),
+        }
     }
 }
 
@@ -137,8 +125,7 @@ pub struct LimitedReceiver<T> {
 impl<T> Debug for LimitedReceiver<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("LimitedReceiver")
-            .field("semaphore", &self.inner.semaphore)
-            .field("senders", &self.inner.senders)
+            .field("semaphore", &self.inner.semaphore.available_permits())
             .finish()
     }
 }
@@ -146,50 +133,10 @@ impl<T> Debug for LimitedReceiver<T> {
 impl<T> Drop for LimitedReceiver<T> {
     fn drop(&mut self) {
         self.inner.semaphore.close();
+
         if let Some(waker) = self.inner.recv.take() {
             waker.wake();
         }
-    }
-}
-
-impl<T: Encodable> LimitedReceiver<T> {
-    #[inline]
-    pub fn recv(&mut self) -> RecvFuture<'_, T> {
-        RecvFuture { receiver: self }
-    }
-}
-
-#[must_use = "futures do nothing unless polled"]
-pub struct RecvFuture<'a, T: Encodable> {
-    receiver: &'a LimitedReceiver<T>,
-}
-
-impl<T: Encodable> Future for RecvFuture<'_, T> {
-    type Output = Option<T>;
-
-    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-        let receiver = self.receiver;
-
-        match receiver.inner.queue.pop() {
-            Ok(Some(item)) => {
-                receiver.inner.semaphore.release(item.byte_size());
-
-                return Poll::Ready(Some(item));
-            }
-            // the queue is empty
-            Ok(None) => {
-                if receiver.inner.semaphore.closed() {
-                    return Poll::Ready(None);
-                }
-            }
-            Err(_) => {
-                // inconsistent
-            }
-        }
-
-        receiver.inner.recv.register(cx.waker());
-
-        Poll::Pending
     }
 }
 
@@ -197,35 +144,54 @@ impl<T: Encodable> Stream for LimitedReceiver<T> {
     type Item = T;
 
     fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
-        match self.inner.queue.pop() {
-            Ok(Some(item)) => {
-                self.inner.semaphore.release(item.byte_size());
-
-                return Poll::Ready(Some(item));
-            }
-            Ok(None) => {
-                // the queue is empty
-                if self.inner.semaphore.closed() {
-                    return Poll::Ready(None);
+        loop {
+            match self.inner.queue.pop() {
+                Ok(Some((amount, item))) => {
+                    self.inner.semaphore.release(amount);
+                    return Poll::Ready(Some(item));
                 }
-            }
-            Err(_) => {
-                // inconsistent
+                Ok(None) => {
+                    // There are no messages to pop, in this case, register recv task
+                    self.inner.recv.register(cx.waker());
+                    break;
+                }
+                Err(_) => {
+                    // inconsistent
+                    std::hint::spin_loop();
+                }
             }
         }
 
-        self.inner.recv.register(cx.waker());
+        // Check the queue again after parking to prevent race condition:
+        // a message could be added to the queue after previous `pop`
+        // before `register` call
+        loop {
+            match self.inner.queue.pop() {
+                Ok(Some((amount, item))) => {
+                    self.inner.semaphore.release(amount);
+                    break Poll::Ready(Some(item));
+                }
+                Ok(None) => {
+                    if self.inner.semaphore.closed() {
+                        break Poll::Ready(None);
+                    }
 
-        Poll::Pending
+                    break Poll::Pending;
+                }
+                Err(_) => {
+                    // inconsistent
+                    std::hint::spin_loop();
+                }
+            }
+        }
     }
 }
 
 #[cfg(test)]
 mod tests {
-
     use futures::StreamExt;
     use tokio_test::task::spawn;
-    use tokio_test::{assert_pending, assert_ready, assert_ready_err};
+    use tokio_test::{assert_pending, assert_ready};
 
     use super::*;
     use crate::tests::Message;
@@ -294,6 +260,8 @@ mod tests {
         let tx3 = tx.clone();
         let tx1 = tx;
 
+        assert_eq!(tx1.inner.semaphore.available_permits(), 10);
+
         tx1.send(1.into()).await.unwrap();
         tx2.send(2.into()).await.unwrap();
         tx3.send(3.into()).await.unwrap();
@@ -309,17 +277,40 @@ mod tests {
         assert!(rx.next().await.is_none());
     }
 
-    #[tokio::test]
-    async fn sender_notified_when_block_on_oversize_acquire() {
-        let (tx, rx) = limited::<Message>(10);
-        assert_eq!(tx.available_bytes(), 10);
+    #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+    async fn mpsc() {
+        let threads = 10;
+        let total = 1000;
 
-        let mut wait = spawn(async move { tx.send(11.into()).await });
-        assert_eq!(rx.inner.semaphore.available_permits(), 10);
-        assert_pending!(wait.poll());
+        let (tx, mut rx) = limited::<Message>(10);
+        for tid in 0..threads {
+            let tx = tx.clone();
 
-        drop(rx);
+            tokio::spawn(async move {
+                for _ in 0..total {
+                    let value = rand::random_range(1..7);
 
-        assert_ready_err!(wait.poll());
+                    tx.send(value.into()).await.unwrap();
+                }
+
+                println!("thread {} done", tid);
+            });
+        }
+        drop(tx);
+
+        for _i in 0..threads * total {
+            match rx.next().await {
+                Some(_msg) => {
+                    // println!(
+                    //     "got {i}th with value {} remaining {}",
+                    //     msg.size,
+                    //     rx.inner.semaphore.available_permits()
+                    // );
+                }
+                None => panic!("recv failed"),
+            }
+        }
+
+        assert!(rx.next().await.is_none());
     }
 }

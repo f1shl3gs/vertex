@@ -1,4 +1,4 @@
-use std::fmt::{Debug, Formatter};
+use std::fmt::Debug;
 use std::pin::Pin;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::task::{Context, Poll, Waker};
@@ -11,140 +11,155 @@ const CLOSED: usize = 1;
 
 /// An asynchronous counting semaphore which permits waiting on multiple permits at once.
 pub struct Semaphore {
-    permits: AtomicUsize,
-    queue: Queue<(usize, Waker)>,
+    /// a state to track permits and close flag
+    /// | 0 ... 62 |   63   |
+    /// | permits  | closed |
+    state: AtomicUsize,
+    pending: Queue<(usize, Waker)>,
 }
 
 impl Debug for Semaphore {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let state = self.state.load(Ordering::Acquire);
+
         f.debug_struct("Semaphore")
-            .field("permits", &self.permits)
-            .finish_non_exhaustive()
+            .field("permits", &(state >> PERMIT_SHIFT))
+            .field("state", &(state & CLOSED == CLOSED))
+            .finish()
     }
 }
 
 impl Semaphore {
-    /// Creates a new semaphore with the initial number of permits
     pub fn new(permits: usize) -> Self {
-        assert!(
-            permits <= MAX_PERMITS,
-            "a semaphore may not have more than MAX_PERMITS permits ({MAX_PERMITS})",
+        debug_assert!(
+            permits > 0 && permits <= MAX_PERMITS,
+            "limit must be in (0, {MAX_PERMITS}]"
         );
 
-        Semaphore {
-            permits: AtomicUsize::new(permits << PERMIT_SHIFT),
-            queue: Queue::default(),
+        Self {
+            state: AtomicUsize::new(permits << PERMIT_SHIFT),
+            pending: Queue::default(),
         }
+    }
+
+    #[inline]
+    pub fn available_permits(&self) -> usize {
+        self.state.load(Ordering::Acquire) >> PERMIT_SHIFT
+    }
+
+    #[inline]
+    pub fn close(&self) {
+        self.state.fetch_or(CLOSED, Ordering::AcqRel);
+
+        loop {
+            match self.pending.pop() {
+                Ok(Some((_, waker))) => waker.wake(),
+                Ok(None) => break,
+                Err(_) => {
+                    std::hint::spin_loop();
+                }
+            }
+        }
+    }
+
+    pub fn closed(&self) -> bool {
+        self.state.load(Ordering::Acquire) & CLOSED == CLOSED
     }
 
     pub fn acquire(&self, amount: usize) -> AcquireFuture<'_> {
         AcquireFuture {
-            semaphore: self,
             amount,
+            semaphore: self,
         }
     }
 
     pub fn try_acquire(&self, amount: usize) -> Result<(), ()> {
         let needed = amount << PERMIT_SHIFT;
 
-        let mut current = self.permits.load(Ordering::Acquire);
+        let mut current = self.state.load(Ordering::Acquire);
         loop {
             if current & CLOSED == CLOSED {
                 return Err(());
             }
 
-            // Are there enough permits remaining?
             if current < needed {
                 return Err(());
             }
 
-            let next = current - amount;
-            match self
-                .permits
-                .compare_exchange(current, next, Ordering::AcqRel, Ordering::Acquire)
-            {
+            match self.state.compare_exchange(
+                current,
+                current - needed,
+                Ordering::AcqRel,
+                Ordering::Acquire,
+            ) {
                 Ok(_) => return Ok(()),
                 Err(actual) => current = actual,
             }
         }
     }
 
-    /// Adds `amount` new permits to the semaphore.
-    pub fn release(&self, mut amount: usize) {
-        self.permits
-            .fetch_add(amount << PERMIT_SHIFT, Ordering::Release);
+    pub fn release(&self, amount: usize) {
+        let available = self
+            .state
+            .fetch_add(amount << PERMIT_SHIFT, Ordering::Release)
+            + amount;
 
-        // wake as many as possible
-        //
-        //
-        while let Ok(Some((acquire, waker))) =
-            self.queue.pop_if(|(acquire, _waker)| amount >= *acquire)
-        {
-            amount -= acquire;
-            waker.wake();
+        loop {
+            match self.pending.pop_if(|(acquire, _)| available >= *acquire) {
+                Ok(Some((_, waker))) => {
+                    waker.wake();
+                    break;
+                }
+                Ok(None) => {
+                    break;
+                }
+                Err(_) => {
+                    // inconsistent
+                    std::hint::spin_loop();
+                }
+            }
         }
-    }
-
-    /// Closes the semaphore. This prevents the semaphore from issuing new permits
-    /// and notifies all pending waiters.
-    pub fn close(&self) {
-        self.permits.fetch_or(CLOSED, Ordering::Release);
-
-        while let Ok(Some((_permit, waker))) = self.queue.pop() {
-            waker.wake();
-        }
-    }
-
-    pub fn closed(&self) -> bool {
-        let current = self.permits.load(Ordering::Acquire);
-        current & CLOSED == CLOSED
-    }
-
-    /// Returns the current number of available permits.
-    pub fn available_permits(&self) -> usize {
-        self.permits.load(Ordering::Acquire) >> PERMIT_SHIFT
     }
 }
 
-#[must_use = "futures do nothing unless you `.await` or poll them"]
 pub struct AcquireFuture<'a> {
-    semaphore: &'a Semaphore,
     amount: usize,
+    semaphore: &'a Semaphore,
 }
 
-impl Future for AcquireFuture<'_> {
+impl<'a> Future for AcquireFuture<'a> {
     type Output = Result<(), ()>;
 
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-        let needed = self.amount << 1;
+        let needed = self.amount << PERMIT_SHIFT;
 
         // First, try to take the requested number of permits from the semaphore
-        let mut current = self.semaphore.permits.load(Ordering::Acquire);
-
+        let mut current = self.semaphore.state.load(Ordering::Acquire);
         loop {
-            if current & CLOSED > 0 {
+            if current & CLOSED == CLOSED {
                 return Poll::Ready(Err(()));
             }
 
             let next = if current >= needed {
                 current - needed
             } else {
-                self.semaphore.queue.push((self.amount, cx.waker().clone()));
+                // add this task to pending queue, and it will be waked when
+                // receiver got a msg
+                self.semaphore
+                    .pending
+                    .push((self.amount, cx.waker().clone()));
+
                 return Poll::Pending;
             };
 
-            match self.semaphore.permits.compare_exchange(
+            match self.semaphore.state.compare_exchange(
                 current,
                 next,
                 Ordering::AcqRel,
                 Ordering::Acquire,
             ) {
-                Ok(_) => {
-                    return Poll::Ready(Ok(()));
-                }
-                Err(actual) => {
-                    current = actual;
-                }
+                Ok(_) => return Poll::Ready(Ok(())),
+                Err(actual) => current = actual,
             }
         }
     }

@@ -49,10 +49,8 @@ impl Encodable for Message {
 
 #[tokio::main]
 async fn main() {
-    let max_records = 100_0000;
-
     bench(
-        max_records,
+        10_000_000,
         &[128, 256, 512, 1024, 2048, 4096],
         BufferType::Memory,
     )
@@ -60,7 +58,7 @@ async fn main() {
 
     profile(async move || {
         bench(
-            max_records,
+            1_000_000,
             &[128, 256, 512, 1024, 2048, 4096 /*8192, 16384*/],
             BufferType::Disk {
                 max_record_size: 4 * 1024 * 1024,  // 4M
