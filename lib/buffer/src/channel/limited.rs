@@ -128,6 +128,16 @@ impl<T> Debug for LimitedReceiver<T> {
     }
 }
 
+impl<T> Drop for LimitedReceiver<T> {
+    fn drop(&mut self) {
+        self.inner.semaphore.close();
+
+        if let Some(waker) = self.inner.recv.take() {
+            waker.wake();
+        }
+    }
+}
+
 impl<T: Encodable> Stream for LimitedReceiver<T> {
     type Item = T;
 
