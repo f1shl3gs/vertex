@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1767387875747,
+  "lastUpdate": 1767395048802,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "61a23b9494349b5fe0911155abea13f4d6a11396",
-          "message": "Merge pull request #2628 from f1shl3gs/sources/dnstap/unify_listen\n\nsources/dnstap: unify listen",
-          "timestamp": "2025-10-23T03:15:05+08:00",
-          "tree_id": "2e29ff2d8f3ff1df9f19a4c6dfaed005ae2d1f28",
-          "url": "https://github.com/f1shl3gs/vertex/commit/61a23b9494349b5fe0911155abea13f4d6a11396"
-        },
-        "date": 1761161153307,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 558,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40354.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bb8907931a91a67d9a5b1f7c6d58ec739c256781",
           "message": "Merge pull request #2629 from f1shl3gs/sources/dnsmasq/unify_endpoints\n\nsources/dnsmasq: unify endpoints",
           "timestamp": "2025-10-23T03:24:42+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41212.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "27a81e473c068370d7084a8f2b312d3f99c2c09c",
+          "message": "Merge pull request #2731 from f1shl3gs/lib/tracing-internal/optimize_attributes_insertions\n\nlib/tracing-internal: optimize attributes insertions",
+          "timestamp": "2026-01-03T06:52:50+08:00",
+          "tree_id": "2561b1a9f7a5059122d246ea8034b37e58127e49",
+          "url": "https://github.com/f1shl3gs/vertex/commit/27a81e473c068370d7084a8f2b312d3f99c2c09c"
+        },
+        "date": 1767395026418,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 575,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41211.6,
             "unit": "KiB"
           }
         ]
