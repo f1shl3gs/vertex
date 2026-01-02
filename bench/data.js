@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1767348615480,
+  "lastUpdate": 1767348631137,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "eb84db66a347b76f38b2625b88c7703fac0afc99",
-          "message": "Merge pull request #2619 from f1shl3gs/misc/switch_to_calculate_start\n\nmisc: switch offset to calculate_start*",
-          "timestamp": "2025-10-22T19:23:52+08:00",
-          "tree_id": "56c59d549753220763896dfa38c5fb3df433f092",
-          "url": "https://github.com/f1shl3gs/vertex/commit/eb84db66a347b76f38b2625b88c7703fac0afc99"
-        },
-        "date": 1761132394517,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.005,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 164.87,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 297.89,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 659.65,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "427948e6a429d138f06338247cb50efcd764ede1",
           "message": "Merge pull request #2620 from f1shl3gs/sources/fluent/unify_listen_name\n\nsources/fluent: unify listen name",
           "timestamp": "2025-10-22T20:56:20+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 686.38,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "43d2006d81d9a9ed5a0be6e17e94fa9c51d6fa0e",
+          "message": "Merge pull request #2728 from f1shl3gs/cargo/upgrade\n\ncargo: upgrade",
+          "timestamp": "2026-01-02T18:07:46+08:00",
+          "tree_id": "a1a46b6f777d81925f9373f940350c5ad136ac9d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/43d2006d81d9a9ed5a0be6e17e94fa9c51d6fa0e"
+        },
+        "date": 1767348609061,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.537,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 181.38,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 343.77,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 700.76,
             "unit": "ns/op"
           }
         ]
