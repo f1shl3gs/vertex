@@ -43,10 +43,10 @@ impl Event {
 #[derive(Clone, Debug, Default, PartialEq, PartialOrd)]
 pub struct SpanEvents {
     /// The events stored as a vector. Could be empty if there are no events
-    pub events: Vec<Event>,
+    events: Vec<Event>,
 
     /// The number of Events dropped from the span
-    pub dropped: u32,
+    dropped: usize,
 }
 
 impl Deref for SpanEvents {

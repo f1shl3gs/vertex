@@ -373,23 +373,33 @@ struct SpanEventVisitor<'a>(&'a mut event::trace::Event);
 
 impl tracing::field::Visit for SpanEventVisitor<'_> {
     fn record_f64(&mut self, field: &Field, value: f64) {
-        self.0.attributes.insert(field.name(), value)
+        self.0
+            .attributes
+            .insert(Key::from_static(field.name()), value)
     }
 
     fn record_i64(&mut self, field: &Field, value: i64) {
-        self.0.attributes.insert(field.name(), value)
+        self.0
+            .attributes
+            .insert(Key::from_static(field.name()), value)
     }
 
     fn record_bool(&mut self, field: &Field, value: bool) {
-        self.0.attributes.insert(field.name(), value)
+        self.0
+            .attributes
+            .insert(Key::from_static(field.name()), value)
     }
 
     fn record_str(&mut self, field: &Field, value: &str) {
-        self.0.attributes.insert(field.name(), value)
+        self.0
+            .attributes
+            .insert(Key::from_static(field.name()), value)
     }
 
     fn record_debug(&mut self, field: &Field, value: &dyn Debug) {
-        self.0.attributes.insert(field.name(), format!("{value:?}"))
+        self.0
+            .attributes
+            .insert(Key::from_static(field.name()), format!("{value:?}"))
     }
 }
 

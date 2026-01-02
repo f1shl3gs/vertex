@@ -40,10 +40,10 @@ impl Link {
 #[non_exhaustive]
 pub struct SpanLinks {
     /// The links stored as vector, could be empty if there are no links
-    pub links: Vec<Link>,
+    links: Vec<Link>,
 
     /// The number of links dropped from the span
-    pub dropped: u32,
+    dropped: usize,
 }
 
 impl Deref for SpanLinks {
