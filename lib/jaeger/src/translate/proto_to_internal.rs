@@ -1,7 +1,9 @@
+use std::borrow::Cow;
+
 use base64::prelude::{BASE64_STANDARD, Engine as _};
 use event::Events;
-use event::tags::{Tags, Value};
-use event::trace::{AnyValue, EvictedHashMap, Key, SpanContext, SpanId};
+use event::tags::{Key, Tags, Value};
+use event::trace::{AnyValue, Attributes, Event, KeyValue, SpanContext, SpanId};
 use event::trace::{SpanKind, Trace, TraceId, TraceState};
 
 use crate::proto::{self, Batch, ValueType};
@@ -24,11 +26,26 @@ impl From<proto::Span> for event::trace::Span {
         let span_id = SpanId::from_bytes(span_id_bytes);
         let parent_span_id = span.parent_span_id();
         let name = span.operation_name;
-        let mut attributes = span.tags.into();
+        let mut attributes = span
+            .tags
+            .into_iter()
+            .map(|item| {
+                let (key, value) = item.into();
+                KeyValue { key, value }
+            })
+            .collect::<Vec<_>>()
+            .into();
         let start_time = prost_timestamp_to_nano_seconds(span.start_time);
         let end_time = start_time + prost_duration_to_nano_seconds(span.duration);
         let trace_state = trace_state_from_attributes(&mut attributes);
         let kind = span_kind_from_attributes(&mut attributes);
+
+        let events = span
+            .logs
+            .into_iter()
+            .map(Into::<Event>::into)
+            .collect::<Vec<_>>()
+            .into();
 
         event::trace::Span {
             span_context: SpanContext {
@@ -43,8 +60,8 @@ impl From<proto::Span> for event::trace::Span {
             kind,
             start_time,
             end_time,
-            tags: attributes,
-            events: span.logs.into_iter().map(Into::into).collect(),
+            attributes,
+            events,
             links: Default::default(),
             status: Default::default(),
         }
@@ -107,13 +124,18 @@ impl From<proto::KeyValue> for (Key, AnyValue) {
 impl From<proto::Log> for event::trace::Event {
     fn from(log: proto::Log) -> Self {
         let timestamp = log.timestamp.unwrap();
-        let mut attributes: EvictedHashMap = log.fields.into();
 
-        let name = if let Some(value) = attributes.remove("message") {
-            value.to_string()
-        } else {
-            String::new()
-        };
+        let mut name = Cow::Borrowed("");
+        let mut attributes = Attributes::with_capacity(log.fields.len());
+        for field in log.fields {
+            let (key, value) = field.into();
+            if key.as_str() == "message" {
+                name = Cow::Owned(value.to_string());
+                continue;
+            }
+
+            attributes.insert(key, value);
+        }
 
         Self {
             name,
@@ -131,7 +153,7 @@ fn prost_timestamp_to_nano_seconds(timestamp: Option<prost_types::Timestamp>) ->
 
 const W3C_TRACESTATE: &str = "w3c.tracestate";
 
-fn trace_state_from_attributes(attributes: &mut EvictedHashMap) -> TraceState {
+fn trace_state_from_attributes(attributes: &mut Attributes) -> TraceState {
     if let Some(value) = attributes.remove(W3C_TRACESTATE) {
         let value = value.to_string();
         // TODO: log errors
@@ -150,7 +172,7 @@ fn prost_duration_to_nano_seconds(duration: Option<prost_types::Duration>) -> i6
 
 const SPAN_KIND: &str = "span.kind";
 
-fn span_kind_from_attributes(attributes: &mut EvictedHashMap) -> SpanKind {
+fn span_kind_from_attributes(attributes: &mut Attributes) -> SpanKind {
     if let Some(value) = attributes.remove(SPAN_KIND) {
         match value {
             AnyValue::String(s) => match s.as_ref() {

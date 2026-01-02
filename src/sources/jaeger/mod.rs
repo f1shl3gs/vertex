@@ -35,7 +35,7 @@ impl SourceConfig for Config {
                 config.max_packet_size,
                 config.socket_buffer_size,
                 shutdown.clone(),
-                |data| match jaeger::agent::deserialize_compact_batch(data) {
+                |data| match jaeger::agent::deserialize_compact_batch(&data) {
                     Ok(batch) => Ok(batch),
                     Err(err) => Err(std::io::Error::new(std::io::ErrorKind::InvalidInput, err)),
                 },
@@ -50,7 +50,7 @@ impl SourceConfig for Config {
                 config.max_packet_size,
                 config.socket_buffer_size,
                 shutdown.clone(),
-                |data| match jaeger::agent::deserialize_binary_batch(data) {
+                |data| match jaeger::agent::deserialize_binary_batch(&data) {
                     Ok(batch) => Ok(batch),
                     Err(err) => Err(std::io::Error::new(std::io::ErrorKind::InvalidInput, err)),
                 },

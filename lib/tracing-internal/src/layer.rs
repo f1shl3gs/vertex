@@ -1,9 +1,11 @@
 use std::any::TypeId;
+use std::borrow::Cow;
 use std::fmt::Debug;
 use std::marker::PhantomData;
 use std::time::{Instant, SystemTime, UNIX_EPOCH};
 
-use event::trace::{EvictedHashMap, Link, Span, StatusCode, TraceId};
+use event::tags::Key;
+use event::trace::{Link, Span, StatusCode, TraceId};
 use tracing::{Subscriber, span::Attributes};
 use tracing_core::span::{Id, Record};
 use tracing_core::{Event, Field};
@@ -115,15 +117,18 @@ where
         }
 
         if let Some(filename) = metadata.file() {
-            span.tags.insert("code.filepath", filename);
+            span.attributes
+                .insert(Key::from_static("code.filepath"), filename);
         }
 
         if let Some(module) = metadata.module_path() {
-            span.tags.insert("code.namespace", module);
+            span.attributes
+                .insert(Key::from_static("code.namespace"), module);
         }
 
         if let Some(line) = metadata.line() {
-            span.tags.insert("code.lineno", line)
+            span.attributes
+                .insert(Key::from_static("code.lineno"), line)
         }
 
         attrs.record(&mut SpanAttributeVisitor(&mut span));
@@ -165,7 +170,7 @@ where
 
         let follows_link = Link::new(follows_cx, vec![]);
         let links = &mut data.span.links;
-        links.push_back(follows_link);
+        links.push(follows_link);
     }
 
     /// Records `Event` data on event
@@ -173,24 +178,24 @@ where
         // Ignore events that are not in the context of a span
         if let Some(span) = ctx.lookup_current() {
             // Performance read operations before getting a write lock to avoid
-            // a dead lock.
+            // a deadlock.
             //
             // See https://github.com/tokio-rs/tracing/issues/763
             let metadata = event.metadata();
 
-            let mut te = {
-                let mut attributes = EvictedHashMap::new(128, 4);
-                attributes.insert("level", metadata.level().as_str());
-                attributes.insert("target", metadata.target());
+            let mut span_event = {
+                let mut attributes = event::trace::Attributes::with_capacity(2);
+                attributes.insert(Key::from_static("level"), metadata.level().as_str());
+                attributes.insert(Key::from_static("target"), metadata.target());
 
                 event::trace::Event {
-                    name: Default::default(),
+                    name: Cow::Borrowed(""),
                     timestamp: now(),
                     attributes,
                 }
             };
 
-            event.record(&mut SpanEventVisitor(&mut te));
+            event.record(&mut SpanEventVisitor(&mut span_event));
 
             let mut extensions = span.extensions_mut();
             if let Some(TraceData { span, .. }) = extensions.get_mut::<TraceData>() {
@@ -202,19 +207,22 @@ where
 
                 if self.event_location {
                     if let Some(file) = metadata.file() {
-                        span.tags.insert("code.filepath", file);
+                        span.attributes
+                            .insert(Key::from_static("code.filepath"), file);
                     }
 
                     if let Some(module) = metadata.module_path() {
-                        span.tags.insert("code.namespace", module);
+                        span.attributes
+                            .insert(Key::from_static("code.namespace"), module);
                     }
 
                     if let Some(line) = metadata.line() {
-                        span.tags.insert("code.lineno", line);
+                        span.attributes
+                            .insert(Key::from_static("code.lineno"), line);
                     }
                 }
 
-                span.events.push_back(te);
+                span.events.push(span_event);
             }
         }
     }
@@ -264,8 +272,10 @@ where
             if self.tracked_inactivity {
                 // Append busy/idle timings when enabled.
                 if let Some(timings) = extensions.get_mut::<Timings>() {
-                    span.tags.insert("busy_ns", timings.busy);
-                    span.tags.insert("idle_ns", timings.idle);
+                    span.attributes
+                        .insert(Key::from_static("busy_ns"), timings.busy);
+                    span.attributes
+                        .insert(Key::from_static("idle_ns"), timings.idle);
                 }
             }
 
@@ -329,23 +339,33 @@ struct SpanAttributeVisitor<'a>(&'a mut Span);
 
 impl tracing::field::Visit for SpanAttributeVisitor<'_> {
     fn record_f64(&mut self, field: &Field, value: f64) {
-        self.0.tags.insert(field.name(), value)
+        self.0
+            .attributes
+            .insert(Key::from_static(field.name()), value)
     }
 
     fn record_i64(&mut self, field: &Field, value: i64) {
-        self.0.tags.insert(field.name(), value)
+        self.0
+            .attributes
+            .insert(Key::from_static(field.name()), value)
     }
 
     fn record_bool(&mut self, field: &Field, value: bool) {
-        self.0.tags.insert(field.name(), value)
+        self.0
+            .attributes
+            .insert(Key::from_static(field.name()), value)
     }
 
     fn record_str(&mut self, field: &Field, value: &str) {
-        self.0.tags.insert(field.name(), value)
+        self.0
+            .attributes
+            .insert(Key::from_static(field.name()), value)
     }
 
     fn record_debug(&mut self, field: &Field, value: &dyn Debug) {
-        self.0.tags.insert(field.name(), format!("{value:?}"))
+        self.0
+            .attributes
+            .insert(Key::from_static(field.name()), format!("{value:?}"))
     }
 }
 

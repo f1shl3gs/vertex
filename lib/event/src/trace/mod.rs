@@ -1,6 +1,6 @@
-mod evicted_hash_map;
-mod evicted_queue;
-pub mod generator;
+mod attributes;
+mod event;
+mod link;
 mod span;
 
 use std::borrow::Cow;
@@ -10,18 +10,17 @@ use std::num::ParseIntError;
 use std::ops::{BitAnd, BitOr, Not};
 use std::str::FromStr;
 
-pub use evicted_hash_map::EvictedHashMap;
-pub use evicted_queue::EvictedQueue;
-pub use generator::RngGenerator;
 use serde::{Deserialize, Serialize};
-pub use span::{Event, Link, Span, SpanContext, SpanKind, Status, StatusCode};
+pub use span::{Span, SpanContext, SpanKind, Status, StatusCode};
 use typesize::TypeSize;
 
-pub use super::tags::Key;
-use super::tags::Tags;
+use super::tags::{Key, Tags};
 use super::{
     BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, EventMetadata, Finalizable,
 };
+pub use attributes::Attributes;
+pub use event::{Event, SpanEvents};
+pub use link::{Link, SpanLinks};
 
 #[derive(Clone, Debug, PartialOrd, PartialEq, Serialize)]
 pub enum AnyValue {

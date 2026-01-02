@@ -58,7 +58,13 @@ async fn handle(
     mut output: Pipeline,
     acknowledgements: bool,
 ) -> Result<Response<Full<Bytes>>, hyper::Error> {
-    if req.method() != Method::POST {
+    let (parts, incoming) = req.into_parts();
+    let peer = parts
+        .extensions
+        .get::<SocketAddr>()
+        .expect("Missing http info extension");
+
+    if parts.method != Method::POST {
         return Ok::<_, hyper::Error>(
             Response::builder()
                 .status(StatusCode::METHOD_NOT_ALLOWED)
@@ -67,15 +73,16 @@ async fn handle(
         );
     }
 
-    if req.uri().path() != "/api/traces" {
+    if parts.uri.path() != "/api/traces" {
         return Ok(Response::builder()
             .status(StatusCode::NOT_FOUND)
             .body(Full::default())
             .expect("build NOT_FOUND should always success"));
     }
 
-    let data = req.into_body().collect().await?.to_bytes();
-    match deserialize_binary_batch(data.to_vec()) {
+    let data = incoming.collect().await?.to_bytes();
+
+    match deserialize_binary_batch(&data) {
         Ok(batch) => {
             let mut events: Events = batch.into();
 
@@ -85,7 +92,7 @@ async fn handle(
             }
 
             if let Err(err) = output.send(events).await {
-                error!(message = "Error sending batch", ?err);
+                error!(message = "Error sending traces", ?err, ?peer);
 
                 let status = if let Some(receiver) = receiver {
                     match receiver.await {
@@ -105,9 +112,18 @@ async fn handle(
                 Ok(Response::new(Full::default()))
             }
         }
-        Err(err) => Ok(Response::builder()
-            .status(StatusCode::BAD_REQUEST)
-            .body(Full::new(err.to_string().into()))
-            .expect("build BAD_REQUEST should always success")),
+        Err(err) => {
+            warn!(
+                message = "decode thrift binary payload failed",
+                %err,
+                %peer,
+                internal_log_rate_limit = 30,
+            );
+
+            Ok(Response::builder()
+                .status(StatusCode::BAD_REQUEST)
+                .body(Full::new(err.to_string().into()))
+                .expect("build BAD_REQUEST should always success"))
+        }
     }
 }

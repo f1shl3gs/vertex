@@ -5,24 +5,9 @@ use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use typesize::TypeSize;
 
-use super::{EvictedHashMap, EvictedQueue, KeyValue, SpanId, TraceFlags, TraceId, TraceState};
-
-#[derive(Clone, Debug, PartialOrd, PartialEq, Serialize)]
-pub struct Event {
-    /// name of the event.
-    pub name: String,
-
-    /// `timestamp` is the time the event occurred.
-    pub timestamp: i64,
-
-    pub attributes: EvictedHashMap,
-}
-
-impl TypeSize for Event {
-    fn allocated_bytes(&self) -> usize {
-        self.name.len() + self.attributes.allocated_bytes()
-    }
-}
+use super::event::{Event, SpanEvents};
+use super::link::SpanLinks;
+use super::{Attributes, KeyValue, SpanId, TraceFlags, TraceId, TraceState};
 
 /// `SpanKind` describes the relationship between the Span, its parents,
 /// and its children in a `Trace`. `SpanKind` describes two independent
@@ -95,37 +80,6 @@ impl Display for SpanKind {
             SpanKind::Internal => write!(f, "internal"),
             SpanKind::Unspecified => write!(f, "unspecified"),
         }
-    }
-}
-
-/// A pointer from the current span to another span in the same trace or
-/// in a different trace. For example, this can be used in batching
-/// operations, where a single batch handler processes multiple requests
-/// from different traces or when the handler receives a request from a
-/// different project.
-#[derive(Clone, Debug, PartialEq, PartialOrd, Serialize)]
-pub struct Link {
-    /// The span context of the linked span.
-    pub span_context: SpanContext,
-
-    /// `attributes` is a collection of key/value pairs on the link.
-    pub attributes: Vec<KeyValue>,
-}
-
-impl Link {
-    pub fn new(span_context: SpanContext, attributes: Vec<KeyValue>) -> Self {
-        Self {
-            span_context,
-            attributes,
-        }
-    }
-
-    pub fn trace_id(&self) -> TraceId {
-        self.span_context.trace_id
-    }
-
-    pub fn span_id(&self) -> SpanId {
-        self.span_context.span_id
     }
 }
 
@@ -276,14 +230,14 @@ pub struct Span {
 
     /// `tags` is a collection of key/value pairs. The value can be a string, an
     /// integer, a double or the Boolean value `true` or `false`.
-    pub tags: EvictedHashMap,
+    pub attributes: Attributes,
 
     /// `events` is a collection of event items.
-    pub events: EvictedQueue<Event>,
+    pub events: SpanEvents,
 
     /// links is a collection of Links, which are references from this span to a span
     /// in the same or different trace.
-    pub links: EvictedQueue<Link>,
+    pub links: SpanLinks,
 
     /// An optional final status for this span. Semantically when Status isn't set,
     /// it span's status code is unset, i.e. assume STATUS_CODE_UNSET (code = 0)
@@ -305,9 +259,9 @@ impl Span {
             kind: SpanKind::Client,
             start_time: 0,
             end_time: 0,
-            tags: EvictedHashMap::new(128, 0),
-            events: EvictedQueue::new(128),
-            links: EvictedQueue::new(128),
+            attributes: Attributes::default(),
+            events: SpanEvents::default(),
+            links: SpanLinks::default(),
             status: Status::default(),
         }
     }
@@ -374,11 +328,8 @@ impl Span {
             .timestamp_nanos_opt()
             .expect("timestamp can not be represented in a timestamp with nanosecond precision.");
 
-        self.events.push_back(Event {
-            name: name.into(),
-            timestamp,
-            attributes: attributes.into(),
-        });
+        self.events
+            .push(Event::new(name.into(), timestamp, attributes));
     }
 
     /// Convenience method to record an exception/error as an `Event`.
@@ -393,6 +344,8 @@ impl Span {
 
 impl TypeSize for Span {
     fn allocated_bytes(&self) -> usize {
-        self.name.allocated_bytes() + self.tags.allocated_bytes() + self.events.allocated_bytes()
+        self.name.allocated_bytes()
+            + self.attributes.allocated_bytes()
+            + self.events.allocated_bytes()
     }
 }

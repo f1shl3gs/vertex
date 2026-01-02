@@ -1,5 +1,6 @@
+use event::tags::Key;
 use event::trace::{
-    AnyValue, Event, EvictedHashMap, EvictedQueue, Key, KeyValue, Link, SpanKind, StatusCode, Trace,
+    AnyValue, Attributes, Event, KeyValue, SpanEvents, SpanKind, SpanLinks, StatusCode, Trace,
 };
 
 use crate::thrift::jaeger::{Log, Span, SpanRef, SpanRefType, Tag, TagType};
@@ -45,9 +46,8 @@ impl From<Event> for Log {
         let mut fields = event
             .attributes
             .into_iter()
-            .map(Into::into)
+            .map(Tag::from)
             .collect::<Vec<_>>();
-
         fields.push((Key::from("message"), AnyValue::from(event.name.to_string())).into());
 
         Log { timestamp, fields }
@@ -71,7 +71,7 @@ impl From<event::trace::Span> for Span {
             start_time: span.start_time / 1000,
             duration: (span.end_time - span.start_time) / 1000,
             tags: Some(build_span_tags(
-                span.tags,
+                span.attributes,
                 span.status.status_code,
                 span.status.message,
                 span.kind,
@@ -81,7 +81,7 @@ impl From<event::trace::Span> for Span {
     }
 }
 
-fn links_to_references(links: EvictedQueue<Link>) -> Option<Vec<SpanRef>> {
+fn links_to_references(links: SpanLinks) -> Option<Vec<SpanRef>> {
     if links.is_empty() {
         return None;
     }
@@ -106,7 +106,7 @@ fn links_to_references(links: EvictedQueue<Link>) -> Option<Vec<SpanRef>> {
     Some(refs)
 }
 
-fn events_to_logs(events: EvictedQueue<Event>) -> Option<Vec<Log>> {
+fn events_to_logs(events: SpanEvents) -> Option<Vec<Log>> {
     if events.is_empty() {
         None
     } else {
@@ -140,18 +140,18 @@ impl UserOverrides {
 }
 
 fn build_span_tags(
-    attrs: EvictedHashMap,
+    attributes: Attributes,
     status_code: StatusCode,
     status_description: String,
     kind: SpanKind,
 ) -> Vec<Tag> {
     let mut user_overrides = UserOverrides::default();
     // TODO: determine if namespacing is required to avoid collision with set attributes
-    let mut tags = attrs
+    let mut tags = attributes
         .into_iter()
-        .map(|(k, v)| {
-            user_overrides.record_attr(k.as_str());
-            KeyValue::new(k, v).into()
+        .map(|item| {
+            user_overrides.record_attr(item.key.as_str());
+            Tag::from(item)
         })
         .collect::<Vec<_>>();
 
