@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1767349058221,
+  "lastUpdate": 1767349146551,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c9b9a323347783b415f2da1b34e00c32d2230340",
-          "message": "Merge pull request #2625 from f1shl3gs/sources/jaeger/unify_listen\n\nsources/jaeger: unify listen name",
-          "timestamp": "2025-10-23T01:34:30+08:00",
-          "tree_id": "474bd00eb635e6cb6ea41b249e10876b6e76db0a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c9b9a323347783b415f2da1b34e00c32d2230340"
-        },
-        "date": 1761155149778,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 585,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40354.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ddc0147c4193c715da031908d80023bdbbc76a31",
           "message": "Merge pull request #2626 from f1shl3gs/lib/configurable/remove_default\n\nlib/configurable: remove default support",
           "timestamp": "2025-10-23T01:40:41+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41294.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "43d2006d81d9a9ed5a0be6e17e94fa9c51d6fa0e",
+          "message": "Merge pull request #2728 from f1shl3gs/cargo/upgrade\n\ncargo: upgrade",
+          "timestamp": "2026-01-02T18:07:46+08:00",
+          "tree_id": "a1a46b6f777d81925f9373f940350c5ad136ac9d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/43d2006d81d9a9ed5a0be6e17e94fa9c51d6fa0e"
+        },
+        "date": 1767349124062,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 580,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41294.1,
             "unit": "KiB"
           }
         ]
