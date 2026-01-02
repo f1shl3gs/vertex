@@ -29,10 +29,7 @@ impl From<proto::Span> for event::trace::Span {
         let mut attributes = span
             .tags
             .into_iter()
-            .map(|item| {
-                let (key, value) = item.into();
-                KeyValue { key, value }
-            })
+            .map(Into::into)
             .collect::<Vec<_>>()
             .into();
         let start_time = prost_timestamp_to_nano_seconds(span.start_time);
@@ -103,7 +100,7 @@ impl From<Batch> for Trace {
     }
 }
 
-impl From<proto::KeyValue> for (Key, AnyValue) {
+impl From<proto::KeyValue> for KeyValue {
     fn from(kv: proto::KeyValue) -> Self {
         let value = if kv.v_type == ValueType::String as i32 {
             kv.v_str.into()
@@ -117,18 +114,21 @@ impl From<proto::KeyValue> for (Key, AnyValue) {
             BASE64_STANDARD.encode(kv.v_binary).into()
         };
 
-        (kv.key.into(), value)
+        KeyValue {
+            key: kv.key.into(),
+            value,
+        }
     }
 }
 
-impl From<proto::Log> for event::trace::Event {
+impl From<proto::Log> for Event {
     fn from(log: proto::Log) -> Self {
         let timestamp = log.timestamp.unwrap();
 
         let mut name = Cow::Borrowed("");
         let mut attributes = Attributes::with_capacity(log.fields.len());
         for field in log.fields {
-            let (key, value) = field.into();
+            let KeyValue { key, value } = field.into();
             if key.as_str() == "message" {
                 name = Cow::Owned(value.to_string());
                 continue;
