@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1767350316646,
+  "lastUpdate": 1767387875747,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d7cca71ae4675d4bd2698a9430bad77a73d023e7",
-          "message": "Merge pull request #2627 from f1shl3gs/sources/jaeger/unify_listen\n\nsources/jaeger: unify listen",
-          "timestamp": "2025-10-23T01:56:44+08:00",
-          "tree_id": "067bc67f2114ae76954b448c7a30dfaab65435dd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d7cca71ae4675d4bd2698a9430bad77a73d023e7"
-        },
-        "date": 1761156467460,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 570,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40347.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "61a23b9494349b5fe0911155abea13f4d6a11396",
           "message": "Merge pull request #2628 from f1shl3gs/sources/dnstap/unify_listen\n\nsources/dnstap: unify listen",
           "timestamp": "2025-10-23T03:15:05+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41273.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8a2ad266d47277cfad556c0184be085e87b37ca9",
+          "message": "Merge pull request #2730 from f1shl3gs/lib/event/simplify_trace\n\nlib/event: simplify trace structure",
+          "timestamp": "2026-01-03T04:53:06+08:00",
+          "tree_id": "81a74f05f02080ac3b5e282ade91433b048d7dbb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8a2ad266d47277cfad556c0184be085e87b37ca9"
+        },
+        "date": 1767387853252,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 590,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41212.5,
             "unit": "KiB"
           }
         ]
