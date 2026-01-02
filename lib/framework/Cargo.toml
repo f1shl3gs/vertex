@@ -36,7 +36,7 @@ dyn-clone = { version = "1.0.20", default-features = false }
 event = { path = "../event" }
 # TODO: framework should not exit if any error happened
 exitcode = { version = "1.1.2" }
-flate2 = { version = "1.1.7" }
+flate2 = { version = "1.1.5" }
 futures = { version = "0.3.31", default-features = false, features = ["async-await"] }
 glob = { version = "0.3.3", default-features = false }
 headers = { version = "0.4.1", default-features = false }
@@ -74,7 +74,7 @@ tokio-stream = { version = "0.1.17", default-features = false, features = ["net"
 tokio-util = { version = "0.7.17", default-features = false, features = ["time"] }
 tower = { version = "0.5.2", default-features = false, features = ["limit", "retry", "timeout"] }
 tracing = { version = "0.1.44", default-features = false }
-tracing-core = { version = "0.1.35", default-features = false }
+tracing-core = { version = "0.1.36", default-features = false }
 tracing-internal = { path = "../tracing-internal" }
 tracing-limit = { path = "../tracing-limit" }
 tracing-subscriber = { version = "0.3.22", default-features = false, features = ["env-filter", "json", "fmt", "ansi"] }
