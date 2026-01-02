@@ -1,3 +1,4 @@
+use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fmt::Debug;
 use std::marker::PhantomData;
@@ -5,9 +6,9 @@ use std::sync::{Mutex, MutexGuard, OnceLock};
 
 use event::LogRecord;
 use event::log::Value;
-use event::trace::generator::IdGenerator;
-use event::trace::{RngGenerator, Span, SpanId, TraceId};
+use event::trace::{Span, SpanId, TraceId};
 use futures::{Stream, StreamExt, future::ready};
+use rand::Rng;
 use tokio::sync::broadcast::{self, Receiver, Sender};
 use tokio_stream::wrappers::BroadcastStream;
 use tracing::span::Attributes;
@@ -175,10 +176,13 @@ impl tracing::field::Visit for SpanFields {
     }
 }
 
-#[derive(Default)]
-struct InternalTracer {
-    id_gen: RngGenerator,
+thread_local! {
+    /// Store random number generator for each thread
+    static CURRENT_RNG: RefCell<rand::rngs::ThreadRng> = RefCell::new(rand::rngs::ThreadRng::default());
 }
+
+#[derive(Default)]
+struct InternalTracer;
 
 impl PreSampledTracer for InternalTracer {
     fn export(&self, span: Span) {
@@ -187,11 +191,11 @@ impl PreSampledTracer for InternalTracer {
     }
 
     fn new_trace_id(&self) -> TraceId {
-        self.id_gen.new_trace_id()
+        CURRENT_RNG.with_borrow_mut(|rng| TraceId::from_bytes(rng.random::<[u8; 16]>()))
     }
 
     fn new_span_id(&self) -> SpanId {
-        self.id_gen.new_span_id()
+        CURRENT_RNG.with_borrow_mut(|rng| SpanId::from_bytes(rng.random::<[u8; 8]>()))
     }
 }
 
@@ -220,7 +224,7 @@ pub fn init(color: bool, json: bool, levels: &str, internal_log_rate_limit: u64)
 
         let rate_limited =
             RateLimitedLayer::new(formatter).with_default_limit(internal_log_rate_limit);
-        let trace_layer = tracing_internal::TracingLayer::new(InternalTracer::default());
+        let trace_layer = tracing_internal::TracingLayer::new(InternalTracer);
         let subscriber = subscriber.with(rate_limited).with(trace_layer);
 
         let _ = subscriber.try_init();
@@ -234,7 +238,7 @@ pub fn init(color: bool, json: bool, levels: &str, internal_log_rate_limit: u64)
 
         let rate_limited =
             RateLimitedLayer::new(formatter).with_default_limit(internal_log_rate_limit);
-        let trace_layer = tracing_internal::TracingLayer::new(InternalTracer::default());
+        let trace_layer = tracing_internal::TracingLayer::new(InternalTracer);
         let subscriber = subscriber.with(rate_limited).with(trace_layer);
 
         let _ = subscriber.try_init();

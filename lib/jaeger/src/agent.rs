@@ -1,14 +1,14 @@
 use std::fmt::{Debug, Formatter};
+use std::io::Cursor;
 
 use prost::bytes::{BufMut, BytesMut};
 use thrift::protocol::{
     TBinaryInputProtocol, TBinaryOutputProtocol, TCompactInputProtocol, TCompactOutputProtocol,
-    TInputProtocol,
 };
 use thrift::transport::{ReadHalf, TIoChannel, WriteHalf};
 
 use crate::Batch;
-use crate::thrift::agent::{AgentEmitBatchArgs, AgentSyncClient, TAgentSyncClient};
+use crate::thrift::agent::{AgentSyncClient, TAgentSyncClient};
 use crate::transport::{TBufferChannel, TNoopChannel};
 
 /// The max size of UDP packet we want to send, synced with jaeger-agent
@@ -45,20 +45,18 @@ impl Default for BufferClient {
     }
 }
 
-pub fn deserialize_compact_batch(input: Vec<u8>) -> thrift::Result<Batch> {
-    let reader = std::io::Cursor::new(input);
+pub fn deserialize_compact_batch(input: &[u8]) -> thrift::Result<Batch> {
+    let reader = Cursor::new(input);
     let mut input = TCompactInputProtocol::new(reader);
-    input.read_message_begin()?;
-    let args = AgentEmitBatchArgs::read_from_in_protocol(&mut input)?;
-    Ok(args.batch)
+
+    Batch::read_from_in_protocol(&mut input)
 }
 
-pub fn deserialize_binary_batch(input: Vec<u8>) -> thrift::Result<Batch> {
-    let reader = std::io::Cursor::new(input);
+pub fn deserialize_binary_batch(input: &[u8]) -> thrift::Result<Batch> {
+    let reader = Cursor::new(input);
     let mut input = TBinaryInputProtocol::new(reader, false);
-    input.read_message_begin()?;
-    let args = AgentEmitBatchArgs::read_from_in_protocol(&mut input)?;
-    Ok(args.batch)
+
+    Batch::read_from_in_protocol(&mut input)
 }
 
 pub fn serialize_binary_batch(batch: Batch) -> thrift::Result<Vec<u8>> {
@@ -93,42 +91,3 @@ pub fn serialize_batch(
 
     Ok(payload)
 }
-
-/*
-fn serialize_batch_vectored(
-    client: &mut BufferClient,
-    mut batch: jaeger::Batch,
-    max_packet_size: usize,
-    output: &mut Vec<Vec<u8>>,
-) -> thrift::Result<()> {
-    client.client.emit_batch(batch.clone())?;
-    let payload = client.buffer.take_bytes();
-
-    if payload.len() <= max_packet_size {
-        output.push(payload);
-        return Ok(());
-    }
-
-    if batch.spans.len() <= 1 {
-        return Err(thrift::ProtocolError::new(
-            thrift::ProtocolErrorKind::SizeLimit,
-            format!(
-                "single span's jaeger exporter payload size of {} bytes over max UDP packet \
-                size of {} bytes",
-                payload.len(),
-                max_packet_size,
-            ),
-        )
-        .into());
-    }
-
-    let mid = batch.spans.len() / 2;
-    let new_spans = batch.spans.drain(mid..).collect::<Vec<_>>();
-    let new_batch = jaeger::Batch::new(batch.process.clone(), new_spans);
-
-    serialize_batch_vectored(client, batch, max_packet_size, output)?;
-    serialize_batch_vectored(client, new_batch, max_packet_size, output)?;
-
-    Ok(())
-}
-*/

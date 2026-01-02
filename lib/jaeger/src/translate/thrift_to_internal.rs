@@ -1,9 +1,10 @@
-use std::collections::HashMap;
+use std::borrow::Cow;
 
 use base64::prelude::{BASE64_STANDARD, Engine as _};
-use event::trace::{AnyValue, Event, EvictedHashMap, EvictedQueue, Key, KeyValue};
-use event::trace::{Link, SpanContext, SpanKind, Status, StatusCode};
-use event::{Events, Trace, tags::Value};
+use event::Events;
+use event::tags::Value;
+use event::trace::{AnyValue, Attributes, Event, KeyValue, Link, SpanEvents};
+use event::trace::{SpanContext, SpanKind, Status, StatusCode, Trace};
 
 use crate::thrift::jaeger::{Batch, Log, Span, SpanRef, Tag, TagType};
 use crate::translate::id::to_trace_id;
@@ -82,7 +83,7 @@ impl From<Span> for event::trace::Span {
             kind,
             start_time: js.start_time * 1000,
             end_time: end_time * 1000,
-            tags: attributes,
+            attributes,
             events: jaeger_logs_to_internal_event(js.logs),
             links: references_to_links(js.references).into(),
             status,
@@ -95,9 +96,9 @@ impl From<Log> for Event {
         let timestamp = log.timestamp * 1000;
         let mut attributes = tags_to_attributes(Some(log.fields));
         let name = if let Some(value) = attributes.remove("message") {
-            value.to_string()
+            Cow::Owned(value.to_string())
         } else {
-            "".into()
+            Cow::Borrowed("")
         };
 
         Event {
@@ -126,21 +127,18 @@ impl From<Tag> for KeyValue {
     }
 }
 
-fn tags_to_attributes(tags: Option<Vec<Tag>>) -> EvictedHashMap {
+fn tags_to_attributes(tags: Option<Vec<Tag>>) -> Attributes {
     if let Some(tags) = tags {
         tags.into_iter()
-            .map(|tag| {
-                let kv: KeyValue = tag.into();
-                (kv.key, kv.value)
-            })
-            .collect::<HashMap<Key, AnyValue>>()
+            .map(KeyValue::from)
+            .collect::<Vec<_>>()
             .into()
     } else {
-        EvictedHashMap::new(128, 0)
+        Attributes::with_capacity(4)
     }
 }
 
-fn status_from_attributes(attributes: &mut EvictedHashMap) -> Status {
+fn status_from_attributes(attributes: &mut Attributes) -> Status {
     if let Some(value) = attributes.remove("error") {
         let msg = if matches!(value, AnyValue::Boolean(_)) {
             String::new()
@@ -160,16 +158,16 @@ fn status_from_attributes(attributes: &mut EvictedHashMap) -> Status {
     }
 }
 
-fn jaeger_logs_to_internal_event(logs: Option<Vec<Log>>) -> EvictedQueue<Event> {
+fn jaeger_logs_to_internal_event(logs: Option<Vec<Log>>) -> SpanEvents {
     if let Some(logs) = logs {
         logs.into_iter()
             .map(Into::into)
-            .fold(EvictedQueue::default(), |mut queue, event| {
-                queue.push_back(event);
-                queue
+            .fold(SpanEvents::default(), |mut events, event| {
+                events.push(event);
+                events
             })
     } else {
-        EvictedQueue::default()
+        SpanEvents::default()
     }
 }
 
@@ -179,16 +177,16 @@ fn references_to_links(refs: Option<Vec<SpanRef>>) -> Vec<Link> {
             .map(|span_ref| {
                 let trace_id = to_trace_id(span_ref.trace_id_high, span_ref.trace_id_low);
 
-                Link {
-                    span_context: SpanContext {
+                Link::new(
+                    SpanContext {
                         trace_id,
                         span_id: span_ref.span_id.into(),
                         trace_flags: Default::default(),
                         is_remote: false,
                         trace_state: Default::default(),
                     },
-                    attributes: vec![],
-                }
+                    Default::default(),
+                )
             })
             .collect()
     } else {
