@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dev-dependencies]
-tokio = { version = "1.48.0", default-features = false, features = ["macros"]}
+tokio = { version = "1.49.0", default-features = false, features = ["macros"]}
 
 [dependencies]
 bytes = { version = "1.11.0", default-features = false }

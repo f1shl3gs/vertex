@@ -404,7 +404,7 @@ event = { path = "lib/event", features = ["test"] }
 framework = { path = "lib/framework", features = ["test-util"] }
 serde_path_to_error = { version = "0.1.20", default-features = false }
 testify = { path = "lib/testify" }
-tokio = { version = "1.48.0", default-features = false, features = ["test-util"] }
+tokio = { version = "1.49.0", default-features = false, features = ["test-util"] }
 tonic = { version = "0.14.2", default-features = false, features = ["server", "router"]}
 
 [dependencies]
@@ -441,7 +441,7 @@ tikv-jemalloc-ctl = { version = "0.6.1", optional = true, features = ["use_std"]
 async-stream = { version = "0.3.6", optional = true }
 async-trait = { version = "0.1.89", default-features = false }
 futures = { version = "0.3.31", default-features = false }
-tokio = { version = "1.48.0", default-features = false, features = ["time", "net", "signal", "rt-multi-thread", "io-util"] }
+tokio = { version = "1.49.0", default-features = false, features = ["time", "net", "signal", "rt-multi-thread", "io-util"] }
 tokio-util = { version = "0.7.17", default-features = false, features = ["codec", "time", "net"] }
 
 # Tracing
