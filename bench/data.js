@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1767666319904,
+  "lastUpdate": 1767666328118,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d2aeea0cb8078548cf98d016ae0f664c3357d163",
-          "message": "Merge pull request #2632 from f1shl3gs/sources/mysqld/unify_endpoint\n\nsources/mysqld: unify endpoint",
-          "timestamp": "2025-10-23T04:13:51+08:00",
-          "tree_id": "10e78cea0fa3f8647819050935d50f70016f71c3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d2aeea0cb8078548cf98d016ae0f664c3357d163"
-        },
-        "date": 1761164697745,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 567,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40350.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f64b404180e27a2729e24eb0d12648170c208e13",
           "message": "Merge pull request #2634 from f1shl3gs/sources/prometheus_remote_write/unify_listen\n\nsources/prometheus_remote_write: unify listen",
           "timestamp": "2025-10-23T05:02:27+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 594,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41204.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "37d9a5548fda67812afdf8bec3acd6f78ce74183",
+          "message": "Merge pull request #2737 from f1shl3gs/dependabot/cargo/tokio-test-0.4.5\n\nchore(deps): bump tokio-test from 0.4.4 to 0.4.5",
+          "timestamp": "2026-01-06T10:14:08+08:00",
+          "tree_id": "c11fbbb9e208aff7062a3f2f3cd4fbed5a7f363b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/37d9a5548fda67812afdf8bec3acd6f78ce74183"
+        },
+        "date": 1767666305846,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 580,
             "unit": "s"
           },
           {
