@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1767693297686,
+  "lastUpdate": 1767695286194,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2016618373defafa654cb04329176815d471f687",
-          "message": "Merge pull request #2639 from f1shl3gs/sinks/jaeger/unify_endpoint\n\nsinks/jaeger: unify endpoint",
-          "timestamp": "2025-10-24T00:12:58+08:00",
-          "tree_id": "588248a7a149078cf8359ab0bc27b78d26966879",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2016618373defafa654cb04329176815d471f687"
-        },
-        "date": 1761236652280,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 574,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40356.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4eedf7f336f0f6b20f676bca70776496396f2494",
           "message": "Merge pull request #2640 from f1shl3gs/sinks/skywalking/fix_component_type\n\nsinks/skywalking: fix component type",
           "timestamp": "2025-10-24T02:13:23+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41204.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4347b2450be10bc09ad2acaa27481147c191b969",
+          "message": "Merge pull request #2739 from f1shl3gs/dependabot/cargo/quote-1.0.43\n\nchore(deps): bump quote from 1.0.42 to 1.0.43",
+          "timestamp": "2026-01-06T18:16:47+08:00",
+          "tree_id": "24cf658b2f5c1b594bb7b3989c3c421e20efda18",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4347b2450be10bc09ad2acaa27481147c191b969"
+        },
+        "date": 1767695263220,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 575,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41212.2,
             "unit": "KiB"
           }
         ]
