@@ -25,6 +25,6 @@ humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = fa
 regex = { version = "1.12.2", default-features = false, features = ["unicode"] }
 serde_json = { version = "1.0.148", default-features = false }
 twox-hash = { version = "2.1.2", default-features = false, features = ["xxhash64"] }
-url = { version = "2.5.7", default-features = false }
+url = { version = "2.5.8", default-features = false }
 value = { path = "../value", features = ["string_path"] }
 woothee = { version = "0.13.0", default-features = false }
