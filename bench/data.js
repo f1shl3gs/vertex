@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1767820644689,
+  "lastUpdate": 1767822449150,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e5c104854e6140218e68a40c35a0a381a3cd39d3",
-          "message": "Merge pull request #2643 from f1shl3gs/lib/framework/fix_multiple_config\n\ncli: fix multiple configs",
-          "timestamp": "2025-10-25T03:50:23+08:00",
-          "tree_id": "2fd00d295b626eeca13c77d5a6e58acaad48ef25",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e5c104854e6140218e68a40c35a0a381a3cd39d3"
-        },
-        "date": 1761336090364,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 570,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40361.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "57b8912d84d8aa850723e3837a50a6e6b382f97c",
           "message": "Merge pull request #2644 from f1shl3gs/lib/framework/remove_secret_string\n\nlib/framework: remove SecretString",
           "timestamp": "2025-10-25T04:30:00+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41212,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f102ce0d4a212a5330d0ac79198776607057d739",
+          "message": "Merge pull request #2745 from f1shl3gs/dep/switch_to_our_serde_yaml\n\ndeps: switch to our own serde_yaml",
+          "timestamp": "2026-01-08T05:36:11+08:00",
+          "tree_id": "f206880393542af8b074641e87a305ca0203a480",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f102ce0d4a212a5330d0ac79198776607057d739"
+        },
+        "date": 1767822426980,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 574,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41194.8,
             "unit": "KiB"
           }
         ]
