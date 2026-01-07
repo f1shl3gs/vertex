@@ -463,7 +463,7 @@ tower = { version = "0.5.2", default-features = false }
 
 # Serde
 serde = { version = "1.0.228", default-features = false, features = ["derive"] }
-serde_yaml = { version = "0.9.34", default-features = false }
+serde_yaml = { git = "https://github.com/f1shl3gs/serde-yaml.git", rev = "62dea63989d8bfd09a9453fa957605dcf09aa4a7", default-features = false }
 serde_json = { version = "1.0.149", default-features = false }
 
 # GRPC & Protobuf

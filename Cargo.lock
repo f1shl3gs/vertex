@@ -3745,14 +3745,13 @@ dependencies = [
 [[package]]
 name = "serde_yaml"
 version = "0.9.34+deprecated"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6a8b1a1a2ebf674015cc02edccce75287f1a0130d394307b36743c2f5d504b47"
+source = "git+https://github.com/f1shl3gs/serde-yaml.git?rev=62dea63989d8bfd09a9453fa957605dcf09aa4a7#62dea63989d8bfd09a9453fa957605dcf09aa4a7"
 dependencies = [
  "indexmap 2.12.1",
  "itoa",
- "ryu",
- "serde",
+ "serde_core",
  "unsafe-libyaml",
+ "zmij",
 ]
 
 [[package]]

@@ -11,7 +11,7 @@ syslog = ["dep:syslog_loose"]
 [dev-dependencies]
 event = { path = "../event", features = ["test"] }
 futures = { version = "0.3.31", default-features = false, features = ["async-await"]}
-serde_yaml = { version = "0.9.34", default-features = false }
+serde_yaml = { git = "https://github.com/f1shl3gs/serde-yaml.git", rev = "62dea63989d8bfd09a9453fa957605dcf09aa4a7", default-features = false }
 tokio = { version = "1.49.0", default-features = false, features = ["test-util", "macros"] }
 value = { path = "../value" }
 
