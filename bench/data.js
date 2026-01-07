@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1767762368403,
+  "lastUpdate": 1767762371739,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ca55932293994590bd148b78d785f335cf44ef99",
-          "message": "Merge pull request #2642 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.103\n\nchore(deps): bump proc-macro2 from 1.0.102 to 1.0.103",
-          "timestamp": "2025-10-24T19:48:36+08:00",
-          "tree_id": "8e6106f40d75b995dd0daac80e3de6321fa50571",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ca55932293994590bd148b78d785f335cf44ef99"
-        },
-        "date": 1761307185573,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 570,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40370,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5a69b04119f4d32625814f0f5b0761ea4f4b2233",
           "message": "Merge pull request #2641 from f1shl3gs/dependabot/cargo/flate2-1.1.5\n\nchore(deps): bump flate2 from 1.1.4 to 1.1.5",
           "timestamp": "2025-10-24T19:49:03+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41213.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a7924f91bfd379d9909e049af1318834cfa79a56",
+          "message": "Merge pull request #2742 from f1shl3gs/dependabot/cargo/rsa-0.9.10\n\nchore(deps): bump rsa from 0.9.9 to 0.9.10",
+          "timestamp": "2026-01-07T12:54:38+08:00",
+          "tree_id": "438245c1a0a5c605b2cce64a308005dd27e4f369",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a7924f91bfd379d9909e049af1318834cfa79a56"
+        },
+        "date": 1767762349204,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 592,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41212.2,
             "unit": "KiB"
           }
         ]
