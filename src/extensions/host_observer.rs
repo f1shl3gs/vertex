@@ -19,9 +19,9 @@ const fn default_interval() -> Duration {
     Duration::from_secs(10)
 }
 
-#[configurable_component(extension, name = "port_observer")]
+#[configurable_component(extension, name = "host_observer")]
 struct Config {
-    /// Path to the `/proc`
+    /// Absolute Path to the `/proc`
     #[serde(default = "default_proc")]
     proc_path: PathBuf,
 
@@ -30,7 +30,7 @@ struct Config {
 }
 
 #[async_trait::async_trait]
-#[typetag::serde(name = "port_observer")]
+#[typetag::serde(name = "host_observer")]
 impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
         let observer = Observer::register(cx.key);
@@ -67,7 +67,7 @@ async fn list_endpoints(root: &PathBuf) -> crate::Result<Vec<Endpoint>> {
 
             Endpoint {
                 id: format!("{}:{}:{}@{}", protocol, addr.ip(), addr.port(), pid),
-                typ: "port".to_string(),
+                typ: "host".to_string(),
                 target: info.addr.to_string(),
                 details: value!({
                     "name": name,
