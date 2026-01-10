@@ -154,9 +154,9 @@ extensions-dns_observer = ["dep:resolver"]
 extensions-docker_observer = ["dep:docker"]
 extensions-exec_observer = ["tokio/process"]
 extensions-healthcheck = ["tonic/router", "dep:tonic-health"]
+extensions-host_observer = []
 extensions-http_observer = []
 extensions-kubernetes_observer = ["dep:kubernetes"]
-extensions-port_observer = []
 extensions-pprof = ["dep:pprof"]
 extensions-remote_tap = []
 
@@ -167,9 +167,9 @@ extensions = [
     "extensions-docker_observer",
     "extensions-exec_observer",
     "extensions-healthcheck",
+    "extensions-host_observer",
     "extensions-http_observer",
     "extensions-kubernetes_observer",
-    "extensions-port_observer",
     # Musl does not provide "pthread_getname_np" in current release.
     # https://github.com/tikv/pprof-rs/issues/41
     "extensions-pprof",
