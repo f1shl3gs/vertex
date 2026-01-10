@@ -34,6 +34,14 @@ struct Config {
     #[serde(with = "crate::config::serde_uri")]
     endpoint: Uri,
 
+    /// The interval between fetch config.
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
+    interval: Duration,
+
+    /// Extra HTTP headers to add to request.
+    #[serde(default)]
+    headers: IndexMap<String, String>,
+
     auth: Option<Auth>,
 
     tls: Option<TlsConfig>,
@@ -42,14 +50,6 @@ struct Config {
     /// configured proxy is used.
     #[serde(default)]
     proxy: ProxyConfig,
-
-    /// HTTP headers to add to the request.
-    #[serde(default)]
-    headers: IndexMap<String, String>,
-
-    /// The interval between fetch config.
-    #[serde(default = "default_interval", with = "humanize::duration::serde")]
-    interval: Duration,
 }
 
 #[async_trait::async_trait]
