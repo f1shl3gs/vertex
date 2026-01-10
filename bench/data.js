@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1767908541614,
+  "lastUpdate": 1768049589821,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7a105144d112f1486a6a4acc0471babb5cc8e3ab",
-          "message": "Merge pull request #2647 from f1shl3gs/remove_docs\n\nmisc: remove docs",
-          "timestamp": "2025-10-25T23:51:35+08:00",
-          "tree_id": "6afa6b28bb243147c273e1d9f1e6d4236a8eadef",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7a105144d112f1486a6a4acc0471babb5cc8e3ab"
-        },
-        "date": 1761408165896,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 579,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40354.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f4041ac8c2428e4685a8e65bccd6e0c4edf46fb6",
           "message": "Merge pull request #2648 from f1shl3gs/misc/fix_example_config\n\nmisc: fix example config",
           "timestamp": "2025-10-25T23:51:55+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41192.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c4e06f8b768ad7d83d8f5d457ba1d301645b2dba",
+          "message": "Merge pull request #2749 from f1shl3gs/lib/framework/re-order_http_provider_config\n\nlib/framework: re-order http provider config",
+          "timestamp": "2026-01-10T20:42:04+08:00",
+          "tree_id": "4ab21ed84a36d2ee53b07175b3e5c479f287185f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c4e06f8b768ad7d83d8f5d457ba1d301645b2dba"
+        },
+        "date": 1768049567295,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 564,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41191.6,
             "unit": "KiB"
           }
         ]
