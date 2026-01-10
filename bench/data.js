@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1768049589821,
+  "lastUpdate": 1768054177976,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f4041ac8c2428e4685a8e65bccd6e0c4edf46fb6",
-          "message": "Merge pull request #2648 from f1shl3gs/misc/fix_example_config\n\nmisc: fix example config",
-          "timestamp": "2025-10-25T23:51:55+08:00",
-          "tree_id": "065b5676f32ae0ea7c314d33cf5cb2f8c1effc8e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f4041ac8c2428e4685a8e65bccd6e0c4edf46fb6"
-        },
-        "date": 1761408184171,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 575,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40354.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "906faca7b2eb0cfb204f55d9549ef60f173456a1",
           "message": "Merge pull request #2649 from f1shl3gs/dependabot/cargo/proptest-derive-0.7.0\n\nchore(deps): bump proptest-derive from 0.6.0 to 0.7.0",
           "timestamp": "2025-10-27T19:11:14+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 564,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41191.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cfd735cdc2c7b45f9ac6190b0df8543639d9342d",
+          "message": "Merge pull request #2750 from f1shl3gs/extensions/host_observer/rename\n\nextension/host_observer: rename port_observer to host_observer",
+          "timestamp": "2026-01-10T21:58:20+08:00",
+          "tree_id": "791d496c3d1aedad9421b643709ecff241c923c9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cfd735cdc2c7b45f9ac6190b0df8543639d9342d"
+        },
+        "date": 1768054155597,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 577,
             "unit": "s"
           },
           {
