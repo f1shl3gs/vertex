@@ -304,6 +304,7 @@ async fn collect(
                             debug!(message = "sync response", sync);
                         }
                         // Deprecated in favour of google.golang.org/genproto/googleapis/rpc/status
+                        #[allow(deprecated)]
                         Response::Error(err) => {
                             warn!(message = "error resp received", ?err);
                             break;
@@ -342,6 +343,7 @@ fn apply_update(notification: Notification, stats: &mut BTreeMap<Vec<PathElem>, 
         let value = match value {
             Value::IntVal(i) => i as f64,
             Value::UintVal(u) => u as f64,
+            #[allow(deprecated)]
             Value::FloatVal(f) => f as f64,
             Value::BoolVal(b) => b as u8 as f64,
             Value::DoubleVal(d) => d,
