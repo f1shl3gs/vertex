@@ -393,7 +393,7 @@ name = "socket"
 required-features = ["sinks-socket"]
 
 [build-dependencies]
-prost-build = { version = "0.14.1", default-features = false }
+prost-build = { version = "0.14.3", default-features = false }
 tonic-prost-build = { version = "0.14.2", default-features = false, features = ["transport"] }
 
 [dev-dependencies]
@@ -467,8 +467,8 @@ serde_yaml = { git = "https://github.com/f1shl3gs/serde-yaml.git", rev = "62dea6
 serde_json = { version = "1.0.149", default-features = false }
 
 # GRPC & Protobuf
-prost = { version = "0.14.1", default-features = false, features = ["std"] }
-prost-types = { version = "0.14.1", default-features = false }
+prost = { version = "0.14.3", default-features = false, features = ["std"] }
+prost-types = { version = "0.14.3", default-features = false }
 tonic = { version = "0.14.2", default-features = false, optional = true, features = ["transport"] }
 tonic-prost = { version = "0.14.2", default-features = false, optional = true }
 tonic-health = { version = "0.14.2", default-features = false, optional = true }

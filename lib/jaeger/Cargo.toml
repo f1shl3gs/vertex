@@ -11,8 +11,8 @@ tonic-prost-build = { version = "0.14.2", default-features = false, features = [
 [dependencies]
 base64 = { version = "0.22.1", default-features = false, features = ["alloc"] }
 event = { path = "../event" }
-prost = { version = "0.14.1", default-features = false }
-prost-types = { version = "0.14.1", default-features = false }
+prost = { version = "0.14.3", default-features = false }
+prost-types = { version = "0.14.3", default-features = false }
 thrift = { version = "0.17.0", default-features = false }
 tonic = { version = "0.14.2", default-features = false, features = ["codegen", "transport"] }
 tonic-prost = { version = "0.14.2", default-features = false }
