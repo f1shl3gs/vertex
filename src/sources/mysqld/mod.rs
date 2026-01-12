@@ -3,9 +3,10 @@ mod global_variables;
 mod info_schema_innodb_cmp;
 mod info_schema_innodb_cmpmem;
 mod info_schema_query_response_time;
+mod slave_status;
+
 #[cfg(all(test, feature = "mysql-integration-tests"))]
 mod integration_tests;
-mod slave_status;
 
 use std::time::{Duration, Instant};
 
