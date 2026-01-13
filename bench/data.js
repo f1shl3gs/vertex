@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1768218004393,
+  "lastUpdate": 1768281750973,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d3d6a292b029062100dd0c66a3af0982f162065b",
-          "message": "Merge pull request #2652 from f1shl3gs/cargo/update\n\nCargo/update",
-          "timestamp": "2025-10-30T04:31:09+08:00",
-          "tree_id": "8de9a2ad401559181f75be0ae950d08972baf472",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d3d6a292b029062100dd0c66a3af0982f162065b"
-        },
-        "date": 1761770569035,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 575,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41148.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d786683a63f06b42acf799f82514975f13819acd",
           "message": "Merge pull request #2653 from f1shl3gs/extensions/zpages/unify_listen\n\nextensions/zpages: unify listen",
           "timestamp": "2025-10-30T05:12:30+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41198.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e080a4cf805edbe9925189ef60a5eee07a215914",
+          "message": "Merge pull request #2754 from f1shl3gs/dependabot/cargo/tower-0.5.3\n\nchore(deps): bump tower from 0.5.2 to 0.5.3",
+          "timestamp": "2026-01-13T13:10:51+08:00",
+          "tree_id": "5d83eb12130dc0e6968748ebe9a28fe488765824",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e080a4cf805edbe9925189ef60a5eee07a215914"
+        },
+        "date": 1768281726932,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 591,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41188.9,
             "unit": "KiB"
           }
         ]
