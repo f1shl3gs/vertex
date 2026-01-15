@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1768281762027,
+  "lastUpdate": 1768452730171,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "99377939745bc31bd042e1ee28de9dced24481b9",
-          "message": "Merge pull request #2654 from f1shl3gs/extensions/remote_tap\n\nextensions/remote_tap: init & remove extensions/zpages",
-          "timestamp": "2025-10-30T23:33:02+08:00",
-          "tree_id": "8cd2b34a0f1d6d76f6231c964b85563e57fd9864",
-          "url": "https://github.com/f1shl3gs/vertex/commit/99377939745bc31bd042e1ee28de9dced24481b9"
-        },
-        "date": 1761839062870,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 595,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41104.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bc7b79d900715f158b492913486acf260543741b",
           "message": "Merge pull request #2655 from f1shl3gs/secrets/add_features\n\nsecrets: add secret features",
           "timestamp": "2025-10-31T00:16:14+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41197.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2f60cf6806a4c1a171781cefcf2661eaede26a46",
+          "message": "Merge pull request #2756 from f1shl3gs/dependabot/cargo/chrono-0.4.43\n\nchore(deps): bump chrono from 0.4.42 to 0.4.43",
+          "timestamp": "2026-01-15T12:40:47+08:00",
+          "tree_id": "4d63a86ee0eba6a93b053d518a259707bbd94a9f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2f60cf6806a4c1a171781cefcf2661eaede26a46"
+        },
+        "date": 1768452707174,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 578,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41196.3,
             "unit": "KiB"
           }
         ]
