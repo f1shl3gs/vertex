@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1768452730171,
+  "lastUpdate": 1768810677405,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bc7b79d900715f158b492913486acf260543741b",
-          "message": "Merge pull request #2655 from f1shl3gs/secrets/add_features\n\nsecrets: add secret features",
-          "timestamp": "2025-10-31T00:16:14+08:00",
-          "tree_id": "8e9d2caf57ce6b422815639de38dd8fcbac26c63",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bc7b79d900715f158b492913486acf260543741b"
-        },
-        "date": 1761841662067,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 601,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41103.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b86068b8e76c25b499a796d04ec30515cc799f3e",
           "message": "Merge pull request #2656 from f1shl3gs/dependabot/cargo/console-subscriber-0.5.0\n\nchore(deps): bump console-subscriber from 0.4.1 to 0.5.0",
           "timestamp": "2025-10-31T00:28:19+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 578,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41196.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0d29a497cd28fc762b5f2c6b6513b0c5f549b090",
+          "message": "Merge pull request #2757 from f1shl3gs/dependabot/github_actions/styfle/cancel-workflow-action-0.13.0\n\nchore(ci): bump styfle/cancel-workflow-action from 0.12.1 to 0.13.0",
+          "timestamp": "2026-01-19T16:06:29+08:00",
+          "tree_id": "4d6beafdcdffc999ef5729c0b92848ce88d1636e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0d29a497cd28fc762b5f2c6b6513b0c5f549b090"
+        },
+        "date": 1768810655063,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 589,
             "unit": "s"
           },
           {
