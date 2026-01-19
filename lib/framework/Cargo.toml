@@ -68,7 +68,7 @@ serde_json = { version = "1.0.149", default-features = false }
 serde_yaml = { git = "https://github.com/f1shl3gs/serde-yaml.git", rev = "62dea63989d8bfd09a9453fa957605dcf09aa4a7", default-features = false }
 snap = { version = "1.1.1", default-features = false }
 socket2 = { version = "0.6.1", default-features = false }
-thiserror = { version = "2.0.17", default-features = false }
+thiserror = { version = "2.0.18", default-features = false }
 tokio = { version = "1.49.0", default-features = false, features = ["time", "net", "signal", "rt-multi-thread"] }
 tokio-rustls = { version = "0.26.4", default-features = false }
 tokio-stream = { version = "0.1.18", default-features = false, features = ["net", "sync"] }
