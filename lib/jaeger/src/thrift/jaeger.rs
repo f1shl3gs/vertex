@@ -1078,8 +1078,8 @@ impl CollectorSubmitBatchesResult {
     o_prot.write_struct_end()
   }
   fn ok_or(self) -> thrift::Result<Vec<BatchSubmitResponse>> {
-    if self.result_value.is_some() {
-      Ok(self.result_value.unwrap())
+    if let Some(result) = self.result_value {
+      Ok(result)
     } else {
       Err(
         thrift::Error::Application(

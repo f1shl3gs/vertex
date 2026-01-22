@@ -44,9 +44,7 @@ impl NetSockstat {
         let mut metrics = Vec::with_capacity(7);
 
         // If sockstat contains the number of used sockets, export it
-        if !v6 && self.used.is_some() {
-            let v = self.used.unwrap();
-
+        if !v6 && let Some(v) = self.used {
             metrics.push(Metric::gauge(
                 "node_sockstat_sockets_used",
                 "Number of IPv4 sockets in use.",
