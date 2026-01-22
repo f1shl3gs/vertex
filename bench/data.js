@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1769103951409,
+  "lastUpdate": 1769104534473,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "86c0c4e8fe4fff7e1ab7d99e212c95ea016afadc",
-          "message": "Merge pull request #2659 from f1shl3gs/extensions/docker_observer/fix_type_name\n\nextensions/docker_observer: fix type name",
-          "timestamp": "2025-10-31T08:25:08+08:00",
-          "tree_id": "335ab40cfc65ac2530ad584995ed08f3551610a5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/86c0c4e8fe4fff7e1ab7d99e212c95ea016afadc"
-        },
-        "date": 1761870993190,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 595,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41239.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e3a580308a11832454842bfb79b1ad5ce706a531",
           "message": "Merge pull request #2660 from f1shl3gs/toolchain/1.91.0\n\ntoolchain: 1.91.0",
           "timestamp": "2025-10-31T08:29:54+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41141.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "153d9adc29c38428953ba6fbb3b264a2ca28d285",
+          "message": "Merge pull request #2761 from f1shl3gs/toolchain/1.93\n\ntoolchain: bump to 1.93",
+          "timestamp": "2026-01-23T01:43:43+08:00",
+          "tree_id": "b32aeb7ff12bb666490c2636589ef9209b34a8b7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/153d9adc29c38428953ba6fbb3b264a2ca28d285"
+        },
+        "date": 1769104512351,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 574,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40909.9,
             "unit": "KiB"
           }
         ]
