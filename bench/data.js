@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1769247954047,
+  "lastUpdate": 1769284494226,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5cec03c3450cf0d24a5cf686077eaf85f8fe15a6",
-          "message": "Merge pull request #2662 from f1shl3gs/extensions/docker_observer/fix_feature_name\n\nextensions/docker_observer: fix feature name",
-          "timestamp": "2025-11-01T05:28:19+08:00",
-          "tree_id": "9c188bf1f6a4604fc7b7337eef637c92a975a5fc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5cec03c3450cf0d24a5cf686077eaf85f8fe15a6"
-        },
-        "date": 1761946749864,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 567,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41039.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1fd82d9854cca86d0f871f5476aaaafa50bc2c99",
           "message": "Merge pull request #2663 from f1shl3gs/dependabot/cargo/tokio-util-0.7.17\n\nchore(deps): bump tokio-util from 0.7.16 to 0.7.17",
           "timestamp": "2025-11-03T18:53:10+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 584,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40908.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9834289168e7937e85cfbe9cee8ec84824f3848d",
+          "message": "Merge pull request #2764 from f1shl3gs/misc/optimize_tokio_select\n\nmisc: optimize tokio::select!",
+          "timestamp": "2026-01-25T03:43:28+08:00",
+          "tree_id": "a02f98522a2373ef5640155ed856b652af79df62",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9834289168e7937e85cfbe9cee8ec84824f3848d"
+        },
+        "date": 1769284472173,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 577,
             "unit": "s"
           },
           {
