@@ -50,9 +50,7 @@ async fn run(
     loop {
         tokio::select! {
             _ = ticker.tick() => {},
-            _ = &mut shutdown => {
-                break
-            }
+            _ = &mut shutdown => break
         }
 
         match glob(&pattern) {

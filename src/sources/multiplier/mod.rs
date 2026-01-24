@@ -199,10 +199,7 @@ async fn run(
             received = notifier.next() => match received {
                 Some(change) => change,
                 // notifier shutdown
-                None => {
-                    println!("notifier done");
-                    break
-                },
+                None => break,
             },
         };
 
@@ -386,9 +383,7 @@ impl SourceTemplate {
             let result = tokio::select! {
                 biased;
 
-                _ = force_shutdown_tripwire => {
-                    Ok(())
-                },
+                _ = force_shutdown_tripwire => Ok(()),
                 result = source => result,
             };
 

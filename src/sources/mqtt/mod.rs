@@ -56,42 +56,35 @@ async fn run(
     mut shutdown: ShutdownSignal,
 ) -> Result<(), ()> {
     loop {
-        tokio::select! {
+        let mut stream = tokio::select! {
             biased;
 
-            _ = &mut shutdown => break,
-            res = listener.accept() => {
-                match res {
-                    Ok(mut stream) => {
-                        let output = output.clone();
-                        let remote_addr = stream.peer_addr();
+            _ = &mut shutdown => return Ok(()),
+            res = listener.accept() => match res {
+                Ok(stream) => stream,
+                Err(err) => {
+                    error!(
+                        message = "accept tcp connection failed",
+                        ?err
+                    );
 
-                        if let Some(keepalive) = &keepalive
-                            && let Err(err) = stream.set_keepalive(keepalive) {
-                                error!(
-                                    message = "set keepalive failed",
-                                    ?err
-                                );
-
-                                continue;
-                            }
-
-                        tokio::spawn(broker::serve_connection(remote_addr, stream, output));
-                    },
-                    Err(err) => {
-                        error!(
-                            message = "accept tcp connection failed",
-                            ?err
-                        );
-
-                        continue;
-                    }
-                };
+                    continue;
+                }
             }
-        }
-    }
+        };
 
-    Ok(())
+        let output = output.clone();
+        let peer = stream.peer_addr();
+
+        if let Some(keepalive) = &keepalive
+            && let Err(err) = stream.set_keepalive(keepalive)
+        {
+            error!(message = "set keepalive failed", ?peer, ?err);
+            continue;
+        }
+
+        tokio::spawn(broker::serve_connection(peer, stream, output));
+    }
 }
 
 #[cfg(test)]

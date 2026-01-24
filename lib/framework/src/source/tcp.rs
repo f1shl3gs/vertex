@@ -313,6 +313,7 @@ async fn handle_stream<T>(
             _ = &mut tripwire => break,
             _ = &mut shutdown_signal => {
                 debug!(message = "Start graceful shutdown");
+
                 // Close our write part of TCP socket to signal the other side
                 // that it should stop writing and close the channel.
                 let socket = reader.get_ref().get_ref();

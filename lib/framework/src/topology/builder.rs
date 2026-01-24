@@ -364,9 +364,7 @@ pub async fn build_pieces(
             let result = tokio::select! {
                 biased;
 
-                _ = force_shutdown_tripwire => {
-                    Ok(())
-                },
+                _ = force_shutdown_tripwire => Ok(()),
                 result = ext => result,
             };
 
@@ -475,9 +473,7 @@ pub async fn build_pieces(
             let result = tokio::select! {
                 biased;
 
-                _ = force_shutdown_tripwire => {
-                    Ok(())
-                },
+                _ = force_shutdown_tripwire => Ok(()),
                 result = server => result
             };
 

@@ -254,9 +254,7 @@ async fn recv_loop(
 
     loop {
         let (size, peer) = tokio::select! {
-            _ = &mut shutdown => {
-                break
-            },
+            _ = &mut shutdown => break,
             result = socket.recv_from(&mut buf) => match result {
                 Ok(pair) => pair,
                 Err(err) => {

@@ -9,8 +9,8 @@ use framework::config::{SourceConfig, SourceContext};
 use framework::{Pipeline, Sink};
 use futures::Stream;
 use futures::StreamExt;
+use tokio::pin;
 use tokio::time::sleep;
-use tokio::{pin, select};
 
 use super::metrics::capture_metrics;
 
@@ -221,7 +221,7 @@ where
                 break;
             }
 
-            select! {
+            tokio::select! {
                 _ = &mut source_timeout => break,
                 Some(event) = rx.next() => events.push(event),
                 _ = &mut source => break,

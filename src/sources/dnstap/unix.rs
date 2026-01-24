@@ -138,9 +138,13 @@ impl Config {
                     _ = &mut shutdown => break,
                 };
 
-                let output = output.clone();
-                let shutdown = shutdown.clone();
-                tokio::spawn(serve_conn(stream, true, max_frame_length, shutdown, output));
+                tokio::spawn(serve_conn(
+                    stream,
+                    true,
+                    max_frame_length,
+                    shutdown.clone(),
+                    output.clone(),
+                ));
             }
 
             Ok(())

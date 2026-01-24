@@ -64,10 +64,10 @@ where
 
         Box::pin(async move {
             loop {
-                let conn = tokio::select! {
+                let (peer, conn) = tokio::select! {
                     _ = &mut shutdown => break,
                     result = listener.accept() => match result {
-                        Ok(conn) => TokioIo::new(conn),
+                        Ok(conn) => (conn.peer_addr(), TokioIo::new(conn)),
                         Err(err) => {
                             error!(
                                 message = "accept new connection failed",
@@ -81,7 +81,7 @@ where
 
                 let mut shutdown = shutdown.clone();
                 let service = ConnectInfo {
-                    peer_addr: conn.inner().peer_addr(),
+                    peer,
                     inner: service.clone(),
                 };
                 tokio::spawn(async move {
@@ -95,6 +95,7 @@ where
                                 if let Err(err) = result {
                                     trace!(
                                         message = "failed to serve http connection",
+                                        %peer,
                                         %err
                                     );
                                 }
@@ -115,7 +116,7 @@ where
 }
 
 struct ConnectInfo<S> {
-    peer_addr: SocketAddr,
+    peer: SocketAddr,
     inner: S,
 }
 
@@ -128,7 +129,7 @@ where
     type Future = S::Future;
 
     fn call(&self, mut req: Request<B>) -> Self::Future {
-        req.extensions_mut().insert(self.peer_addr);
+        req.extensions_mut().insert(self.peer);
         self.inner.call(req)
     }
 }
