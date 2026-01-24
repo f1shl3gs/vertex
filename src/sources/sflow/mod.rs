@@ -77,17 +77,15 @@ async fn run(
 
     loop {
         let (size, peer) = tokio::select! {
-            result = socket.recv_from(&mut buf) => {
-                match result {
-                    Ok(t) => t,
-                    Err(err) => {
-                        warn!(
-                            message = "recv datagram failed",
-                            %err,
-                        );
+            result = socket.recv_from(&mut buf) => match result {
+                Ok(t) => t,
+                Err(err) => {
+                    warn!(
+                        message = "recv datagram failed",
+                        %err,
+                    );
 
-                        return Err(());
-                    }
+                    return Err(());
                 }
             },
             _ = &mut shutdown => break,

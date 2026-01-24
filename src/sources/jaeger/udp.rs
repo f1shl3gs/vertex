@@ -61,8 +61,8 @@ pub(super) async fn serve(
     address: SocketAddr,
     max_packet_size: usize,
     receive_buffer_size: Option<usize>,
-    shutdown: ShutdownSignal,
-    decode: impl Fn(Vec<u8>) -> std::io::Result<Batch> + Send + Sync + 'static,
+    mut shutdown: ShutdownSignal,
+    decode: impl Fn(&[u8]) -> std::io::Result<Batch> + Send + Sync + 'static,
     mut output: Pipeline,
 ) -> crate::Result<()> {
     let socket = UdpSocket::bind(address)
@@ -92,37 +92,35 @@ pub(super) async fn serve(
     loop {
         buf.resize(max_length, 0);
 
-        tokio::select! {
-            recv = socket.recv_from(&mut buf) => {
-                match recv {
-                    Ok((size, _orgin_address)) => {
-                        let payload = buf.split_to(size);
-                        recv_bytes.inc(size as u64);
-
-                        match decode(payload.to_vec()) {
-                            Ok(batch) => {
-                                if let Err(err) = output.send(batch).await {
-                                    error!(message = "Error sending trace", %err);
-
-                                    return Err(err.into());
-                                }
-                            }
-                            Err(err) => {
-                                warn!(
-                                    message = "Decoding batch failed",
-                                    %err,
-                                    internal_log_rate_limit = true
-                                );
-                            }
-                        }
-                    }
-                    Err(err) => {
-                        warn!(message = "Receiving udp packet failed", ?err);
-                    }
+        let (size, peer) = tokio::select! {
+            _ = &mut shutdown => return Ok(()),
+            result = socket.recv_from(&mut buf) => match result {
+                Ok(recv) => recv,
+                Err(err) => {
+                    warn!(message = "Receiving udp packet failed", ?err);
+                    continue;
                 }
-            },
+            }
+        };
 
-            _ = shutdown.clone() => return Ok(())
+        let payload = buf.split_to(size);
+        recv_bytes.inc(size as u64);
+
+        match decode(payload.as_ref()) {
+            Ok(batch) => {
+                if let Err(err) = output.send(batch).await {
+                    error!(message = "Error sending trace", %peer, %err);
+                    return Err(err.into());
+                }
+            }
+            Err(err) => {
+                warn!(
+                    message = "Decoding batch failed",
+                    %peer,
+                    %err,
+                    internal_log_rate_limit = true
+                );
+            }
         }
     }
 }

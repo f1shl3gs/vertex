@@ -12,7 +12,6 @@ use rskafka::client::Client;
 use rskafka::client::partition::{Compression, PartitionClient, UnknownTopicHandling};
 use rskafka::client::producer::Error;
 use rskafka::record::Record;
-use tokio::select;
 use tower::Service;
 use tripwire::{Trigger, Tripwire};
 
@@ -133,7 +132,7 @@ async fn update_topics(
 
     let mut ticker = tokio::time::interval(REFRESH_METADATA_INTERVAL);
     loop {
-        select! {
+        tokio::select! {
             _ = ticker.tick() => {},
             _ = &mut tripwire => {
                 debug!(message = "stop updating topic metadata...");

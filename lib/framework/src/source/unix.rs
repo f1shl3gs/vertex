@@ -198,58 +198,59 @@ async fn serve(
     loop {
         buf.resize(max_length, 0);
 
-        tokio::select! {
-            recv = socket.recv_from(&mut buf) => {
-                let (size, addr) = recv.map_err(|err| {
+        let (size, addr) = tokio::select! {
+            result = socket.recv_from(&mut buf) => match result {
+                Ok(recv) => recv,
+                Err(err) => {
                     error!(
                         message = "Error receiving data from Unix Socket",
                         %err,
                         socket = "unix",
                         internal_log_rate_limit = true
                     );
-                })?;
 
-                let received_from = if !addr.is_unnamed() {
-                    let path = addr.as_pathname().map(|err| err.to_owned());
-
-                    path.map(|p| p.to_string_lossy().into_owned().into())
-                } else {
-                    // In most cases, we'll be connecting to this socket from an
-                    // unnamed socket (a socket not bound to a file). Instead of a
-                    // filename, we'll surface a specific host value.
-                    Some(UNNAMED_SOCKET_HOST.into())
-                };
-
-                let payload = buf.split_to(size);
-
-                let mut stream = FramedRead::new(payload.as_ref(), decoder.clone());
-                while let Some(result) = stream.next().await {
-                    match result {
-                        Ok((mut events, _byte_size)) => {
-                            handle_events(&mut events, received_from.as_ref());
-
-                            if let Err(_err) = output.send(events).await {
-                                warn!(
-                                    message = "failed to forward events, cause downstream is closed"
-                                );
-
-                                break
-                            }
-                        }
-                        Err(err) => {
-                            warn!(
-                                message = "Error while receiving data from Unix socket",
-                                internal_log_rate_limit = true,
-                            );
-
-                            if !err.can_continue() {
-                                break
-                            }
-                        }
-                    }
+                    return Err(());
                 }
             },
             _ = &mut shutdown => break,
+        };
+
+        let received_from = if !addr.is_unnamed() {
+            let path = addr.as_pathname().map(|err| err.to_owned());
+
+            path.map(|p| p.to_string_lossy().into_owned().into())
+        } else {
+            // In most cases, we'll be connecting to this socket from an
+            // unnamed socket (a socket not bound to a file). Instead of a
+            // filename, we'll surface a specific host value.
+            Some(UNNAMED_SOCKET_HOST.into())
+        };
+
+        let payload = buf.split_to(size);
+        let mut stream = FramedRead::new(payload.as_ref(), decoder.clone());
+
+        while let Some(result) = stream.next().await {
+            match result {
+                Ok((mut events, _byte_size)) => {
+                    handle_events(&mut events, received_from.as_ref());
+
+                    if let Err(_err) = output.send(events).await {
+                        warn!(message = "failed to forward events, cause downstream is closed");
+
+                        break;
+                    }
+                }
+                Err(err) => {
+                    warn!(
+                        message = "Error while receiving data from Unix socket",
+                        internal_log_rate_limit = true,
+                    );
+
+                    if !err.can_continue() {
+                        break;
+                    }
+                }
+            }
         }
     }
 

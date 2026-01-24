@@ -80,10 +80,7 @@ impl Elasticsearch {
     ) -> Result<(), ()> {
         loop {
             tokio::select! {
-                _ = &mut shutdown => {
-                    return Ok(())
-                },
-
+                _ = &mut shutdown => return Ok(()),
                 _ = interval.tick() => {
                     let metrics = self.collect().await;
 

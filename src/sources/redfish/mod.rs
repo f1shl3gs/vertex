@@ -154,9 +154,7 @@ async fn scrape_loop(
     loop {
         tokio::select! {
             _ = ticker.tick() => {}
-            _ = &mut shutdown => {
-                break
-            }
+            _ = &mut shutdown => break,
         }
 
         let start = Instant::now();
