@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1769284494226,
+  "lastUpdate": 1769350233254,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1fd82d9854cca86d0f871f5476aaaafa50bc2c99",
-          "message": "Merge pull request #2663 from f1shl3gs/dependabot/cargo/tokio-util-0.7.17\n\nchore(deps): bump tokio-util from 0.7.16 to 0.7.17",
-          "timestamp": "2025-11-03T18:53:10+08:00",
-          "tree_id": "ec90ee2f06dde3dab94cb7cd7a632cc5f2df4f57",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1fd82d9854cca86d0f871f5476aaaafa50bc2c99"
-        },
-        "date": 1762167872676,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 596,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41036.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "067de49249180b6b03bcfdbd2575f0d8e21656a6",
           "message": "Merge pull request #2664 from f1shl3gs/sources/wireless\n\nsources/wireless: init",
           "timestamp": "2025-11-04T08:52:24+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 577,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40908.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c68fd55dce9fbd6c9541d4ef0d08f0ef3fc7ed12",
+          "message": "Merge pull request #2765 from f1shl3gs/examples/cleanup_filestats\n\nexamples: cleanup filestats.yml",
+          "timestamp": "2026-01-25T21:58:56+08:00",
+          "tree_id": "90114bdb0f4ab1a7fcf4a25149a7af1e654762dc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c68fd55dce9fbd6c9541d4ef0d08f0ef3fc7ed12"
+        },
+        "date": 1769350210793,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 591,
             "unit": "s"
           },
           {
