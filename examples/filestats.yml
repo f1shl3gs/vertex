@@ -4,14 +4,9 @@ sources:
     include: ./examples/*.yml
 
 sinks:
-  blackhole:
-    type: blackhole
+  stdout:
+    type: console
     inputs:
       - files
-  # stdout:
-  #   type: console
-  #   inputs:
-  #     - files
-  #   encoding:
-  #     codec: text
-      # pretty: true
+    encoding:
+      codec: text
