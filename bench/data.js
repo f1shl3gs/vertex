@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1769350233254,
+  "lastUpdate": 1769625645408,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "067de49249180b6b03bcfdbd2575f0d8e21656a6",
-          "message": "Merge pull request #2664 from f1shl3gs/sources/wireless\n\nsources/wireless: init",
-          "timestamp": "2025-11-04T08:52:24+08:00",
-          "tree_id": "6836fc2ef4ef1adb58d5f47665ac4084a47b6ff7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/067de49249180b6b03bcfdbd2575f0d8e21656a6"
-        },
-        "date": 1762218225620,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 587,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41117.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "18d8f86ba3ed4779c7efedf68060af3cb761c290",
           "message": "Merge pull request #2665 from f1shl3gs/dependabot/cargo/rustls-0.23.35\n\nchore(deps): bump rustls from 0.23.34 to 0.23.35",
           "timestamp": "2025-11-05T11:58:08+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40908.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3f4884e37b94dc293223d06b30bfc1ff27c28e37",
+          "message": "Merge pull request #2766 from f1shl3gs/dependabot/cargo/tonic-d6c1aa6b55\n\nchore(deps): bump the tonic group with 4 updates",
+          "timestamp": "2026-01-29T02:28:42+08:00",
+          "tree_id": "4ecba5b4e38be24ff8f12dc7ea4b013c3d8a82ea",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3f4884e37b94dc293223d06b30bfc1ff27c28e37"
+        },
+        "date": 1769625617771,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 595,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40916.1,
             "unit": "KiB"
           }
         ]
