@@ -1,9 +1,8 @@
 use std::pin::Pin;
 use std::sync::Arc;
-use std::task::{Context, Poll};
+use std::task::{Context, Poll, ready};
 use std::time::Instant;
 
-use futures::ready;
 use pin_project_lite::pin_project;
 use tokio::sync::OwnedSemaphorePermit;
 

@@ -1,9 +1,8 @@
 use std::marker::PhantomPinned;
 use std::pin::Pin;
-use std::task::{Context, Poll};
+use std::task::{Context, Poll, ready};
 
 use bytes::{Buf, BufMut};
-use futures::ready;
 use hyper::rt;
 use pin_project_lite::pin_project;
 

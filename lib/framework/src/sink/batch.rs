@@ -3,13 +3,13 @@ use std::fmt::{self, Debug, Formatter};
 use std::hash::Hash;
 use std::marker::PhantomData;
 use std::pin::Pin;
-use std::task::{Context, Poll};
+use std::task::{Context, Poll, ready};
 use std::time::Duration;
 
 use event::EventStatus;
 use futures::future::BoxFuture;
 use futures::stream::FuturesUnordered;
-use futures::{FutureExt, Sink, Stream, TryFutureExt, ready};
+use futures::{FutureExt, Sink, Stream, TryFutureExt};
 use pin_project_lite::pin_project;
 use tokio::sync::oneshot;
 use tokio::time::{Sleep, sleep};

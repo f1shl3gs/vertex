@@ -1,6 +1,6 @@
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr};
 use std::pin::Pin;
-use std::task::{Context, Poll};
+use std::task::{Context, Poll, ready};
 use std::time::Duration;
 
 use backoff::ExponentialBackoff;
@@ -8,7 +8,9 @@ use bytes::BytesMut;
 use codecs::encoding::Transformer;
 use configurable::Configurable;
 use event::{Event, EventContainer, EventStatus, Events, Finalizable};
-use futures::{FutureExt, StreamExt, future::BoxFuture, ready, stream::BoxStream};
+use futures::future::BoxFuture;
+use futures::stream::BoxStream;
+use futures::{FutureExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tokio::{net::UdpSocket, sync::oneshot};

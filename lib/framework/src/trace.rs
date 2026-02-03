@@ -7,7 +7,7 @@ use std::sync::{Mutex, MutexGuard, OnceLock};
 use event::LogRecord;
 use event::log::Value;
 use event::trace::{Span, SpanId, TraceId};
-use futures::{Stream, StreamExt, future::ready};
+use futures::{Stream, StreamExt};
 use rand::Rng;
 use tokio::sync::broadcast::{self, Receiver, Sender};
 use tokio_stream::wrappers::BroadcastStream;
@@ -67,7 +67,7 @@ impl TraceSubscription {
         // We ignore errors because the only error we get is when the broadcast receiver
         // lags, and there's nothing we can actually do about that so there's no reason
         // to force callers to even deal with it.
-        BroadcastStream::new(self.receiver).filter_map(|item| ready(item.ok()))
+        BroadcastStream::new(self.receiver).filter_map(|item| futures::future::ready(item.ok()))
     }
 }
 
@@ -85,7 +85,7 @@ impl SpanSubscription {
     }
 
     pub fn into_stream(self) -> impl Stream<Item = Span> + Unpin {
-        BroadcastStream::new(self.receiver).filter_map(|item| ready(item.ok()))
+        BroadcastStream::new(self.receiver).filter_map(|item| futures::future::ready(item.ok()))
     }
 }
 

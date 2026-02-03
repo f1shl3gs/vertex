@@ -2,12 +2,12 @@ use std::fmt;
 use std::marker::PhantomData;
 use std::pin::Pin;
 use std::sync::Arc;
-use std::task::{Context, Poll};
+use std::task::{Context, Poll, ready};
 use std::time::Duration;
 
 use bytes::Bytes;
 use event::{Event, EventFinalizers, EventStatus, Finalizable};
-use futures::{future::BoxFuture, ready};
+use futures::future::BoxFuture;
 use http::{Request, Response, StatusCode};
 use http_body_util::{BodyExt, Full};
 use pin_project_lite::pin_project;

@@ -2,10 +2,10 @@ use std::collections::HashMap;
 use std::hash::{BuildHasherDefault, Hash};
 use std::num::NonZeroUsize;
 use std::pin::Pin;
-use std::task::{Context, Poll};
+use std::task::{Context, Poll, ready};
 use std::time::Duration;
 
-use futures::{Stream, ready};
+use futures::Stream;
 use pin_project_lite::pin_project;
 use tokio_util::time::DelayQueue;
 use tokio_util::time::delay_queue::Key;
