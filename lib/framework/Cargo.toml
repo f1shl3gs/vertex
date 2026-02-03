@@ -59,7 +59,7 @@ percent-encoding = { version = "2.3.2", default-features = false }
 pin-project-lite = { version = "0.2.16", default-features = false }
 pkcs8 = { version = "0.10.2", default-features = false, features = ["pkcs5", "std", "encryption"] }
 rand = { version = "0.9.2", default-features = false }
-regex = { version = "1.12.2", default-features = false }
+regex = { version = "1.12.3", default-features = false }
 resolver = { path = "../resolver" }
 rustls = { version = "0.23.36", default-features = false, features = ["ring"] }
 rustls-native-certs = { version = "0.8.3", default-features = false }
