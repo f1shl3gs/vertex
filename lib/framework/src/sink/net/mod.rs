@@ -10,12 +10,12 @@ pub use unix::UnixSinkConfig;
 
 use std::marker::Unpin;
 use std::pin::Pin;
-use std::task::{Context, Poll};
+use std::task::{Context, Poll, ready};
 
 use bytes::Bytes;
 use codec::BytesCodec;
 use event::{EventFinalizers, EventStatus};
-use futures::{Sink, ready};
+use futures::Sink;
 use pin_project_lite::pin_project;
 use thiserror::Error;
 use tokio::io::AsyncWrite;

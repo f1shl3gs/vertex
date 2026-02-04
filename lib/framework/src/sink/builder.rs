@@ -5,7 +5,8 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use event::Finalizable;
-use futures::{Stream, StreamExt, stream::Map};
+use futures::stream::Map;
+use futures::{Stream, StreamExt};
 use tower::Service;
 use typesize::TypeSize;
 

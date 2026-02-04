@@ -1,9 +1,9 @@
 use std::future::Future;
 use std::pin::Pin;
-use std::task::{Context, Poll};
+use std::task::{Context, Poll, ready};
 
 use futures::stream::Peekable;
-use futures::{Sink, SinkExt, Stream, StreamExt, ready};
+use futures::{Sink, SinkExt, Stream, StreamExt};
 
 impl<T: ?Sized, Item> VecSinkExt<Item> for T where T: Sink<Item> {}
 

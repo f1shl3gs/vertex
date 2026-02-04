@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 use std::pin::Pin;
 use std::sync::Arc;
-use std::task::{Context, Poll};
+use std::task::{Context, Poll, ready};
 
-use futures::{Future, FutureExt, future, ready};
+use futures::{Future, FutureExt, future};
 use pin_project_lite::pin_project;
 use tokio::time::{Instant, timeout_at};
 use tripwire::{Trigger, Tripwire};

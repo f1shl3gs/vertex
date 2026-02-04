@@ -5,7 +5,8 @@ use std::time::Instant;
 
 use buffer::{BufferReceiver, BufferSender, WhenFull};
 use event::Events;
-use futures::{FutureExt, StreamExt, stream::FuturesOrdered};
+use futures::stream::FuturesOrdered;
+use futures::{FutureExt, StreamExt};
 use metrics::{Attributes, Counter};
 use tokio::time::timeout;
 use tracing::Instrument;

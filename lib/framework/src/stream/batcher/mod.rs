@@ -6,10 +6,10 @@ pub mod limiter;
 pub use config::BatchConfig;
 
 use std::pin::Pin;
-use std::task::{Context, Poll};
+use std::task::{Context, Poll, ready};
 
 use futures::stream::{Fuse, Stream};
-use futures::{Future, StreamExt, ready};
+use futures::{Future, StreamExt};
 use pin_project_lite::pin_project;
 use tokio::time::Sleep;
 

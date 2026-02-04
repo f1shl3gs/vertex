@@ -4,10 +4,10 @@ use std::pin::Pin;
 use std::sync::Arc;
 use std::sync::atomic::AtomicUsize;
 use std::sync::atomic::Ordering;
-use std::task::{Context, Poll};
+use std::task::{Context, Poll, ready};
 
 use event::Event;
-use futures::{FutureExt, Stream, StreamExt, TryStreamExt, ready};
+use futures::{FutureExt, Stream, StreamExt, TryStreamExt};
 use tokio::io::{AsyncRead, AsyncWrite};
 use tokio::net::TcpListener;
 use tokio::sync::oneshot;
