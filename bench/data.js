@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1770086040153,
+  "lastUpdate": 1770184775023,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3d090d3fe0bfbb85df88a68b5a9b7bf73c1602d0",
-          "message": "Merge pull request #2667 from f1shl3gs/lib/prometheus/fix_metric_and_label_name_parsing\n\nlib/prometheus: fix metric & label name parsing",
-          "timestamp": "2025-11-05T12:14:23+08:00",
-          "tree_id": "a0044e70e59866a4e9ec1feba8ba2c4ee4cba6f9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3d090d3fe0bfbb85df88a68b5a9b7bf73c1602d0"
-        },
-        "date": 1762316741826,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 587,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41118.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2b12e3be9e6ad123d4829090375218dd50205f9d",
           "message": "Merge pull request #2666 from f1shl3gs/sources/http_check/add_tls_timing\n\nsources/http_check: add tls timing",
           "timestamp": "2025-11-05T12:15:21+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 587,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40916.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b1c961686da5c7b257299c3cdcff73b362dc1f55",
+          "message": "Merge pull request #2768 from f1shl3gs/misc/use_std_task_ready\n\nmisc: use std::task::ready",
+          "timestamp": "2026-02-04T13:48:18+08:00",
+          "tree_id": "2d3d02925383773eb1cd5a5221c2f035f941352c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b1c961686da5c7b257299c3cdcff73b362dc1f55"
+        },
+        "date": 1770184752446,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 571,
             "unit": "s"
           },
           {
