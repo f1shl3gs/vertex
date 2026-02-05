@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1770282234313,
+  "lastUpdate": 1770282798623,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "90b5c5950fe62f6faf876f83f1b6d943d9d1de4e",
-          "message": "Merge pull request #2673 from f1shl3gs/providers/http/simplify_decoder\n\nproviders/http: simplify decoder",
-          "timestamp": "2025-11-09T21:11:50+08:00",
-          "tree_id": "4269761bdb96a8075d7ad9c518d85c90fcdf0ce2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/90b5c5950fe62f6faf876f83f1b6d943d9d1de4e"
-        },
-        "date": 1762694582645,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 588,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41203.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "07fc4d7b6b440378302f4e19d927aed0367cb24a",
           "message": "Merge pull request #2674 from f1shl3gs/dependabot/cargo/syn-2.0.110\n\nchore(deps): bump syn from 2.0.109 to 2.0.110",
           "timestamp": "2025-11-10T14:04:09+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 592,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40914.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5f1a5ec813600eb6ee1f526e224f819872782c34",
+          "message": "Merge pull request #2774 from f1shl3gs/dependabot/cargo/proptest-derive-0.8.0\n\nchore(deps): bump proptest-derive from 0.7.0 to 0.8.0",
+          "timestamp": "2026-02-05T17:01:52+08:00",
+          "tree_id": "a3234af924e043a9471a2f4cee3135b7ff2d71bc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5f1a5ec813600eb6ee1f526e224f819872782c34"
+        },
+        "date": 1770282771596,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 580,
             "unit": "s"
           },
           {
