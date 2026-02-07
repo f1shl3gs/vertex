@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1770462939880,
+  "lastUpdate": 1770462972922,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7327b3ed499c6d751892dc961a3859acad4db3cb",
-          "message": "Merge pull request #2676 from f1shl3gs/dependabot/cargo/quick-xml-0.38.4\n\nchore(deps): bump quick-xml from 0.38.3 to 0.38.4",
-          "timestamp": "2025-11-12T18:49:01+08:00",
-          "tree_id": "42a7f172ef92a5a5048a546bdd90fd02d2467973",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7327b3ed499c6d751892dc961a3859acad4db3cb"
-        },
-        "date": 1762945221911,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 574,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41198.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "da4b01d4bd87745ed0afdad576531fa80f1f5396",
           "message": "Merge pull request #2675 from f1shl3gs/dependabot/cargo/hyper-1.8.0\n\nchore(deps): bump hyper from 1.7.0 to 1.8.0",
           "timestamp": "2025-11-12T18:49:22+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40914.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5ea2a123880fa36a9fec3a681d73cc57166990e2",
+          "message": "Merge pull request #2777 from f1shl3gs/dependabot/cargo/memchr-2.8.0\n\nchore(deps): bump memchr from 2.7.6 to 2.8.0",
+          "timestamp": "2026-02-07T19:04:43+08:00",
+          "tree_id": "d3a740e1d6013eaddfa1ce39dcd13e085b57ee61",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5ea2a123880fa36a9fec3a681d73cc57166990e2"
+        },
+        "date": 1770462950026,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 579,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40912.2,
             "unit": "KiB"
           }
         ]
