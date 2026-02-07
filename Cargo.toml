@@ -477,7 +477,7 @@ tonic-health = { version = "0.14.3", default-features = false, optional = true }
 pprof = { version = "0.15.0", default-features = false, optional = true, features = ["flamegraph", "prost-codec"] }
 
 # Cli
-argh = { version = "0.1.13", default-features = false, features = ["help"] }
+argh = { version = "0.1.14", default-features = false, features = ["help"] }
 
 # External libs
 base64 = { version = "0.22.1", default-features = false, optional = true }
