@@ -22,7 +22,7 @@ configurable = { path = "../configurable" }
 event = { path = "../event" }
 futures = { version = "0.3.31", default-features = false }
 log_schema = { path = "../log_schema" }
-memchr = { version = "2.7.6", default-features = false }
+memchr = { version = "2.8.0", default-features = false }
 serde = { version = "1.0.228", default-features = false }
 serde_json = { version = "1.0.149", default-features = false, features = ["std"] }
 tokio = { version = "1.49.0", default-features = false }
