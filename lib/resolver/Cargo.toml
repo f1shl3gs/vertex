@@ -9,7 +9,7 @@ tokio = { version = "1.49.0", default-features = false, features = ["macros", "r
 
 [dependencies]
 libc = { version = "0.2.181", default-features = false }
-rand = { version = "0.9.2", default-features = false, features = ["thread_rng"] }
+rand = { version = "0.10.0", default-features = false, features = ["thread_rng"] }
 tokio = { version = "1.49.0", default-features = false, features = ["io-util", "net", "sync", "time"] }
 
 [target.'cfg(target_os = "windows")'.dependencies]

@@ -9,5 +9,5 @@ tokio = { version = "1.49.0", default-features = false, features = ["net", "rt-m
 
 [dependencies]
 chrono = { version = "0.4.43", default-features = false, features = ["now"] }
-rand = { version = "0.9.2", default-features = false, features = ["std_rng", "std"] }
+rand = { version = "0.10.0", default-features = false, features = ["std_rng", "std"] }
 tokio = { version = "1.49.0", default-features = false, features = ["net"] }
