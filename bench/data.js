@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1770743102864,
+  "lastUpdate": 1770759630681,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "621b69bc5c9ae129c5593af9529f5cc9be8a7d1c",
-          "message": "Merge pull request #2680 from f1shl3gs/lib/codecs/fix_logfmt_encoding\n\nlib/codecs: fix logfmt encoding",
-          "timestamp": "2025-11-14T11:53:48+08:00",
-          "tree_id": "a9e581ef47f65cc4bed70bdf23a1240450eaa24a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/621b69bc5c9ae129c5593af9529f5cc9be8a7d1c"
-        },
-        "date": 1763093091806,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 578,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41246.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "45f23fbcd98d38c6fab69eb60d40aa44cafe8de2",
           "message": "Merge pull request #2681 from f1shl3gs/lib/codecs/encoding/logfmt/fix_downflow\n\nlib/codecs: fix downflow panic if log have no fields in logfmt encoder",
           "timestamp": "2025-11-14T12:51:20+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 587,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40920.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eeb3db6ab2a29048e64404b6b1e7bddf7d1a7a29",
+          "message": "Merge pull request #2782 from f1shl3gs/dependabot/cargo/quickcheck-1.1.0\n\nchore(deps): bump quickcheck from 1.0.3 to 1.1.0",
+          "timestamp": "2026-02-11T05:28:57+08:00",
+          "tree_id": "e5d22b1aa7b79777eced821c44371daa3e2001fb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/eeb3db6ab2a29048e64404b6b1e7bddf7d1a7a29"
+        },
+        "date": 1770759607680,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 577,
             "unit": "s"
           },
           {
