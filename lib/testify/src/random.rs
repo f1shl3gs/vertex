@@ -3,7 +3,7 @@ use std::iter;
 
 use event::{BatchNotifier, Event, Events, LogRecord};
 use futures::{Stream, StreamExt, stream};
-use rand::Rng;
+use rand::RngExt;
 use rand::distr::Alphanumeric;
 
 pub fn random_string(len: usize) -> String {

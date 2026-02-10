@@ -5,7 +5,7 @@ use std::time::{Duration, Instant, SystemTime};
 use buffer::{BufferConfig, BufferReceiver, BufferSender, BufferType, Encodable};
 use bytes::{Buf, BufMut};
 use finalize::{AddBatchNotifier, BatchNotifier};
-use rand::Rng;
+use rand::RngExt;
 use rand::distr::Alphanumeric;
 
 pub struct Message {

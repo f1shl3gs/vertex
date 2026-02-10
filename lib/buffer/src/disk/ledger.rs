@@ -385,7 +385,7 @@ impl Ledger {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use rand::Rng;
+    use rand::RngExt;
     use rand::distr::Alphanumeric;
 
     #[test]

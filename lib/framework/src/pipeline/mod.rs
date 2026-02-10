@@ -295,7 +295,7 @@ mod tests {
     use super::*;
     use chrono::{DateTime, TimeDelta, Utc};
     use event::LogRecord;
-    use rand::Rng;
+    use rand::RngExt;
 
     #[tokio::test]
     async fn emits_lag_time_for_log() {

@@ -4,7 +4,7 @@ use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::Instant;
 
 use humanize::bytes::parse_bytes;
-use rand::Rng;
+use rand::RngExt;
 use rand::distr::Alphanumeric;
 
 static LINES: AtomicU64 = AtomicU64::new(0);
