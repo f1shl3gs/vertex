@@ -14,7 +14,7 @@ use std::time::{Duration, Instant};
 use configurable::{Configurable, configurable_component};
 use event::Event;
 use futures::{FutureExt, SinkExt, future::BoxFuture, stream};
-use rand::Rng;
+use rand::RngExt;
 use rand_distr::Exp1;
 use serde::{Deserialize, Serialize};
 use testify::stats::{HistogramStats, LevelTimeHistogram, TimeHistogram, WeightedSumStats};

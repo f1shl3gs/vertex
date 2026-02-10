@@ -7,7 +7,7 @@ use configurable::{Configurable, configurable_component};
 use framework::Source;
 use framework::config::{OutputType, SourceConfig, SourceContext};
 use futures::StreamExt;
-use rand::Rng;
+use rand::RngExt;
 use serde::{Deserialize, Serialize};
 use tokio_util::codec::FramedRead;
 

@@ -6,7 +6,7 @@ use bytes::{Buf, BufMut};
 use finalize::{
     AddBatchNotifier, BatchNotifier, EventFinalizer, EventFinalizers, EventStatus, Finalizable,
 };
-use rand::Rng;
+use rand::RngExt;
 use rand::distr::Alphanumeric;
 use tokio_test::task::spawn;
 use tokio_test::{assert_pending, assert_ready};

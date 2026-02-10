@@ -11,7 +11,7 @@ use framework::config::default_interval;
 use framework::config::{OutputType, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
 use parking_lot::Mutex;
-use rand::{Rng, rng};
+use rand::{RngExt, rng};
 use socket2::{Domain, Protocol, Socket, Type};
 use tokio::net::UdpSocket;
 use tokio::task::JoinSet;

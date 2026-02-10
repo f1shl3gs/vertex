@@ -8,7 +8,7 @@ use event::LogRecord;
 use event::log::Value;
 use event::trace::{Span, SpanId, TraceId};
 use futures::{Stream, StreamExt};
-use rand::Rng;
+use rand::RngExt;
 use tokio::sync::broadcast::{self, Receiver, Sender};
 use tokio_stream::wrappers::BroadcastStream;
 use tracing::span::Attributes;

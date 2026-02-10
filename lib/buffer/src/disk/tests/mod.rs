@@ -11,7 +11,7 @@ mod size_limit;
 use std::path::PathBuf;
 use std::sync::Arc;
 
-use rand::Rng;
+use rand::RngExt;
 use rand::distr::Alphanumeric;
 use tracing::trace;
 use tracing_subscriber::EnvFilter;
