@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1770711383757,
+  "lastUpdate": 1770741764296,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e45efba2a8a231d42da750b7ab4981f9fa4dee2f",
-          "message": "Merge pull request #2678 from f1shl3gs/dependabot/cargo/hyper-util-0.1.18\n\nchore(deps): bump hyper-util from 0.1.17 to 0.1.18",
-          "timestamp": "2025-11-14T08:21:29+08:00",
-          "tree_id": "280a6a53fc5bf5eaccbc07fbcbe8106f35e3bc64",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e45efba2a8a231d42da750b7ab4981f9fa4dee2f"
-        },
-        "date": 1763080341536,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 575,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41248.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "74a5b4a366faa6792e1f9055458472437d698fca",
           "message": "Merge pull request #2679 from f1shl3gs/dependabot/cargo/hyper-1.8.1\n\nchore(deps): bump hyper from 1.8.0 to 1.8.1",
           "timestamp": "2025-11-14T09:01:27+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 591,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40902.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "466b8fde3dabda79918417dff294d9295b396922",
+          "message": "Merge pull request #2781 from f1shl3gs/dependabot/cargo/temp-dir-0.2.0\n\nchore(deps): bump temp-dir from 0.1.16 to 0.2.0",
+          "timestamp": "2026-02-11T00:31:32+08:00",
+          "tree_id": "cd64b2280f8c71aeb60bd486b07ee990d1814b9e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/466b8fde3dabda79918417dff294d9295b396922"
+        },
+        "date": 1770741741926,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 565,
             "unit": "s"
           },
           {
