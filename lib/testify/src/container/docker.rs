@@ -9,6 +9,7 @@ use hyper::{Method, Request, StatusCode};
 use hyper_unix::UnixConnector;
 use hyper_util::rt::TokioExecutor;
 use percent_encoding::NON_ALPHANUMERIC;
+use serde::de::Error as _;
 use serde::{Deserialize, Serialize};
 use tokio_util::bytes::BytesMut;
 use tracing::{info, warn};
@@ -295,9 +296,23 @@ impl Client {
         }
 
         #[derive(Deserialize)]
-        struct NetworkSettings {
+        struct Bridge {
             #[serde(rename = "IPAddress")]
             ip_address: IpAddr,
+        }
+
+        #[derive(Deserialize)]
+        struct Networks {
+            bridge: Option<Bridge>,
+        }
+
+        #[derive(Deserialize)]
+        struct NetworkSettings {
+            #[serde(rename = "IPAddress")]
+            ip_address: Option<IpAddr>,
+
+            #[serde(rename = "Networks")]
+            networks: Networks,
         }
 
         #[derive(Deserialize)]
@@ -308,7 +323,17 @@ impl Client {
 
         let resp = serde_json::from_slice::<InspectResponse>(&data)?;
 
-        Ok(resp.network_settings.ip_address)
+        if let Some(addr) = resp.network_settings.ip_address {
+            return Ok(addr);
+        }
+
+        if let Some(bridge) = resp.network_settings.networks.bridge {
+            return Ok(bridge.ip_address);
+        }
+
+        Err(Error::Deserialize(serde_json::Error::custom(
+            "no IP address found",
+        )))
     }
 
     pub async fn tail_logs(

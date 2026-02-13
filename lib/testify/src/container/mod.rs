@@ -7,7 +7,6 @@ use docker::{HostConfig, LogOutput, PortBinding};
 use futures::{StreamExt, TryStreamExt};
 use tokio_util::codec::FramedRead;
 use tokio_util::io::StreamReader;
-use tracing::info;
 
 use super::wait::wait_for_tcp;
 
@@ -173,14 +172,14 @@ impl Container {
         if !self.ports.is_empty() {
             let ip = client.inspect_ip_address(&id).await.unwrap();
             for key in self.ports.keys() {
-                if let Some(ps) = key.strip_suffix("/tcp") {
-                    let port = ps.parse::<u16>().unwrap();
-                    let addr = SocketAddr::new(ip, port);
+                let Some(ps) = key.strip_suffix("/tcp") else {
+                    continue;
+                };
 
-                    info!("wait for tcp {}", addr);
+                let port = ps.parse::<u16>().unwrap();
+                let addr = SocketAddr::new(ip, port);
 
-                    wait_for_tcp(SocketAddr::from((ip, port))).await;
-                }
+                wait_for_tcp(addr).await;
             }
         }
 
