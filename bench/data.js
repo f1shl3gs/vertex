@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1771001368792,
+  "lastUpdate": 1771004166861,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "767fd64976eec77645e52a392e7763020670bb6e",
-          "message": "Merge pull request #2685 from f1shl3gs/cli/launch/move_tracing_init_to_the_begining\n\ncli/launch: move tracing init to the beginning",
-          "timestamp": "2025-11-20T00:57:56+08:00",
-          "tree_id": "5619cd8e0f21c2ef541a4afa0653054da54b10b4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/767fd64976eec77645e52a392e7763020670bb6e"
-        },
-        "date": 1763572142992,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 585,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41651.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f9787c5ee9b1c341ffffd61c69637f9ea3ca5f12",
           "message": "Merge pull request #2686 from f1shl3gs/examples/rename_zpages_to_tap\n\nexample: rename zpages.yaml to tap.yaml",
           "timestamp": "2025-11-20T20:00:20+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40910.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "36e9a103a657a3f0edc59bf5f575a6b17daf98d3",
+          "message": "Merge pull request #2788 from f1shl3gs/sources/node/add_kernel_hung\n\nsources/node: add kernel_hung",
+          "timestamp": "2026-02-14T01:23:49+08:00",
+          "tree_id": "e3aeb1976c5360edde4468397a2e4f33b0091b17",
+          "url": "https://github.com/f1shl3gs/vertex/commit/36e9a103a657a3f0edc59bf5f575a6b17daf98d3"
+        },
+        "date": 1771004143761,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 627,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40922.4,
             "unit": "KiB"
           }
         ]
