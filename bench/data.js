@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1770975217080,
+  "lastUpdate": 1770998734809,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "735ffdb52cccc8f678c2567986bfba1e543c01dc",
-          "message": "Merge pull request #2683 from f1shl3gs/toolchain/1.91.1\n\ntoolchain: update to 1.91.1",
-          "timestamp": "2025-11-17T12:47:28+08:00",
-          "tree_id": "47b36389537cf5b7f822a71b1bd04bb4121a85c2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/735ffdb52cccc8f678c2567986bfba1e543c01dc"
-        },
-        "date": 1763355511295,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 583,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41276.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5c7320468c55a7778b0fb50ce922f0e5eb566071",
           "message": "Merge pull request #2684 from f1shl3gs/sources/gnmi\n\nsources/gnmi: init",
           "timestamp": "2025-11-20T00:26:43+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 601,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40921.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d11040dcf9b8bed26f4212805d4f9a0e1af3ef52",
+          "message": "Merge pull request #2786 from f1shl3gs/misc/fix_container_based_integration_tests\n\nmisc: fix container based integration tests",
+          "timestamp": "2026-02-13T23:54:24+08:00",
+          "tree_id": "a595e583763a231dfe0ed6754bba3e713f42cf63",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d11040dcf9b8bed26f4212805d4f9a0e1af3ef52"
+        },
+        "date": 1770998712597,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 565,
             "unit": "s"
           },
           {
