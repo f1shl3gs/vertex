@@ -21,6 +21,8 @@ mod filesystem;
 pub mod hwmon;
 mod infiniband;
 mod ipvs;
+#[cfg(target_os = "linux")]
+mod kernel_hung;
 mod lnstat;
 mod loadavg;
 mod mdadm;
@@ -172,6 +174,9 @@ struct Collectors {
     #[serde(default = "default_ipvs_config")]
     ipvs: Option<ipvs::Config>,
 
+    #[serde(default)]
+    kernel_hung: bool,
+
     #[serde(default = "default_true")]
     loadavg: bool,
 
@@ -299,6 +304,7 @@ impl Default for Collectors {
             hwmon: true,
             infiniband: true,
             ipvs: default_ipvs_config(),
+            kernel_hung: false,
             loadavg: true,
             mdadm: true,
             memory: true,
@@ -590,6 +596,13 @@ async fn run(
             let proc_path = proc_path.clone();
             let conf = conf.clone();
             tasks.spawn(async move { record_gather!("ipvs", ipvs::gather(conf, proc_path)) });
+        }
+
+        if collectors.kernel_hung {
+            let proc_path = proc_path.clone();
+            tasks.spawn(
+                async move { record_gather!("kernel_hung", kernel_hung::gather(proc_path)) },
+            );
         }
 
         if collectors.loadavg {
