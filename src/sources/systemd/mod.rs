@@ -3,6 +3,7 @@ mod resolved;
 mod service;
 mod units;
 mod version;
+mod virtualization;
 mod watchdog;
 
 use std::time::Duration;
@@ -88,6 +89,20 @@ impl SourceConfig for Config {
                         0.0
                     }
                 };
+
+                match virtualization::collect(&mut client).await {
+                    Ok(metric) => {
+                        if let Err(_err) = output.send(metric).await {
+                            break;
+                        }
+                    }
+                    Err(err) => {
+                        warn!(
+                            message = "failed to get systemd virtualization type",
+                            %err
+                        );
+                    }
+                }
 
                 let mut metrics =
                     match units::collect(&mut client, &include, &exclude, version).await {
