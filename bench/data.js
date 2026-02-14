@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1771053246162,
+  "lastUpdate": 1771061517870,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b3708b1c1303a402be77c1a1992c87f6d47b4cef",
-          "message": "Merge pull request #2687 from f1shl3gs/cargo/update\n\ncargo update",
-          "timestamp": "2025-11-20T20:13:05+08:00",
-          "tree_id": "8a2acddf4fd0825eb378448ec146296383b3f8eb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b3708b1c1303a402be77c1a1992c87f6d47b4cef"
-        },
-        "date": 1763641468440,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 603,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41641.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "add0b82e515c1de6a74b0e37ac8a95968e028d57",
           "message": "Merge pull request #2689 from f1shl3gs/dependabot/github_actions/actions/checkout-6\n\nchore(ci): bump actions/checkout from 5 to 6",
           "timestamp": "2025-11-21T19:45:00+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 585,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40922.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f2c0a94fdfa895b903249f247a4a580b1898d59e",
+          "message": "Merge pull request #2790 from f1shl3gs/sources/node/add_erofs_in_default_exclude_fs_type\n\nsources/node: add erofs to default exclude fs type",
+          "timestamp": "2026-02-14T17:20:38+08:00",
+          "tree_id": "2eb5cba3efe47c69b3e5dc86d9c75d84d735e242",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f2c0a94fdfa895b903249f247a4a580b1898d59e"
+        },
+        "date": 1771061495815,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 579,
             "unit": "s"
           },
           {
