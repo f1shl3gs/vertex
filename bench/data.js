@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1771061517870,
+  "lastUpdate": 1771065731467,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "add0b82e515c1de6a74b0e37ac8a95968e028d57",
-          "message": "Merge pull request #2689 from f1shl3gs/dependabot/github_actions/actions/checkout-6\n\nchore(ci): bump actions/checkout from 5 to 6",
-          "timestamp": "2025-11-21T19:45:00+08:00",
-          "tree_id": "247f9f8bba781a9e66f50d38cf971fe45eb30fb3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/add0b82e515c1de6a74b0e37ac8a95968e028d57"
-        },
-        "date": 1763726161558,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 584,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41641.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6e4cbdec4810a00a534c44b166e8ba0d35459fd8",
           "message": "Merge pull request #2688 from f1shl3gs/dependabot/cargo/indexmap-2.12.1\n\nchore(deps): bump indexmap from 2.12.0 to 2.12.1",
           "timestamp": "2025-11-21T19:45:16+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40922.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3f631cabb0c8f3bb0b9fed42d36cfb8b745d2c13",
+          "message": "Merge pull request #2791 from f1shl3gs/sources/systemd/add_virtualization_type\n\nsources/systemd: add systemd virtualization type",
+          "timestamp": "2026-02-14T18:30:53+08:00",
+          "tree_id": "e3edae464ac6466c80680d140a61a441d63e5c15",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3f631cabb0c8f3bb0b9fed42d36cfb8b745d2c13"
+        },
+        "date": 1771065709355,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 574,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40928.4,
             "unit": "KiB"
           }
         ]
