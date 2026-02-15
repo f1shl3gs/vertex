@@ -27,7 +27,7 @@ rustls = { version = "0.23.36", default-features = false, features = ["ring"] }
 rustls-native-certs = { version = "0.8.3", default-features = false }
 
 # Future
-futures = { version = "0.3.31", default-features = false, features = ["alloc"] }
+futures = { version = "0.3.32", default-features = false, features = ["alloc"] }
 
 # HTTP
 headers = { version = "0.4.1", default-features = false }

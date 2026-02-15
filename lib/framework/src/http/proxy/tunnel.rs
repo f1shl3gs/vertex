@@ -1,6 +1,6 @@
 use std::fmt::Write as _;
 use std::io;
-use std::pin::Pin;
+use std::pin::{Pin, pin};
 use std::task::{Context, Poll};
 
 use bytes::{BytesMut, buf::Buf};
@@ -67,8 +67,7 @@ impl<S: Read + Write + Unpin> Future for Tunnel<S> {
 
         loop {
             if let TunnelState::Writing = &this.state {
-                let fut = this.stream.as_mut().unwrap().write_buf(&mut this.buf);
-                futures::pin_mut!(fut);
+                let fut = pin!(this.stream.as_mut().unwrap().write_buf(&mut this.buf));
                 let n = match fut.poll(ctx) {
                     Poll::Ready(Ok(n)) => n,
                     Poll::Ready(Err(err)) => return Poll::Ready(Err(err)),
@@ -84,8 +83,7 @@ impl<S: Read + Write + Unpin> Future for Tunnel<S> {
                     )));
                 }
             } else {
-                let fut = this.stream.as_mut().unwrap().read_buf(&mut this.buf);
-                futures::pin_mut!(fut);
+                let fut = pin!(this.stream.as_mut().unwrap().read_buf(&mut this.buf));
                 let n = match fut.poll(ctx) {
                     Poll::Ready(Ok(x)) => x,
                     Poll::Ready(Err(err)) => return Poll::Ready(Err(err)),

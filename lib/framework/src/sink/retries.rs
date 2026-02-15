@@ -2,7 +2,7 @@ use std::borrow::Cow;
 use std::cmp;
 use std::future::Future;
 use std::pin::Pin;
-use std::task::{Context, Poll};
+use std::task::{Context, Poll, ready};
 use std::time::Duration;
 
 use futures::FutureExt;
@@ -162,7 +162,7 @@ impl Future for RetryPolicyFuture {
     type Output = ();
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-        futures::ready!(self.delay.poll_unpin(cx));
+        ready!(self.delay.poll_unpin(cx));
         Poll::Ready(())
     }
 }

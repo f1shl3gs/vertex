@@ -2,7 +2,7 @@ use std::io::{self, Error, ErrorKind};
 use std::net::SocketAddr;
 use std::pin::Pin;
 use std::sync::Arc;
-use std::task::{Context, Poll};
+use std::task::{Context, Poll, ready};
 
 use futures::future::BoxFuture;
 use futures::{FutureExt, Stream, stream};
@@ -225,7 +225,7 @@ impl MaybeTlsIncomingStream<TcpStream> {
         loop {
             return match &mut this.state {
                 StreamState::Accepted(stream) => poll_fn(Pin::new(stream), cx),
-                StreamState::Accepting(fut) => match futures::ready!(fut.as_mut().poll(cx)) {
+                StreamState::Accepting(fut) => match ready!(fut.as_mut().poll(cx)) {
                     Ok(stream) => {
                         this.state = StreamState::Accepted(MaybeTlsStream::Tls { tls: stream });
                         continue;
@@ -272,7 +272,7 @@ impl AsyncWrite for MaybeTlsIncomingStream<TcpStream> {
                 }
                 poll_result => poll_result,
             },
-            StreamState::Accepting(fut) => match futures::ready!(fut.as_mut().poll(cx)) {
+            StreamState::Accepting(fut) => match ready!(fut.as_mut().poll(cx)) {
                 Ok(stream) => {
                     this.state = StreamState::Accepted(MaybeTlsStream::Tls { tls: stream });
                     Poll::Pending

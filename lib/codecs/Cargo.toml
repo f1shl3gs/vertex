@@ -10,7 +10,7 @@ syslog = ["dep:syslog_loose"]
 
 [dev-dependencies]
 event = { path = "../event", features = ["test"] }
-futures = { version = "0.3.31", default-features = false, features = ["async-await"]}
+futures = { version = "0.3.32", default-features = false, features = ["async-await"]}
 serde_yaml = { git = "https://github.com/f1shl3gs/serde-yaml.git", rev = "62dea63989d8bfd09a9453fa957605dcf09aa4a7", default-features = false }
 tokio = { version = "1.49.0", default-features = false, features = ["test-util", "macros"] }
 value = { path = "../value" }
@@ -20,7 +20,7 @@ bytes = { version = "1.11.1", default-features = false }
 chrono = { version = "0.4.43", default-features = false }
 configurable = { path = "../configurable" }
 event = { path = "../event" }
-futures = { version = "0.3.31", default-features = false }
+futures = { version = "0.3.32", default-features = false }
 log_schema = { path = "../log_schema" }
 memchr = { version = "2.8.0", default-features = false }
 serde = { version = "1.0.228", default-features = false }

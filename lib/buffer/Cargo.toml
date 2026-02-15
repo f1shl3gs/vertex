@@ -16,7 +16,7 @@ tracing = { version = "0.1.44", default-features = false, features = ["attribute
 bytes = { version = "1.11.1", default-features = false }
 crc32fast = { version = "1.5.0", default-features = false, features = ["std"] }
 finalize = { path = "../finalize" }
-futures = { version = "0.3.31", default-features = false }
+futures = { version = "0.3.32", default-features = false }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes", "serde"], rev = "29e9225d05de76c6d48134497aa4a94c2cd08380" }
 memmap2 = { version = "0.9.10", default-features = false }
 pin-project-lite = { version = "0.2.16", default-features = false }

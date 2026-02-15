@@ -10,7 +10,7 @@ hyper = { version = "1.8.1", default-features = false, features = ["full"] }
 http-body-util = { version = "0.1.3", default-features = false }
 hyper-util = { version = "0.1.20", default-features = false, features = ["client-legacy", "http1"] }
 hyper-unix = { path = "../hyper-unix" }
-futures = { version = "0.3.31", default-features = false }
+futures = { version = "0.3.32", default-features = false }
 percent-encoding = { version = "2.3.2", default-features = false }
 rand = { version = "0.10.0", default-features = false }
 serde = { version = "1.0.228", default-features = false }
