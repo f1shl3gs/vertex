@@ -46,6 +46,8 @@ mod sockstat;
 mod softirqs;
 mod softnet;
 mod stat;
+#[cfg(target_os = "linux")]
+mod swap;
 mod tapestats;
 mod tcpstat;
 mod thermal_zone;
@@ -240,6 +242,9 @@ struct Collectors {
     #[serde(default = "default_true")]
     stat: bool,
 
+    #[serde(default)]
+    swap: bool,
+
     #[serde(default = "default_true")]
     tapestats: bool,
 
@@ -325,6 +330,7 @@ impl Default for Collectors {
             softnet: true,
             softirqs: false,
             stat: true,
+            swap: false,
             tapestats: true,
             time: true,
             timex: true,
@@ -712,6 +718,11 @@ async fn run(
         if collectors.stat {
             let proc_path = proc_path.clone();
             tasks.spawn(async move { record_gather!("stat", stat::gather(proc_path)) });
+        }
+
+        if collectors.swap {
+            let proc_path = proc_path.clone();
+            tasks.spawn(async move { record_gather!("swap", swap::gather(proc_path)) });
         }
 
         if collectors.tapestats {
