@@ -501,7 +501,7 @@ parking_lot = { version = "0.12.5", default-features = false, optional = true }
 percent-encoding = { version = "2.3.2", default-features = false }
 pin-project-lite = { version = "0.2.16", default-features = false }
 pulsar = { git = "https://github.com/f1shl3gs/pulsar-rs", rev = "bab5d791bb64f9e19d53eef242b8b33c96e836d0", default-features = false, optional = true, features = ["auth-oauth2", "compression", "tokio-rustls-runtime"] }
-quick-xml = { version = "0.39.0", default-features = false, features = ["serialize"], optional = true }
+quick-xml = { version = "0.39.1", default-features = false, features = ["serialize"], optional = true }
 rand = { version = "0.10.0", default-features = false }
 regex = { version = "1.12.3", default-features = false }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "c18c924934f3d0edf8e442212fa595f81c20d027", optional = true, features = ["transport-tls"] }
