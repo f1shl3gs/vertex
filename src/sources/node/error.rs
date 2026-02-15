@@ -22,6 +22,11 @@ pub enum Error {
     Parse(ParseError),
     #[error("{0}")]
     Other(String),
+
+    #[error("no data")]
+    NoData,
+    #[error("malformed {0}")]
+    Malformed(&'static str),
 }
 
 impl From<&'static str> for Error {
