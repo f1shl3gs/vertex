@@ -210,11 +210,10 @@ mod tests {
     use std::pin::Pin;
     use std::sync::Arc;
     use std::sync::atomic::{AtomicUsize, Ordering};
-    use std::task::{Context, Poll};
+    use std::task::{Context, Poll, ready};
     use std::time::Duration;
 
     use event::{BatchNotifier, EventFinalizer, EventFinalizers};
-    use futures::{ready, stream};
     use rand::SeedableRng;
     use rand::rngs::StdRng;
     use rand_distr::Distribution;
@@ -375,7 +374,7 @@ mod tests {
         // Set up our driver input stream, service, etc.
         let input_requests = (1..=2048).collect::<Vec<_>>();
         let input_total: usize = input_requests.iter().sum();
-        let input_stream = stream::iter(
+        let input_stream = futures::stream::iter(
             input_requests
                 .into_iter()
                 .map(|i| DelayRequest::new(i, &counter)),
