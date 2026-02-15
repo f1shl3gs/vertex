@@ -7,7 +7,7 @@ publish = false
 [dependencies]
 async-stream = { version = "0.3.6" }
 crossbeam-utils = { version = "0.8.21", default-features = false }
-futures = { version = "0.3.31", default-features = false, features = ["alloc"] }
+futures = { version = "0.3.32", default-features = false, features = ["alloc"] }
 pin-project-lite = { version = "0.2.16" }
 tokio = { version = "1.49.0", default-features = false, features = ["sync", "macros"] }
 tracing = { version = "0.1.44", default-features = false }

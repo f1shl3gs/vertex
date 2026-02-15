@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 bytes = { version = "1.11.1", default-features = false }
-futures = { version = "0.3.31", default-features = false }
+futures = { version = "0.3.32", default-features = false }
 memchr = { version = "2.8.0", default-features = false, features = ["alloc"] }
 pin-project-lite = { version = "0.2.16", default-features = false }
 tokio = { version = "1.49.0", default-features = false, features = ["net", "rt", "sync", "time"] }

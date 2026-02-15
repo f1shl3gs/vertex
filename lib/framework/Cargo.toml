@@ -37,7 +37,7 @@ event = { path = "../event" }
 # TODO: framework should not exit if any error happened
 exitcode = { version = "1.1.2" }
 flate2 = { version = "1.1.9" }
-futures = { version = "0.3.31", default-features = false, features = ["async-await"] }
+futures = { version = "0.3.32", default-features = false, features = ["async-await"] }
 glob = { version = "0.3.3", default-features = false }
 headers = { version = "0.4.1", default-features = false }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["duration", "bytes", "serde"], rev = "29e9225d05de76c6d48134497aa4a94c2cd08380" }

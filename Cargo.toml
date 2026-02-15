@@ -440,7 +440,7 @@ tikv-jemalloc-ctl = { version = "0.6.1", optional = true, features = ["use_std"]
 # Futrures & Tokio
 async-stream = { version = "0.3.6", optional = true }
 async-trait = { version = "0.1.89", default-features = false }
-futures = { version = "0.3.31", default-features = false }
+futures = { version = "0.3.32", default-features = false }
 tokio = { version = "1.49.0", default-features = false, features = ["time", "net", "signal", "rt-multi-thread", "io-util"] }
 tokio-util = { version = "0.7.18", default-features = false, features = ["codec", "time", "net"] }
 

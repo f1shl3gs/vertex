@@ -22,7 +22,7 @@ buffer = { path = "../buffer" }
 bytes = { version = "1.11.1", default-features = false }
 chrono = { version = "0.4.43", default-features = false, features = ["now", "serde"] }
 finalize = { path = "../finalize" }
-futures = { version = "0.3.31", default-features = false, features = ["std"] }
+futures = { version = "0.3.32", default-features = false, features = ["std"] }
 log_schema = { path = "../log_schema" }
 serde = { version = "1.0.228", default-features = false, features = ["alloc", "derive"] }
 serde_json = { version = "1.0.149", default-features = false }
