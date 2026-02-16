@@ -542,10 +542,11 @@ async fn run(
 
         if let Some(conf) = &collectors.diskstats {
             let proc_path = proc_path.clone();
+            let sys_path = sys_path.clone();
             let conf = conf.clone();
-            tasks.spawn(
-                async move { record_gather!("diskstats", diskstats::gather(conf, proc_path)) },
-            );
+            tasks.spawn(async move {
+                record_gather!("diskstats", diskstats::gather(conf, proc_path, sys_path))
+            });
         }
 
         if collectors.dmi {

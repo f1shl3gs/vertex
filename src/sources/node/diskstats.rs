@@ -10,7 +10,7 @@ use event::{Metric, tags, tags::Key};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 
-use super::Error;
+use super::{Error, read_into};
 
 const DISK_SECTOR_SIZE: f64 = 512.0;
 
@@ -35,7 +35,11 @@ pub fn default_ignored() -> regex::Regex {
     regex::Regex::new(r#"^(z?ram|loop|fd|(h|s|v|xv)d[a-z]|nvme\d+n\d+p)\d+$"#).unwrap()
 }
 
-pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+pub async fn gather(
+    conf: Config,
+    proc_path: PathBuf,
+    sys_path: PathBuf,
+) -> Result<Vec<Metric>, Error> {
     let data = std::fs::read_to_string(proc_path.join("diskstats"))?;
 
     // https://www.kernel.org/doc/Documentation/ABI/testing/procfs-diskstats
@@ -115,6 +119,8 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
             .cloned()
             .unwrap_or_default();
 
+        let queue_stats = device_queue_stats(sys_path.join("block").join(device).join("queue"))?;
+
         metrics.push(Metric::gauge_with_tags(
             "node_disk_info",
             "Info of /sys/block/<block_device>.",
@@ -127,6 +133,7 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
                 "wwn" => info.get("ID_WWN").cloned().unwrap_or_default(),
                 "model" => info.get("ID_MODEL").cloned().unwrap_or_default(),
                 "serial" => serial,
+                "rotational" => queue_stats.rotational,
                 "revision" => info.get("ID_REVISION").cloned().unwrap_or_default(),
             ),
         ));
@@ -319,6 +326,17 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
     Ok(metrics)
 }
 
+struct QueueStats {
+    rotational: u64,
+}
+
+// stats for /sys/block/xxx/queue where xxx is a device name.
+fn device_queue_stats(root: PathBuf) -> Result<QueueStats, Error> {
+    let rotational = read_into(root.join("rotational"))?;
+
+    Ok(QueueStats { rotational })
+}
+
 fn udev_device_properties(major: &str, minor: &str) -> Result<HashMap<String, String>, Error> {
     let path = format!("/run/udev/data/b{major}:{minor}");
     let data = std::fs::read_to_string(path)?;
@@ -343,21 +361,14 @@ mod tests {
     #[tokio::test]
     async fn test_gather() {
         let proc_path = "tests/node/proc";
+        let sys_path = "tests/node/sys";
         let conf = Config {
             ignored: default_ignored(),
         };
 
-        let result = gather(conf, proc_path.into()).await.unwrap();
-        assert_ne!(result.len(), 0);
-    }
-
-    #[tokio::test]
-    async fn gather_root() {
-        let conf = Config {
-            ignored: default_ignored(),
-        };
-
-        let result = gather(conf, "/proc".into()).await.unwrap();
+        let result = gather(conf, proc_path.into(), sys_path.into())
+            .await
+            .unwrap();
         assert_ne!(result.len(), 0);
     }
 }

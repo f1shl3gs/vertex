@@ -54,40 +54,37 @@ async fn read_stat(proc_path: PathBuf) -> Result<Stat, Error> {
 
     let mut stat = Stat::default();
     for line in data.lines() {
-        if line.starts_with("ctxt ") {
-            stat.ctxt = line.strip_prefix("ctxt ").unwrap().parse().unwrap_or(0u64);
+        if let Some(stripped) = line.strip_prefix("ctxt ") {
+            stat.ctxt = stripped.parse().unwrap_or(0u64);
             continue;
         }
 
-        if line.starts_with("btime ") {
-            stat.btime = line.strip_prefix("btime ").unwrap().parse().unwrap_or(0);
+        if let Some(stripped) = line.strip_prefix("btime ") {
+            stat.btime = stripped.parse().unwrap_or(0u64);
             continue;
         }
 
-        if line.starts_with("processes ") {
-            stat.forks = line
-                .strip_prefix("processes ")
-                .unwrap()
-                .parse()
-                .unwrap_or(0);
+        if let Some(stripped) = line.strip_prefix("intr ") {
+            let mut parts = stripped.split_ascii_whitespace();
+            if let Some(part) = parts.next() {
+                stat.intr = part.parse::<u64>().unwrap_or(0u64);
+            }
+
             continue;
         }
 
-        if line.starts_with("procs_running ") {
-            stat.procs_running = line
-                .strip_prefix("procs_running ")
-                .unwrap()
-                .parse()
-                .unwrap_or(0);
+        if let Some(stripped) = line.strip_prefix("processes ") {
+            stat.forks = stripped.parse().unwrap_or(0u64);
             continue;
         }
 
-        if line.starts_with("procs_blocked ") {
-            stat.procs_blocked = line
-                .strip_prefix("procs_blocked ")
-                .unwrap()
-                .parse()
-                .unwrap_or(0);
+        if let Some(stripped) = line.strip_prefix("procs_running ") {
+            stat.procs_running = stripped.parse().unwrap_or(0u64);
+            continue;
+        }
+
+        if let Some(stripped) = line.strip_prefix("procs_blocked ") {
+            stat.procs_blocked = stripped.parse().unwrap_or(0u64);
             continue;
         }
     }

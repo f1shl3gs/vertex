@@ -13,7 +13,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
 
         metrics.push(Metric::gauge_with_tags(
             "node_nvme_info",
-            "node_nvme_info Non-numeric data from /sys/class/nvme/<device>, value is always 1",
+            "Non-numeric data from /sys/class/nvme/<device>, value is always 1",
             1f64,
             tags!(
                 "device" => device,
