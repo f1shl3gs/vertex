@@ -47,7 +47,7 @@ pub async fn gather() -> Result<Vec<Metric>, Error> {
         Metric::gauge(
             "node_timex_frequency_adjustment_ratio",
             "Local clock frequency adjustment.",
-            tx.freq as f64 / PPM16FRAC,
+            1.0 + tx.freq as f64 / PPM16FRAC,
         ),
         Metric::gauge(
             "node_timex_maxerror_seconds",

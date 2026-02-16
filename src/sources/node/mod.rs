@@ -359,6 +359,14 @@ fn default_sys_path() -> PathBuf {
     "/sys".into()
 }
 
+fn default_udev_path() -> PathBuf {
+    PathBuf::from("/run/udev")
+}
+
+fn default_root_path() -> PathBuf {
+    PathBuf::from("/")
+}
+
 /// The Node source generates metrics about the host system scraped
 /// from various sources. This is intended to be used when the collector is
 /// deployed as an agent, and replace `node_exporter`.
@@ -369,9 +377,15 @@ struct Config {
     #[serde(default = "default_proc_path")]
     proc_path: PathBuf,
 
+    #[serde(default = "default_root_path")]
+    root_path: PathBuf,
+
     /// sysfs mountpoint.
     #[serde(default = "default_sys_path")]
     sys_path: PathBuf,
+
+    #[serde(default = "default_udev_path")]
+    udev_path: PathBuf,
 
     /// Duration between each scrape.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
@@ -486,7 +500,9 @@ macro_rules! record_gather {
 async fn run(
     interval: Duration,
     proc_path: PathBuf,
+    root_path: PathBuf,
     sys_path: PathBuf,
+    udev_path: PathBuf,
     collectors: Collectors,
     mut shutdown: ShutdownSignal,
     mut out: Pipeline,
@@ -530,9 +546,12 @@ async fn run(
         }
 
         if let Some(conf) = &collectors.cpu {
-            let proc_path = proc_path.clone();
             let conf = conf.clone();
-            tasks.spawn(async move { record_gather!("cpu", cpu::gather(conf, proc_path)) });
+            let proc_path = proc_path.clone();
+            let sys_path = sys_path.clone();
+            tasks.spawn(
+                async move { record_gather!("cpu", cpu::gather(conf, proc_path, sys_path)) },
+            );
         }
 
         if collectors.cpufreq {
@@ -541,11 +560,16 @@ async fn run(
         }
 
         if let Some(conf) = &collectors.diskstats {
-            let proc_path = proc_path.clone();
             let conf = conf.clone();
-            tasks.spawn(
-                async move { record_gather!("diskstats", diskstats::gather(conf, proc_path)) },
-            );
+            let proc_path = proc_path.clone();
+            let sys_path = sys_path.clone();
+            let udev_path = udev_path.clone();
+            tasks.spawn(async move {
+                record_gather!(
+                    "diskstats",
+                    diskstats::gather(conf, proc_path, sys_path, udev_path)
+                )
+            });
         }
 
         if collectors.dmi {
@@ -581,10 +605,11 @@ async fn run(
         }
 
         if let Some(conf) = &collectors.filesystem {
-            let proc_path = proc_path.clone();
             let conf = conf.clone();
+            let proc_path = proc_path.clone();
+            let root_path = root_path.clone();
             tasks.spawn(async move {
-                record_gather!("filesystem", filesystem::gather(conf, proc_path))
+                record_gather!("filesystem", filesystem::gather(conf, root_path, proc_path))
             });
         }
 
@@ -618,7 +643,8 @@ async fn run(
 
         if collectors.mdadm {
             let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("mdadm", mdadm::gather(proc_path)) });
+            let sys_path = sys_path.clone();
+            tasks.spawn(async move { record_gather!("mdadm", mdadm::gather(proc_path, sys_path)) });
         }
 
         if collectors.memory {
@@ -661,7 +687,8 @@ async fn run(
         }
 
         if collectors.os_release {
-            tasks.spawn(async { record_gather!("os", os_release::gather()) });
+            let root_path = root_path.clone();
+            tasks.spawn(async { record_gather!("os", os_release::gather(root_path)) });
         }
 
         if let Some(conf) = &collectors.power_supply {
@@ -822,7 +849,9 @@ impl SourceConfig for Config {
         Ok(Box::pin(run(
             self.interval,
             self.proc_path.clone(),
+            self.root_path.clone(),
             self.sys_path.clone(),
+            self.udev_path.clone(),
             self.collectors.clone(),
             cx.shutdown,
             cx.output,

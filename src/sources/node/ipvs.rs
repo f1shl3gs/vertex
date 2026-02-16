@@ -34,7 +34,7 @@ fn default_labels() -> Vec<String> {
 }
 
 pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = parse_ipvs_stats(&proc_path).await?;
+    let stats = parse_ipvs_stats(&proc_path)?;
 
     let mut metrics = vec![
         Metric::sum(
@@ -64,7 +64,7 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
         ),
     ];
 
-    let backends = parse_ipvs_backend_status(proc_path).await?;
+    let backends = parse_ipvs_backend_status(proc_path)?;
     let mut sums = BTreeMap::new();
     let mut label_values = BTreeMap::new();
     for backend in backends {
@@ -75,7 +75,7 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
         };
 
         let mut kv = Vec::with_capacity(conf.labels.len());
-        for (i, label) in conf.labels.iter().enumerate() {
+        for label in &conf.labels {
             let lv = match label.as_str() {
                 "local_address" => local_address.clone(),
                 "local_port" => backend.local_port.to_string(),
@@ -86,7 +86,7 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
                 _ => "".to_string(),
             };
 
-            kv[i] = lv;
+            kv.push(lv)
         }
 
         let key = kv.join("-");
@@ -154,23 +154,23 @@ struct IPVSStats {
     outgoing_bytes: u64,
 }
 
-async fn parse_ipvs_stats(root: &Path) -> Result<IPVSStats, Error> {
-    let data = std::fs::read_to_string(root.join("net/ip_vs_stat"))?;
+fn parse_ipvs_stats(root: &Path) -> Result<IPVSStats, Error> {
+    let data = std::fs::read_to_string(root.join("net/ip_vs_stats"))?;
     let lines = data.lines().collect::<Vec<_>>();
     if lines.len() < 4 {
         return Err("ip_vs_stats corrupt: too short".into());
     }
 
-    let stat_fields = lines[2].split_ascii_whitespace().collect::<Vec<_>>();
-    if stat_fields.len() != 5 {
+    let fields = lines[2].split_ascii_whitespace().collect::<Vec<_>>();
+    if fields.len() != 5 {
         return Err("ip_vs_stats corrupt: unexpected number of fields".into());
     }
 
-    let connections = u64::from_str_radix(stat_fields[0], 16)?;
-    let incoming_packets = u64::from_str_radix(stat_fields[1], 16)?;
-    let outgoing_packets = u64::from_str_radix(stat_fields[2], 16)?;
-    let incoming_bytes = u64::from_str_radix(stat_fields[3], 16)?;
-    let outgoing_bytes = u64::from_str_radix(stat_fields[4], 16)?;
+    let connections = u64::from_str_radix(fields[0], 16)?;
+    let incoming_packets = u64::from_str_radix(fields[1], 16)?;
+    let outgoing_packets = u64::from_str_radix(fields[2], 16)?;
+    let incoming_bytes = u64::from_str_radix(fields[3], 16)?;
+    let outgoing_bytes = u64::from_str_radix(fields[4], 16)?;
 
     Ok(IPVSStats {
         connections,
@@ -212,7 +212,7 @@ struct IPVSBackendStatus {
     weight: u64,
 }
 
-async fn parse_ipvs_backend_status(root: PathBuf) -> Result<Vec<IPVSBackendStatus>, Error> {
+fn parse_ipvs_backend_status(root: PathBuf) -> Result<Vec<IPVSBackendStatus>, Error> {
     let data = std::fs::read_to_string(root.join("net/ip_vs"))?;
 
     let mut status = vec![];
@@ -252,6 +252,7 @@ async fn parse_ipvs_backend_status(root: PathBuf) -> Result<Vec<IPVSBackendStatu
                 proto = fields[0].to_string();
                 local_mark = fields[1].to_string();
                 local_port = 0;
+                local_address.clear();
             }
 
             "->" => {
@@ -324,7 +325,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_parse_ip_port() {
+    fn parse() {
         let input = "C0A80016:0CEA";
         let (addr, port) = parse_ip_port(input).unwrap();
         assert_eq!(addr, "192.168.0.22");

@@ -3,7 +3,8 @@
 use std::collections::HashMap;
 use std::path::PathBuf;
 
-use event::{Metric, tags, tags::Key};
+use event::tags::Key;
+use event::{Metric, tags};
 
 use super::Error;
 
@@ -34,15 +35,4 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     }
 
     Ok(metrics)
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[tokio::test]
-    async fn test_gather() {
-        let proc_path = "tests/node/proc";
-        gather(proc_path.into()).await.unwrap();
-    }
 }

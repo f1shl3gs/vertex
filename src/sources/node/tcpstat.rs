@@ -37,22 +37,119 @@ macro_rules! state_metric {
     };
 }
 
+async fn add_tcp_stats(
+    sock: &mut NetlinkSocket,
+    family: u8,
+    stats: &mut Statistics,
+) -> io::Result<()> {
+    #[rustfmt::skip]
+    let msg = [
+        // u32, length of the netlink packet, including the header and the payload
+        72u8, 0, 0, 0,
+        // u16, message type, SOCK_DIAG_BY_FAMILY
+        20, 0,
+        // u16, flags NLM_F_REQUEST | NLM_F_DUMP
+        1, 3,
+        // u32, sequence number
+        1, 0, 0, 0,
+        // u32, port number
+        0, 0, 0, 0,
+
+        // payload
+        family, 6, 0, 0, 254, 15, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0
+    ];
+
+    sock.write_all(&msg).await?;
+
+    let mut buf = [0u8; 16 * 1024];
+    let mut read_offset = 0;
+    'RECV: loop {
+        let cnt = sock.read(&mut buf[read_offset..]).await? + read_offset;
+        read_offset = 0;
+
+        if cnt < 4 {
+            read_offset = cnt;
+            continue;
+        }
+
+        let mut offset = 0;
+        while offset < cnt {
+            let len = u32::from_ne_bytes((&buf[offset..offset + 4]).try_into().unwrap()) as usize;
+            if cnt - offset < len {
+                // not enough
+                read_offset = cnt - offset;
+                buf.copy_within(offset..cnt, 0);
+                break;
+            }
+
+            // full packet
+            let msg_typ = u16::from_ne_bytes((&buf[offset + 4..offset + 6]).try_into().unwrap());
+            match msg_typ {
+                SOCK_DIAG_BY_FAMILY => {
+                    let state = match buf[offset + NETLINK_HEADER_LEN] {
+                        AF_INET | AF_INET6 => buf[offset + NETLINK_HEADER_LEN + 1],
+                        _family => continue,
+                    };
+
+                    match state {
+                        TCP_ESTABLISHED => stats.established += 1,
+                        TCP_SYN_SENT => stats.syn_sent += 1,
+                        TCP_SYN_RECV => stats.syn_recv += 1,
+                        TCP_FIN_WAIT1 => stats.fin_wait1 += 1,
+                        TCP_FIN_WAIT2 => stats.fin_wait2 += 1,
+                        TCP_TIME_WAIT => stats.time_wait += 1,
+                        TCP_CLOSE => stats.close += 1,
+                        TCP_CLOSE_WAIT => stats.close_wait += 1,
+                        TCP_LAST_ACK => stats.last_ack += 1,
+                        TCP_LISTEN => stats.listen += 1,
+                        TCP_CLOSING => stats.closing += 1,
+                        _ => {
+                            error!(message = "unknown tcp state", ?state);
+                        }
+                    }
+                }
+                NLMSG_NOOP => continue,
+                NLMSG_DONE => break 'RECV,
+                NLMSG_ERROR => return Err(io::Error::other("overrun packet")),
+                _typ => return Err(io::Error::other("invalid packet type")),
+            }
+
+            offset += len;
+        }
+
+        if cnt < buf.len() {
+            break;
+        }
+    }
+
+    Ok(())
+}
+
 pub async fn gather() -> Result<Vec<Metric>, Error> {
-    let v4 = fetch_tcp_stats(AF_INET).await?;
-    let v6 = fetch_tcp_stats(AF_INET6).await?;
+    let mut sock = NetlinkSocket::connect()?;
+    let mut stats = Statistics::default();
+
+    add_tcp_stats(&mut sock, AF_INET, &mut stats).await?;
+    add_tcp_stats(&mut sock, AF_INET6, &mut stats).await?;
 
     Ok(vec![
-        state_metric!("established", v4.established + v6.established),
-        state_metric!("syn_sent", v4.syn_sent + v6.syn_sent),
-        state_metric!("syn_recv", v4.syn_recv + v6.syn_recv),
-        state_metric!("fin_wait1", v4.fin_wait1 + v6.fin_wait1),
-        state_metric!("fin_wait2", v4.fin_wait2 + v6.fin_wait2),
-        state_metric!("time_wait", v4.time_wait + v6.time_wait),
-        state_metric!("close", v4.close + v6.close),
-        state_metric!("close_wait", v4.close_wait + v6.close_wait),
-        state_metric!("last_ack", v4.last_ack + v6.last_ack),
-        state_metric!("listen", v4.listen + v6.listen),
-        state_metric!("closing", v4.closing + v6.closing),
+        state_metric!("established", stats.established),
+        state_metric!("syn_sent", stats.syn_sent),
+        state_metric!("syn_recv", stats.syn_recv),
+        state_metric!("fin_wait1", stats.fin_wait1),
+        state_metric!("fin_wait2", stats.fin_wait2),
+        state_metric!("time_wait", stats.time_wait),
+        state_metric!("close", stats.close),
+        state_metric!("close_wait", stats.close_wait),
+        state_metric!("last_ack", stats.last_ack),
+        state_metric!("listen", stats.listen),
+        state_metric!("closing", stats.closing),
     ])
 }
 
@@ -120,7 +217,7 @@ struct NetlinkSocket {
 }
 
 impl NetlinkSocket {
-    fn new() -> io::Result<Self> {
+    fn connect() -> io::Result<Self> {
         let fd = unsafe {
             let ret = libc::socket(
                 libc::PF_NETLINK,
@@ -248,12 +345,12 @@ async fn fetch_tcp_stats(family: u8) -> io::Result<Statistics> {
         0, 0, 0, 0, 0, 0, 0, 0
     ];
 
-    let mut sock = NetlinkSocket::new()?;
+    let mut sock = NetlinkSocket::connect()?;
     sock.write_all(&msg).await?;
 
     let mut stats = Statistics::default();
 
-    let mut buf = [0u8; 8 * 1024];
+    let mut buf = [0u8; 16 * 1024];
     let mut read_offset = 0;
     'RECV: loop {
         let cnt = sock.read(&mut buf[read_offset..]).await? + read_offset;

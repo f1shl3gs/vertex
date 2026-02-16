@@ -84,11 +84,18 @@ impl NetSockstat {
             }
 
             if let Some(v) = nsp.mem {
-                metrics.push(Metric::gauge(
-                    format!("node_sockstat_{}_mem_bytes", nsp.protocol),
-                    format!("Number of {} sockets in state mem", nsp.protocol),
-                    v as f64 * PAGESIZE,
-                ));
+                metrics.extend([
+                    Metric::gauge(
+                        format!("node_sockstat_{}_mem", nsp.protocol),
+                        format!("Number of {} sockets in state mem", nsp.protocol),
+                        v,
+                    ),
+                    Metric::gauge(
+                        format!("node_sockstat_{}_mem_bytes", nsp.protocol),
+                        format!("Number of {} sockets in state mem_bytes", nsp.protocol),
+                        v as f64 * PAGESIZE,
+                    ),
+                ]);
             }
 
             if let Some(value) = nsp.memory {
@@ -113,7 +120,7 @@ fn parse_sockstat(path: PathBuf) -> Result<NetSockstat, Error> {
         let size = fields.len();
 
         if size < 3 || size % 2 != 1 {
-            return Err(Error::from("malformed sockstat line"));
+            return Err(Error::Malformed("sockstat line"));
         }
 
         let proto = fields[0].strip_suffix(':').unwrap();
@@ -160,7 +167,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_parse_sockstat() {
+    fn parse() {
         let ns = parse_sockstat("tests/node/proc/net/sockstat6".into()).unwrap();
         assert_eq!(ns.used, None);
 

@@ -119,7 +119,7 @@ fn stats_to_metrics(stats: Stats) -> Vec<Metric> {
         Metric::gauge_with_tags(
             "node_btrfs_last_commit_seconds",
             "Duration of the most recent commit, in seconds",
-            stats.commit_stats.last_commit_ms / 1000,
+            stats.commit_stats.last_commit_ms as f64 / 1000.0,
             tags!(
                 "uuid" => stats.uuid.clone()
             ),
@@ -127,7 +127,7 @@ fn stats_to_metrics(stats: Stats) -> Vec<Metric> {
         Metric::gauge_with_tags(
             "node_btrfs_max_commit_seconds",
             "Duration of the slowest commit, in seconds",
-            stats.commit_stats.max_commit_ms / 1000,
+            stats.commit_stats.max_commit_ms as f64 / 1000.0,
             tags!(
                 "uuid" => stats.uuid.clone()
             ),
@@ -135,7 +135,7 @@ fn stats_to_metrics(stats: Stats) -> Vec<Metric> {
         Metric::sum_with_tags(
             "node_btrfs_commit_seconds_total",
             "Sum of the duration of all commits, in seconds",
-            stats.commit_stats.total_commit_ms / 1000,
+            stats.commit_stats.total_commit_ms as f64 / 1000.0,
             tags!(
                 "uuid" => stats.uuid.clone()
             ),
@@ -149,7 +149,8 @@ fn stats_to_metrics(stats: Stats) -> Vec<Metric> {
             "Size of a device that is part of the filesystem.",
             device.size,
             tags!(
-                Key::from_static("device") => name
+                Key::from_static("device") => name,
+                "uuid" => stats.uuid.clone()
             ),
         ));
     }
@@ -198,7 +199,8 @@ fn get_allocation_stats(typ: &str, uuid: &str, stats: AllocationStats) -> Vec<Me
                 usage.total_bytes,
                 tags!(
                     Key::from_static("block_group_type") => typ,
-                    Key::from_static("mode") => mode.clone()
+                    Key::from_static("mode") => mode.clone(),
+                    Key::from_static("uuid") => uuid
                 ),
             ),
             Metric::gauge_with_tags(

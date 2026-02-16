@@ -153,7 +153,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
         metrics.push(Metric::gauge_with_tags(
             "node_thermal_zone_temp",
             "Zone temperature in Celsius",
-            stat.temp / 1000,
+            stat.temp as f64 / 1000.0,
             tags!(
                 "zone" => stat.name,
                 "type" => stat.typ,

@@ -1,3 +1,4 @@
+use std::io::ErrorKind;
 use std::path::PathBuf;
 
 use event::{Metric, tags};
@@ -92,19 +93,19 @@ pub struct FibreChannelHost {
 }
 
 /// fibre_channel_class parse everything in /sys/class/fc_host
-pub async fn fibre_channel_class(sys_path: PathBuf) -> Result<Vec<FibreChannelHost>, Error> {
+fn fibre_channel_class(sys_path: PathBuf) -> Result<Vec<FibreChannelHost>, Error> {
     let dirs = std::fs::read_dir(sys_path.join("class/fc_host"))?;
 
     let mut fcc = Vec::new();
     for entry in dirs.flatten() {
-        let host = parse_fibre_channel_host(entry.path()).await?;
+        let host = parse_fibre_channel_host(entry.path())?;
         fcc.push(host);
     }
 
     Ok(fcc)
 }
 
-async fn parse_fibre_channel_host(root: PathBuf) -> Result<FibreChannelHost, Error> {
+fn parse_fibre_channel_host(root: PathBuf) -> Result<FibreChannelHost, Error> {
     let mut host = FibreChannelHost {
         name: root.file_name().unwrap().to_str().unwrap().to_string(),
         ..Default::default()
@@ -123,7 +124,16 @@ async fn parse_fibre_channel_host(root: PathBuf) -> Result<FibreChannelHost, Err
         "supported_classes",
         "supported_speeds",
     ] {
-        let value = read_string(root.join(sub))?;
+        let value = match read_string(root.join(sub)) {
+            Ok(value) => value,
+            Err(err) => {
+                if err.kind() == ErrorKind::NotFound {
+                    continue;
+                }
+
+                return Err(err.into());
+            }
+        };
 
         match sub {
             "speed" => host.speed = value,
@@ -161,25 +171,23 @@ async fn parse_fibre_channel_host(root: PathBuf) -> Result<FibreChannelHost, Err
         }
     }
 
-    host.counters = parse_fibre_channel_statistics(root).await?;
+    host.counters = parse_fibre_channel_statistics(root)?;
 
     Ok(host)
 }
 
-async fn read_hex(path: PathBuf) -> Result<u64, Error> {
+fn read_hex(path: PathBuf) -> Result<u64, Error> {
     let content = read_string(path)?
         .trim_end()
         .strip_prefix("0x")
         .unwrap()
         .to_string();
 
-    let v = u64::from_str_radix(&content, 16)?;
-
-    Ok(v)
+    u64::from_str_radix(&content, 16).map_err(Into::into)
 }
 
 /// parse_fibre_channel_statistics parses metrics from a single FC host
-async fn parse_fibre_channel_statistics(root: PathBuf) -> Result<FibreChannelCounters, Error> {
+fn parse_fibre_channel_statistics(root: PathBuf) -> Result<FibreChannelCounters, Error> {
     let dirs = std::fs::read_dir(root.join("statistics"))?;
 
     let mut counters = FibreChannelCounters::default();
@@ -188,22 +196,20 @@ async fn parse_fibre_channel_statistics(root: PathBuf) -> Result<FibreChannelCou
         let path = entry.path();
 
         match name.to_str().unwrap() {
-            "dumped_frames" => counters.dumped_frames = read_hex(path).await?,
-            "error_frames" => counters.error_frames = read_hex(path).await?,
-            "fcp_packet_aborts" => counters.fcp_packet_aborts = read_hex(path).await?,
-            "invalid_tx_word_count" => counters.invalid_tx_word_count = read_hex(path).await?,
-            "invalid_crc_count" => counters.invalid_crc_count = read_hex(path).await?,
-            "link_failure_count" => counters.link_failure_count = read_hex(path).await?,
-            "loss_of_signal_count" => counters.loss_of_signal_count = read_hex(path).await?,
-            "loss_of_sync_count" => counters.loss_of_sync_count = read_hex(path).await?,
-            "nos_count" => counters.nos_count = read_hex(path).await?,
-            "rx_frames" => counters.rx_frames = read_hex(path).await?,
-            "rx_words" => counters.rx_words = read_hex(path).await?,
-            "seconds_since_last_reset" => {
-                counters.seconds_since_last_reset = read_hex(path).await?
-            }
-            "tx_frames" => counters.tx_frames = read_hex(path).await?,
-            "tx_words" => counters.tx_words = read_hex(path).await?,
+            "dumped_frames" => counters.dumped_frames = read_hex(path)?,
+            "error_frames" => counters.error_frames = read_hex(path)?,
+            "fcp_packet_aborts" => counters.fcp_packet_aborts = read_hex(path)?,
+            "invalid_tx_word_count" => counters.invalid_tx_word_count = read_hex(path)?,
+            "invalid_crc_count" => counters.invalid_crc_count = read_hex(path)?,
+            "link_failure_count" => counters.link_failure_count = read_hex(path)?,
+            "loss_of_signal_count" => counters.loss_of_signal_count = read_hex(path)?,
+            "loss_of_sync_count" => counters.loss_of_sync_count = read_hex(path)?,
+            "nos_count" => counters.nos_count = read_hex(path)?,
+            "rx_frames" => counters.rx_frames = read_hex(path)?,
+            "rx_words" => counters.rx_words = read_hex(path)?,
+            "seconds_since_last_reset" => counters.seconds_since_last_reset = read_hex(path)?,
+            "tx_frames" => counters.tx_frames = read_hex(path)?,
+            "tx_words" => counters.tx_words = read_hex(path)?,
             _ => {}
         }
     }
@@ -212,146 +218,171 @@ async fn parse_fibre_channel_statistics(root: PathBuf) -> Result<FibreChannelCou
 }
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let hosts = fibre_channel_class(sys_path).await?;
+    let hosts = fibre_channel_class(sys_path)?;
 
     let mut metrics = vec![];
     for host in hosts {
         let name = host.name;
 
-        metrics.extend([
-            // first the Host values
-            Metric::gauge_with_tags(
-                "node_fibrechannel_info",
-                "Non-numeric data from /sys/class/fc_host/<host>, value is always 1.",
-                1,
-                tags!(
-                    "dev_loss_tmo" => host.dev_loss_tmo,
-                    "fabric_name" => host.fabric_name,
-                    "fc_host" => name.clone(),
-                    "port_id" => host.port_id,
-                    "port_name" => host.port_name,
-                    "port_state" => host.port_state,
-                    "port_type" => host.port_type,
-                    "speed" => host.speed,
-                    "supported_classes" => host.supported_classes,
-                    "supported_speeds" => host.supported_speeds,
-                    "symbolic_name" => host.symbolic_name,
-                ),
+        metrics.push(Metric::gauge_with_tags(
+            "node_fibrechannel_info",
+            "Non-numeric data from /sys/class/fc_host/<host>, value is always 1.",
+            1,
+            tags!(
+                "dev_loss_tmo" => host.dev_loss_tmo,
+                "fabric_name" => host.fabric_name,
+                "fc_host" => name.clone(),
+                "port_id" => host.port_id,
+                "port_name" => host.port_name,
+                "port_state" => host.port_state,
+                "port_type" => host.port_type,
+                "speed" => host.speed,
+                "supported_classes" => host.supported_classes,
+                "supported_speeds" => host.supported_speeds,
+                "symbolic_name" => host.symbolic_name,
             ),
-            // the counters
-            Metric::sum_with_tags(
+        ));
+
+        if host.counters.dumped_frames != u64::MAX {
+            metrics.push(Metric::sum_with_tags(
                 "node_fibrechannel_dumped_frames_total",
                 "Number of dumped frames",
                 host.counters.dumped_frames,
                 tags!(
                     "fc_host" => name.clone()
                 ),
-            ),
-            Metric::sum_with_tags(
+            ));
+        }
+        if host.counters.error_frames != u64::MAX {
+            metrics.push(Metric::sum_with_tags(
                 "node_fibrechannel_error_frames_total",
                 "Number of errors in frames",
                 host.counters.error_frames,
                 tags!(
                     "fc_host" => name.clone()
                 ),
-            ),
-            Metric::sum_with_tags(
+            ));
+        }
+        if host.counters.invalid_crc_count != u64::MAX {
+            metrics.push(Metric::sum_with_tags(
                 "node_fibrechannel_invalid_crc_total",
                 "Invalid Cyclic Redundancy Check count",
                 host.counters.invalid_crc_count,
                 tags!(
                     "fc_host" => name.clone()
                 ),
-            ),
-            Metric::sum_with_tags(
+            ));
+        }
+        if host.counters.rx_frames != u64::MAX {
+            metrics.push(Metric::sum_with_tags(
                 "node_fibrechannel_rx_frames_total",
                 "Number of frames received",
                 host.counters.rx_frames,
                 tags!(
                     "fc_host" => name.clone()
                 ),
-            ),
-            Metric::sum_with_tags(
+            ));
+        }
+        if host.counters.rx_words != u64::MAX {
+            metrics.push(Metric::sum_with_tags(
                 "node_fibrechannel_rx_words_total",
                 "Number of words received by host port",
                 host.counters.rx_words,
                 tags!(
                     "fc_host" => name.clone()
                 ),
-            ),
-            Metric::sum_with_tags(
+            ));
+        }
+        if host.counters.tx_frames != u64::MAX {
+            metrics.push(Metric::sum_with_tags(
                 "node_fibrechannel_tx_frames_total",
                 "Number of frames transmitted by host port",
                 host.counters.tx_frames,
                 tags!(
                     "fc_host" => name.clone()
                 ),
-            ),
-            Metric::sum_with_tags(
+            ));
+        }
+        if host.counters.tx_words != u64::MAX {
+            metrics.push(Metric::sum_with_tags(
                 "node_fibrechannel_tx_words_total",
                 "Number of words transmitted by host port",
-                host.counters.tx_frames,
+                host.counters.tx_words,
                 tags!(
                     "fc_host" => name.clone()
                 ),
-            ),
-            Metric::sum_with_tags(
+            ));
+        }
+        if host.counters.seconds_since_last_reset != u64::MAX {
+            metrics.push(Metric::sum_with_tags(
                 "node_fibrechannel_seconds_since_last_reset_total",
                 "Number of seconds since last host port reset",
                 host.counters.seconds_since_last_reset,
                 tags!(
                     "fc_host" => name.clone()
                 ),
-            ),
-            Metric::sum_with_tags(
+            ));
+        }
+        if host.counters.invalid_tx_word_count != u64::MAX {
+            metrics.push(Metric::sum_with_tags(
                 "node_fibrechannel_invalid_tx_words_total",
                 "Number of invalid words transmitted by host port",
                 host.counters.invalid_tx_word_count,
                 tags!(
                     "fc_host" => name.clone()
                 ),
-            ),
-            Metric::sum_with_tags(
+            ));
+        }
+        if host.counters.link_failure_count != u64::MAX {
+            metrics.push(Metric::sum_with_tags(
                 "node_fibrechannel_link_failure_total",
                 "Number of times the host port link has failed",
                 host.counters.link_failure_count,
                 tags!(
                     "fc_host" => name.clone()
                 ),
-            ),
-            Metric::sum_with_tags(
+            ));
+        }
+        if host.counters.loss_of_sync_count != u64::MAX {
+            metrics.push(Metric::sum_with_tags(
                 "node_fibrechannel_loss_of_sync_total",
                 "Number of failures on either bit or transmission word boundaries",
                 host.counters.loss_of_sync_count,
                 tags!(
                     "fc_host" => name.clone()
                 ),
-            ),
-            Metric::sum_with_tags(
+            ));
+        }
+        if host.counters.loss_of_signal_count != u64::MAX {
+            metrics.push(Metric::sum_with_tags(
                 "node_fibrechannel_loss_of_signal_total",
                 "Number of times signal has been lost",
                 host.counters.loss_of_signal_count,
                 tags!(
                     "fc_host" => name.clone()
                 ),
-            ),
-            Metric::sum_with_tags(
+            ));
+        }
+        if host.counters.nos_count != u64::MAX {
+            metrics.push(Metric::sum_with_tags(
                 "node_fibrechannel_nos_total",
                 "Number Not_Operational Primitive Sequence received by host port",
                 host.counters.nos_count,
                 tags!(
                     "fc_host" => name.clone()
                 ),
-            ),
-            Metric::sum_with_tags(
+            ));
+        }
+        if host.counters.fcp_packet_aborts != u64::MAX {
+            metrics.push(Metric::sum_with_tags(
                 "node_fibrechannel_fcp_packet_aborts_total",
                 "Number of aborted packets",
                 host.counters.fcp_packet_aborts,
                 tags!(
                     "fc_host" => name
                 ),
-            ),
-        ]);
+            ));
+        }
     }
 
     Ok(metrics)
@@ -361,9 +392,9 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_fibre_channel_class() {
-        let fcc = fibre_channel_class("tests/node/sys".into()).await.unwrap();
+    #[test]
+    fn parse() {
+        let fcc = fibre_channel_class("tests/node/sys".into()).unwrap();
         assert_eq!(fcc.len(), 1);
         let host = &fcc[0];
 

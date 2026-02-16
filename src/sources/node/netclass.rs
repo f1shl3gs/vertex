@@ -29,7 +29,7 @@ fn default_ignores() -> regex::Regex {
 }
 
 pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let devices = net_class_devices(sys_path.clone()).await?;
+    let devices = net_class_devices(sys_path.clone())?;
 
     let mut metrics = Vec::new();
     for device in devices {
@@ -37,8 +37,8 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
             continue;
         }
 
-        let path = format!("{}/class/net/{}", sys_path.to_string_lossy(), device);
-        let nci = match NetClassInterface::parse(&path).await {
+        let path = sys_path.join("class/net").join(&device);
+        let nci = match NetClassInterface::parse(path) {
             Ok(nci) => nci,
             _ => continue,
         };
@@ -240,7 +240,7 @@ fn admin_state(flags: Option<i64>) -> &'static str {
     }
 }
 
-async fn net_class_devices(sys_path: PathBuf) -> Result<Vec<String>, Error> {
+fn net_class_devices(sys_path: PathBuf) -> Result<Vec<String>, Error> {
     let dirs = std::fs::read_dir(sys_path.join("class/net"))?;
 
     let mut devices = Vec::new();
@@ -335,7 +335,7 @@ struct NetClassInterface {
 }
 
 impl NetClassInterface {
-    pub async fn parse(path: &str) -> Result<NetClassInterface, Error> {
+    fn parse(path: PathBuf) -> Result<NetClassInterface, Error> {
         let dirs = std::fs::read_dir(path)?;
 
         let mut nci = NetClassInterface::default();
@@ -389,10 +389,10 @@ impl NetClassInterface {
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_netcalss_interface() {
+    #[test]
+    fn parse() {
         let path = "tests/node/sys/class/net/eth0";
-        let nci = NetClassInterface::parse(path).await.unwrap();
+        let nci = NetClassInterface::parse(path.into()).unwrap();
 
         assert_eq!(nci.addr_assign_type, Some(3));
         assert_eq!(nci.address, "01:01:01:01:01:01");

@@ -356,8 +356,7 @@ fn hwmon_metrics(dir: &Path) -> Result<Vec<Metric>, Error> {
                         pv / 1000000.0,
                         tags!(
                             "chip" => chip,
-                            "sensor" => sensor,
-                            "label" => sanitized(label),
+                            "sensor" => sanitized(label),
                         ),
                     ));
                 }
@@ -391,21 +390,21 @@ fn collect_sensor_data(
     for entry in dirs.flatten() {
         let filename = entry.file_name();
 
-        if let Ok((sensor, num, property)) = explode_sensor_filename(filename.to_str().unwrap()) {
-            if !is_hwmon_sensor(sensor) {
-                continue;
-            }
+        let Ok((sensor, num, property)) = explode_sensor_filename(filename.to_str().unwrap())
+        else {
+            continue;
+        };
 
-            match read_string(entry.path()) {
-                Ok(value) => {
-                    let sensor = format!("{}{}", sensor, if num.is_empty() { "0" } else { num });
-                    stats
-                        .entry(sensor)
-                        .or_default()
-                        .insert(property.to_string(), value);
-                }
-                _ => continue,
-            }
+        if !is_hwmon_sensor(sensor) {
+            continue;
+        }
+
+        if let Ok(value) = read_string(entry.path()) {
+            let sensor = format!("{}{}", sensor, if num.is_empty() { "0" } else { num });
+            stats
+                .entry(sensor)
+                .or_default()
+                .insert(property.to_string(), value);
         }
     }
 
@@ -416,25 +415,15 @@ fn collect_sensor_data(
 fn explode_sensor_filename(name: &str) -> Result<(&str, &str, &str), ()> {
     let input = name.as_bytes();
 
-    let mut found_underscore = false;
     let mut num_start = 0;
     while num_start < input.len() {
         if input[num_start].is_ascii_digit() {
             break;
         }
 
-        if input[num_start] == b'_' {
-            found_underscore = true;
-        }
-
         num_start += 1;
     }
     if num_start >= input.len() {
-        // num is not found
-        if found_underscore {
-            return Err(());
-        }
-
         return Ok((&name[..num_start], &name[num_start..], &name[num_start..]));
     }
 
@@ -578,13 +567,13 @@ mod tests {
 
     #[tokio::test]
     async fn test_gather() {
-        let path = "tests/node/sys".into();
+        let path = "/sys".into();
         let ms = gather(path).await.unwrap();
         assert_ne!(ms.len(), 0);
     }
 
     #[test]
-    fn test_explode_sensor_filename() {
+    fn good_sensor_filename() {
         let input = "fan1_input";
 
         let (typ, id, property) = explode_sensor_filename(input).unwrap();
@@ -592,13 +581,16 @@ mod tests {
         assert_eq!(id, "1");
         assert_eq!(property, "input");
 
-        let input = "fan_i";
-        assert!(explode_sensor_filename(input).is_err());
-
         let input = "pwm1";
-        let (typ, id, _) = explode_sensor_filename(input).unwrap();
+        let (typ, id, property) = explode_sensor_filename(input).unwrap();
         assert_eq!(typ, "pwm");
         assert_eq!(id, "1");
+        assert_eq!(property, "");
+
+        let (typ, id, name) = explode_sensor_filename("beep_enable").unwrap();
+        assert_eq!(typ, "beep_enable");
+        assert_eq!(id, "");
+        assert_eq!(name, "");
     }
 
     #[test]

@@ -6,7 +6,7 @@ use std::sync::LazyLock;
 use event::{Metric, tags, tags::Key};
 use regex::Regex;
 
-use super::Error;
+use super::{Error, read_into};
 
 /// MDStat holds info parsed from /proc/mdstat
 #[derive(Debug, PartialEq)]
@@ -262,7 +262,7 @@ fn state_metric_value(key: &str, state: &str) -> f64 {
     if key == state { 1.0 } else { 0.0 }
 }
 
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+pub async fn gather(proc_path: PathBuf, sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stats = parse_mdstat(proc_path.join("mdstat")).await?;
 
     let mut metrics = Vec::with_capacity(stats.len() * 11);
@@ -355,7 +355,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 state_metric_value("resyncing", &state),
                 tags!(
                     Key::from_static("device") => device.clone(),
-                    Key::from_static("state") => "resyncing"
+                    Key::from_static("state") => "resync"
                 ),
             ),
             Metric::gauge_with_tags(
@@ -364,13 +364,69 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 state_metric_value("checking", &state),
                 tags!(
                     Key::from_static("device") => device,
-                    Key::from_static("state") => "checking"
+                    Key::from_static("state") => "check"
                 ),
             ),
         ]);
     }
 
+    if let Ok(raids) = md_raids(sys_path) {
+        for raid in raids {
+            let tags = tags!(
+                "device" => raid.device,
+            );
+
+            metrics.extend([
+                Metric::gauge_with_tags(
+                    "node_md_raid_disks",
+                    "Number of raid disks on device",
+                    raid.disks,
+                    tags.clone(),
+                ),
+                Metric::gauge_with_tags(
+                    "node_md_degraded",
+                    "Number of degraded disks on device",
+                    raid.degraded_disks,
+                    tags,
+                ),
+            ]);
+        }
+    }
+
     Ok(metrics)
+}
+
+struct MdRaid {
+    // kernel device name of array
+    device: String,
+    // number of devices in a fully functional array
+    disks: u64,
+    // number of degraded disks in the array
+    degraded_disks: u64,
+}
+
+fn md_raids(sys_path: PathBuf) -> Result<Vec<MdRaid>, Error> {
+    let mut paths = glob::glob(sys_path.join("block/md*/md").to_string_lossy().as_ref())?;
+
+    let mut raids = Vec::new();
+    while let Some(Ok(path)) = paths.next() {
+        let disks = read_into(path.join("raid_disks"))?;
+        let degraded_disks = read_into(path.join("degraded")).unwrap_or_default();
+
+        raids.push(MdRaid {
+            device: path
+                .parent()
+                .unwrap()
+                .file_name()
+                .unwrap()
+                .to_string_lossy()
+                .to_string(),
+            disks,
+            degraded_disks,
+        });
+    }
+
+    Ok(raids)
 }
 
 #[cfg(test)]

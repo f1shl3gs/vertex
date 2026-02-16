@@ -220,6 +220,8 @@ struct V4Ops {
     save_fh: u64,
     sec_info: u64,
     set_attr: u64,
+    set_client_id: u64,
+    set_client_id_confirm: u64,
     verify: u64,
     write: u64,
     rel_lock_owner: u64,
@@ -270,9 +272,11 @@ impl TryFrom<Vec<u64>> for V4Ops {
             save_fh: v[33],
             sec_info: v[34],
             set_attr: v[35],
-            verify: v[36],
-            write: v[37],
-            rel_lock_owner: v[38],
+            set_client_id: v[36],
+            set_client_id_confirm: v[37],
+            verify: v[38],
+            write: v[39],
+            rel_lock_owner: if v[0] > 39 { v[40] } else { 0 },
         })
     }
 }
@@ -290,6 +294,7 @@ struct ServerRPCStats {
     v3_stats: V3Stats,
     server_v4_stats: ServerV4Stats,
     v4_ops: V4Ops,
+    wdeleg_getattr: u64,
 }
 
 async fn server_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ServerRPCStats, Error> {
@@ -298,7 +303,6 @@ async fn server_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ServerRPCStats, Err
     let mut stats = ServerRPCStats::default();
     for line in data.lines() {
         let parts = line.trim().split_ascii_whitespace().collect::<Vec<_>>();
-
         if parts.len() < 2 {
             return Err(format!("invalid NFSd metric line {line}").into());
         }
@@ -335,6 +339,7 @@ async fn server_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ServerRPCStats, Err
             "proc3" => stats.v3_stats = values.try_into()?,
             "proc4" => stats.server_v4_stats = values.try_into()?,
             "proc4ops" => stats.v4_ops = values.try_into()?,
+            "wdeleg_getattr" => stats.wdeleg_getattr = values[0],
             _ => return Err(format!("errors parsing NFSd metric line {line}").into()),
         }
     }
@@ -346,7 +351,7 @@ macro_rules! rpc_metric {
     ($proto: expr, $name: expr, $value: expr) => {
         Metric::sum_with_tags(
             "node_nfsd_requests_total",
-            "Number of NFSd procedures invoked.",
+            "Total number NFSd Requests by method and protocol",
             $value,
             tags! {
                 "proto" => $proto.to_string(),
@@ -477,6 +482,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         rpc_metric!("2", "Link", stats.v2_stats.link),
         rpc_metric!("2", "SymLink", stats.v2_stats.sym_link),
         rpc_metric!("2", "MkDir", stats.v2_stats.mkdir),
+        rpc_metric!("2", "RmDir", stats.v2_stats.rmdir),
         rpc_metric!("2", "ReadDir", stats.v2_stats.read_dir),
         rpc_metric!("2", "FsStat", stats.v2_stats.fs_stat),
         // collects statistics for NFSv3 requests
@@ -514,6 +520,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         rpc_metric!("4", "Lock", stats.v4_ops.lock),
         rpc_metric!("4", "Lockt", stats.v4_ops.lockt),
         rpc_metric!("4", "Locku", stats.v4_ops.locku),
+        rpc_metric!("4", "Lookup", stats.v4_ops.lookup),
         rpc_metric!("4", "LookupRoot", stats.v4_ops.lookup_root),
         rpc_metric!("4", "Nverify", stats.v4_ops.nverify),
         rpc_metric!("4", "Open", stats.v4_ops.open),
@@ -531,9 +538,16 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         rpc_metric!("4", "SaveFH", stats.v4_ops.save_fh),
         rpc_metric!("4", "SecInfo", stats.v4_ops.sec_info),
         rpc_metric!("4", "SetAttr", stats.v4_ops.set_attr),
+        rpc_metric!("4", "SetClientID", stats.v4_ops.set_client_id),
+        rpc_metric!(
+            "4",
+            "SetClientIDConfirm",
+            stats.v4_ops.set_client_id_confirm
+        ),
         rpc_metric!("4", "Verify", stats.v4_ops.verify),
         rpc_metric!("4", "Write", stats.v4_ops.write),
         rpc_metric!("4", "RelLockOwner", stats.v4_ops.rel_lock_owner),
+        rpc_metric!("4", "WdelegGetattr", stats.wdeleg_getattr),
     ];
 
     Ok(metrics)
@@ -697,10 +711,13 @@ proc4ops 72 0 0 0 1098 2 0 0 0 0 8179 5896 0 0 0 0 5900 0 0 2 0 2 0 9609 0 2 150
                         save_fh: 0,
                         sec_info: 0,
                         set_attr: 0,
+                        set_client_id: 0,
+                        set_client_id_confirm: 0,
                         verify: 3,
                         write: 3,
                         rel_lock_owner: 0,
                     },
+                    wdeleg_getattr: 0
                 },
                 invalid: false,
             },

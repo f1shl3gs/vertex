@@ -23,6 +23,8 @@ struct RaplZone {
     name: String,
     // index (different value for duplicate names)
     index: i32,
+    // filesystem path of RaplZone
+    path: PathBuf,
     // the current microjoule value from the zone energy counter
     // // https://www.kernel.org/doc/Documentation/power/powercap/powercap.txt
     microjoules: u64,
@@ -35,18 +37,16 @@ struct RaplZone {
 /// https://www.kernel.org/doc/Documentation/power/powercap/powercap.txt
 async fn get_rapl_zones(sys_path: PathBuf) -> Result<Vec<RaplZone>, Error> {
     let root = sys_path.join("class/powercap");
-    let mut zones = vec![];
+    let dirs = std::fs::read_dir(&root)?;
 
     // count name usages to avoid duplicates (label them with an index)
     let mut names: BTreeMap<String, i32> = BTreeMap::new();
-
+    let mut zones = vec![];
     // loop through directory files searching for file "name" from subdirs
-    let dirs = std::fs::read_dir(root)?;
     for entry in dirs.flatten() {
-        let path = entry.path().join("name");
-        let name = match read_string(path) {
-            Ok(c) => c,
-            _ => continue,
+        let path = entry.path();
+        let Ok(name) = read_string(path.join("name")) else {
+            continue;
         };
 
         let (name, index) = match get_name_and_index(&name) {
@@ -58,14 +58,13 @@ async fn get_rapl_zones(sys_path: PathBuf) -> Result<Vec<RaplZone>, Error> {
             }
         };
 
-        let path = entry.path().join("max_energy_range_uj");
-        let max_microjoules = read_into(path)?;
-        let path = entry.path().join("energy_uj");
-        let microjoules = read_into(path)?;
+        let max_microjoules = read_into(path.join("max_energy_range_uj"))?;
+        let microjoules = read_into(path.join("energy_uj"))?;
 
         zones.push(RaplZone {
             name: name.to_string(),
             index,
+            path,
             microjoules,
             max_microjoules,
         });
@@ -102,7 +101,8 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             format!("Current RAPL {} value in joules", zone.name),
             zone.microjoules as f64 / 1000000.0,
             tags!(
-                "index" => zone.index
+                "index" => zone.index,
+                "path" => zone.path.to_string_lossy().as_ref(),
             ),
         ))
     }

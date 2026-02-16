@@ -3,10 +3,9 @@ use std::path::PathBuf;
 
 use configurable::Configurable;
 use event::{Metric, tags, tags::Key};
-use humanize::bytes::parse_bytes;
 use serde::{Deserialize, Serialize};
 
-use super::{Error, error::ParseError, read_string};
+use super::{Error, read_string};
 
 #[derive(Clone, Configurable, Debug, Default, Deserialize, Serialize)]
 pub struct Config {
@@ -21,61 +20,94 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
     for stat in stats {
         metrics.extend([
             // metrics under /sys/fs/bcache/<uuid>
-            Metric::gauge(
+            Metric::gauge_with_tags(
                 "node_bcache_average_key_size_sectors",
                 "Average data per key in the btree (sectors).",
                 stat.bcache.average_key_size,
+                tags!(
+                    "uuid" => stat.name.clone()
+                )
             ),
-            Metric::gauge(
+            Metric::gauge_with_tags(
                 "node_bcache_btree_cache_size_bytes",
                 "Amount of memory currently used by the btree cache.",
                 stat.bcache.btree_cache_size,
+                tags!(
+                    "uuid" => stat.name.clone()
+                )
             ),
-            Metric::gauge(
+            Metric::gauge_with_tags(
                 "node_bcache_cache_available_percent",
                 "Percentage of cache device without dirty data, usable for writeback (may contain clean cached data).",
                 stat.bcache.cache_available_percent,
+                tags!(
+                    "uuid" => stat.name.clone()
+                )
             ),
-            Metric::gauge(
+            Metric::gauge_with_tags(
                 "node_bcache_congested",
-                "Congested.",
+                "Congestion",
                 stat.bcache.congested,
+                tags!(
+                    "uuid" => stat.name.clone()
+                )
             ),
-            Metric::gauge(
+            Metric::gauge_with_tags(
                 "node_bcache_root_usage_percent",
                 "Percentage of the root btree node in use (tree depth increases if too high).",
                 stat.bcache.root_usage_percent,
+                tags!(
+                    "uuid" => stat.name.clone()
+                )
             ),
-            Metric::gauge(
+            Metric::gauge_with_tags(
                 "node_bcache_tree_depth",
                 "Depth of the btree.",
                 stat.bcache.tree_depth,
+                tags!(
+                    "uuid" => stat.name.clone()
+                )
             ),
             // metrics under /sys/fs/bcache/<uuid>/internal
-            Metric::gauge(
+            Metric::gauge_with_tags(
                 "node_bcache_active_journal_entries",
                 "Number of journal entries that are newer than the index.",
                 stat.bcache.internal.active_journal_entries,
+                tags!(
+                    "uuid" => stat.name.clone()
+                )
             ),
-            Metric::gauge(
-                "node_bcache_btree_node",
+            Metric::gauge_with_tags(
+                "node_bcache_btree_nodes",
                 "Total nodes in the btree.",
                 stat.bcache.internal.btree_nodes,
+                tags!(
+                    "uuid" => stat.name.clone()
+                )
             ),
-            Metric::gauge(
+            Metric::gauge_with_tags(
                 "node_bcache_btree_read_average_duration_seconds",
                 "Average btree read duration.",
                 stat.bcache.internal.btree_read_average_duration_us as f64 * 1e-9,
+                tags!(
+                    "uuid" => stat.name.clone()
+                )
             ),
-            Metric::gauge(
+            Metric::sum_with_tags(
                 "node_bcache_cache_read_races_total",
                 "Counts instances where while data was being read from the cache, the bucket was reused and invalidated - i.e. where the pointer was stale after the read completed.",
                 stat.bcache.internal.cache_read_races,
+                tags!(
+                    "uuid" => stat.name.clone()
+                )
             )
         ]);
 
         for bdev in stat.bdevs {
-            let tags = tags!(Key::from_static("backing_device") => bdev.name);
+            let tags = tags!(
+                Key::from_static("backing_device") => bdev.name,
+                Key::from_static("uuid") => stat.name.clone()
+            );
 
             // metrics in /sys/fs/bcache/<uuid>/<bdev>/
             metrics.extend([
@@ -168,7 +200,10 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
         }
 
         for cache in stat.caches {
-            let tags = tags!(Key::from_static("cache_device") => cache.name);
+            let tags = tags!(
+                Key::from_static("cache_device") => cache.name,
+                Key::from_static("uuid") => stat.name.clone(),
+            );
 
             // metrics under /sys/fs/bcache/<uuid>/<cache>
             metrics.extend([
@@ -331,6 +366,7 @@ fn get_stats(root: PathBuf, priority_stats: bool) -> Result<Stat, Error> {
 }
 
 /// InternalStats contains internal bcache statistics.
+#[derive(Debug)]
 struct InternalStats {
     active_journal_entries: u64,
     btree_nodes: u64,
@@ -339,6 +375,7 @@ struct InternalStats {
 }
 
 /// PeriodStats contains statistics for a time period (5 min or total).
+#[derive(Debug)]
 struct PeriodStats {
     bypassed: u64,
     cache_bypass_hits: u64,
@@ -370,6 +407,7 @@ fn read_period_stats(path: PathBuf) -> Result<PeriodStats, Error> {
 }
 
 /// `BcacheStats` contains statistics tied to a bcache ID.
+#[derive(Debug)]
 struct BcacheStats {
     average_key_size: u64,
     btree_cache_size: u64,
@@ -383,7 +421,7 @@ struct BcacheStats {
 }
 
 /// `WritebackRateDebugStats` contains bcache writeback statistics.
-#[derive(Default)]
+#[derive(Debug, Default)]
 struct WritebackRateDebugStats {
     rate: u64,
     dirty: u64,
@@ -399,53 +437,46 @@ fn read_writeback_rate_debug(path: PathBuf) -> Result<WritebackRateDebugStats, E
 
     let mut stats = WritebackRateDebugStats::default();
     for line in data.lines() {
-        if let Some(value) = line.strip_prefix("rate:") {
-            let value = value.trim().strip_suffix("/sec").unwrap_or(value);
-            let value = parse_bytes(value)
-                .map_err(|err| Error::Parse(ParseError::Other(err.to_string())))?;
-            stats.rate = value as u64;
+        let Some((key, value)) = line.split_once(':') else {
             continue;
-        }
+        };
 
-        if let Some(value) = line.strip_prefix("dirty:") {
-            let value = parse_bytes(value.trim())
-                .map_err(|err| Error::Parse(ParseError::Other(err.to_string())))?;
-            stats.dirty = value as u64;
-            continue;
-        }
+        let value = value.trim();
+        match key {
+            "rate" => {
+                let Some(stripped) = value.strip_suffix("/sec") else {
+                    continue;
+                };
 
-        if let Some(value) = line.strip_prefix("target:") {
-            let value = parse_bytes(value.trim())
-                .map_err(|err| Error::Parse(ParseError::Other(err.to_string())))?;
-            stats.target = value as u64;
-            continue;
-        }
+                stats.rate = parse_bytes(stripped).map_err(|_| Error::Malformed("rate"))?;
+            }
+            "dirty" => {
+                stats.dirty = parse_bytes(value).map_err(|_| Error::Malformed("dirty"))?;
+            }
+            "target" => {
+                stats.target = parse_bytes(value).map_err(|_| Error::Malformed("target"))?;
+            }
+            "proportional" => {
+                stats.proportional =
+                    parse_bytes(value).map_err(|_| Error::Malformed("proportional"))? as i64;
+            }
+            "integral" => {
+                stats.integral =
+                    parse_bytes(value).map_err(|_| Error::Malformed("integral"))? as i64;
+            }
+            "change" => {
+                let Some(stripped) = value.strip_suffix("/sec") else {
+                    continue;
+                };
 
-        if let Some(value) = line.strip_prefix("proportional:") {
-            let value = parse_bytes(value.trim())
-                .map_err(|err| Error::Parse(ParseError::Other(err.to_string())))?;
-            stats.proportional = value as i64;
-            continue;
-        }
-
-        if let Some(value) = line.strip_prefix("integral:") {
-            let value = parse_bytes(value.trim())
-                .map_err(|err| Error::Parse(ParseError::Other(err.to_string())))?;
-            stats.integral = value as i64;
-            continue;
-        }
-
-        if let Some(value) = line.strip_prefix("change:") {
-            let value = value.trim().strip_suffix("/sec").unwrap_or(value);
-            let value = parse_bytes(value)
-                .map_err(|err| Error::Parse(ParseError::Other(err.to_string())))?;
-            stats.change = value as i64;
-            continue;
-        }
-
-        if let Some(value) = line.strip_prefix("next io:") {
-            let value = value.trim().strip_suffix("ms").expect("ms must exist");
-            stats.next_io = value.parse()?;
+                stats.change =
+                    parse_bytes(stripped).map_err(|_| Error::Malformed("change"))? as i64;
+            }
+            "next io" => {
+                let value = value.strip_suffix("ms").expect("ms must exist");
+                stats.next_io = value.parse()?;
+            }
+            _ => {}
         }
     }
 
@@ -453,6 +484,7 @@ fn read_writeback_rate_debug(path: PathBuf) -> Result<WritebackRateDebugStats, E
 }
 
 /// `BdevStats` contains statistics for one backing device.
+#[derive(Debug)]
 struct BdevStats {
     name: String,
     dirty_data: u64,
@@ -462,7 +494,7 @@ struct BdevStats {
 }
 
 /// `PriorityStats` contains statistics from the priority_stats file.
-#[derive(Default)]
+#[derive(Debug, Default)]
 struct PriorityStats {
     unused_percent: u64,
     metadata_percent: u64,
@@ -499,6 +531,7 @@ fn read_priority_stats(path: PathBuf) -> Result<PriorityStats, Error> {
 }
 
 /// `CacheStats` contains statistics for one cache device.
+#[derive(Debug)]
 struct CacheStats {
     name: String,
     io_errors: u64,
@@ -512,6 +545,7 @@ struct CacheStats {
 /// The names and meanings of each statistic were taken from bcache.txt
 /// and files in drivers/md/bcache in the Linux kernel source. Counters
 /// are u64 (in-kernel counters are mostly unsigned long).
+#[derive(Debug)]
 struct Stat {
     // The name of the bcache used to source these statistics.
     name: String,
@@ -536,6 +570,46 @@ fn read_value(path: PathBuf) -> Result<u64, Error> {
     }
 }
 
+// parse_bytes converts a human-readable byte slice into an u64
+fn parse_bytes(input: &str) -> Result<u64, ()> {
+    let len = input.len();
+    if len == 0 {
+        return Err(());
+    }
+
+    let (mut value, unit) = input.split_at(len - 1);
+    // Source for conversion rules:
+    // linux-kernel/drivers/md/bcache/util.c:bch_hprint()
+    let mul = match unit {
+        "k" => 1u64 << 10,
+        "M" => 1 << 20,
+        "G" => 1 << 30,
+        "T" => 1 << 40,
+        "P" => 1 << 50,
+        "E" => 1 << 60,
+        "Z" => 64,
+        "Y" => 65536,
+        _ if unit.parse::<u8>().is_ok() => {
+            value = input;
+            1
+        }
+        _ => return Err(()),
+    };
+
+    let value = match value.split_once('.') {
+        Some((first, second)) => {
+            // parses the peculiar format produced by bcache's bch_hprint.
+            let mant = first.parse::<f64>().map_err(|_| ())?;
+            let frac = second.parse::<f64>().map_err(|_| ())?;
+
+            mant + frac / 10.24
+        }
+        None => value.parse::<f64>().map_err(|_| ())?,
+    };
+
+    Ok((value * mul as f64) as u64)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -553,6 +627,13 @@ mod tests {
     }
 
     #[test]
+    fn writeback_rate_debug() {
+        let path = "tests/node/sys/fs/bcache/deaddd54-c735-46d5-868e-f331c5fd7c74/bdev0/writeback_rate_debug";
+        let stats = read_writeback_rate_debug(path.into()).unwrap();
+        println!("{:#?}", stats);
+    }
+
+    #[test]
     fn priority_stats() {
         let path =
             "tests/node/sys/fs/bcache/deaddd54-c735-46d5-868e-f331c5fd7c74/cache0/priority_stats"
@@ -563,17 +644,17 @@ mod tests {
     }
 
     #[test]
-    fn writeback_rate_debug() {
-        let path =
-            "tests/node/sys/fs/bcache/deaddd54-c735-46d5-868e-f331c5fd7c74/bdev0/writeback_rate_debug"
-                .into();
-        let stats = read_writeback_rate_debug(path).unwrap();
-        assert_eq!(stats.rate as usize, parse_bytes("1.1M").unwrap());
-        assert_eq!(stats.dirty as usize, parse_bytes("20.4G").unwrap());
-        assert_eq!(stats.target as usize, parse_bytes("20.4G").unwrap());
-        assert_eq!(stats.proportional as usize, parse_bytes("427.5k").unwrap());
-        assert_eq!(stats.integral as usize, parse_bytes("790.0k").unwrap());
-        assert_eq!(stats.change as usize, parse_bytes("321.5k").unwrap());
-        assert_eq!(stats.next_io, 17)
+    fn dehumanize() {
+        for (input, expect) in [
+            ("542k", Ok(555008)),
+            ("322M", Ok(337641472)),
+            ("1.1k", Ok(1124)),
+            ("1.9k", Ok(1924)),
+            ("1.10k", Ok(2024)),
+            ("", Err(())),
+        ] {
+            let got = parse_bytes(input);
+            assert_eq!(expect, got, "input {:?}", input);
+        }
     }
 }

@@ -7,6 +7,8 @@ use event::{Metric, tags};
 use super::{Error, read_into};
 
 pub async fn collect(sysfs: PathBuf) -> Result<Vec<Metric>, Error> {
+    let valid_device = regex::Regex::new(r#"^st\d+$"#).unwrap();
+
     let root = sysfs.join("class/scsi_tape");
     let dirs = root.read_dir()?;
 
@@ -18,6 +20,10 @@ pub async fn collect(sysfs: PathBuf) -> Result<Vec<Metric>, Error> {
         }
 
         let name = path.file_name().map(|name| name.to_string_lossy()).unwrap();
+        if !valid_device.is_match(name.as_ref()) {
+            continue;
+        }
+
         let stats = match read_stats(&path) {
             Ok(stats) => stats,
             Err(err) => {

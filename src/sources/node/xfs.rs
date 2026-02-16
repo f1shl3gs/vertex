@@ -541,8 +541,8 @@ async fn parse_stat(path: PathBuf) -> Result<Stats, Error> {
                     return Err("incorrect number of values for XFS read write stats".into());
                 }
 
-                stat.read_write.read = us[0];
-                stat.read_write.write = us[1];
+                stat.read_write.write = us[0];
+                stat.read_write.read = us[1];
             }
             "attr" => {}
             "icluster" => {}
