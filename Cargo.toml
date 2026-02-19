@@ -492,7 +492,7 @@ glob = { version = "0.3.3", default-features = false }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes", "duration", "serde"], rev = "29e9225d05de76c6d48134497aa4a94c2cd08380" }
 hyper-unix = { path = "lib/hyper-unix", optional = true }
 indexmap = { version = "2.13.0", default-features = false, features = ["serde"] }
-inventory = { version = "0.3.21", default-features = false }
+inventory = { version = "0.3.22", default-features = false }
 libc = { version = "0.2.182", default-features = false }
 lru = { version = "0.16.3", default-features = false, optional = true }
 maxminddb = { git = "https://github.com/f1shl3gs/maxminddb.git", rev = "eb9a6d1861cfe7313589c0e0281ddbb660a88962", optional = true, features = ["mmap", "unsafe-str"] }
