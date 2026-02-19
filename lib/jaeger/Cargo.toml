@@ -6,7 +6,7 @@ publish = false
 build = "build.rs"
 
 [build-dependencies]
-tonic-prost-build = { version = "0.14.4", default-features = false, features = ["transport"] }
+tonic-prost-build = { version = "0.14.5", default-features = false, features = ["transport"] }
 
 [dependencies]
 base64 = { version = "0.22.1", default-features = false, features = ["alloc"] }
@@ -14,5 +14,5 @@ event = { path = "../event" }
 prost = { version = "0.14.3", default-features = false }
 prost-types = { version = "0.14.3", default-features = false }
 thrift = { version = "0.17.0", default-features = false }
-tonic = { version = "0.14.4", default-features = false, features = ["codegen", "transport"] }
-tonic-prost = { version = "0.14.4", default-features = false }
+tonic = { version = "0.14.5", default-features = false, features = ["codegen", "transport"] }
+tonic-prost = { version = "0.14.5", default-features = false }
