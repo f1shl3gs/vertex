@@ -108,6 +108,7 @@ pub async fn gather(
                     minor,
                     %err,
                 );
+
                 continue;
             }
         };
