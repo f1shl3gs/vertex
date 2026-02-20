@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1771585306589,
+  "lastUpdate": 1771585367933,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2a4545f3e716d92dbb5f81c4e08407f34b0de853",
-          "message": "Merge pull request #2697 from f1shl3gs/sinks/blackhole/enhance_acknowledgement\n\nsinks/blackhole: enhance acknowledgements",
-          "timestamp": "2025-11-29T21:13:42+08:00",
-          "tree_id": "a5c3db98d5fd8730172e1e8961f37622f1830ec3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2a4545f3e716d92dbb5f81c4e08407f34b0de853"
-        },
-        "date": 1764422686991,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 588,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41259.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "406190a50c4dd0e2a8572d724cf099a355d945d6",
           "message": "Merge pull request #2698 from f1shl3gs/dependabot/cargo/criterion-0.8.0\n\nchore(deps): bump criterion from 0.7.0 to 0.8.0",
           "timestamp": "2025-12-02T14:19:10+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40955.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ea6afab7040b479e0c98a025763b4a1f66519fc0",
+          "message": "Merge pull request #2800 from f1shl3gs/dependabot/cargo/syn-2.0.117\n\nchore(deps): bump syn from 2.0.116 to 2.0.117",
+          "timestamp": "2026-02-20T18:50:37+08:00",
+          "tree_id": "ced0d24eaacef0134e9a3348e162fe16b91183ae",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ea6afab7040b479e0c98a025763b4a1f66519fc0"
+        },
+        "date": 1771585345212,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 616,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40949.8,
             "unit": "KiB"
           }
         ]
