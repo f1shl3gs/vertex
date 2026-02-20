@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::collections::BTreeMap;
 use std::ops::ControlFlow;
 use std::os::fd::{AsRawFd, FromRawFd, OwnedFd};
@@ -507,10 +508,13 @@ fn queue_stats(
     port: &str,
     values: Vec<u64>,
 ) -> impl Iterator<Item = Metric> {
+    let name = Cow::<'static, str>::Owned(name.into());
+    let desc = Cow::<'static, str>::Owned(desc.into());
+
     values.into_iter().enumerate().map(move |(queue, value)| {
         Metric::sum_with_tags(
-            name,
-            desc,
+            name.clone(),
+            desc.clone(),
             value,
             tags!(
                 "port" => port,

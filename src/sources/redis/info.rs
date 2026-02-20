@@ -1606,7 +1606,7 @@ fn handle_replication_metrics(
             };
 
             return Ok(vec![Metric::gauge_with_tags(
-                key,
+                key.to_string(),
                 desc,
                 value,
                 tags!(

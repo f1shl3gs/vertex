@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::collections::{BTreeMap, HashMap};
 
 /// A trait to fetch an accurate estimate of the total memory usage of a value.
@@ -40,6 +41,15 @@ type_size!(u64, i64);
 impl TypeSize for String {
     fn allocated_bytes(&self) -> usize {
         self.len()
+    }
+}
+
+impl TypeSize for Cow<'static, str> {
+    fn allocated_bytes(&self) -> usize {
+        match self {
+            Cow::Borrowed(_) => 0,
+            Cow::Owned(s) => s.len(),
+        }
     }
 }
 

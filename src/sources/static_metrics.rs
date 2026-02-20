@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::time::Duration;
 
 use chrono::Utc;
@@ -82,7 +83,7 @@ async fn run(
             .map(|conf| {
                 Metric::new(
                     conf.name.clone(),
-                    conf.description.clone(),
+                    conf.description.clone().map(Cow::Owned),
                     conf.tags.clone(),
                     ts,
                     conf.value.clone(),
@@ -201,13 +202,13 @@ mod tests {
             ),
             (
                 "sum",
-                Some("sum description".to_string()),
+                Some("sum description".into()),
                 tags!("foo" => "bar"),
                 MetricValue::Sum(2.2),
             ),
             (
                 "histogram",
-                Some("histogram".to_string()),
+                Some("histogram".into()),
                 tags!("bar" => "foo"),
                 MetricValue::Histogram {
                     count: 2,
@@ -226,7 +227,7 @@ mod tests {
             ),
             (
                 "summary",
-                Some("summary".to_string()),
+                Some("summary".into()),
                 tags!("bar" => "foo"),
                 MetricValue::Summary {
                     count: 3,
