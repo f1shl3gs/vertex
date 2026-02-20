@@ -2,10 +2,6 @@ sources:
   node:
     type: node
     interval: 5s
-    proc_path: /home/f1shl3gs/Workspaces/goland/node_exporter/collector/fixtures/proc
-    sys_path: /home/f1shl3gs/Workspaces/goland/node_exporter/collector/fixtures/sys
-    udev_path: /home/f1shl3gs/Workspaces/goland/node_exporter/collector/fixtures/udev
-    root_path: /home/f1shl3gs/Workspaces/goland/node_exporter/collector/fixtures
 
 sinks:
   prom:
