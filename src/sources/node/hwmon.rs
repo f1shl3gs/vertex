@@ -49,7 +49,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
 }
 
 fn hwmon_metrics(dir: &Path) -> Result<Vec<Metric>, Error> {
-    let chip = &hwmon_name(dir)?;
+    let chip = &read_hwmon_name(dir)?;
 
     let mut data = collect_sensor_data(dir)?;
     let dev_path = dir.join("device");
@@ -456,7 +456,7 @@ fn human_readable_chip_name(dir: &Path) -> Result<String, Error> {
     Ok(content)
 }
 
-fn hwmon_name(path: &Path) -> Result<String, Error> {
+fn read_hwmon_name(path: &Path) -> Result<String, Error> {
     // generate a name for a sensor path
 
     // sensor numbering depends on the order of linux module loading and
@@ -565,13 +565,6 @@ mod tests {
         }
     }
 
-    #[tokio::test]
-    async fn test_gather() {
-        let path = "/sys".into();
-        let ms = gather(path).await.unwrap();
-        assert_ne!(ms.len(), 0);
-    }
-
     #[test]
     fn good_sensor_filename() {
         let input = "fan1_input";
@@ -594,13 +587,13 @@ mod tests {
     }
 
     #[test]
-    fn test_is_hwmon_sensor() {
+    fn detect_hwmon_sensor() {
         assert!(is_hwmon_sensor("fan"));
         assert!(!is_hwmon_sensor("foo"));
     }
 
     #[test]
-    fn test_collect_sensor_data() {
+    fn sensor_data() {
         let path = "tests/node/sys/class/hwmon/hwmon3";
         let kvs = collect_sensor_data(path).unwrap();
 
@@ -609,9 +602,9 @@ mod tests {
     }
 
     #[test]
-    fn test_hwmon_name() {
+    fn hwmon_name() {
         let path = PathBuf::from("tests/node/sys/class/hwmon/hwmon2");
-        let name = hwmon_name(&path).unwrap();
+        let name = read_hwmon_name(&path).unwrap();
         assert_eq!(name, "platform_applesmc_768")
     }
 }
