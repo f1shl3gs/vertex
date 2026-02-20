@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1771194086718,
+  "lastUpdate": 1771585188979,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b0c0782ec8b8419e7d77c64bd7bf26f6bb0094d9",
-          "message": "Merge pull request #2694 from f1shl3gs/dependabot/cargo/tracing-0.1.43\n\nchore(deps): bump tracing from 0.1.41 to 0.1.43",
-          "timestamp": "2025-11-28T19:17:00+08:00",
-          "tree_id": "57daeac639eff96ff3946955c4d4071e57cb01db",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b0c0782ec8b8419e7d77c64bd7bf26f6bb0094d9"
-        },
-        "date": 1764329262654,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 564,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41251.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d32dfc2d147d5639c66aa0d2df9bad214cf22602",
           "message": "Merge pull request #2695 from f1shl3gs/deps/bump_tracing_subscriber_to_0.3.30\n\ndeps: bump tracing-subscriber to 0.3.22",
           "timestamp": "2025-11-28T19:38:41+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40948.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "418bb1a2aa561c76453aae716d76e27748b4c308",
+          "message": "Merge pull request #2799 from f1shl3gs/sources/node/fix_some_bugs\n\nsources/node: fix some bugs & metric value",
+          "timestamp": "2026-02-20T18:48:24+08:00",
+          "tree_id": "00e9cf6dca450f21fb77c73ead00267c659f7625",
+          "url": "https://github.com/f1shl3gs/vertex/commit/418bb1a2aa561c76453aae716d76e27748b4c308"
+        },
+        "date": 1771585166109,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 574,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40958.1,
             "unit": "KiB"
           }
         ]
