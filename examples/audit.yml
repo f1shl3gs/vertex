@@ -1,0 +1,12 @@
+sources:
+  audit:
+    type: audit
+
+sinks:
+  stdout:
+    type: console
+    inputs:
+      - audit
+    encoding:
+      codec: json
+      pretty: true
