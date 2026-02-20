@@ -2,7 +2,7 @@ use std::ffi::CString;
 use std::path::PathBuf;
 
 use configurable::Configurable;
-use event::{Metric, tags, tags::Key};
+use event::{Metric, tags};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 
@@ -41,89 +41,150 @@ fn default_fs_type_exclude() -> regex::Regex {
     ).unwrap()
 }
 
-pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = get_stats(&conf, proc_path)?;
+pub async fn gather(
+    conf: Config,
+    root_path: PathBuf,
+    proc_path: PathBuf,
+) -> Result<Vec<Metric>, Error> {
+    let data = std::fs::read_to_string(proc_path.join("1/mountinfo"))
+        .or_else(|_err| std::fs::read_to_string(proc_path.join("self/mountinfo")))?;
 
-    let mut metrics = Vec::with_capacity(stats.len() * 8);
-    for stat in stats {
-        let device_error = stat.device_error.is_some();
-        let tags = tags!(
-            Key::from_static("device") => stat.device.clone(),
-            Key::from_static("fstype") => stat.fs_type,
-            Key::from_static("mountpoint") => stat.mount_point.clone(),
-            Key::from_static("device_error") => stat.device_error.unwrap_or_default(),
-        );
+    let mut metrics = Vec::new();
+    for line in data.lines() {
+        let Ok(info) = parse_mount_info(line) else {
+            continue;
+        };
+
+        if conf.mount_points_exclude.is_match(info.mount_point) {
+            debug!(
+                message = "ignoring mount point",
+                mount_point = info.mount_point
+            );
+            continue;
+        }
+        if conf.fs_type_exclude.is_match(info.fs_type) {
+            debug!(message = "ignoring fs type", r#type = info.fs_type);
+            continue;
+        }
+
+        let mount_point = info
+            .mount_point
+            .replace("\\040", " ")
+            .replace("\\011", "\t");
+        let read_only = info.options.split(',').any(|item| item == "ro")
+            || info.super_options.split(',').any(|item| item == "ro");
 
         metrics.extend([
             Metric::gauge_with_tags(
                 "node_filesystem_device_error",
-                "Whether an error occurred while getting statistics for the given device.",
-                device_error,
-                tags.clone(),
+                "Whether an error occurred while getting statistics for the given device",
+                1,
+                tags!(
+                    "device" => info.device,
+                    "mountpoint" => &mount_point,
+                    "fstype" => info.fs_type,
+                    "device_error" => ""
+                ),
             ),
             Metric::gauge_with_tags(
                 "node_filesystem_readonly",
-                "Filesystem read-only status.",
-                stat.ro,
-                tags.clone(),
-            ),
-        ]);
-
-        if device_error {
-            continue;
-        }
-
-        metrics.extend([
-            Metric::gauge_with_tags(
-                "node_filesystem_size_bytes",
-                "Filesystem size in bytes.",
-                stat.size,
-                tags.clone(),
-            ),
-            Metric::gauge_with_tags(
-                "node_filesystem_free_bytes",
-                "Filesystem free space in bytes.",
-                stat.free,
-                tags.clone(),
-            ),
-            Metric::gauge_with_tags(
-                "node_filesystem_avail_bytes",
-                "Filesystem space available to non-root users in bytes.",
-                stat.avail,
-                tags.clone(),
-            ),
-            Metric::gauge_with_tags(
-                "node_filesystem_files",
-                "Filesystem total file nodes.",
-                stat.files,
-                tags.clone(),
-            ),
-            Metric::gauge_with_tags(
-                "node_filesystem_files_free",
-                "Filesystem total free file nodes",
-                stat.files_free,
-                tags,
-            ),
-            Metric::gauge_with_tags(
-                "node_filesystem_mount_info",
-                "Filesystem mount information",
-                1,
+                "Filesystem read-only status",
+                read_only,
                 tags!(
-                    "device" => stat.device,
-                    "major" => stat.major,
-                    "minor" => stat.minor,
-                    "mountpoint" => stat.mount_point,
+                    "device" => info.device,
+                    "mountpoint" => &mount_point,
+                    "fstype" => info.fs_type,
+                    "device_error" => ""
                 ),
             ),
         ]);
+
+        match statfs(root_path.join(info.mount_point)) {
+            Ok(usage) => {
+                let tags = tags!(
+                    "device" => info.device,
+                    "mountpoint" => info.mount_point,
+                    "fstype" => info.fs_type,
+                    "device_error" => ""
+                );
+
+                metrics.extend([
+                    Metric::gauge_with_tags(
+                        "node_filesystem_device_error",
+                        "Whether an error occurred while getting statistics for the given device",
+                        1,
+                        tags!(
+                            "device" => info.device,
+                            "mountpoint" => &mount_point,
+                            "fstype" => info.fs_type,
+                            "device_error" => ""
+                        ),
+                    ),
+                    Metric::gauge_with_tags(
+                        "node_filesystem_size_bytes",
+                        "Filesystem size in bytes",
+                        usage.size(),
+                        tags.clone(),
+                    ),
+                    Metric::gauge_with_tags(
+                        "node_filesystem_free_bytes",
+                        "Filesystem free space in bytes",
+                        usage.free(),
+                        tags.clone(),
+                    ),
+                    Metric::gauge_with_tags(
+                        "node_filesystem_avail_bytes",
+                        "Filesystem space available to non-root users in bytes",
+                        usage.avail(),
+                        tags.clone(),
+                    ),
+                    Metric::gauge_with_tags(
+                        "node_filesystem_files",
+                        "Filesystem total file nodes",
+                        usage.files(),
+                        tags.clone(),
+                    ),
+                    Metric::gauge_with_tags(
+                        "node_filesystem_files_free",
+                        "Filesystem total free file nodes",
+                        usage.files_free(),
+                        tags,
+                    ),
+                    Metric::gauge_with_tags(
+                        "node_filesystem_mount_info",
+                        "Filesystem mount information",
+                        1,
+                        tags!(
+                            "device" => info.device,
+                            "major" => info.major,
+                            "minor" => info.minor,
+                            "mountpoint" => info.mount_point,
+                        ),
+                    ),
+                ]);
+            }
+            Err(err) => {
+                metrics.push(Metric::gauge_with_tags(
+                    "node_filesystem_device_error",
+                    "Whether an error occurred while getting statistics for the given device",
+                    1,
+                    tags!(
+                        "device" => info.device,
+                        "mountpoint" => &mount_point,
+                        "fstype" => info.fs_type,
+                        "device_error" => err.kind().to_string(),
+                    ),
+                ));
+            }
+        }
     }
 
     Ok(metrics)
 }
 
-fn get_stats(config: &Config, root: PathBuf) -> Result<Vec<Stat>, Error> {
-    let data = std::fs::read_to_string(root.join("1/mountinfo"))
-        .or_else(|_err| std::fs::read_to_string(root.join("self/mountinfo")))?;
+fn get_stats(config: &Config, proc_path: PathBuf) -> Result<Vec<Stat>, Error> {
+    let data = std::fs::read_to_string(proc_path.join("1/mountinfo"))
+        .or_else(|_err| std::fs::read_to_string(proc_path.join("self/mountinfo")))?;
 
     let mut stats = Vec::new();
     for line in data.lines() {
@@ -163,7 +224,7 @@ fn get_stats(config: &Config, root: PathBuf) -> Result<Vec<Stat>, Error> {
             .map(|(major, minor)| (major.to_string(), minor.to_string()))
             .unwrap_or_default();
 
-        match statfs(&mount_point) {
+        match statfs(PathBuf::from(&mount_point)) {
             Ok(usage) => {
                 stats.push(Stat {
                     device: device.to_string(),
@@ -200,7 +261,7 @@ fn get_stats(config: &Config, root: PathBuf) -> Result<Vec<Stat>, Error> {
                     files: 0,
                     files_free: 0,
                     ro: 0,
-                    device_error: Some(err.kind().to_string()),
+                    device_error: Some(err),
                     major,
                     minor,
                 });
@@ -211,9 +272,62 @@ fn get_stats(config: &Config, root: PathBuf) -> Result<Vec<Stat>, Error> {
     Ok(stats)
 }
 
-fn statfs(path: &str) -> Result<Usage, std::io::Error> {
-    let path =
-        CString::new(path).map_err(|_| std::io::Error::from(std::io::ErrorKind::InvalidInput))?;
+// MountInfo is a type that describes the details, options for each
+// mount, parsed from /proc/self/mountinfo.
+//
+// http://man7.org/linux/man-pages/man5/proc.5.html
+struct MountInfo<'a> {
+    device: &'a str,
+    // unique id for the mount
+    mount_id: i32,
+    // the id of the parent mount
+    parent_id: i32,
+    // the value of `st_dev` for the files on this FS
+    major: &'a str,
+    minor: &'a str,
+    // the pathname of the directory in the FS that forms the
+    // root for this mount
+    root: &'a str,
+    // the pathname of the mount point relative to the root
+    mount_point: &'a str,
+    fs_type: &'a str,
+    // mount options
+    options: &'a str,
+    // super block options
+    super_options: &'a str,
+}
+
+fn parse_mount_info(line: &str) -> Result<MountInfo<'_>, ()> {
+    let fields = line.split_ascii_whitespace().collect::<Vec<_>>();
+    if fields.len() < 10 {
+        return Err(());
+    }
+    if fields[fields.len() - 4] != "-" {
+        return Err(());
+    }
+
+    let Some((major, minor)) = fields[2].split_once(':') else {
+        return Err(());
+    };
+
+    Ok(MountInfo {
+        major,
+        minor,
+        device: fields[fields.len() - 2],
+        root: fields[3],
+        mount_point: fields[4],
+        fs_type: fields[fields.len() - 3],
+        options: fields[5],
+        super_options: fields[fields.len() - 1],
+        // TODO
+        mount_id: 0,
+        parent_id: 0,
+    })
+}
+
+fn statfs(path: PathBuf) -> std::io::Result<Usage> {
+    let path = CString::new(path.to_string_lossy().as_bytes())
+        .map_err(|_| std::io::Error::from(std::io::ErrorKind::InvalidInput))?;
 
     let mut vfs = std::mem::MaybeUninit::<libc::statvfs>::uninit();
     let result = unsafe { libc::statvfs(path.as_ptr(), vfs.as_mut_ptr()) };
@@ -241,7 +355,7 @@ struct Stat {
     files: u64,
     files_free: u64,
     ro: u64,
-    device_error: Option<String>,
+    device_error: Option<std::io::Error>,
 }
 
 struct Usage(libc::statvfs);

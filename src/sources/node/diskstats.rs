@@ -3,24 +3,27 @@
 //! Docs from https://www.kernel.org/doc/Documentation/iostats.txt
 
 use std::collections::HashMap;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use configurable::Configurable;
 use event::{Metric, tags, tags::Key};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 
-use super::Error;
+use super::{Error, read_into};
 
 const DISK_SECTOR_SIZE: f64 = 512.0;
 
 const DEVICE_KEY: Key = Key::from_static("device");
 
+fn default_ignored() -> regex::Regex {
+    regex::Regex::new("^(z?ram|loop|fd|(h|s|v|xv)d[a-z]|nvme\\d+n\\d+p)\\d+$").unwrap()
+}
+
 #[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
-    #[serde(with = "serde_regex")]
-    #[serde(default = "default_ignored")]
-    pub ignored: regex::Regex,
+    #[serde(default = "default_ignored", with = "serde_regex")]
+    ignored: regex::Regex,
 }
 
 impl Default for Config {
@@ -31,11 +34,12 @@ impl Default for Config {
     }
 }
 
-pub fn default_ignored() -> regex::Regex {
-    regex::Regex::new(r#"^(z?ram|loop|fd|(h|s|v|xv)d[a-z]|nvme\d+n\d+p)\d+$"#).unwrap()
-}
-
-pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+pub async fn gather(
+    conf: Config,
+    proc_path: PathBuf,
+    sys_path: PathBuf,
+    udev_path: PathBuf,
+) -> Result<Vec<Metric>, Error> {
     let data = std::fs::read_to_string(proc_path.join("diskstats"))?;
 
     // https://www.kernel.org/doc/Documentation/ABI/testing/procfs-diskstats
@@ -95,7 +99,7 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
             continue;
         }
 
-        let info = match udev_device_properties(major, minor) {
+        let info = match udev_device_properties(&udev_path, major, minor) {
             Ok(info) => info,
             Err(err) => {
                 debug!(
@@ -112,8 +116,24 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
         let serial = info
             .get("SCSI_IDENT_SERIAL")
             .or_else(|| info.get("ID_SERIAL_SHORT"))
+            // used by virtio devices
+            .or_else(|| info.get("ID_SERIAL"))
             .cloned()
             .unwrap_or_default();
+
+        // stats for /sys/block/xxx/queue where xxx is a device name.
+        let path = sys_path.join("block").join(device).join("queue/rotational");
+        let rotational = match read_into::<_, u64, _>(&path) {
+            Ok(rotational) => rotational,
+            Err(err) => {
+                debug!(
+                    message = "read rotational of queue stats failed",
+                    ?path,
+                    %err
+                );
+                0
+            }
+        };
 
         metrics.push(Metric::gauge_with_tags(
             "node_disk_info",
@@ -127,6 +147,7 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
                 "wwn" => info.get("ID_WWN").cloned().unwrap_or_default(),
                 "model" => info.get("ID_MODEL").cloned().unwrap_or_default(),
                 "serial" => serial,
+                "rotational" => rotational,
                 "revision" => info.get("ID_REVISION").cloned().unwrap_or_default(),
             ),
         ));
@@ -241,7 +262,9 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
             }
         }
 
-        if let Some(fs_type) = info.get("ID_FS_TYPE") {
+        if let Some(fs_type) = info.get("ID_FS_TYPE")
+            && !fs_type.is_empty()
+        {
             metrics.push(Metric::gauge_with_tags(
                 "node_disk_filesystem_info",
                 "Info about disk filesystem",
@@ -256,7 +279,9 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
             ))
         }
 
-        if let Some(name) = info.get("DM_NAME") {
+        if let Some(name) = info.get("DM_NAME")
+            && !name.is_empty()
+        {
             metrics.push(Metric::gauge_with_tags(
                 "node_disk_device_mapper_info",
                 "Info about disk device mapper",
@@ -272,45 +297,46 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
             ))
         }
 
-        if info.contains_key("ID_ATA") {
+        if let Some(ata) = info.get("ID_ATA")
+            && !ata.is_empty()
+        {
             for (key, name, desc) in [
                 (
                     "ID_ATA_WRITE_CACHE",
                     "node_disk_ata_write_cache",
-                    "ATA disk has a write cache.",
+                    "ATA disk has a write cache",
                 ),
                 (
                     "ID_ATA_WRITE_CACHE_ENABLED",
                     "node_disk_ata_write_cache_enabled",
-                    "ATA disk has its write cache enabled.",
+                    "ATA disk has its write cache enabled",
                 ),
                 (
                     "ID_ATA_ROTATION_RATE_RPM",
                     "node_disk_ata_rotation_rate_rpm",
-                    "ATA disk rotation rate in RPMs (0 for SSDs).",
+                    "ATA disk rotation rate in RPMs (0 for SSDs)",
                 ),
             ] {
-                if let Some(value) = info.get(key) {
-                    match value.parse::<f64>() {
-                        Ok(value) => metrics.push(Metric::gauge_with_tags(
-                            name,
-                            desc,
-                            value,
-                            tags!(
-                                "device" => device,
-                            ),
-                        )),
-                        Err(err) => {
-                            warn!(
-                                message = "parse ATA value failed",
-                                %err
-                            );
-
-                            continue;
-                        }
-                    }
-                } else {
+                let Some(value) = info.get(key) else {
                     debug!(message = "udev attribute does not exist", attr = key);
+                    continue;
+                };
+
+                match value.parse::<f64>() {
+                    Ok(value) => metrics.push(Metric::gauge_with_tags(
+                        name,
+                        desc,
+                        value,
+                        tags!("device" => device),
+                    )),
+                    Err(err) => {
+                        warn!(
+                            message = "parse ATA value failed",
+                            %err
+                        );
+
+                        continue;
+                    }
                 }
             }
         }
@@ -319,45 +345,24 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
     Ok(metrics)
 }
 
-fn udev_device_properties(major: &str, minor: &str) -> Result<HashMap<String, String>, Error> {
-    let path = format!("/run/udev/data/b{major}:{minor}");
-    let data = std::fs::read_to_string(path)?;
+fn udev_device_properties(
+    udev_path: &Path,
+    major: &str,
+    minor: &str,
+) -> Result<HashMap<String, String>, Error> {
+    let data = std::fs::read_to_string(udev_path.join(format!("data/b{major}:{minor}")))?;
 
     let mut properties = HashMap::new();
     for line in data.lines() {
         // we're only interested in device properties
-        if let Some(value) = line.strip_prefix("E:")
-            && let Some((key, value)) = value.split_once("=")
-        {
+        let Some(stripped) = line.strip_prefix("E:") else {
+            continue;
+        };
+
+        if let Some((key, value)) = stripped.split_once("=") {
             properties.insert(key.to_string(), value.to_string());
         }
     }
 
     Ok(properties)
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[tokio::test]
-    async fn test_gather() {
-        let proc_path = "tests/node/proc";
-        let conf = Config {
-            ignored: default_ignored(),
-        };
-
-        let result = gather(conf, proc_path.into()).await.unwrap();
-        assert_ne!(result.len(), 0);
-    }
-
-    #[tokio::test]
-    async fn gather_root() {
-        let conf = Config {
-            ignored: default_ignored(),
-        };
-
-        let result = gather(conf, "/proc".into()).await.unwrap();
-        assert_ne!(result.len(), 0);
-    }
 }

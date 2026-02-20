@@ -1,7 +1,8 @@
 use std::io::ErrorKind;
 use std::path::PathBuf;
 
-use event::{Metric, tags};
+use event::Metric;
+use event::tags::Tags;
 
 use super::{Error, read_string};
 
@@ -348,6 +349,68 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let path = sys_path.join("class/dmi/id");
     let dmi = DesktopManagementInterface::parse(path)?;
 
+    let mut tags = Tags::with_capacity(20);
+    if let Some(value) = dmi.bios_date {
+        tags.insert("bios_date", value);
+    }
+    if let Some(value) = dmi.bios_release {
+        tags.insert("bios_release", value);
+    }
+    if let Some(value) = dmi.bios_vendor {
+        tags.insert("bios_vendor", value);
+    }
+    if let Some(value) = dmi.bios_version {
+        tags.insert("bios_version", value);
+    }
+    if let Some(value) = dmi.board_asset_tag {
+        tags.insert("board_asset_tag", value);
+    }
+    if let Some(value) = dmi.board_name {
+        tags.insert("board_name", value);
+    }
+    if let Some(value) = dmi.board_serial {
+        tags.insert("board_serial", value);
+    }
+    if let Some(value) = dmi.board_vendor {
+        tags.insert("board_vendor", value);
+    }
+    if let Some(value) = dmi.board_version {
+        tags.insert("board_version", value);
+    }
+    if let Some(value) = dmi.chassis_asset_tag {
+        tags.insert("chassis_asset_tag", value);
+    }
+    if let Some(value) = dmi.chassis_serial {
+        tags.insert("chassis_serial", value);
+    }
+    if let Some(value) = dmi.chassis_vendor {
+        tags.insert("chassis_vendor", value);
+    }
+    if let Some(value) = dmi.chassis_version {
+        tags.insert("chassis_version", value);
+    }
+    if let Some(value) = dmi.product_family {
+        tags.insert("product_family", value);
+    }
+    if let Some(value) = dmi.product_name {
+        tags.insert("product_name", value);
+    }
+    if let Some(value) = dmi.product_serial {
+        tags.insert("product_serial", value);
+    }
+    if let Some(value) = dmi.product_sku {
+        tags.insert("product_sku", value);
+    }
+    if let Some(value) = dmi.product_uuid {
+        tags.insert("product_uuid", value);
+    }
+    if let Some(value) = dmi.product_version {
+        tags.insert("product_version", value);
+    }
+    if let Some(value) = dmi.system_vendor {
+        tags.insert("system_vendor", value);
+    }
+
     Ok(vec![Metric::gauge_with_tags(
         "node_dmi_info",
         "A metric with a constant '1' value labeled by bios_date, bios_release, bios_vendor,\
@@ -356,29 +419,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
          product_name, product_serial, product_sku, product_uuid, product_version, system_vendor \
          if provided by DMI.",
         1,
-        tags!(
-            "bios_date" => dmi.bios_date.unwrap_or_default(),
-            "bios_release" => dmi.bios_release.unwrap_or_default(),
-            "bios_vendor" => dmi.bios_vendor.unwrap_or_default(),
-            "bios_version" => dmi.bios_version.unwrap_or_default(),
-            "board_asset_tag" => dmi.board_asset_tag.unwrap_or_default(),
-            "board_name" => dmi.board_name.unwrap_or_default(),
-            "board_serial" => dmi.board_serial.unwrap_or_default(),
-            "board_vendor" => dmi.board_vendor.unwrap_or_default(),
-            "board_version" => dmi.board_version.unwrap_or_default(),
-            "chassis_asset_tag" => dmi.chassis_asset_tag.unwrap_or_default(),
-            "chassis_serial" => dmi.chassis_serial.unwrap_or_default(),
-            "chassis_type" => dmi.chassis_type.unwrap_or_default(),
-            "chassis_vendor" => dmi.chassis_vendor.unwrap_or_default(),
-            "chassis_version" => dmi.chassis_version.unwrap_or_default(),
-            "product_family" => dmi.product_family.unwrap_or_default(),
-            "product_name" => dmi.product_name.unwrap_or_default(),
-            "product_serial" => dmi.product_serial.unwrap_or_default(),
-            "product_sku" => dmi.product_sku.unwrap_or_default(),
-            "product_uuid" => dmi.product_uuid.unwrap_or_default(),
-            "product_version" => dmi.product_version.unwrap_or_default(),
-            "sys_vendor" => dmi.system_vendor.unwrap_or_default(),
-        ),
+        tags,
     )])
 }
 

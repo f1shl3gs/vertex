@@ -164,7 +164,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
         for port in device.ports {
             let tags = tags!(
                 Key::from_static("device") => device.name.clone(),
-                Key::from_static("port") => port.name
+                Key::from_static("port") => port.port
             );
 
             metrics.extend([

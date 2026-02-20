@@ -5,23 +5,27 @@ use event::Metric;
 use super::{Error, read_string};
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    match get_load(proc_path).await {
-        Ok(loads) => Ok(vec![
-            Metric::gauge("node_load1", "1m load average", loads[0]),
-            Metric::gauge("node_load5", "5m load average", loads[1]),
-            Metric::gauge("node_load15", "15m load average", loads[2]),
-        ]),
+    let loads = get_load(proc_path)?;
 
-        Err(err) => Err(Error::from(err)),
-    }
+    Ok(vec![
+        Metric::gauge("node_load1", "1m load average", loads[0]),
+        Metric::gauge("node_load5", "5m load average", loads[1]),
+        Metric::gauge("node_load15", "15m load average", loads[2]),
+    ])
 }
 
-async fn get_load(path: PathBuf) -> Result<Vec<f64>, std::io::Error> {
+fn get_load(path: PathBuf) -> Result<Vec<f64>, Error> {
     let content = read_string(path.join("loadavg"))?;
+
     let loads = content
         .split_ascii_whitespace()
-        .map(|part| part.parse::<f64>().unwrap_or(0.0))
-        .collect::<Vec<f64>>();
+        .take(3)
+        .map(|s| s.parse::<f64>())
+        .collect::<Result<Vec<_>, _>>()?;
+
+    if loads.len() != 3 {
+        return Err(Error::NoData);
+    }
 
     Ok(loads)
 }
@@ -30,10 +34,10 @@ async fn get_load(path: PathBuf) -> Result<Vec<f64>, std::io::Error> {
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_get_load() {
+    #[test]
+    fn parse() {
         let root = PathBuf::from("tests/node/proc");
-        let loads = get_load(root).await.unwrap();
+        let loads = get_load(root).unwrap();
 
         assert_eq!(loads[0], 0.02);
         assert_eq!(loads[1], 0.04);

@@ -141,7 +141,7 @@ impl TryFrom<Vec<u64>> for ServerRPC {
 
     fn try_from(v: Vec<u64>) -> Result<Self, Self::Error> {
         if v.len() != 5 {
-            return Err(format!("invalid RPC line {v:?}").into());
+            return Err(Error::Malformed("server RPC values"));
         }
 
         Ok(Self {
@@ -220,6 +220,8 @@ struct V4Ops {
     save_fh: u64,
     sec_info: u64,
     set_attr: u64,
+    set_client_id: u64,
+    set_client_id_confirm: u64,
     verify: u64,
     write: u64,
     rel_lock_owner: u64,
@@ -270,9 +272,11 @@ impl TryFrom<Vec<u64>> for V4Ops {
             save_fh: v[33],
             sec_info: v[34],
             set_attr: v[35],
-            verify: v[36],
-            write: v[37],
-            rel_lock_owner: v[38],
+            set_client_id: v[36],
+            set_client_id_confirm: v[37],
+            verify: v[38],
+            write: v[39],
+            rel_lock_owner: if v[0] > 39 { v[40] } else { 0 },
         })
     }
 }
@@ -290,15 +294,15 @@ struct ServerRPCStats {
     v3_stats: V3Stats,
     server_v4_stats: ServerV4Stats,
     v4_ops: V4Ops,
+    wdeleg_getattr: u64,
 }
 
-async fn server_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ServerRPCStats, Error> {
+fn load_server_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ServerRPCStats, Error> {
     let data = std::fs::read_to_string(path)?;
 
     let mut stats = ServerRPCStats::default();
     for line in data.lines() {
-        let parts = line.trim().split_ascii_whitespace().collect::<Vec<_>>();
-
+        let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
         if parts.len() < 2 {
             return Err(format!("invalid NFSd metric line {line}").into());
         }
@@ -335,6 +339,7 @@ async fn server_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ServerRPCStats, Err
             "proc3" => stats.v3_stats = values.try_into()?,
             "proc4" => stats.server_v4_stats = values.try_into()?,
             "proc4ops" => stats.v4_ops = values.try_into()?,
+            "wdeleg_getattr" => stats.wdeleg_getattr = values[0],
             _ => return Err(format!("errors parsing NFSd metric line {line}").into()),
         }
     }
@@ -346,7 +351,7 @@ macro_rules! rpc_metric {
     ($proto: expr, $name: expr, $value: expr) => {
         Metric::sum_with_tags(
             "node_nfsd_requests_total",
-            "Number of NFSd procedures invoked.",
+            "Total number NFSd Requests by method and protocol",
             $value,
             tags! {
                 "proto" => $proto.to_string(),
@@ -357,7 +362,7 @@ macro_rules! rpc_metric {
 }
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = server_rpc_stats(proc_path.join("net/rpc/nfsd")).await?;
+    let stats = load_server_rpc_stats(proc_path.join("net/rpc/nfsd"))?;
     let metrics = vec![
         // collects statistics for the reply cache
         Metric::sum(
@@ -477,6 +482,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         rpc_metric!("2", "Link", stats.v2_stats.link),
         rpc_metric!("2", "SymLink", stats.v2_stats.sym_link),
         rpc_metric!("2", "MkDir", stats.v2_stats.mkdir),
+        rpc_metric!("2", "RmDir", stats.v2_stats.rmdir),
         rpc_metric!("2", "ReadDir", stats.v2_stats.read_dir),
         rpc_metric!("2", "FsStat", stats.v2_stats.fs_stat),
         // collects statistics for NFSv3 requests
@@ -514,6 +520,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         rpc_metric!("4", "Lock", stats.v4_ops.lock),
         rpc_metric!("4", "Lockt", stats.v4_ops.lockt),
         rpc_metric!("4", "Locku", stats.v4_ops.locku),
+        rpc_metric!("4", "Lookup", stats.v4_ops.lookup),
         rpc_metric!("4", "LookupRoot", stats.v4_ops.lookup_root),
         rpc_metric!("4", "Nverify", stats.v4_ops.nverify),
         rpc_metric!("4", "Open", stats.v4_ops.open),
@@ -531,9 +538,16 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         rpc_metric!("4", "SaveFH", stats.v4_ops.save_fh),
         rpc_metric!("4", "SecInfo", stats.v4_ops.sec_info),
         rpc_metric!("4", "SetAttr", stats.v4_ops.set_attr),
+        rpc_metric!("4", "SetClientID", stats.v4_ops.set_client_id),
+        rpc_metric!(
+            "4",
+            "SetClientIDConfirm",
+            stats.v4_ops.set_client_id_confirm
+        ),
         rpc_metric!("4", "Verify", stats.v4_ops.verify),
         rpc_metric!("4", "Write", stats.v4_ops.write),
         rpc_metric!("4", "RelLockOwner", stats.v4_ops.rel_lock_owner),
+        rpc_metric!("4", "WdelegGetattr", stats.wdeleg_getattr),
     ];
 
     Ok(metrics)
@@ -544,25 +558,18 @@ mod tests {
     use super::*;
     use testify::temp_dir;
 
-    #[tokio::test]
-    async fn test_server_rpc_stats() {
-        struct Case {
-            name: String,
-            content: String,
-            stats: ServerRPCStats,
-            invalid: bool,
-        }
-
+    #[test]
+    fn server_rpc_stats() {
         let cases = vec![
-            Case {
-                name: "invalid file".to_string(),
-                content: "invalid".to_string(),
-                stats: Default::default(),
-                invalid: true,
-            },
-            Case {
-                name: "good file".to_string(),
-                content: "rc 0 6 18622
+            (
+                "invalid file",
+                "invalid",
+                Default::default(),
+                true,
+            ),
+            (
+                "good file",
+                "rc 0 6 18622
 fh 0 0 0 0 0
 io 157286400 0
 th 8 0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
@@ -573,8 +580,8 @@ proc2 18 2 69 0 0 4410 0 0 0 0 0 0 0 0 0 0 0 99 2
 proc3 22 2 112 0 2719 111 0 0 0 0 0 0 0 0 0 0 0 27 216 0 2 1 0
 proc4 2 2 10853
 proc4ops 72 0 0 0 1098 2 0 0 0 0 8179 5896 0 0 0 0 5900 0 0 2 0 2 0 9609 0 2 150 1272 0 0 0 1236 0 0 0 0 3 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-".to_string(),
-                stats: ServerRPCStats {
+wdeleg_getattr 16",
+                ServerRPCStats {
                     reply_cache: ReplyCache {
                         hits: 0,
                         misses: 6,
@@ -697,25 +704,28 @@ proc4ops 72 0 0 0 1098 2 0 0 0 0 8179 5896 0 0 0 0 5900 0 0 2 0 2 0 9609 0 2 150
                         save_fh: 0,
                         sec_info: 0,
                         set_attr: 0,
-                        verify: 3,
-                        write: 3,
+                        set_client_id: 3,
+                        set_client_id_confirm: 3,
+                        verify: 0,
+                        write: 0,
                         rel_lock_owner: 0,
                     },
+                    wdeleg_getattr: 16
                 },
-                invalid: false,
-            },
+                false
+            ),
         ];
 
         let tmpdir = temp_dir();
-        for case in cases {
-            let path = tmpdir.join(case.name.as_str());
-            std::fs::write(&path, case.content).unwrap();
-            let result = server_rpc_stats(&path).await;
-            if case.invalid && result.is_err() {
+        for (name, input, stats, valid) in cases {
+            let path = tmpdir.join(name);
+            std::fs::write(&path, input).unwrap();
+            let result = load_server_rpc_stats(&path);
+            if valid && result.is_err() {
                 continue;
             }
 
-            assert_eq!(result.unwrap(), case.stats)
+            assert_eq!(result.unwrap(), stats);
         }
     }
 }

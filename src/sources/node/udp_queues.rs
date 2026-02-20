@@ -9,65 +9,41 @@ use super::Error;
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let mut metrics = Vec::with_capacity(4);
 
-    match net_ip_socket_summary(proc_path.join("net/udp")).await {
-        Ok(v4) => {
-            metrics.extend([
-                Metric::gauge_with_tags(
-                    "node_udp_queues",
-                    "Number of allocated memory in the kernel for UDP datagrams in bytes.",
-                    v4.tx_queue_length,
-                    tags! {
-                        "ip" => "v4",
-                        "queue" => "tx",
-                    },
-                ),
-                Metric::gauge_with_tags(
-                    "node_udp_queues",
-                    "Number of allocated memory in the kernel for UDP datagrams in bytes.",
-                    v4.rx_queue_length,
-                    tags! {
-                        "ip" => "v4",
-                        "queue" => "rx",
-                    },
-                ),
-            ]);
+    for (ip, path) in [("v4", "net/udp"), ("v6", "net/udp6")] {
+        let path = proc_path.join(path);
+        if !path.exists() {
+            continue;
         }
-        Err(err) => {
-            warn!(
-                message = "couldn't get udp queue stats",
-                %err,
-            );
-        }
-    }
 
-    match net_ip_socket_summary(proc_path.join("net/udp6")).await {
-        Ok(v6) => {
-            metrics.extend([
-                Metric::gauge_with_tags(
-                    "node_udp_queues",
-                    "Number of allocated memory in the kernel for UDP datagrams in bytes.",
-                    v6.tx_queue_length,
-                    tags! {
-                        "ip" => "v6",
-                        "queue" => "tx",
-                    },
-                ),
-                Metric::gauge_with_tags(
-                    "node_udp_queues",
-                    "Number of allocated memory in the kernel for UDP datagrams in bytes.",
-                    v6.rx_queue_length,
-                    tags! {
-                        "ip" => "v6",
-                        "queue" => "rx",
-                    },
-                ),
-            ]);
-        }
-        Err(err) => {
-            warn!(
-                message = "couldn't get udp6 queue stats",
-                %err,
-            );
+        match net_ip_socket_summary(path) {
+            Ok(summary) => {
+                metrics.extend([
+                    Metric::gauge_with_tags(
+                        "node_udp_queues",
+                        "Number of allocated memory in the kernel for UDP datagrams in bytes.",
+                        summary.tx_queue_length,
+                        tags! {
+                            "ip" => ip,
+                            "queue" => "tx",
+                        },
+                    ),
+                    Metric::gauge_with_tags(
+                        "node_udp_queues",
+                        "Number of allocated memory in the kernel for UDP datagrams in bytes.",
+                        summary.rx_queue_length,
+                        tags! {
+                            "ip" => ip,
+                            "queue" => "rx",
+                        },
+                    ),
+                ]);
+            }
+            Err(err) => {
+                warn!(
+                    message = "couldn't get udp queue stats",
+                    %err,
+                );
+            }
         }
     }
 
@@ -106,11 +82,11 @@ struct NetIPSocketLine {
     inode: u64,
 }
 
-async fn net_ip_socket_summary(path: PathBuf) -> Result<NetIPSocketSummary, Error> {
+fn net_ip_socket_summary(path: PathBuf) -> Result<NetIPSocketSummary, Error> {
     let data = std::fs::read_to_string(path)?;
-
     let mut summary = NetIPSocketSummary::default();
-    // skip first line
+
+    // skip first header line
     for line in data.lines().skip(1) {
         let (tx, rx) = parse_net_ip_socket_queues(line)?;
 
@@ -143,7 +119,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_parse_net_ip_socket_queues() {
+    fn parse() {
         let line = "   73: 0100007F:0143 00000000:0000 07 00000010:00000005 00:00000000 00000000     0        0 36799 2 0000000000000000 0 ";
         let (tx, rx) = parse_net_ip_socket_queues(line).unwrap();
 
@@ -151,8 +127,8 @@ mod tests {
         assert_eq!(rx, 5);
     }
 
-    #[tokio::test]
-    async fn test_net_ip_socket_summary() {
+    #[test]
+    fn socket_summary() {
         struct TestCase {
             name: String,
             file: PathBuf,
@@ -196,7 +172,7 @@ mod tests {
         ];
 
         for case in cases {
-            let result = net_ip_socket_summary(case.file).await;
+            let result = net_ip_socket_summary(case.file);
             if case.want_err {
                 if result.is_err() {
                     continue;

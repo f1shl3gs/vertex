@@ -1,13 +1,14 @@
 //! Collect metrics from `/proc/stat`
 
-use std::path::PathBuf;
+use std::collections::BTreeMap;
+use std::path::{Path, PathBuf};
 
 use configurable::Configurable;
 use event::{Metric, tags, tags::Key};
 use framework::config::{default_true, serde_regex};
 use serde::{Deserialize, Serialize};
 
-use super::Error;
+use super::{Error, read_into};
 
 const USER_HZ: f64 = 100.0;
 
@@ -62,10 +63,39 @@ macro_rules! state_metric {
     };
 }
 
-pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = get_cpu_stat(proc_path).await?;
+pub async fn gather(
+    conf: Config,
+    proc_path: PathBuf,
+    sys_path: PathBuf,
+) -> Result<Vec<Metric>, Error> {
+    let mut metrics = Vec::new();
 
-    let mut metrics = Vec::with_capacity(stats.len() * 10);
+    if conf.info {
+        let content = std::fs::read_to_string(proc_path.join("cpuinfo"))?;
+        let infos = parse_cpu_info(&content);
+
+        for info in infos {
+            metrics.push(Metric::gauge_with_tags(
+                "node_cpu_info",
+                "CPU information from /proc/cpuinfo",
+                1,
+                tags!(
+                    "package" => info.physical_id,
+                    "core" => info.core_id,
+                    "cpu" => info.processor,
+                    "vendor" => info.vendor_id,
+                    "family" => info.cpu_family,
+                    "model" => info.model,
+                    "model_name" => info.model_name,
+                    "microcode" => info.microcode,
+                    "stepping" => info.stepping,
+                    "cachesize" => info.cache_size,
+                ),
+            ));
+        }
+    }
+
+    let stats = get_cpu_stat(proc_path)?;
     for (cpu, stat) in stats.iter().enumerate() {
         metrics.extend([
             state_metric!(cpu, "user", stat.user),
@@ -104,7 +134,155 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
         }
     }
 
+    let pattern = format!(
+        "{}/devices/system/cpu/cpu[0-9]*",
+        sys_path.to_string_lossy()
+    );
+    let mut paths = glob::glob(pattern.as_str())?;
+
+    let mut package_throttles = BTreeMap::<u64, u64>::new();
+    let mut package_core_throttles = BTreeMap::<u64, BTreeMap<u64, u64>>::new();
+    while let Some(Ok(path)) = paths.next() {
+        let Ok(physical_package_id) = read_into(path.join("topology/physical_package_id")) else {
+            continue;
+        };
+        let Ok(core_id) = read_into(path.join("topology/core_id")) else {
+            continue;
+        };
+
+        let Ok(core_throttle_count) = read_into(path.join("thermal_throttle/core_throttle_count"))
+        else {
+            continue;
+        };
+        let counts = package_core_throttles
+            .entry(physical_package_id)
+            .or_default();
+        counts.insert(core_id, core_throttle_count);
+
+        let Ok(package_throttle_count) =
+            read_into(path.join("thermal_throttle/package_throttle_count"))
+        else {
+            continue;
+        };
+        package_throttles.insert(physical_package_id, package_throttle_count);
+    }
+
+    for (physical_package_id, package_throttle_count) in package_throttles {
+        metrics.push(Metric::sum_with_tags(
+            "node_cpu_package_throttles_total",
+            "Number of times this CPU package has been throttled",
+            package_throttle_count,
+            tags!(
+                "package" => physical_package_id,
+            ),
+        ));
+    }
+    for (physical_package_id, counts) in package_core_throttles {
+        for (core_id, count) in counts {
+            metrics.push(Metric::sum_with_tags(
+                "node_cpu_core_throttles_total",
+                "Number of times this CPU core has been throttled",
+                count,
+                tags!(
+                    "package" => physical_package_id,
+                    "core" => core_id,
+                ),
+            ));
+        }
+    }
+
+    match std::fs::read_to_string(sys_path.join("devices/system/cpu/isolated")) {
+        Ok(content) => {
+            let cpus = parse_cpu_range(&content)?;
+
+            for cpu in cpus {
+                metrics.push(Metric::gauge_with_tags(
+                    "node_cpu_isolated",
+                    "Whether each core is isolated, information from /sys/devices/system/cpu/isolated",
+                    1,
+                    tags!(
+                        "cpu" => cpu,
+                    )
+                ));
+            }
+        }
+        Err(err) => {
+            if err.kind() != std::io::ErrorKind::NotFound {
+                warn!(
+                    message = "unable to get isolated cpus",
+                    %err
+                );
+            }
+        }
+    }
+
     Ok(metrics)
+}
+
+#[derive(Debug, Default)]
+struct CpuInfo<'a> {
+    physical_id: &'a str,
+    core_id: &'a str,
+    processor: &'a str,
+    vendor_id: &'a str,
+    cpu_family: &'a str,
+    model: &'a str,
+    model_name: &'a str,
+    microcode: &'a str,
+    stepping: &'a str,
+    cache_size: &'a str,
+}
+
+fn parse_cpu_info(content: &str) -> Vec<CpuInfo<'_>> {
+    let mut infos = Vec::new();
+    let mut cpu_info = CpuInfo::default();
+
+    for line in content.lines() {
+        let Some((key, value)) = line.split_once("\t: ") else {
+            if line.is_empty() {
+                infos.push(cpu_info);
+                cpu_info = CpuInfo::default();
+            }
+
+            continue;
+        };
+
+        match key {
+            "physical id" => {
+                cpu_info.physical_id = value;
+            }
+            "core id\t" => {
+                cpu_info.core_id = value;
+            }
+            "processor" => {
+                cpu_info.processor = value;
+            }
+            "vendor" | "vendor_id" => {
+                cpu_info.vendor_id = value;
+            }
+            "cpu family" => {
+                cpu_info.cpu_family = value;
+            }
+            "model\t" => {
+                cpu_info.model = value;
+            }
+            "model name" => {
+                cpu_info.model_name = value;
+            }
+            "microcode" => {
+                cpu_info.microcode = value;
+            }
+            "stepping" => {
+                cpu_info.stepping = value;
+            }
+            "cache size" => {
+                cpu_info.cache_size = value;
+            }
+            _ => {}
+        }
+    }
+
+    infos
 }
 
 #[derive(Default)]
@@ -121,7 +299,7 @@ struct CPUStat {
     guest_nice: f64,
 }
 
-async fn get_cpu_stat(proc_path: PathBuf) -> Result<Vec<CPUStat>, Error> {
+fn get_cpu_stat(proc_path: PathBuf) -> Result<Vec<CPUStat>, Error> {
     let data = std::fs::read_to_string(proc_path.join("stat"))?;
 
     let mut stats = Vec::new();
@@ -161,14 +339,52 @@ async fn get_cpu_stat(proc_path: PathBuf) -> Result<Vec<CPUStat>, Error> {
     Ok(stats)
 }
 
+fn get_isolated_cpus(root: &Path) -> Result<Vec<u16>, Error> {
+    let content = std::fs::read_to_string(root.join("devices/system/cpu/isolated"))?;
+
+    parse_cpu_range(&content)
+}
+
+fn parse_cpu_range(input: &str) -> Result<Vec<u16>, Error> {
+    let mut cpus = Vec::new();
+
+    let parts = input.trim().split(',');
+    for part in parts {
+        if part.is_empty() {
+            continue;
+        }
+
+        match part.split_once('-') {
+            Some((start, end)) => {
+                let start = start
+                    .parse::<u16>()
+                    .map_err(|_| Error::Malformed("start of cpu range"))?;
+                let end = end
+                    .parse::<u16>()
+                    .map_err(|_| Error::Malformed("end of cpu range"))?;
+
+                for c in start..=end {
+                    cpus.push(c);
+                }
+            }
+            None => match part.parse::<u16>() {
+                Ok(v) => cpus.push(v),
+                Err(_) => return Err(Error::Malformed("cpu range")),
+            },
+        }
+    }
+
+    Ok(cpus)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_get_cpu_stats() {
+    #[test]
+    fn cpu_stats() {
         let proc_path = PathBuf::from("tests/node/proc");
-        let stats = get_cpu_stat(proc_path).await.unwrap();
+        let stats = get_cpu_stat(proc_path).unwrap();
 
         assert_eq!(stats.len(), 8);
         assert_eq!(31f64 / USER_HZ, stats[7].softirq);
@@ -183,5 +399,13 @@ mod tests {
         assert_eq!(0f64, stats[7].steal);
         assert_eq!(0f64, stats[7].guest);
         assert_eq!(0f64, stats[7].guest_nice);
+    }
+
+    #[test]
+    fn cpu_info() {
+        let content = std::fs::read_to_string("tests/node/proc/cpuinfo").unwrap();
+        let infos = parse_cpu_info(&content);
+
+        println!("{:#?}", infos)
     }
 }

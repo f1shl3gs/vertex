@@ -1,15 +1,16 @@
 use std::collections::BTreeMap;
+use std::path::PathBuf;
 
 use chrono::NaiveDate;
 use event::{Metric, tags};
 
 use super::Error;
 
-const ETC_OS_RELEASE: &str = "/etc/os-release";
-const USR_LIB_OS_RELEASE: &str = "/usr/lib/os-release";
+const ETC_OS_RELEASE: &str = "etc/os-release";
+const USR_LIB_OS_RELEASE: &str = "usr/lib/os-release";
 
-pub async fn gather() -> Result<Vec<Metric>, Error> {
-    let infos = release_infos()?;
+pub async fn gather(root_path: PathBuf) -> Result<Vec<Metric>, Error> {
+    let infos = release_infos(root_path)?;
 
     let mut metrics = vec![Metric::gauge_with_tags(
         "node_os_info",
@@ -31,15 +32,15 @@ pub async fn gather() -> Result<Vec<Metric>, Error> {
         ),
     )];
 
-    if let Some(version) = infos.get("VERSION") {
-        let version: f64 = version.parse().unwrap_or_default();
+    if let Some(version) = infos.get("VERSION_ID") {
+        let version = version.parse::<f64>().unwrap_or_default();
         metrics.push(Metric::gauge_with_tags(
             "node_os_version",
             "Metric containing the major.minor part of the OS version.",
             version,
             tags!(
                 "id" => infos.get("ID").cloned().unwrap_or_default(),
-                "id_link" => infos.get("ID_LIKE").cloned().unwrap_or_default(),
+                "id_like" => infos.get("ID_LIKE").cloned().unwrap_or_default(),
                 "name" => infos.get("NAME").cloned().unwrap_or_default()
             ),
         ));
@@ -59,9 +60,9 @@ pub async fn gather() -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
-fn release_infos() -> Result<BTreeMap<String, String>, Error> {
+fn release_infos(root: PathBuf) -> Result<BTreeMap<String, String>, Error> {
     for path in [ETC_OS_RELEASE, USR_LIB_OS_RELEASE] {
-        match parse_os_release(path) {
+        match parse_os_release(root.join(path)) {
             Ok(infos) => return Ok(infos),
             Err(_err) => continue,
         }
@@ -70,7 +71,7 @@ fn release_infos() -> Result<BTreeMap<String, String>, Error> {
     Err(Error::from("No invalid os release file"))
 }
 
-fn parse_os_release(path: &str) -> Result<BTreeMap<String, String>, Error> {
+fn parse_os_release(path: PathBuf) -> Result<BTreeMap<String, String>, Error> {
     let data = std::fs::read_to_string(path)?;
 
     let mut envs = BTreeMap::new();
@@ -87,27 +88,18 @@ fn parse_os_release(path: &str) -> Result<BTreeMap<String, String>, Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use chrono::NaiveDate;
-
-    #[test]
-    fn test_parse_os_release() {
-        let path = format!("tests/node/{USR_LIB_OS_RELEASE}");
-        let m = parse_os_release(&path).unwrap();
-
-        assert_eq!(m.get("NAME").unwrap(), "Ubuntu");
-        assert_eq!(m.get("ID").unwrap(), "ubuntu");
-        assert_eq!(m.get("ID_LIKE").unwrap(), "debian");
-        assert_eq!(m.get("PRETTY_NAME").unwrap(), "Ubuntu 20.04.2 LTS");
-        assert_eq!(m.get("VERSION").unwrap(), "20.04.2 LTS (Focal Fossa)");
-        assert_eq!(m.get("VERSION_ID").unwrap(), "20.04");
-        assert_eq!(m.get("VERSION_CODENAME").unwrap(), "focal");
-    }
 
     #[test]
     fn parse() {
-        let support_end = "2025-12-15";
-        let date = NaiveDate::parse_from_str(support_end, "%Y-%m-%d").unwrap();
-        let timestamp = date.and_hms_opt(0, 0, 0).unwrap().and_utc().timestamp();
-        println!("{timestamp:?}");
+        let path = format!("tests/node/{USR_LIB_OS_RELEASE}");
+        let info = parse_os_release(path.into()).unwrap();
+
+        assert_eq!(info.get("NAME").unwrap(), "Ubuntu");
+        assert_eq!(info.get("ID").unwrap(), "ubuntu");
+        assert_eq!(info.get("ID_LIKE").unwrap(), "debian");
+        assert_eq!(info.get("PRETTY_NAME").unwrap(), "Ubuntu 20.04.2 LTS");
+        assert_eq!(info.get("VERSION").unwrap(), "20.04.2 LTS (Focal Fossa)");
+        assert_eq!(info.get("VERSION_ID").unwrap(), "20.04");
+        assert_eq!(info.get("VERSION_CODENAME").unwrap(), "focal");
     }
 }

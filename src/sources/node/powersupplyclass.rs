@@ -1063,6 +1063,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
 
         power_supply_metric!(metrics, ps.name, "authentic", ps.authentic);
         power_supply_metric!(metrics, ps.name, "calibrate", ps.calibrate);
+        power_supply_metric!(metrics, ps.name, "capacity", ps.capacity);
         power_supply_metric!(
             metrics,
             ps.name,

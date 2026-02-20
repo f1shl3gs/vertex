@@ -9,21 +9,23 @@ use super::{Error, read_string};
 
 macro_rules! parse_subsystem_metrics {
     ($metrics: expr, $root: expr, $subsystem: expr, $path: expr) => {
-        let path = format!("{}/spl/kstat/zfs/{}", $root, $path);
-        for (k, v) in parse_procfs_file(&path).await? {
-            let k = k.replace("-", "_");
-            $metrics.push(Metric::gauge(format!("node_{}_{}", $subsystem, k), k, v))
+        let path = $root.join("spl/kstat/zfs").join($path);
+        for (k, v) in parse_procfs_file(path)? {
+            $metrics.push(Metric::gauge(
+                format!("node_{}_{}", $subsystem, k.replace("-", "_")),
+                format!("kstat.zfs.misc.{}.{}", $path, k),
+                v,
+            ));
         }
     };
 }
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let proc_path = proc_path.to_string_lossy();
     let mut metrics = Vec::new();
 
     parse_subsystem_metrics!(metrics, proc_path, "zfs_abd", "abdstats");
     parse_subsystem_metrics!(metrics, proc_path, "zfs_arc", "arcstats");
-    parse_subsystem_metrics!(metrics, proc_path, "zfs_dbuf", "dbuf_stats");
+    parse_subsystem_metrics!(metrics, proc_path, "zfs_dbuf", "dbufstats");
     parse_subsystem_metrics!(metrics, proc_path, "zfs_dmu_tx", "dmu_tx");
     parse_subsystem_metrics!(metrics, proc_path, "zfs_dnode", "dnodestats");
     parse_subsystem_metrics!(metrics, proc_path, "zfs_fm", "fm");
@@ -36,54 +38,48 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     parse_subsystem_metrics!(metrics, proc_path, "zfs_zil", "zil");
 
     // pool stats
-    let pattern = format!("{proc_path}/spl/kstat/zfs/*/io");
+    let pattern = format!("{}/spl/kstat/zfs/*/io", proc_path.to_string_lossy());
     let paths = glob::glob(&pattern)?;
 
     for path in paths.flatten() {
         let path = path.to_str().unwrap();
         let pool_name = parse_pool_name(path)?;
-        let kvs = parse_pool_procfs_file(path).await?;
+        let kvs = parse_pool_procfs_file(path)?;
         for (key, value) in kvs {
             metrics.push(Metric::gauge_with_tags(
                 format!("node_zfs_zpool_{key}"),
-                key,
+                format!("kstat.zfs.misc.io.{key}"),
                 value,
                 tags! {
-                    "zpool" => pool_name.to_string()
+                    "zpool" => pool_name
                 },
             ))
         }
     }
 
-    let pattern = format!("{proc_path}/spl/kstat/zfs/*/objset-*");
+    let pattern = format!("{}/spl/kstat/zfs/*/objset-*", proc_path.to_string_lossy());
     let paths = glob::glob(&pattern)?;
     for path in paths.flatten() {
-        let path = path.to_str().unwrap();
-        let kvs = parse_pool_objset_file(path).await?;
-        for (key, value) in kvs {
-            let fields = key.split('.').collect::<Vec<_>>();
-            let desc = fields[0].to_string();
-            let pool_name = fields[1].to_string();
-            let dataset = fields[2].to_string();
-
+        let kvs = parse_pool_objset_file(path)?;
+        for ((key, pool, dataset), value) in kvs {
             metrics.push(Metric::gauge_with_tags(
                 format!("node_zfs_zpool_dataset_{key}"),
-                desc,
+                format!("kstat.zfs.misc.objset.{key}"),
                 value,
                 tags!(
-                    "zpool" => pool_name,
+                    "zpool" => pool,
                     "dataset" => dataset
                 ),
             ));
         }
     }
 
-    let pattern = format!("{proc_path}/spl/kstat/zfs/*/state");
+    let pattern = format!("{}/spl/kstat/zfs/*/state", proc_path.to_string_lossy());
     let paths = glob::glob(&pattern)?;
     for path in paths.flatten() {
         let path = path.to_string_lossy();
         let pool_name = parse_pool_name(path.as_ref())?;
-        let kvs = parse_pool_state_file(path.as_ref()).await?;
+        let kvs = parse_pool_state_file(path.as_ref())?;
         for (key, value) in kvs {
             metrics.push(Metric::gauge_with_tags(
                 "node_zfs_zpool_state",
@@ -100,13 +96,13 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
-async fn parse_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Error> {
+fn parse_procfs_file(path: PathBuf) -> Result<BTreeMap<String, i64>, Error> {
     let data = std::fs::read_to_string(path)?;
 
     let mut kvs = BTreeMap::new();
     let mut parse = false;
     for line in data.lines() {
-        let fields = line.trim().split_ascii_whitespace().collect::<Vec<_>>();
+        let fields = line.split_ascii_whitespace().collect::<Vec<_>>();
 
         if !parse
             && fields.len() == 3
@@ -121,9 +117,9 @@ async fn parse_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Error> {
 
         // kstat data type (column 2) should be KSTAT_DATA_UINT64, otherwise ignore
         // TODO: when other KSTAT_DATA_* types arrive, much of this will need to be restructured
-        if fields[1] == "4" {
+        if fields[1] == "3" || fields[1] == "4" {
             let key = fields[0].to_string();
-            let value = fields[2].parse().unwrap_or(0u64);
+            let value = fields[2].parse().unwrap_or(0i64);
             kvs.insert(key, value);
         }
     }
@@ -131,7 +127,7 @@ async fn parse_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Error> {
     Ok(kvs)
 }
 
-async fn parse_pool_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Error> {
+fn parse_pool_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Error> {
     let length = path.split('/').count();
     if length < 2 {
         return Err(Error::from(
@@ -170,22 +166,16 @@ async fn parse_pool_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Err
     Ok(kvs)
 }
 
-async fn parse_pool_objset_file(path: &str) -> Result<BTreeMap<String, u64>, Error> {
-    let data = std::fs::read_to_string(path)?;
+fn parse_pool_objset_file(path: PathBuf) -> Result<BTreeMap<(String, String, String), u64>, Error> {
+    let data = std::fs::read_to_string(&path)?;
 
     let mut kvs = BTreeMap::new();
     let mut parse = false;
-    let mut pool_name = String::new();
-    let mut dataset_name = String::new();
+    let mut pool = String::new();
+    let mut dataset = String::new();
     for line in data.lines() {
-        let parts = line.trim().split_ascii_whitespace().collect::<Vec<_>>();
-
-        if !parse
-            && parts.len() == 3
-            && parts[0] == "name"
-            && parts[1] == "type"
-            && parts[2] == "data"
-        {
+        let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
+        if !parse && parts[0] == "name" && parts[1] == "type" && parts[2] == "data" {
             parse = true;
             continue;
         }
@@ -195,18 +185,20 @@ async fn parse_pool_objset_file(path: &str) -> Result<BTreeMap<String, u64>, Err
         }
 
         if parts[0] == "dataset_name" {
+            let path = path.to_string_lossy();
             let elmts = path.split('/').collect::<Vec<_>>();
             let length = elmts.len();
-            pool_name = elmts[length - 2].to_string();
-            dataset_name = parts[2].to_string();
+            pool = elmts[length - 2].to_string();
+            dataset = match line.find(parts[2]) {
+                Some(index) => line[index..].to_string(),
+                None => return Err(Error::Malformed("pool objset line")),
+            };
             continue;
         }
 
         if parts[1] == "4" {
-            let key = format!("{}.{}.{}", parts[0], pool_name, dataset_name);
             let value = parts[2].parse::<u64>()?;
-
-            kvs.insert(key, value);
+            kvs.insert((parts[0].to_string(), pool.clone(), dataset.clone()), value);
         }
     }
 
@@ -223,11 +215,10 @@ const STATS: [&str; 7] = [
     "suspended",
 ];
 
-async fn parse_pool_state_file(path: &str) -> Result<BTreeMap<&'static str, bool>, Error> {
+fn parse_pool_state_file(path: &str) -> Result<BTreeMap<&'static str, bool>, Error> {
     let actual_state = read_string(path)?.to_lowercase();
 
     let mut kvs = BTreeMap::new();
-
     for stat in STATS {
         let active = actual_state == stat;
 
@@ -252,14 +243,14 @@ mod tests {
     use super::*;
     use glob::glob;
 
-    #[tokio::test]
-    async fn test_parse_pool_procfs_file() {
+    #[test]
+    fn pool_procfs_file() {
         let paths = glob("tests/node/proc/spl/kstat/zfs/*/io").unwrap();
         let mut parsed = 0;
         for path in paths.flatten() {
             let path = path.to_str().unwrap();
             parsed += 1;
-            let kvs = parse_pool_procfs_file(path).await.unwrap();
+            let kvs = parse_pool_procfs_file(path).unwrap();
             assert_ne!(kvs.len(), 0);
 
             for (k, v) in kvs {
@@ -276,17 +267,15 @@ mod tests {
         assert_eq!(parsed, 2);
     }
 
-    #[tokio::test]
-    async fn test_parse_pool_objset_file() {
+    #[test]
+    fn pool_objset_file() {
         let paths = glob("tests/node/proc/spl/kstat/zfs/*/objset-*").unwrap();
         for path in paths.flatten() {
-            let kvs = parse_pool_objset_file(path.to_str().unwrap())
-                .await
-                .unwrap();
+            let kvs = parse_pool_objset_file(path).unwrap();
 
             assert_ne!(kvs.len(), 0);
-            for (k, v) in kvs {
-                if k != "kstat.zfs.misc.objset.writes" {
+            for ((key, _pool, _write), v) in kvs {
+                if key != "writes" {
                     continue;
                 }
 
@@ -297,15 +286,15 @@ mod tests {
         }
     }
 
-    #[tokio::test]
-    async fn test_parse_pool_state_file() {
+    #[test]
+    fn pool_state_file() {
         let paths = glob("tests/node/proc/spl/kstat/zfs/*/state").unwrap();
         let mut handled = 0;
         for path in paths.flatten() {
             handled += 1;
             let path: &str = path.to_str().unwrap();
             let pool_name = parse_pool_name(path).unwrap();
-            let kvs = parse_pool_state_file(path).await.unwrap();
+            let kvs = parse_pool_state_file(path).unwrap();
             assert_ne!(kvs.len(), 0);
 
             for (state, active) in kvs {

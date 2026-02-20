@@ -177,7 +177,7 @@ pub struct ClientV4Stats {
     remove: u64,
     rename: u64,
     link: u64,
-    sym_link: u64,
+    symlink: u64,
     create: u64,
     pathconf: u64,
     stat_fs: u64,
@@ -255,7 +255,7 @@ impl TryFrom<Vec<u64>> for ClientV4Stats {
             remove: v[22],
             rename: v[23],
             link: v[24],
-            sym_link: v[25],
+            symlink: v[25],
             create: v[26],
             pathconf: v[27],
             stat_fs: v[28],
@@ -275,8 +275,8 @@ impl TryFrom<Vec<u64>> for ClientV4Stats {
             sequence: v[42],
             get_lease_time: v[43],
             reclaim_complete: v[44],
-            layout_get: v[45],
-            get_device_info: v[46],
+            get_device_info: v[45],
+            layout_get: v[46],
             layout_commit: v[47],
             layout_return: v[48],
             secinfo_no_name: v[49],
@@ -326,14 +326,13 @@ pub struct ClientRPCStats {
     client_v4_stats: ClientV4Stats,
 }
 
-/// client_rpc_stats retrieves NFS client RPC statistics from file
-pub async fn client_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ClientRPCStats, Error> {
+/// load_client_rpc_stats retrieves NFS client RPC statistics from file
+pub fn load_client_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ClientRPCStats, Error> {
     let data = std::fs::read_to_string(path)?;
 
     let mut stats = ClientRPCStats::default();
     for line in data.lines() {
-        let parts = line.trim().split_ascii_whitespace().collect::<Vec<_>>();
-
+        let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
         if parts.len() < 2 {
             return Err(format!("invalid NFS metric line, {line}").into());
         }
@@ -375,7 +374,7 @@ macro_rules! procedure_metric {
 }
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = client_rpc_stats(proc_path.join("net/rpc/nfs")).await?;
+    let stats = load_client_rpc_stats(proc_path.join("net/rpc/nfs"))?;
 
     // collect statistics for network packets/connections
     let mut metrics = vec![
@@ -398,7 +397,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         Metric::sum(
             "node_nfs_connections_total",
             "Total number of NFSd TCP connections.",
-            stats.network.net_count,
+            stats.network.tcp_connect,
         ),
     ];
 
@@ -499,7 +498,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         procedure_metric!("4", "Remove", stats.client_v4_stats.remove),
         procedure_metric!("4", "Rename", stats.client_v4_stats.rename),
         procedure_metric!("4", "Link", stats.client_v4_stats.link),
-        procedure_metric!("4", "Symlink", stats.client_v4_stats.sym_link),
+        procedure_metric!("4", "Symlink", stats.client_v4_stats.symlink),
         procedure_metric!("4", "Create", stats.client_v4_stats.create),
         procedure_metric!("4", "Pathconf", stats.client_v4_stats.pathconf),
         procedure_metric!("4", "StatFs", stats.client_v4_stats.stat_fs),
@@ -559,32 +558,25 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_client_rpc_stats() {
-        struct Case {
-            name: String,
-            content: String,
-            invalid: bool,
-            stats: ClientRPCStats,
-        }
-
+    #[test]
+    fn client_rpc_stats() {
         let cases = vec![
-            Case {
-                name: "invalid file".to_string(),
-                content: "invalid".to_string(),
-                invalid: true,
-                stats: ClientRPCStats::default(),
-            },
-            Case {
-                name: "good old kernel version file".to_string(),
-                content: "net 70 70 69 45
+            (
+                "invalid file",
+                "invalid",
+                true,
+                ClientRPCStats::default(),
+            ),
+            (
+                "good old kernel version file",
+                "net 70 70 69 45
 rpc 1218785755 374636 1218815394
 proc2 18 16 57 74 52 71 73 45 86 0 52 83 61 17 53 50 23 70 82
 proc3 22 0 1061909262 48906 4077635 117661341 5 29391916 2570425 2993289 590 0 0 7815 15 1130 0 3983 92385 13332 2 1 23729
-proc4 48 98 51 54 83 85 23 24 1 28 73 68 83 12 84 39 68 59 58 88 29 74 69 96 21 84 15 53 86 54 66 56 97 36 49 32 85 81 11 58 32 67 13 28 35 90 1 26 1337
-".to_string(),
-                invalid: false,
-                stats: ClientRPCStats {
+proc4 48 98 51 54 83 85 23 24 1 28 73 68 83 12 84 39 68 59 58 88 29 74 69 96 21 84 15 53 86 54 66 56 97 36 49 32 85 81 11 58 32 67 13 28 35 1 90 26 1337
+",
+                false,
+                ClientRPCStats {
                     network: Network {
                         net_count: 70,
                         udp_count: 70,
@@ -665,7 +657,7 @@ proc4 48 98 51 54 83 85 23 24 1 28 73 68 83 12 84 39 68 59 58 88 29 74 69 96 21 
                         remove: 69,
                         rename: 96,
                         link: 21,
-                        sym_link: 84,
+                        symlink: 84,
                         create: 15,
                         pathconf: 53,
                         stat_fs: 86,
@@ -702,17 +694,17 @@ proc4 48 98 51 54 83 85 23 24 1 28 73 68 83 12 84 39 68 59 58 88 29 74 69 96 21 
                         clone: 0,
                     },
                 },
-            },
-            Case {
-                name: "good file".to_string(),
-                content: "net 18628 0 18628 6
+            ),
+            (
+                "good file",
+                "net 18628 0 18628 6
 rpc 4329785 0 4338291
 proc2 18 2 69 0 0 4410 0 0 0 0 0 0 0 0 0 0 0 99 2
 proc3 22 1 4084749 29200 94754 32580 186 47747 7981 8639 0 6356 0 6962 0 7958 0 0 241 4 4 2 39
 proc4 61 1 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-".to_string(),
-                invalid: false,
-                stats: ClientRPCStats {
+",
+                false,
+                ClientRPCStats {
                     network: Network {
                         net_count: 18628,
                         udp_count: 0,
@@ -793,7 +785,7 @@ proc4 61 1 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0
                         remove: 2,
                         rename: 0,
                         link: 0,
-                        sym_link: 0,
+                        symlink: 0,
                         create: 0,
                         pathconf: 0,
                         stat_fs: 0,
@@ -830,20 +822,20 @@ proc4 61 1 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0
                         clone: 0,
                     },
                 },
-            },
+            ),
         ];
 
         let tmpdir = testify::temp_dir();
-        for case in cases {
-            let path = tmpdir.join(case.name);
-            std::fs::write(&path, case.content).unwrap();
+        for (name, input, invalid, stats) in cases {
+            let path = tmpdir.join(name);
+            std::fs::write(&path, input).unwrap();
 
-            let result = client_rpc_stats(&path).await;
-            if case.invalid && result.is_err() {
+            let result = load_client_rpc_stats(&path);
+            if invalid && result.is_err() {
                 continue;
             }
 
-            assert_eq!(result.unwrap(), case.stats)
+            assert_eq!(result.unwrap(), stats)
         }
     }
 }

@@ -7,7 +7,7 @@ use event::Metric;
 use super::{Error, read_into};
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let (avail, pool_size) = read_random(proc_path).await?;
+    let (avail, pool_size) = read_random(proc_path)?;
 
     Ok(vec![
         Metric::gauge(
@@ -23,7 +23,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     ])
 }
 
-async fn read_random(proc_path: PathBuf) -> Result<(u64, u64), Error> {
+fn read_random(proc_path: PathBuf) -> Result<(u64, u64), Error> {
     let avail = read_into(proc_path.join("sys/kernel/random/entropy_avail"))?;
     let pool_size = read_into(proc_path.join("sys/kernel/random/poolsize"))?;
 
@@ -34,10 +34,10 @@ async fn read_random(proc_path: PathBuf) -> Result<(u64, u64), Error> {
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_read_random() {
+    #[test]
+    fn read() {
         let path = "tests/node/proc".into();
-        let (avail, pool_size) = read_random(path).await.unwrap();
+        let (avail, pool_size) = read_random(path).unwrap();
 
         assert_eq!(avail, 3943);
         assert_eq!(pool_size, 4096);
