@@ -141,7 +141,7 @@ impl TryFrom<Vec<u64>> for ServerRPC {
 
     fn try_from(v: Vec<u64>) -> Result<Self, Self::Error> {
         if v.len() != 5 {
-            return Err(format!("invalid RPC line {v:?}").into());
+            return Err(Error::Malformed("server RPC values"));
         }
 
         Ok(Self {
@@ -297,12 +297,12 @@ struct ServerRPCStats {
     wdeleg_getattr: u64,
 }
 
-async fn server_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ServerRPCStats, Error> {
+fn load_server_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ServerRPCStats, Error> {
     let data = std::fs::read_to_string(path)?;
 
     let mut stats = ServerRPCStats::default();
     for line in data.lines() {
-        let parts = line.trim().split_ascii_whitespace().collect::<Vec<_>>();
+        let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
         if parts.len() < 2 {
             return Err(format!("invalid NFSd metric line {line}").into());
         }
@@ -362,7 +362,7 @@ macro_rules! rpc_metric {
 }
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = server_rpc_stats(proc_path.join("net/rpc/nfsd")).await?;
+    let stats = load_server_rpc_stats(proc_path.join("net/rpc/nfsd"))?;
     let metrics = vec![
         // collects statistics for the reply cache
         Metric::sum(
@@ -558,25 +558,18 @@ mod tests {
     use super::*;
     use testify::temp_dir;
 
-    #[tokio::test]
-    async fn test_server_rpc_stats() {
-        struct Case {
-            name: String,
-            content: String,
-            stats: ServerRPCStats,
-            invalid: bool,
-        }
-
+    #[test]
+    fn server_rpc_stats() {
         let cases = vec![
-            Case {
-                name: "invalid file".to_string(),
-                content: "invalid".to_string(),
-                stats: Default::default(),
-                invalid: true,
-            },
-            Case {
-                name: "good file".to_string(),
-                content: "rc 0 6 18622
+            (
+                "invalid file",
+                "invalid",
+                Default::default(),
+                true,
+            ),
+            (
+                "good file",
+                "rc 0 6 18622
 fh 0 0 0 0 0
 io 157286400 0
 th 8 0 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000
@@ -587,8 +580,8 @@ proc2 18 2 69 0 0 4410 0 0 0 0 0 0 0 0 0 0 0 99 2
 proc3 22 2 112 0 2719 111 0 0 0 0 0 0 0 0 0 0 0 27 216 0 2 1 0
 proc4 2 2 10853
 proc4ops 72 0 0 0 1098 2 0 0 0 0 8179 5896 0 0 0 0 5900 0 0 2 0 2 0 9609 0 2 150 1272 0 0 0 1236 0 0 0 0 3 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-".to_string(),
-                stats: ServerRPCStats {
+wdeleg_getattr 16",
+                ServerRPCStats {
                     reply_cache: ReplyCache {
                         hits: 0,
                         misses: 6,
@@ -711,28 +704,28 @@ proc4ops 72 0 0 0 1098 2 0 0 0 0 8179 5896 0 0 0 0 5900 0 0 2 0 2 0 9609 0 2 150
                         save_fh: 0,
                         sec_info: 0,
                         set_attr: 0,
-                        set_client_id: 0,
-                        set_client_id_confirm: 0,
-                        verify: 3,
-                        write: 3,
+                        set_client_id: 3,
+                        set_client_id_confirm: 3,
+                        verify: 0,
+                        write: 0,
                         rel_lock_owner: 0,
                     },
-                    wdeleg_getattr: 0
+                    wdeleg_getattr: 16
                 },
-                invalid: false,
-            },
+                false
+            ),
         ];
 
         let tmpdir = temp_dir();
-        for case in cases {
-            let path = tmpdir.join(case.name.as_str());
-            std::fs::write(&path, case.content).unwrap();
-            let result = server_rpc_stats(&path).await;
-            if case.invalid && result.is_err() {
+        for (name, input, stats, valid) in cases {
+            let path = tmpdir.join(name);
+            std::fs::write(&path, input).unwrap();
+            let result = load_server_rpc_stats(&path);
+            if valid && result.is_err() {
                 continue;
             }
 
-            assert_eq!(result.unwrap(), case.stats)
+            assert_eq!(result.unwrap(), stats);
         }
     }
 }
