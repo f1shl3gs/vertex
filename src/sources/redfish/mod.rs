@@ -197,7 +197,7 @@ async fn scrape_loop(
 
         // set instance
         metrics.iter_mut().for_each(|m| {
-            m.series.tags.insert("instance", client.target.clone());
+            m.tags.insert("instance", client.target.clone());
         });
 
         if let Err(_err) = output.send(metrics).await {

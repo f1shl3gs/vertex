@@ -51,7 +51,7 @@ impl Batch for MetricsBuffer {
             let max_events = self.max_events;
             self.metrics
                 .get_or_insert_with(|| MetricSet::with_capacity(max_events))
-                .insert_update(item);
+                .insert(item);
 
             PushResult::Ok(self.num_items() >= self.max_events)
         }
@@ -174,20 +174,10 @@ impl MetricSet {
     }
 
     fn insert(&mut self, metric: Metric) {
-        let metadata = metric.metadata().clone();
-        let series = metric.series;
+        let (name, tags, _desc, value, timestamp, metadata) = metric.into_parts();
 
         self.0
-            .insert(series, (metric.value, metric.timestamp, metadata));
-    }
-
-    fn insert_update(&mut self, metric: Metric) {
-        /*let update = match metric.value {
-            MetricValue::Gauge(_) => Some(metric),
-
-        }*/
-
-        self.insert(metric)
+            .insert(MetricSeries { name, tags }, (value, timestamp, metadata));
     }
 
     fn default() -> Self {

@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::collections::hash_map::Entry;
 use std::collections::{BTreeMap, HashMap};
 use std::pin::Pin;
@@ -93,7 +94,7 @@ impl MetricConfig {
 
         Some((
             MetricSeries {
-                name: name.to_string(),
+                name: Cow::<'static, str>::Owned(name.to_string()),
                 tags,
             },
             value,

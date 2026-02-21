@@ -393,7 +393,7 @@ fn encode_log<B: BufMut>(log: &LogRecord, buf: &mut B) -> Result<(), Error> {
 fn decode_metric<B: Buf>(buf: &mut B) -> Result<Metric, Error> {
     let name = decode_string(buf)?;
     let tags = decode_tags(buf)?;
-    let description = decode_option_string(buf)?;
+    let description = decode_option_string(buf)?.map(Cow::Owned);
 
     let timestamp = match buf.get_i64() {
         -1 => None,
@@ -454,7 +454,7 @@ fn decode_metric<B: Buf>(buf: &mut B) -> Result<Metric, Error> {
     let metadata = decode_metadata(buf)?;
 
     Ok(Metric::new_with_metadata(
-        name,
+        Cow::Owned(name),
         tags,
         description,
         value,
@@ -566,7 +566,7 @@ mod tests {
                 "sum",
                 Metric::new(
                     "foo",
-                    Some("bar".to_string()),
+                    Some("bar".into()),
                     tags!(
                         "foo" => "bar"
                     ),
@@ -606,7 +606,7 @@ mod tests {
                 "gauge",
                 Metric::new(
                     "foo",
-                    Some("bar".to_string()),
+                    Some("bar".into()),
                     tags!(
                         "foo" => "bar"
                     ),

@@ -416,6 +416,6 @@ mod tests {
         let metric = output.first().unwrap().into_metric();
         assert_eq!(metric.name(), "foo");
         assert_eq!(metric.value, MetricValue::Gauge(1.0));
-        assert!(metric.series.tags.is_empty())
+        assert!(metric.tags.is_empty())
     }
 }

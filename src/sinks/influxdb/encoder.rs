@@ -20,7 +20,7 @@ impl Encoder<Vec<Metric>> for LineProtocolEncoder {
         for metric in &metrics {
             write!(writer, "{}", escape(metric.name(), COMMA_SPACE))?;
 
-            for (key, value) in &metric.series.tags {
+            for (key, value) in &metric.tags {
                 let key = escape(key.as_str(), COMMA_EQ_SPACE);
                 let value = value.to_string();
                 if value.is_empty() {

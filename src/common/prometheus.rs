@@ -1,3 +1,5 @@
+use std::borrow::Cow;
+
 use chrono::{DateTime, Utc};
 use event::tags::Tags;
 use event::{Bucket, Metric, MetricValue, Quantile};
@@ -190,16 +192,14 @@ pub fn convert_metrics(groups: Vec<MetricGroup>) -> Vec<Metric> {
     let mut metrics = Vec::with_capacity(groups.len());
 
     for group in groups {
-        let MetricGroup {
-            name,
-            description,
-            metrics: grouped,
-        } = group;
+        let name = Cow::<'static, str>::Owned(group.name);
+        let description = Cow::<'static, str>::Owned(group.description);
+        let grouped = group.metrics;
 
         match grouped {
             GroupKind::Counter(set) => {
                 for (key, metric) in set {
-                    let metric = Metric::sum(&name, &description, metric.value)
+                    let metric = Metric::sum(name.clone(), description.clone(), metric.value)
                         .with_tags(key.labels.into())
                         .with_timestamp(utc_timestamp(key.timestamp, start));
 
@@ -208,7 +208,7 @@ pub fn convert_metrics(groups: Vec<MetricGroup>) -> Vec<Metric> {
             }
             GroupKind::Gauge(set) | GroupKind::Untyped(set) => {
                 for (key, metric) in set {
-                    let metric = Metric::gauge(&name, &description, metric.value)
+                    let metric = Metric::gauge(name.clone(), description.clone(), metric.value)
                         .with_tags(key.labels.into())
                         .with_timestamp(utc_timestamp(key.timestamp, start));
 
@@ -218,8 +218,8 @@ pub fn convert_metrics(groups: Vec<MetricGroup>) -> Vec<Metric> {
             GroupKind::Summary(set) => {
                 for (key, metric) in set {
                     let metric = Metric::summary(
-                        &name,
-                        &description,
+                        name.clone(),
+                        description.clone(),
                         metric.count,
                         metric.sum,
                         metric
@@ -240,8 +240,8 @@ pub fn convert_metrics(groups: Vec<MetricGroup>) -> Vec<Metric> {
             GroupKind::Histogram(set) => {
                 for (key, metric) in set {
                     let metric = Metric::histogram(
-                        &name,
-                        &description,
+                        name.clone(),
+                        description.clone(),
                         metric.count,
                         metric.sum,
                         metric

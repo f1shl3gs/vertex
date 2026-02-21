@@ -236,7 +236,7 @@ impl Target for MetricTarget {
                             return Ok(());
                         }
                         ["name"] => {
-                            self.metric.set_name(value.to_string_lossy());
+                            self.metric.set_name(value.to_string_lossy().to_string());
                             self.value.insert(path, value);
                         }
                         ["timestamp"] => {

@@ -217,6 +217,8 @@ impl MetricNormalize for PrometheusMetricNormalize {
 
 #[cfg(test)]
 mod tests {
+    use std::borrow::Cow;
+
     use chrono::Utc;
     use event::tags::Tags;
     use event::{Metric, tags};
@@ -242,7 +244,7 @@ mod tests {
         };
     }
 
-    fn gauge(name: impl Into<String>, value: f64, tags: Tags) -> Event {
+    fn gauge(name: impl Into<Cow<'static, str>>, value: f64, tags: Tags) -> Event {
         Metric::gauge_with_tags(name, "", value, tags)
             .with_timestamp(Some(Utc::now()))
             .into()
