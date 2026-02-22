@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::cmp::Ordering;
 use std::net::SocketAddr;
 
@@ -119,12 +120,19 @@ fn reparse_groups(groups: Vec<MetricGroup>) -> Events {
         metrics: group,
     } in groups
     {
+        let name = Cow::<'static, str>::Owned(name);
+        let description = Cow::<'static, str>::Owned(description);
+
         match group {
             GroupKind::Counter(map) => {
                 for (key, metric) in map {
-                    let counter =
-                        Metric::sum_with_tags(&name, &description, metric.value, key.labels)
-                            .with_timestamp(utc_timestamp(key.timestamp, start));
+                    let counter = Metric::sum_with_tags(
+                        name.clone(),
+                        description.clone(),
+                        metric.value,
+                        key.labels,
+                    )
+                    .with_timestamp(utc_timestamp(key.timestamp, start));
 
                     metrics.push(counter)
                 }
@@ -132,9 +140,13 @@ fn reparse_groups(groups: Vec<MetricGroup>) -> Events {
 
             GroupKind::Gauge(map) | GroupKind::Untyped(map) => {
                 for (key, metric) in map {
-                    let gauge =
-                        Metric::gauge_with_tags(&name, &description, metric.value, key.labels)
-                            .with_timestamp(utc_timestamp(key.timestamp, start));
+                    let gauge = Metric::gauge_with_tags(
+                        name.clone(),
+                        description.clone(),
+                        metric.value,
+                        key.labels,
+                    )
+                    .with_timestamp(utc_timestamp(key.timestamp, start));
 
                     metrics.push(gauge)
                 }
@@ -146,8 +158,8 @@ fn reparse_groups(groups: Vec<MetricGroup>) -> Events {
                     buckets.sort_unstable_by(|a, b| a.partial_cmp(b).unwrap_or(Ordering::Equal));
 
                     let histogram = Metric::histogram_with_tags(
-                        &name,
-                        &description,
+                        name.clone(),
+                        description.clone(),
                         key.labels,
                         metric.count,
                         metric.sum,
@@ -168,8 +180,8 @@ fn reparse_groups(groups: Vec<MetricGroup>) -> Events {
             GroupKind::Summary(map) => {
                 for (key, metric) in map {
                     let summary = Metric::summary(
-                        &name,
-                        &description,
+                        name.clone(),
+                        description.clone(),
                         metric.count,
                         metric.sum,
                         metric

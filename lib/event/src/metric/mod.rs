@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::fmt::{Display, Formatter, Write};
 
 use chrono::{DateTime, Utc};
@@ -73,7 +74,7 @@ impl MetricValue {
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq, Serialize)]
 pub struct MetricSeries {
-    pub name: String,
+    pub name: Cow<'static, str>,
     pub tags: Tags,
 }
 
@@ -107,14 +108,15 @@ impl MetricValue {
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct Metric {
-    #[serde(flatten)]
-    pub series: MetricSeries,
+    pub name: Cow<'static, str>,
 
-    pub description: Option<String>,
+    pub description: Option<Cow<'static, str>>,
 
-    pub timestamp: Option<DateTime<Utc>>,
+    pub tags: Tags,
 
     pub value: MetricValue,
+
+    pub timestamp: Option<DateTime<Utc>>,
 
     #[serde(skip)]
     metadata: EventMetadata,
@@ -122,7 +124,8 @@ pub struct Metric {
 
 impl TypeSize for Metric {
     fn allocated_bytes(&self) -> usize {
-        self.series.allocated_bytes()
+        self.name.allocated_bytes()
+            + self.tags.allocated_bytes()
             + self.description.allocated_bytes()
             + self.value.allocated_bytes()
             + self.metadata.allocated_bytes()
@@ -180,7 +183,7 @@ impl Display for Metric {
         match &self.value {
             MetricValue::Gauge(v) | MetricValue::Sum(v) => {
                 write!(fmt, "{}", self.name())?;
-                write_tags(fmt, &self.series.tags)?;
+                write_tags(fmt, &self.tags)?;
                 write!(fmt, "{}", v)
             }
             MetricValue::Histogram {
@@ -188,7 +191,7 @@ impl Display for Metric {
                 count,
                 sum,
             } => {
-                let mut tags = self.series.tags.clone();
+                let mut tags = self.tags.clone();
 
                 for b in buckets {
                     if b.upper == f64::INFINITY {
@@ -218,7 +221,7 @@ impl Display for Metric {
                 sum,
                 quantiles,
             } => {
-                let mut tags = self.series.tags.clone();
+                let mut tags = self.tags.clone();
                 for q in quantiles {
                     tags.insert("quantile", q.quantile.to_string());
                     write!(fmt, "{}", self.name())?;
@@ -285,17 +288,15 @@ impl IntoF64 for std::time::Duration {
 impl Metric {
     #[inline]
     pub fn new(
-        name: impl Into<String>,
-        description: Option<String>,
+        name: impl Into<Cow<'static, str>>,
+        description: Option<Cow<'static, str>>,
         tags: Tags,
         ts: DateTime<Utc>,
         value: MetricValue,
     ) -> Self {
         Self {
-            series: MetricSeries {
-                name: name.into(),
-                tags,
-            },
+            name: name.into(),
+            tags,
             description,
             timestamp: Some(ts),
             value,
@@ -305,15 +306,16 @@ impl Metric {
 
     #[inline]
     pub fn new_with_metadata(
-        name: String,
+        name: Cow<'static, str>,
         tags: Tags,
-        description: Option<String>,
+        description: Option<Cow<'static, str>>,
         value: MetricValue,
         timestamp: Option<DateTime<Utc>>,
         metadata: EventMetadata,
     ) -> Self {
         Self {
-            series: MetricSeries { name, tags },
+            name,
+            tags,
             description,
             timestamp,
             value,
@@ -329,15 +331,13 @@ impl Metric {
     #[inline]
     pub fn gauge<N, D, V>(name: N, desc: D, v: V) -> Metric
     where
-        N: Into<String>,
-        D: Into<String>,
+        N: Into<Cow<'static, str>>,
+        D: Into<Cow<'static, str>>,
         V: IntoF64,
     {
         Self {
-            series: MetricSeries {
-                name: name.into(),
-                tags: Tags::default(),
-            },
+            name: name.into(),
+            tags: Tags::default(),
             description: Some(desc.into()),
             timestamp: None,
             value: MetricValue::Gauge(v.into_f64()),
@@ -348,16 +348,14 @@ impl Metric {
     #[inline]
     pub fn gauge_with_tags<N, D, V, A>(name: N, desc: D, value: V, tags: A) -> Metric
     where
-        N: Into<String>,
-        D: Into<String>,
+        N: Into<Cow<'static, str>>,
+        D: Into<Cow<'static, str>>,
         V: IntoF64,
         A: Into<Tags>,
     {
         Self {
-            series: MetricSeries {
-                name: name.into(),
-                tags: tags.into(),
-            },
+            name: name.into(),
+            tags: tags.into(),
             description: Some(desc.into()),
             timestamp: None,
             value: MetricValue::Gauge(value.into_f64()),
@@ -368,15 +366,13 @@ impl Metric {
     #[inline]
     pub fn sum<N, D, V>(name: N, desc: D, v: V) -> Metric
     where
-        N: Into<String>,
-        D: Into<String>,
+        N: Into<Cow<'static, str>>,
+        D: Into<Cow<'static, str>>,
         V: IntoF64,
     {
         Self {
-            series: MetricSeries {
-                name: name.into(),
-                tags: Tags::default(),
-            },
+            name: name.into(),
+            tags: Tags::default(),
             description: Some(desc.into()),
             timestamp: None,
             value: MetricValue::Sum(v.into_f64()),
@@ -387,16 +383,14 @@ impl Metric {
     #[inline]
     pub fn sum_with_tags<N, D, V, A>(name: N, desc: D, value: V, tags: A) -> Metric
     where
-        N: Into<String>,
-        D: Into<String>,
+        N: Into<Cow<'static, str>>,
+        D: Into<Cow<'static, str>>,
         V: IntoF64,
         A: Into<Tags>,
     {
         Self {
-            series: MetricSeries {
-                name: name.into(),
-                tags: tags.into(),
-            },
+            name: name.into(),
+            tags: tags.into(),
             description: Some(desc.into()),
             timestamp: None,
             value: MetricValue::Sum(value.into_f64()),
@@ -407,16 +401,14 @@ impl Metric {
     #[inline]
     pub fn histogram<N, D, C, S>(name: N, desc: D, count: C, sum: S, buckets: Vec<Bucket>) -> Metric
     where
-        N: Into<String>,
-        D: Into<String>,
+        N: Into<Cow<'static, str>>,
+        D: Into<Cow<'static, str>>,
         C: Into<u64>,
         S: IntoF64,
     {
         Self {
-            series: MetricSeries {
-                name: name.into(),
-                tags: Tags::default(),
-            },
+            name: name.into(),
+            tags: Tags::default(),
             description: Some(desc.into()),
             timestamp: None,
             metadata: EventMetadata::default(),
@@ -438,17 +430,15 @@ impl Metric {
         buckets: Vec<Bucket>,
     ) -> Metric
     where
-        N: Into<String>,
-        D: Into<String>,
+        N: Into<Cow<'static, str>>,
+        D: Into<Cow<'static, str>>,
         A: Into<Tags>,
         C: Into<u64>,
         S: IntoF64,
     {
         Self {
-            series: MetricSeries {
-                name: name.into(),
-                tags: tags.into(),
-            },
+            name: name.into(),
+            tags: tags.into(),
             description: Some(desc.into()),
             timestamp: None,
             metadata: EventMetadata::default(),
@@ -469,16 +459,14 @@ impl Metric {
         quantiles: Vec<Quantile>,
     ) -> Metric
     where
-        N: Into<String>,
-        D: Into<String>,
+        N: Into<Cow<'static, str>>,
+        D: Into<Cow<'static, str>>,
         C: Into<u64>,
         S: IntoF64,
     {
         Self {
-            series: MetricSeries {
-                name: name.into(),
-                tags: Tags::default(),
-            },
+            name: name.into(),
+            tags: Tags::default(),
             description: Some(desc.into()),
             timestamp: None,
             metadata: EventMetadata::default(),
@@ -500,17 +488,15 @@ impl Metric {
         tags: A,
     ) -> Metric
     where
-        N: Into<String>,
-        D: Into<String>,
+        N: Into<Cow<'static, str>>,
+        D: Into<Cow<'static, str>>,
         C: Into<u64>,
         S: IntoF64,
         A: Into<Tags>,
     {
         Self {
-            series: MetricSeries {
-                name: name.into(),
-                tags: tags.into(),
-            },
+            name: name.into(),
+            tags: tags.into(),
             description: Some(desc.into()),
             timestamp: None,
             metadata: EventMetadata::default(),
@@ -526,18 +512,21 @@ impl Metric {
         &self.metadata
     }
 
+    #[allow(clippy::type_complexity)]
     #[inline]
     pub fn into_parts(
         self,
     ) -> (
-        MetricSeries,
-        Option<String>,
+        Cow<'static, str>,
+        Tags,
+        Option<Cow<'static, str>>,
         MetricValue,
         Option<DateTime<Utc>>,
         EventMetadata,
     ) {
         (
-            self.series,
+            self.name,
+            self.tags,
             self.description,
             self.value,
             self.timestamp,
@@ -551,12 +540,12 @@ impl Metric {
 
     #[inline]
     pub fn name(&self) -> &str {
-        &self.series.name
+        &self.name
     }
 
     #[inline]
-    pub fn set_name(&mut self, name: impl Into<String>) {
-        self.series.name = name.into();
+    pub fn set_name(&mut self, name: impl Into<Cow<'static, str>>) {
+        self.name = name.into();
     }
 
     #[inline]
@@ -573,39 +562,39 @@ impl Metric {
 
     #[inline]
     pub fn tags(&self) -> &Tags {
-        &self.series.tags
+        &self.tags
     }
 
     #[inline]
     pub fn tags_mut(&mut self) -> &mut Tags {
-        &mut self.series.tags
+        &mut self.tags
     }
 
     #[inline]
     #[must_use]
     pub fn with_tags(mut self, tags: Tags) -> Self {
-        self.series.tags = tags;
+        self.tags = tags;
         self
     }
 
     #[inline]
     pub fn tag_value(&self, name: &str) -> Option<&Value> {
-        self.series.tags.get(name)
+        self.tags.get(name)
     }
 
     #[inline]
     pub fn insert_tag(&mut self, key: impl Into<Key>, value: impl Into<Value>) {
-        self.series.insert_tag(key, value);
+        self.tags.insert(key.into(), value);
     }
 
     #[inline]
     pub fn remote_tag(&mut self, key: &Key) -> Option<Value> {
-        self.series.tags.remove(key)
+        self.tags.remove(key)
     }
 
     #[inline]
     #[must_use]
-    pub fn with_desc(mut self, desc: Option<String>) -> Self {
+    pub fn with_desc(mut self, desc: Option<Cow<'static, str>>) -> Self {
         self.description = desc;
         self
     }
@@ -639,7 +628,7 @@ mod tests {
     fn test_gauge() {
         let m = Metric::gauge("name", "desc", 1);
         assert_eq!(m.name(), "name");
-        assert_eq!(m.description, Some("desc".to_string()));
+        assert_eq!(m.description, Some("desc".into()));
         assert_eq!(m.value, MetricValue::Gauge(1.0));
     }
 
@@ -647,12 +636,12 @@ mod tests {
     fn test_sum() {
         let m = Metric::sum("name", "desc", 1);
         assert_eq!(m.name(), "name");
-        assert_eq!(m.description, Some("desc".to_string()));
+        assert_eq!(m.description, Some("desc".into()));
         assert_eq!(m.value, MetricValue::Sum(1.0));
 
         let m = Metric::sum_with_tags("name", "desc", 2, tags!("foo" => "bar"));
         assert_eq!(m.name(), "name");
-        assert_eq!(m.description, Some("desc".to_string()));
+        assert_eq!(m.description, Some("desc".into()));
         assert_eq!(m.value, MetricValue::Sum(2.0));
     }
 }

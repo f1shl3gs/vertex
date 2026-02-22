@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet};
 use std::io::Write;
@@ -133,7 +134,7 @@ impl Ord for ExpiringEntry {
 
 #[derive(Default)]
 struct Sets {
-    description: String,
+    description: Cow<'static, str>,
     metrics: BTreeSet<ExpiringEntry>,
 }
 
@@ -319,7 +320,7 @@ fn write_histogram_metric<T: Write>(
 
 fn handle(
     req: Request<Incoming>,
-    metrics: Arc<RwLock<BTreeMap<String, Sets>>>,
+    metrics: Arc<RwLock<BTreeMap<Cow<'static, str>, Sets>>>,
     const_labels: BTreeMap<String, String>,
 ) -> Response<Full<Bytes>> {
     match (req.method(), req.uri().path()) {
@@ -438,7 +439,7 @@ impl StreamSink for PrometheusExporter {
         // The state key is metric name, `Sets` is a container of tags, value and timestamp.
         // HashMap might have better performance, but we want the output is ordered so that's
         // why we choose BTreeMap.
-        let states = Arc::new(RwLock::new(BTreeMap::<String, Sets>::new()));
+        let states = Arc::new(RwLock::new(BTreeMap::<Cow<'static, str>, Sets>::new()));
         let (trigger_shutdown, shutdown, _shutdown_done) = ShutdownSignal::new_wired();
 
         // HTTP server routine
@@ -523,17 +524,18 @@ impl StreamSink for PrometheusExporter {
                 let mut state = states.write();
 
                 metrics.into_iter().for_each(|metric| {
-                    let (series, description, value, timestamp, mut metadata) = metric.into_parts();
+                    let (name, tags, description, value, timestamp, mut metadata) =
+                        metric.into_parts();
                     let finalizers = metadata.take_finalizers();
                     let timestamp = timestamp.unwrap_or(now).timestamp_millis();
 
-                    let sets = state.entry(series.name).or_insert(Sets {
+                    let sets = state.entry(name).or_insert(Sets {
                         description: description.unwrap_or_default(),
                         metrics: Default::default(),
                     });
 
                     sets.metrics.replace(ExpiringEntry {
-                        tags: series.tags,
+                        tags,
                         value,
                         expired_at: timestamp + ttl,
                     });

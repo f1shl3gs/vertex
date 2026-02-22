@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::path::{Path, PathBuf};
 use std::process::{ExitStatus, Stdio};
 use std::time::Duration;
@@ -372,8 +373,8 @@ async fn scrape(path: &Path, infos: &[(String, String)]) -> Result<Vec<Metric>, 
                 name,
                 infos
                     .get(index)
-                    .map(|info| info.1.as_str())
-                    .unwrap_or(column),
+                    .map(|info| Cow::<'static, str>::Owned(info.1.to_string()))
+                    .unwrap_or(Cow::<'static, str>::Owned(column.to_string())),
                 value * multiplier,
                 tags!(
                     "uuid" => uuid,
