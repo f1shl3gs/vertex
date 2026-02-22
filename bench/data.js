@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1771676718857,
+  "lastUpdate": 1771802373226,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "864320e2b3c9c258ba498831fe75d02e3af334db",
-          "message": "Merge pull request #2701 from f1shl3gs/dependabot/cargo/hyper-util-0.1.19\n\nchore(deps): bump hyper-util from 0.1.18 to 0.1.19",
-          "timestamp": "2025-12-04T02:56:15+08:00",
-          "tree_id": "3752866ee4b3f02039cbb13f9cdc567046057f69",
-          "url": "https://github.com/f1shl3gs/vertex/commit/864320e2b3c9c258ba498831fe75d02e3af334db"
-        },
-        "date": 1764789580538,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 584,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41257.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f749b60e9ac0cf108e0b9c981140456aff7ab595",
           "message": "Merge pull request #2702 from f1shl3gs/sources/netflow/refactor\n\nsources/netflow: refactor",
           "timestamp": "2025-12-04T03:11:18+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40946.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a41c274695dfeedf3c3d2321b8eee10f3efdba14",
+          "message": "Merge pull request #2804 from f1shl3gs/lib/events/use_cow_for_metric\n\nlib/events: use Cow<'static, str> for metric name and description",
+          "timestamp": "2026-02-23T07:07:42+08:00",
+          "tree_id": "640795b44f9861d209dbc72715c42504d5024fa9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a41c274695dfeedf3c3d2321b8eee10f3efdba14"
+        },
+        "date": 1771802350266,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 594,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40507.3,
             "unit": "KiB"
           }
         ]
