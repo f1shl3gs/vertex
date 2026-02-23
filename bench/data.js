@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1771880586934,
+  "lastUpdate": 1771880598789,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "318efaeea6d0cf875a37940f06c0bfbee1abc103",
-          "message": "Merge pull request #2622 from f1shl3gs/misc/cleanup_unnecessary_required\n\nmisc: remove unnecessary required",
-          "timestamp": "2025-10-22T21:44:27+08:00",
-          "tree_id": "dc1a03e0a3732d20ea84cc51705959eb0671d0fa",
-          "url": "https://github.com/f1shl3gs/vertex/commit/318efaeea6d0cf875a37940f06c0bfbee1abc103"
-        },
-        "date": 1761140804528,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.282,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 95.387,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 182.54,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 192.03,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d844bf104cd85a31afd27114d4639f98c0121390",
+          "message": "Merge pull request #2805 from f1shl3gs/dependabot/cargo/chrono-0.4.44\n\nchore(deps): bump chrono from 0.4.43 to 0.4.44",
+          "timestamp": "2026-02-24T05:00:13+08:00",
+          "tree_id": "16c785157b14c7648bd1f70da762d9e3134f74a8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d844bf104cd85a31afd27114d4639f98c0121390"
+        },
+        "date": 1771880576422,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.002,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 114.27,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 170.45,
             "unit": "ns/op"
           }
         ]
