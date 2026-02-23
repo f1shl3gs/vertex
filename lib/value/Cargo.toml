@@ -8,14 +8,14 @@ default = []
 string_path = []
 
 [dev-dependencies]
-chrono = { version = "0.4.43", default-features = false, features = ["now"] }
+chrono = { version = "0.4.44", default-features = false, features = ["now"] }
 proptest = { version = "1.10.0", default-features = false, features = ["std"] }
 proptest-derive = { version = "0.8.0", default-features = false }
 quickcheck = { version = "1.1.0", default-features = false }
 
 [dependencies]
 bytes = { version = "1.11.1", default-features = false }
-chrono = { version = "0.4.43", default-features = false, features = ["now"] }
+chrono = { version = "0.4.44", default-features = false, features = ["now"] }
 serde_core = { version = "1.0.228", default-features = false }
 serde_json = { version = "1.0.149", default-features = false, features = ["std"] }
 typesize = { path = "../typesize" }

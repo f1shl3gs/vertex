@@ -16,7 +16,7 @@ tracing = { version = "0.1.44", default-features = false }
 libc = { version = "0.2.182", default-features = false }
 
 [dev-dependencies]
-chrono = { version = "0.4.43", default-features = false, features = ["now"] }
+chrono = { version = "0.4.44", default-features = false, features = ["now"] }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes"], rev = "29e9225d05de76c6d48134497aa4a94c2cd08380" }
 rand = { version = "0.10.0", default-features = false, features = ["thread_rng"] }
 temp-dir = { version = "0.2.0", default-features = false }

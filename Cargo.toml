@@ -482,7 +482,7 @@ argh = { version = "0.1.14", default-features = false, features = ["help"] }
 # External libs
 base64 = { version = "0.22.1", default-features = false, optional = true }
 bytes = { version = "1.11.1", default-features = false }
-chrono = { version = "0.4.43", default-features = false }
+chrono = { version = "0.4.44", default-features = false }
 dashmap = { version = "6.1.0", default-features = false, optional = true }
 encoding_rs = { version = "0.8.35", optional = true, features = ["serde"] }
 exitcode = { version = "1.1.2" }
