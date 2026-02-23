@@ -27,7 +27,7 @@ backoff = { path = "../backoff" }
 base64 = { version = "0.22.1", default-features = false }
 buffer = { path = "../buffer" }
 bytes = { version = "1.11.1", default-features = false }
-chrono = { version = "0.4.43", default-features = false, features = ["clock"] }
+chrono = { version = "0.4.44", default-features = false, features = ["clock"] }
 chrono-tz = { version = "0.10.4", default-features = false }
 codecs = { path = "../codecs" }
 configurable = { path = "../configurable" }

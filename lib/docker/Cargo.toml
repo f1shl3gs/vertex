@@ -8,7 +8,7 @@ tokio = { version = "1.49.0", default-features = false, features = ["macros"]}
 
 [dependencies]
 bytes = { version = "1.11.1", default-features = false }
-chrono = { version = "0.4.43", default-features = false, features = ["serde"] }
+chrono = { version = "0.4.44", default-features = false, features = ["serde"] }
 futures = { version = "0.3.32", default-features = false }
 http = { version = "1.4.0", default-features = false }
 hyper = { version = "1.8.1", default-features = false }

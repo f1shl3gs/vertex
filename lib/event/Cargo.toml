@@ -20,7 +20,7 @@ rand = { version = "0.10.0", default-features = false }
 [dependencies]
 buffer = { path = "../buffer" }
 bytes = { version = "1.11.1", default-features = false }
-chrono = { version = "0.4.43", default-features = false, features = ["now", "serde"] }
+chrono = { version = "0.4.44", default-features = false, features = ["now", "serde"] }
 finalize = { path = "../finalize" }
 futures = { version = "0.3.32", default-features = false, features = ["std"] }
 log_schema = { path = "../log_schema" }
