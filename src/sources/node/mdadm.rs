@@ -3,7 +3,7 @@
 use std::path::{Path, PathBuf};
 use std::sync::LazyLock;
 
-use event::{Metric, tags, tags::Key};
+use event::{Metric, tags};
 use regex::Regex;
 
 use super::{Error, read_into};
@@ -258,10 +258,6 @@ fn recovery_line(input: &str) -> Result<(f64, i64, f64, f64), Error> {
     Ok((percent, synced_blocks, finish, speed))
 }
 
-fn state_metric_value(key: &str, state: &str) -> f64 {
-    if key == state { 1.0 } else { 0.0 }
-}
-
 pub async fn gather(proc_path: PathBuf, sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stats = parse_mdstat(proc_path.join("mdstat")).await?;
 
@@ -276,7 +272,7 @@ pub async fn gather(proc_path: PathBuf, sys_path: PathBuf) -> Result<Vec<Metric>
                 "Total number of disks of device.",
                 stat.disks_total,
                 tags!(
-                    Key::from_static("device") => device.clone(),
+                    "device" => &device,
                 ),
             ),
             Metric::gauge_with_tags(
@@ -284,7 +280,7 @@ pub async fn gather(proc_path: PathBuf, sys_path: PathBuf) -> Result<Vec<Metric>
                 "Total number of blocks on device.",
                 stat.blocks_total,
                 tags!(
-                    Key::from_static("device") => device.clone()
+                    "device" => &device
                 ),
             ),
             Metric::gauge_with_tags(
@@ -292,7 +288,7 @@ pub async fn gather(proc_path: PathBuf, sys_path: PathBuf) -> Result<Vec<Metric>
                 "Number of blocks synced on device.",
                 stat.blocks_synced,
                 tags!(
-                    Key::from_static("device") => device.clone()
+                    "device" => &device
                 ),
             ),
             Metric::gauge_with_tags(
@@ -300,8 +296,8 @@ pub async fn gather(proc_path: PathBuf, sys_path: PathBuf) -> Result<Vec<Metric>
                 "Number of active/failed/spare disks of device.",
                 stat.disks_active,
                 tags!(
-                    Key::from_static("device") => device.clone(),
-                    Key::from_static("state") => "active"
+                    "device" => &device,
+                    "state" => "active"
                 ),
             ),
             Metric::gauge_with_tags(
@@ -309,8 +305,8 @@ pub async fn gather(proc_path: PathBuf, sys_path: PathBuf) -> Result<Vec<Metric>
                 "Number of active/failed/spare disks of device.",
                 stat.disks_failed,
                 tags!(
-                    Key::from_static("device") => device.clone(),
-                    Key::from_static("state") => "failed"
+                    "device" => &device,
+                    "state" => "failed"
                 ),
             ),
             Metric::gauge_with_tags(
@@ -318,53 +314,53 @@ pub async fn gather(proc_path: PathBuf, sys_path: PathBuf) -> Result<Vec<Metric>
                 "Number of active/failed/spare disks of device.",
                 stat.disks_spare,
                 tags!(
-                    Key::from_static("device") => device.clone(),
-                    Key::from_static("state") => "spare"
+                    "device" => &device,
+                    "state" => "spare"
                 ),
             ),
             Metric::gauge_with_tags(
                 "node_md_state",
                 "Indicates the state of md-device.",
-                state_metric_value("active", &state),
+                state == "active",
                 tags!(
-                    Key::from_static("device") => device.clone(),
-                    Key::from_static("state") => "active"
+                    "device" => &device,
+                    "state" => "active"
                 ),
             ),
             Metric::gauge_with_tags(
                 "node_md_state",
                 "Indicates the state of md-device.",
-                state_metric_value("inactive", &state),
+                state == "inactive",
                 tags!(
-                    Key::from_static("device") => device.clone(),
-                    Key::from_static("state") => "inactive"
+                    "device" => &device,
+                    "state" => "inactive"
                 ),
             ),
             Metric::gauge_with_tags(
                 "node_md_state",
                 "Indicates the state of md-device.",
-                state_metric_value("recovering", &state),
+                state == "recovering",
                 tags!(
-                    Key::from_static("device") => device.clone(),
-                    Key::from_static("state") => "recovering"
+                    "device" => &device,
+                    "state" => "recovering"
                 ),
             ),
             Metric::gauge_with_tags(
                 "node_md_state",
                 "Indicates the state of md-device.",
-                state_metric_value("resyncing", &state),
+                state == "resyncing",
                 tags!(
-                    Key::from_static("device") => device.clone(),
-                    Key::from_static("state") => "resync"
+                    "device" => &device,
+                    "state" => "resync"
                 ),
             ),
             Metric::gauge_with_tags(
                 "node_md_state",
                 "Indicates the state of md-device.",
-                state_metric_value("checking", &state),
+                state == "checking",
                 tags!(
-                    Key::from_static("device") => device,
-                    Key::from_static("state") => "check"
+                    "device" => device,
+                    "state" => "check"
                 ),
             ),
         ]);
@@ -372,9 +368,7 @@ pub async fn gather(proc_path: PathBuf, sys_path: PathBuf) -> Result<Vec<Metric>
 
     if let Ok(raids) = md_raids(sys_path) {
         for raid in raids {
-            let tags = tags!(
-                "device" => raid.device,
-            );
+            let tags = tags!("device" => raid.device);
 
             metrics.extend([
                 Metric::gauge_with_tags(

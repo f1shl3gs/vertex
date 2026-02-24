@@ -369,6 +369,7 @@ jemalloc = [
     "tikv-jemalloc-ctl/profiling"
 ]
 snmalloc = [ "dep:snmalloc-rs" ]
+tracked_allocator = []
 
 [[bench]]
 name = "loki"

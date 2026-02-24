@@ -9,7 +9,7 @@ use std::time::Duration;
 use bytes::{BufMut, Bytes, BytesMut};
 use chrono::Utc;
 use configurable::configurable_component;
-use event::tags::Tags;
+use event::tags::{Tags, Value};
 use event::{Bucket, EventStatus, Events, MetricValue, Quantile};
 use framework::config::{InputType, Resource, SinkConfig, SinkContext};
 use framework::http::{Auth, Authorizer};
@@ -182,7 +182,25 @@ fn write_tags<T: Write>(buf: &mut T, tags: &Tags, const_labels: &BTreeMap<String
 
         buf.write_all(key.as_bytes()).unwrap();
         buf.write_all(b"=\"").unwrap();
-        buf.write_all(value.to_string_lossy().as_bytes()).unwrap();
+        match value {
+            Value::String(s) => {
+                buf.write_all(s.as_bytes()).unwrap();
+            }
+            Value::I64(i) => {
+                buf.write_all(i.to_string().as_bytes()).unwrap();
+            }
+            Value::F64(f) => {
+                buf.write_all(f.to_string().as_bytes()).unwrap();
+            }
+            Value::Bool(b) => {
+                let s = if *b { "true" } else { "false" };
+                buf.write_all(s.as_bytes()).unwrap();
+            }
+            Value::Array(arr) => {
+                let value = serde_json::to_string(arr).unwrap();
+                buf.write_all(value.as_bytes()).unwrap();
+            }
+        }
         buf.write_all(b"\"").unwrap();
     }
 
@@ -243,7 +261,25 @@ fn write_summary_metric<T: Write>(
             buf.write_all(b",").unwrap();
             buf.write_all(key.as_bytes()).unwrap();
             buf.write_all(b"=\"").unwrap();
-            buf.write_all(value.to_string_lossy().as_bytes()).unwrap();
+            match value {
+                Value::String(s) => {
+                    buf.write_all(s.as_bytes()).unwrap();
+                }
+                Value::I64(i) => {
+                    buf.write_all(i.to_string().as_bytes()).unwrap();
+                }
+                Value::F64(f) => {
+                    buf.write_all(f.to_string().as_bytes()).unwrap();
+                }
+                Value::Bool(b) => {
+                    let s = if *b { "true" } else { "false" };
+                    buf.write_all(s.as_bytes()).unwrap();
+                }
+                Value::Array(arr) => {
+                    let value = serde_json::to_string(arr).unwrap();
+                    buf.write_all(value.as_bytes()).unwrap();
+                }
+            }
             buf.write_all(b"\"").unwrap();
         }
         buf.write_all(b"} ").unwrap();
@@ -294,7 +330,25 @@ fn write_histogram_metric<T: Write>(
             buf.write_all(b",").unwrap();
             buf.write_all(key.as_bytes()).unwrap();
             buf.write_all(b"=\"").unwrap();
-            buf.write_all(value.to_string_lossy().as_bytes()).unwrap();
+            match value {
+                Value::String(s) => {
+                    buf.write_all(s.as_bytes()).unwrap();
+                }
+                Value::I64(i) => {
+                    buf.write_all(i.to_string().as_bytes()).unwrap();
+                }
+                Value::F64(f) => {
+                    buf.write_all(f.to_string().as_bytes()).unwrap();
+                }
+                Value::Bool(b) => {
+                    let s = if *b { "true" } else { "false" };
+                    buf.write_all(s.as_bytes()).unwrap();
+                }
+                Value::Array(arr) => {
+                    let value = serde_json::to_string(arr).unwrap();
+                    buf.write_all(value.as_bytes()).unwrap();
+                }
+            }
             buf.write_all(b"\"").unwrap();
         }
         buf.write_all(b"} ").unwrap();

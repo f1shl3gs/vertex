@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use event::{Metric, tags, tags::Key};
+use event::{Metric, tags};
 
 use super::{Error, read_into, read_string};
 
@@ -15,7 +15,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Current cpu thread frequency in hertz.",
                 v * 1000,
                 tags!(
-                    Key::from_static("cpu") => stat.index,
+                    "cpu" => stat.index,
                 ),
             ));
         }
@@ -26,7 +26,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Minimum cpu thread frequency in hertz.",
                 v * 1000,
                 tags!(
-                    Key::from_static("cpu") => stat.index,
+                    "cpu" => stat.index,
                 ),
             ));
         }
@@ -37,7 +37,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Maximum CPU thread frequency in hertz.",
                 v * 1000,
                 tags!(
-                    Key::from_static("cpu") => stat.index,
+                    "cpu" => stat.index,
                 ),
             ))
         }
@@ -48,7 +48,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Current scaled CPU thread frequency in hertz.",
                 v * 1000,
                 tags!(
-                    Key::from_static("cpu") => stat.index,
+                    "cpu" => stat.index,
                 ),
             ))
         }
@@ -59,7 +59,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Minimum scaled CPU thread frequency in hertz.",
                 v as f64 * 1000.0,
                 tags!(
-                    Key::from_static("cpu") => stat.index,
+                    "cpu" => stat.index,
                 ),
             ));
         }
@@ -70,7 +70,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Maximum scaled CPU thread frequency in hertz.",
                 v as f64 * 1000.0,
                 tags!(
-                    Key::from_static("cpu") => stat.index,
+                    "cpu" => stat.index,
                 ),
             ));
         }

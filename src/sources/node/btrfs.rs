@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
-use event::{Metric, tags, tags::Key};
+use event::{Metric, tags};
 
 use super::{Error, read_into, read_string};
 
@@ -79,7 +79,7 @@ pub struct Stats {
 }
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = stats(sys_path).await?;
+    let stats = stats(sys_path)?;
 
     let mut metrics = Vec::with_capacity(stats.len() * 12);
     for stat in stats {
@@ -97,7 +97,7 @@ fn stats_to_metrics(stats: Stats) -> Vec<Metric> {
             1.0,
             tags!(
                 "label" => stats.label,
-                "uuid" => stats.uuid.clone()
+                "uuid" => &stats.uuid
             ),
         ),
         Metric::gauge_with_tags(
@@ -105,7 +105,7 @@ fn stats_to_metrics(stats: Stats) -> Vec<Metric> {
             "Size of global reserve.",
             stats.allocation.global_rsv_size,
             tags!(
-                "uuid" => stats.uuid.clone()
+                "uuid" => &stats.uuid
             ),
         ),
         Metric::sum_with_tags(
@@ -113,7 +113,7 @@ fn stats_to_metrics(stats: Stats) -> Vec<Metric> {
             "The total number of commits that have occurred.",
             stats.commit_stats.commits,
             tags!(
-                "uuid" => stats.uuid.clone()
+                "uuid" => &stats.uuid
             ),
         ),
         Metric::gauge_with_tags(
@@ -121,7 +121,7 @@ fn stats_to_metrics(stats: Stats) -> Vec<Metric> {
             "Duration of the most recent commit, in seconds",
             stats.commit_stats.last_commit_ms as f64 / 1000.0,
             tags!(
-                "uuid" => stats.uuid.clone()
+                "uuid" => &stats.uuid
             ),
         ),
         Metric::gauge_with_tags(
@@ -129,7 +129,7 @@ fn stats_to_metrics(stats: Stats) -> Vec<Metric> {
             "Duration of the slowest commit, in seconds",
             stats.commit_stats.max_commit_ms as f64 / 1000.0,
             tags!(
-                "uuid" => stats.uuid.clone()
+                "uuid" => &stats.uuid
             ),
         ),
         Metric::sum_with_tags(
@@ -137,7 +137,7 @@ fn stats_to_metrics(stats: Stats) -> Vec<Metric> {
             "Sum of the duration of all commits, in seconds",
             stats.commit_stats.total_commit_ms as f64 / 1000.0,
             tags!(
-                "uuid" => stats.uuid.clone()
+                "uuid" => &stats.uuid
             ),
         ),
     ];
@@ -149,8 +149,8 @@ fn stats_to_metrics(stats: Stats) -> Vec<Metric> {
             "Size of a device that is part of the filesystem.",
             device.size,
             tags!(
-                Key::from_static("device") => name,
-                "uuid" => stats.uuid.clone()
+                "device" => name,
+                "uuid" => &stats.uuid
             ),
         ));
     }
@@ -175,8 +175,8 @@ fn get_allocation_stats(typ: &str, uuid: &str, stats: AllocationStats) -> Vec<Me
         "Amount of space reserved for a data type",
         stats.reserved_bytes,
         tags!(
-            Key::from_static("block_group_type") => typ,
-            Key::from_static("uuid") => uuid
+            "block_group_type" => typ,
+            "uuid" => uuid
         ),
     )];
 
@@ -188,9 +188,9 @@ fn get_allocation_stats(typ: &str, uuid: &str, stats: AllocationStats) -> Vec<Me
                 "Amount of used space by a layout/data type",
                 usage.used_bytes,
                 tags!(
-                    Key::from_static("block_group_type") => typ,
-                    Key::from_static("mode") => mode.clone(),
-                    Key::from_static("uuid") => uuid
+                    "block_group_type" => typ,
+                    "mode" => &mode,
+                    "uuid" => uuid
                 ),
             ),
             Metric::gauge_with_tags(
@@ -198,9 +198,9 @@ fn get_allocation_stats(typ: &str, uuid: &str, stats: AllocationStats) -> Vec<Me
                 "Amount of space allocated for a layout/data type",
                 usage.total_bytes,
                 tags!(
-                    Key::from_static("block_group_type") => typ,
-                    Key::from_static("mode") => mode.clone(),
-                    Key::from_static("uuid") => uuid
+                    "block_group_type" => typ,
+                    "mode" => &mode,
+                    "uuid" => uuid
                 ),
             ),
             Metric::gauge_with_tags(
@@ -208,9 +208,9 @@ fn get_allocation_stats(typ: &str, uuid: &str, stats: AllocationStats) -> Vec<Me
                 "Data allocation ratio for a layout/data type",
                 usage.ratio,
                 tags!(
-                    Key::from_static("block_group_type") => typ,
-                    Key::from_static("mode") => mode,
-                    Key::from_static("uuid") => uuid
+                    "block_group_type" => typ,
+                    "mode" => mode,
+                    "uuid" => uuid
                 ),
             ),
         ])
@@ -226,8 +226,8 @@ fn get_layout_metrics(typ: &str, uuid: &str, mode: &str, s: LayoutUsage) -> Vec<
             "Amount of used space by a layout/data type",
             s.used_bytes,
             tags!(
-                "block_group_type" => typ.to_string(),
-                "mode" => mode.to_string()
+                "block_group_type" => typ,
+                "mode" => mode
             ),
         ),
         Metric::gauge_with_tags(
@@ -235,8 +235,8 @@ fn get_layout_metrics(typ: &str, uuid: &str, mode: &str, s: LayoutUsage) -> Vec<
             "Amount of space allocated for a layout/data type",
             s.total_bytes,
             tags!(
-                "block_group_type" => typ.to_string(),
-                "mode" => mode.to_string()
+                "block_group_type" => typ,
+                "mode" => mode
             ),
         ),
         Metric::gauge_with_tags(
@@ -244,33 +244,32 @@ fn get_layout_metrics(typ: &str, uuid: &str, mode: &str, s: LayoutUsage) -> Vec<
             "Data allocation ratio for a layout/data type",
             s.ratio,
             tags!(
-                "block_group_type" => typ.to_string(),
-                "mode" => mode.to_string(),
+                "block_group_type" => typ,
+                "mode" => mode,
                 "uuid" => uuid,
             ),
         ),
     ]
 }
 
-async fn stats(root: PathBuf) -> Result<Vec<Stats>, Error> {
+fn stats(root: PathBuf) -> Result<Vec<Stats>, Error> {
     let pattern = format!("{}/fs/btrfs/*-*", root.to_string_lossy());
     let paths = glob::glob(&pattern)?;
 
     let mut stats = vec![];
     for path in paths.flatten() {
-        let s = get_stats(path).await?;
-        stats.push(s);
+        stats.push(get_stats(path)?);
     }
 
     Ok(stats)
 }
 
-async fn get_stats(root: PathBuf) -> Result<Stats, Error> {
-    let devices = read_device_info(&root).await?;
+fn get_stats(root: PathBuf) -> Result<Stats, Error> {
+    let devices = read_device_info(&root)?;
 
     let label = read_string(root.join("label"))?;
     let uuid = read_string(root.join("metadata_uuid"))?;
-    let features = list_files(root.join("features")).await?;
+    let features = list_files(root.join("features"))?;
     let clone_alignment = read_into(root.join("clone_alignment"))?;
     let node_size = read_into(root.join("nodesize"))?;
     let quota_override = read_into(root.join("quota_override"))?;
@@ -349,26 +348,26 @@ fn read_commit_stats(path: PathBuf) -> Result<CommitStats, Error> {
     })
 }
 
-async fn list_files(path: impl AsRef<Path>) -> Result<Vec<String>, Error> {
+fn list_files(path: impl AsRef<Path>) -> Result<Vec<String>, Error> {
     let dirs = std::fs::read_dir(path)?;
 
     let mut files = vec![];
     for entry in dirs.flatten() {
-        let name = entry.file_name().into_string().unwrap();
+        let name = entry.file_name().to_string_lossy().to_string();
         files.push(name);
     }
 
     Ok(files)
 }
 
-async fn read_device_info(path: &Path) -> Result<BTreeMap<String, Device>, Error> {
+fn read_device_info(path: &Path) -> Result<BTreeMap<String, Device>, Error> {
     let dirs = std::fs::read_dir(path.join("devices"))?;
 
     let mut devices = BTreeMap::new();
     for entry in dirs.flatten() {
         let name = entry.file_name().to_string_lossy().to_string();
         let path = entry.path().join("size");
-        let size: u64 = read_into(path).unwrap_or(0);
+        let size: u64 = read_into(path).unwrap_or_default();
 
         devices.insert(
             name,
@@ -459,10 +458,10 @@ fn calc_ratio(p: &str, n: usize) -> f64 {
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_get_stats() {
+    #[test]
+    fn get_stats() {
         let path = "tests/node/sys";
-        let stats = stats(path.into()).await.unwrap();
+        let stats = stats(path.into()).unwrap();
 
         struct Alloc {
             layout: String,
@@ -583,9 +582,9 @@ mod tests {
         }
     }
 
-    #[tokio::test]
-    async fn test_read_device_info() {
+    #[test]
+    fn device_info() {
         let path = PathBuf::from("tests/node/sys/fs/btrfs/7f07c59f-6136-449c-ab87-e1cf2328731b");
-        let _infos = read_device_info(&path).await.unwrap();
+        let _infos = read_device_info(&path).unwrap();
     }
 }

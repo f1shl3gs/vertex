@@ -3,7 +3,6 @@
 use std::collections::HashMap;
 use std::path::PathBuf;
 
-use event::tags::Key;
 use event::{Metric, tags};
 
 use super::Error;
@@ -28,9 +27,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
             "node_arp_entries",
             "ARP entries by device",
             count,
-            tags!(
-                Key::from_static("device") => device,
-            ),
+            tags!("device" => device),
         ));
     }
 

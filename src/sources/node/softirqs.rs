@@ -1,7 +1,6 @@
 use std::num::ParseIntError;
 use std::path::PathBuf;
 
-use event::tags::Key;
 use event::{Metric, tags};
 
 use super::Error;
@@ -69,8 +68,8 @@ macro_rules! build_metrics {
                 "Softirq counts per CPU",
                 value,
                 tags!(
-                    Key::from_static("cpu") => cpu as i64,
-                    Key::from_static("type") => $name
+                    "cpu" => cpu,
+                    "type" => $name
                 ),
             ));
         }

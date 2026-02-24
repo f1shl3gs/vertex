@@ -4,7 +4,7 @@ use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
 use configurable::Configurable;
-use event::{Metric, tags, tags::Key};
+use event::{Metric, tags};
 use framework::config::{default_true, serde_regex};
 use serde::{Deserialize, Serialize};
 
@@ -56,8 +56,8 @@ macro_rules! state_metric {
             "Seconds the CPUs spent in each mode",
             $value,
             tags! (
-                Key::from_static("mode") => $mode,
-                Key::from_static("cpu") => $cpu as i64
+                "mode" => $mode,
+                "cpu" => $cpu
             )
         )
     };
@@ -117,8 +117,8 @@ pub async fn gather(
                     "Seconds the CPUs spent in guests (VMs) for each mode.",
                     stat.guest,
                     tags!(
-                        Key::from_static("cpu") => cpu as i64,
-                        Key::from_static("mode") => "user",
+                        "cpu" => cpu,
+                        "mode" => "user",
                     ),
                 ),
                 Metric::sum_with_tags(
@@ -126,8 +126,8 @@ pub async fn gather(
                     "Seconds the CPUs spent in guests (VMs) for each mode.",
                     stat.guest_nice,
                     tags!(
-                        Key::from_static("cpu") => cpu as i64,
-                        Key::from_static("mode") => "nice"
+                        "cpu" => cpu,
+                        "mode" => "nice"
                     ),
                 ),
             ]);

@@ -6,15 +6,13 @@ use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
 use configurable::Configurable;
-use event::{Metric, tags, tags::Key};
+use event::{Metric, tags};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 
 use super::{Error, read_into};
 
 const DISK_SECTOR_SIZE: f64 = 512.0;
-
-const DEVICE_KEY: Key = Key::from_static("device");
 
 fn default_ignored() -> regex::Regex {
     regex::Regex::new("^(z?ram|loop|fd|(h|s|v|xv)d[a-z]|nvme\\d+n\\d+p)\\d+$").unwrap()
@@ -153,110 +151,113 @@ pub async fn gather(
         ));
 
         for (index, part) in parts.iter().skip(3).enumerate() {
-            let v = part.parse::<f64>().unwrap_or(0f64);
+            let Ok(v) = part.parse::<f64>() else {
+                debug!(message = "invalid value part", part);
+                continue;
+            };
 
             match index {
                 0 => metrics.push(Metric::sum_with_tags(
                     "node_disk_reads_completed_total",
                     "The total number of reads completed successfully",
                     v,
-                    tags!(DEVICE_KEY => device),
+                    tags!("device" => device),
                 )),
                 1 => metrics.push(Metric::sum_with_tags(
                     "node_disk_reads_merged_total",
                     "The total number of reads merged",
                     v,
-                    tags!(DEVICE_KEY => device),
+                    tags!("device" => device),
                 )),
                 2 => metrics.push(Metric::sum_with_tags(
                     "node_disk_read_bytes_total",
                     "The total number of bytes read successfully",
                     v * DISK_SECTOR_SIZE,
-                    tags!(DEVICE_KEY => device),
+                    tags!("device" => device),
                 )),
                 3 => metrics.push(Metric::sum_with_tags(
                     "node_disk_read_time_seconds_total",
                     "The total number of seconds spent by all reads",
                     v * 0.001,
-                    tags!(DEVICE_KEY => device),
+                    tags!("device" => device),
                 )),
                 4 => metrics.push(Metric::sum_with_tags(
                     "node_disk_writes_completed_total",
                     "The total number of writes completed successfully",
                     v,
-                    tags!(DEVICE_KEY => device),
+                    tags!("device" => device),
                 )),
                 5 => metrics.push(Metric::sum_with_tags(
                     "node_disk_writes_merged_total",
                     "The number of writes merged.",
                     v,
-                    tags!(DEVICE_KEY => device),
+                    tags!("device" => device),
                 )),
                 6 => metrics.push(Metric::sum_with_tags(
                     "node_disk_written_bytes_total",
                     "The total number of bytes written successfully.",
                     v * DISK_SECTOR_SIZE,
-                    tags!(DEVICE_KEY => device),
+                    tags!("device" => device),
                 )),
                 7 => metrics.push(Metric::sum_with_tags(
                     "node_disk_write_time_seconds_total",
                     "This is the total number of seconds spent by all writes.",
                     v * 0.001,
-                    tags!(DEVICE_KEY => device),
+                    tags!("device" => device),
                 )),
                 8 => metrics.push(Metric::gauge_with_tags(
                     "node_disk_io_now",
                     "The number of I/Os currently in progress",
                     v,
-                    tags!(DEVICE_KEY => device),
+                    tags!("device" => device),
                 )),
                 9 => metrics.push(Metric::sum_with_tags(
                     "node_disk_io_time_seconds_total",
                     "Total seconds spent doing I/Os.",
                     v * 0.001,
-                    tags!(DEVICE_KEY => device),
+                    tags!("device" => device),
                 )),
                 10 => metrics.push(Metric::sum_with_tags(
                     "node_disk_io_time_weighted_seconds_total",
                     "The weighted # of seconds spent doing I/Os.",
                     v * 0.001,
-                    tags!(DEVICE_KEY => device),
+                    tags!("device" => device),
                 )),
                 11 => metrics.push(Metric::sum_with_tags(
                     "node_disk_discards_completed_total",
                     "The total number of discards completed successfully.",
                     v,
-                    tags!(DEVICE_KEY => device),
+                    tags!("device" => device),
                 )),
                 12 => metrics.push(Metric::sum_with_tags(
                     "node_disk_discards_merged_total",
                     "The total number of discards merged.",
                     v,
-                    tags!(DEVICE_KEY => device),
+                    tags!("device" => device),
                 )),
                 13 => metrics.push(Metric::sum_with_tags(
                     "node_disk_discarded_sectors_total",
                     "The total number of sectors discarded successfully.",
                     v,
-                    tags!(DEVICE_KEY => device),
+                    tags!("device" => device),
                 )),
                 14 => metrics.push(Metric::sum_with_tags(
                     "node_disk_discard_time_seconds_total",
                     "This is the total number of seconds spent by all discards.",
                     v * 0.001,
-                    tags!(DEVICE_KEY => device),
+                    tags!("device" => device),
                 )),
                 15 => metrics.push(Metric::sum_with_tags(
                     "node_disk_flush_requests_total",
                     "The total number of flush requests completed successfully",
                     v,
-                    tags!(DEVICE_KEY => device),
+                    tags!("device" => device),
                 )),
                 16 => metrics.push(Metric::sum_with_tags(
                     "node_disk_flush_requests_time_seconds_total",
                     "This is the total number of seconds spent by all flush requests.",
                     v * 0.001,
-                    tags!(DEVICE_KEY => device),
+                    tags!("device" => device),
                 )),
                 _ => {}
             }

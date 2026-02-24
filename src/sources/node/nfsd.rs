@@ -354,8 +354,8 @@ macro_rules! rpc_metric {
             "Total number NFSd Requests by method and protocol",
             $value,
             tags! {
-                "proto" => $proto.to_string(),
-                "method" => $name.to_string()
+                "proto" => $proto,
+                "method" => $name
             },
         )
     };

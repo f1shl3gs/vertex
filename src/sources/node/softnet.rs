@@ -18,7 +18,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
 
     for (index, line) in data.lines().enumerate() {
         if let Ok(stat) = parse_softnet(line, index as u32) {
-            let tags = tags!("cpu" => index.to_string());
+            let tags = tags!("cpu" => index);
 
             metrics.extend([
                 Metric::sum_with_tags(

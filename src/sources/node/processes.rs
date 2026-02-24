@@ -44,13 +44,13 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         "Allocated threads in system",
         threads.total(),
     ));
-    for (key, value) in threads.0 {
+    for (state, value) in threads.0 {
         metrics.push(Metric::gauge_with_tags(
             "node_processes_threads_state",
             "Number of threads in each state",
             value,
             tags!(
-                "state" => key
+                "state" => state
             ),
         ));
     }

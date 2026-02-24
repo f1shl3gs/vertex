@@ -2,7 +2,7 @@ use std::io::ErrorKind;
 use std::path::PathBuf;
 
 use configurable::Configurable;
-use event::{Metric, tags, tags::Key};
+use event::{Metric, tags};
 use serde::{Deserialize, Serialize};
 
 use super::{Error, read_string};
@@ -25,7 +25,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
                 "Average data per key in the btree (sectors).",
                 stat.bcache.average_key_size,
                 tags!(
-                    "uuid" => stat.name.clone()
+                    "uuid" => &stat.name
                 )
             ),
             Metric::gauge_with_tags(
@@ -33,7 +33,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
                 "Amount of memory currently used by the btree cache.",
                 stat.bcache.btree_cache_size,
                 tags!(
-                    "uuid" => stat.name.clone()
+                    "uuid" => &stat.name
                 )
             ),
             Metric::gauge_with_tags(
@@ -41,7 +41,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
                 "Percentage of cache device without dirty data, usable for writeback (may contain clean cached data).",
                 stat.bcache.cache_available_percent,
                 tags!(
-                    "uuid" => stat.name.clone()
+                    "uuid" => &stat.name
                 )
             ),
             Metric::gauge_with_tags(
@@ -49,7 +49,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
                 "Congestion",
                 stat.bcache.congested,
                 tags!(
-                    "uuid" => stat.name.clone()
+                    "uuid" => &stat.name
                 )
             ),
             Metric::gauge_with_tags(
@@ -57,7 +57,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
                 "Percentage of the root btree node in use (tree depth increases if too high).",
                 stat.bcache.root_usage_percent,
                 tags!(
-                    "uuid" => stat.name.clone()
+                    "uuid" => &stat.name
                 )
             ),
             Metric::gauge_with_tags(
@@ -65,7 +65,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
                 "Depth of the btree.",
                 stat.bcache.tree_depth,
                 tags!(
-                    "uuid" => stat.name.clone()
+                    "uuid" => &stat.name
                 )
             ),
             // metrics under /sys/fs/bcache/<uuid>/internal
@@ -74,7 +74,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
                 "Number of journal entries that are newer than the index.",
                 stat.bcache.internal.active_journal_entries,
                 tags!(
-                    "uuid" => stat.name.clone()
+                    "uuid" => &stat.name
                 )
             ),
             Metric::gauge_with_tags(
@@ -82,7 +82,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
                 "Total nodes in the btree.",
                 stat.bcache.internal.btree_nodes,
                 tags!(
-                    "uuid" => stat.name.clone()
+                    "uuid" => &stat.name
                 )
             ),
             Metric::gauge_with_tags(
@@ -90,7 +90,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
                 "Average btree read duration.",
                 stat.bcache.internal.btree_read_average_duration_us as f64 * 1e-9,
                 tags!(
-                    "uuid" => stat.name.clone()
+                    "uuid" => &stat.name
                 )
             ),
             Metric::sum_with_tags(
@@ -98,15 +98,15 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
                 "Counts instances where while data was being read from the cache, the bucket was reused and invalidated - i.e. where the pointer was stale after the read completed.",
                 stat.bcache.internal.cache_read_races,
                 tags!(
-                    "uuid" => stat.name.clone()
+                    "uuid" => &stat.name
                 )
             )
         ]);
 
         for bdev in stat.bdevs {
             let tags = tags!(
-                Key::from_static("backing_device") => bdev.name,
-                Key::from_static("uuid") => stat.name.clone()
+                "backing_device" => bdev.name,
+                "uuid" => &stat.name
             );
 
             // metrics in /sys/fs/bcache/<uuid>/<bdev>/
@@ -201,8 +201,8 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
 
         for cache in stat.caches {
             let tags = tags!(
-                Key::from_static("cache_device") => cache.name,
-                Key::from_static("uuid") => stat.name.clone(),
+                "cache_device" => cache.name,
+                "uuid" => stat.name.clone(),
             );
 
             // metrics under /sys/fs/bcache/<uuid>/<cache>

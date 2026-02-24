@@ -7,8 +7,8 @@ use event::{Metric, tags};
 use super::Error;
 
 #[derive(Debug, Default)]
-struct Schedstat {
-    cpu: String,
+struct SchedStat<'a> {
+    cpu: &'a str,
 
     running_nanoseconds: u64,
     waiting_nanoseconds: u64,
@@ -16,12 +16,20 @@ struct Schedstat {
 }
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = schedstat(proc_path).await?;
+    let content = std::fs::read_to_string(proc_path.join("schedstat"))?;
 
-    let mut metrics = Vec::with_capacity(3 * stats.len());
-    for stat in stats {
+    let mut metrics = Vec::new();
+    for line in content.lines() {
+        let Some(stripped) = line.strip_prefix("cpu") else {
+            continue;
+        };
+
+        let Some(stat) = parse_sched_state(stripped) else {
+            warn!(message = "invalid schedstat line", line);
+            continue;
+        };
+
         let tags = tags!("cpu" => stat.cpu);
-
         metrics.extend([
             Metric::sum_with_tags(
                 "node_schedstat_running_seconds_total",
@@ -47,59 +55,40 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
-async fn schedstat(proc_path: PathBuf) -> Result<Vec<Schedstat>, Error> {
-    let data = std::fs::read_to_string(proc_path.join("schedstat"))?;
-
-    let mut stats = Vec::new();
-    for line in data.lines() {
-        if !line.starts_with("cpu") {
-            continue;
-        }
-
-        let fields = line.split_ascii_whitespace().collect::<Vec<_>>();
-
-        if fields.len() < 10 {
-            continue;
-        }
-
-        let cpu = fields[0].strip_prefix("cpu").unwrap();
-        let running_nanoseconds = match fields[7].parse() {
-            Ok(v) => v,
-            _ => continue,
-        };
-
-        let waiting_nanoseconds = match fields[8].parse() {
-            Ok(v) => v,
-            _ => continue,
-        };
-
-        let run_time_slices = match fields[9].parse() {
-            Ok(v) => v,
-            _ => continue,
-        };
-
-        stats.push(Schedstat {
-            cpu: cpu.to_string(),
-            running_nanoseconds,
-            waiting_nanoseconds,
-            run_time_slices,
-        })
+fn parse_sched_state(line: &str) -> Option<SchedStat<'_>> {
+    let fields = line.split_ascii_whitespace().collect::<Vec<_>>();
+    if fields.len() < 10 {
+        return None;
     }
 
-    Ok(stats)
+    let Ok(running_nanoseconds) = fields[7].parse() else {
+        return None;
+    };
+
+    let Ok(waiting_nanoseconds) = fields[8].parse() else {
+        return None;
+    };
+
+    let Ok(run_time_slices) = fields[9].parse() else {
+        return None;
+    };
+
+    Some(SchedStat {
+        cpu: fields[0],
+        running_nanoseconds,
+        waiting_nanoseconds,
+        run_time_slices,
+    })
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_schedstat() {
-        let path = "tests/node/proc".into();
-        let stats = schedstat(path).await.unwrap();
-
-        assert_ne!(stats.len(), 0);
-        let stat = &stats[0];
+    #[test]
+    fn parse() {
+        let line = "0 498494191 0 3533438552 2553969831 3853684107 2465731542 2045936778163039 343796328169361 4767485306";
+        let stat = parse_sched_state(line).unwrap();
 
         assert_eq!(stat.cpu, "0");
         assert_eq!(stat.running_nanoseconds, 2045936778163039);

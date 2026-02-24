@@ -9,10 +9,13 @@ use std::slice::from_raw_parts;
 
 use typesize::TypeSize;
 
-const TYPE_MASK: u8 = 0b1000_0000;
-const KEY_SIZE: usize = 24; // 24 is the size_of::<String>()
+const MAX_SIZE: usize = size_of::<String>(); // 24
 const MAX_LENGTH: usize = 128;
 const INLINE_CAP: usize = 23;
+
+const HEAP_MASK: u8 = 216;
+const STATIC_MASK: u8 = 217;
+const LENGTH_MASK: u8 = 0b1100_0000;
 
 /// 1. String memory layout
 ///    pointer(8b) + capacity(8b) + len(8b)
@@ -46,17 +49,22 @@ impl Key {
             len: s.len() as u32,
             padding1: 0,
             padding2: 0,
-            last: TYPE_MASK,
+            last: STATIC_MASK,
         }
     }
 
     #[inline]
     pub fn from_string(s: String) -> Key {
-        if s.len() <= INLINE_CAP {
-            Key::inline(&s)
-        } else {
-            unsafe { transmute::<String, Key>(s) }
-        }
+        let mut key = unsafe { transmute::<String, Key>(s) };
+        key.last = HEAP_MASK;
+
+        key
+
+        // if s.len() <= INLINE_CAP {
+        //     Key::inline(&s)
+        // } else {
+        //     unsafe { transmute::<String, Key>(s) }
+        // }
     }
 
     fn inline(text: &str) -> Key {
@@ -67,11 +75,11 @@ impl Key {
             len: 0,
             padding1: 0,
             padding2: 0,
-            last: len as u8,
+            last: len as u8 | LENGTH_MASK,
         };
 
         unsafe {
-            copy_nonoverlapping(text.as_bytes().as_ptr(), key.as_ptr().cast_mut(), len);
+            copy_nonoverlapping(text.as_ptr(), key.as_ptr().cast_mut(), len);
         }
 
         key
@@ -86,12 +94,15 @@ impl Key {
 
     #[inline]
     pub fn as_bytes(&self) -> &[u8] {
-        let (ptr, len) = if self.last == 0 || self.last & TYPE_MASK == TYPE_MASK {
-            // String or &' static str
+        let (ptr, len) = if self.last >= HEAP_MASK {
+            // String or static str
             (self.data.as_ptr().cast_const(), self.len as usize)
         } else {
             // inline
-            ((self as *const Self).cast::<u8>(), self.last as usize)
+            (
+                (self as *const Self).cast::<u8>(),
+                (self.last - LENGTH_MASK) as usize,
+            )
         };
 
         unsafe { from_raw_parts(ptr, len) }
@@ -104,7 +115,15 @@ impl Clone for Key {
             // There are only two cases we need to care about: If the string is
             // allocated on the heap or not. If it is, then the data must be cloned
             // properly, otherwise we can simply copy the `Key`.
-            if self.last == 0 {
+            if self.last == HEAP_MASK {
+                if self.len <= INLINE_CAP as u32 {
+                    let mut key = [0u8; MAX_SIZE];
+                    key[MAX_SIZE - 1] = self.len as u8 | LENGTH_MASK;
+                    copy_nonoverlapping(self.data.as_ref(), key.as_mut_ptr(), self.len as usize);
+
+                    return transmute::<[u8; MAX_SIZE], Key>(key);
+                }
+
                 let layout = Layout::array::<u8>(self.len as usize).expect("valid layout");
                 let data = alloc(layout);
                 copy_nonoverlapping(self.data.as_ptr(), data, self.len as usize);
@@ -115,7 +134,7 @@ impl Clone for Key {
                     len: self.len,
                     padding1: 0,
                     padding2: 0,
-                    last: 0,
+                    last: HEAP_MASK,
                 }
             } else {
                 // SAFETY: We just checked that `self` can be copied because it is an
@@ -128,7 +147,7 @@ impl Clone for Key {
 
 impl Drop for Key {
     fn drop(&mut self) {
-        if self.last == 0 {
+        if self.last == HEAP_MASK && self.cap != 0 {
             unsafe {
                 let layout = Layout::array::<u8>(self.cap).expect("valid capacity");
                 std::alloc::dealloc(self.data.as_ptr(), layout);
@@ -169,27 +188,27 @@ impl Eq for Key {}
 impl From<&str> for Key {
     fn from(v: &str) -> Self {
         let len = v.len();
-        if len < INLINE_CAP {
-            let mut data = [0u8; KEY_SIZE];
+        if len <= INLINE_CAP {
+            let mut data = [0u8; MAX_SIZE];
 
-            unsafe {
+            return unsafe {
                 copy_nonoverlapping(v.as_ptr(), data.as_mut_ptr(), len);
-                data[KEY_SIZE - 1] = len as u8;
-                return transmute::<[u8; 24], Key>(data);
-            }
+                data[MAX_SIZE - 1] = len as u8 | LENGTH_MASK;
+                transmute::<[u8; 24], Key>(data)
+            };
         }
 
-        unsafe { transmute(v.to_string()) }
+        Key::from_string(v.to_string())
     }
 }
 
 impl From<&String> for Key {
     #[inline]
     fn from(v: &String) -> Self {
-        if v.len() < INLINE_CAP {
+        if v.len() <= INLINE_CAP {
             Key::inline(v)
         } else {
-            unsafe { transmute::<String, Key>(v.to_string()) }
+            Key::from_string(v.to_string())
         }
     }
 }
@@ -202,7 +221,7 @@ impl From<String> for Key {
 
 impl From<Key> for String {
     fn from(key: Key) -> Self {
-        if key.last == 0 {
+        if key.last == HEAP_MASK {
             return unsafe { transmute::<Key, String>(key) };
         }
 
@@ -314,33 +333,52 @@ mod tests {
 
     #[test]
     fn size() {
-        assert_eq!(size_of::<Key>(), size_of::<String>());
+        assert_eq!(size_of::<String>(), size_of::<Key>());
+        assert_eq!(size_of::<String>(), size_of::<Option<Key>>());
     }
 
     #[test]
     fn static_string() {
-        let k1 = Key::from_static("abc");
-        let k2 = k1.clone();
-        assert_eq!(k1, k2);
-        assert_eq!(k1.as_str(), k2.as_str());
+        for input in [
+            "",
+            "foo",
+            "abcdefghijklmnopqrstuvw",
+            "abcdefghijklmnopqrstuvwxyz",
+        ] {
+            let key = Key::from_static(input);
+            let k1 = key.clone();
+            assert_eq!(key.as_str(), input);
+            assert_eq!(k1.as_str(), input);
+        }
     }
 
     #[test]
     fn heap_string() {
-        let k = "abcdefghijklmnopqrstuvwxyz";
-        let k1 = Key::from_string(k.to_string());
-        let k2 = k1.clone();
-        assert_eq!(k1.as_str(), k);
-        drop(k1);
-        assert_eq!(k2.as_str(), k);
+        for input in [
+            "",
+            "foo",
+            "abcdefghijklmnopqrstuvw",
+            "abcdefghijklmnopqrstuvwxyz",
+        ] {
+            let key = Key::from_string(input.to_string());
+            let k1 = key.clone();
+            assert_eq!(key.as_str(), input);
+            assert_eq!(k1.as_str(), input);
+            drop(key);
+            drop(k1);
+        }
     }
 
     #[test]
     fn inline_string() {
-        let k1 = Key::inline("foo");
-        let k2 = k1.clone();
-        assert_eq!(k1.as_str(), "foo");
-        assert_eq!(k2.as_str(), "foo");
+        for input in ["", "foo", "abcdefghijklmnopqrstuvw"] {
+            let key = Key::inline(input);
+            let key1 = key.clone();
+            assert_eq!(key.as_str(), input);
+            assert_eq!(key1.as_str(), input);
+            drop(key1);
+            drop(key);
+        }
     }
 
     #[test]

@@ -12,6 +12,8 @@ pub mod prometheus;
     feature = "sources-fluent"
 ))]
 pub mod read;
+#[cfg(feature = "tracked_allocator")]
+pub mod tracked_allocator;
 #[cfg(any(
     feature = "transforms-rewrite",
     feature = "transforms-route",

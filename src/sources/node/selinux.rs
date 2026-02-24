@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use event::Metric;
 
-use super::Error;
+use super::{Error, read_into};
 
 pub async fn gather(proc_path: PathBuf, sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let enabled = get_enabled(proc_path)?;
@@ -22,7 +22,7 @@ pub async fn gather(proc_path: PathBuf, sys_path: PathBuf) -> Result<Vec<Metric>
             Metric::gauge(
                 "node_selinux_current_mode",
                 "Current SELinux enforcement mode",
-                current_enforce_mode(sys_path)?,
+                read_into::<_, i32, _>(sys_path.join("fs/selinux/enforce"))?,
             ),
         ]);
     }
@@ -62,11 +62,4 @@ fn default_enforce_mode() -> Result<bool, Error> {
     }
 
     Ok(false)
-}
-
-#[inline]
-fn current_enforce_mode(sys_path: PathBuf) -> Result<i32, Error> {
-    let content = std::fs::read_to_string(sys_path.join("fs/selinux/enforce"))?;
-
-    content.parse().map_err(Into::into)
 }

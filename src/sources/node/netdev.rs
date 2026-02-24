@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use configurable::Configurable;
-use event::{Metric, tags, tags::Key};
+use event::{Metric, tags};
 use framework::config::serde_regex;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
@@ -42,7 +42,7 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
             Config::All => {}
         }
 
-        let tags = tags!(Key::from_static("device") => stat.name);
+        let tags = tags!("device" => stat.name);
         metrics.extend([
             Metric::sum_with_tags(
                 "node_network_receive_bytes_total",

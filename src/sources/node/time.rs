@@ -1,7 +1,7 @@
 use std::ffi::CStr;
 use std::path::{Path, PathBuf};
 
-use event::{Metric, tags, tags::Key};
+use event::{Metric, tags};
 
 use super::{Error, read_string};
 
@@ -26,7 +26,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             "System time zone offset in seconds",
             offset,
             tags!(
-                Key::from_static("time_zone") => tz,
+                "time_zone" => tz,
             ),
         ),
     ];
@@ -40,7 +40,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Available clocksources read from '/sys/devices/system/clocksource'.",
                 1,
                 tags!(
-                    "device" => source.name.clone(),
+                    "device" => &source.name,
                     "clocksource" => available,
                 ),
             ));
@@ -97,22 +97,21 @@ fn parse_clock_sources(root: &Path) -> Result<Vec<ClockSource>, Error> {
             .to_string_lossy()
             .strip_prefix("clocksource")
         {
-            Some(n) => n.to_string(),
+            Some(name) => name.to_string(),
             None => continue,
         };
 
-        let path = entry.path().join("available_clocksource");
-        let data = read_string(path)?;
+        let path = entry.path();
+        let data = read_string(path.join("available_clocksource"))?;
         let available = data
             .split_ascii_whitespace()
             .map(String::from)
             .collect::<Vec<_>>();
 
-        let path = entry.path().join("current_clocksource");
-        let current = read_string(path)?;
+        let current = read_string(path.join("current_clocksource"))?;
 
         sources.push(ClockSource {
-            name: name.to_string(),
+            name,
             available,
             current,
         })

@@ -366,8 +366,8 @@ macro_rules! procedure_metric {
             "Number of NFS procedures invoked.",
             $value,
             tags! {
-                "proto" => $proto,
-                "method" => $name
+                "proto" => event::tags::Key::from_static($proto),
+                "method" => event::tags::Key::from_static($name)
             },
         )
     };

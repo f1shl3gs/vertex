@@ -98,7 +98,7 @@ fn hwmon_metrics(dir: &Path) -> Result<Vec<Metric>, Error> {
                 tags!(
                     "chip" => chip,
                     "label" => label,
-                    "sensor" => sensor.clone(),
+                    "sensor" => sensor,
                 ),
             ));
         }
@@ -181,9 +181,8 @@ fn hwmon_metrics(dir: &Path) -> Result<Vec<Metric>, Error> {
                 prefix.clone()
             };
 
-            let pv = match value.parse::<f64>() {
-                Ok(v) => v,
-                _ => continue,
+            let Ok(pv) = value.parse::<f64>() else {
+                continue;
             };
 
             // special elements, fault, alarm & beep should be handed out without units
@@ -389,7 +388,6 @@ fn collect_sensor_data(
 
     for entry in dirs.flatten() {
         let filename = entry.file_name();
-
         let Ok((sensor, num, property)) = explode_sensor_filename(filename.to_str().unwrap())
         else {
             continue;
