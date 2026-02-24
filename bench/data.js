@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1771881094687,
+  "lastUpdate": 1771945805991,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ee91beed797c4f0aa7f3a847ef58b3abca163151",
-          "message": "Merge pull request #2703 from f1shl3gs/misc/fix_internal_log_rate_limit\n\nmisc: fix `internal_log_rate_limit`",
-          "timestamp": "2025-12-04T04:58:22+08:00",
-          "tree_id": "2108e4151a296cd140fbe54a7995f169da2ab4f8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ee91beed797c4f0aa7f3a847ef58b3abca163151"
-        },
-        "date": 1764796161644,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 580,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41233.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7494e148d8ee4e60566c2643af476445fd922c42",
           "message": "Merge pull request #2704 from f1shl3gs/misc/add_default_can_acknowledge_implement\n\nmisc: add default `SourceConfig::can_acknowledge` implement",
           "timestamp": "2025-12-04T05:18:22+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40506.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2e8b6f7f4114f221fe38c4692ee0ed40e67000f9",
+          "message": "Merge pull request #2806 from f1shl3gs/lib/events/use_key_string_as_tag_value\n\nlib/events: use key string as tag's value variant",
+          "timestamp": "2026-02-24T22:58:02+08:00",
+          "tree_id": "6ec37c320f51ad87ebefa11aca2662cab27df4ee",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2e8b6f7f4114f221fe38c4692ee0ed40e67000f9"
+        },
+        "date": 1771945782375,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 603,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40464.4,
             "unit": "KiB"
           }
         ]
