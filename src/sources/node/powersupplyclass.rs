@@ -1025,7 +1025,7 @@ macro_rules! power_supply_metric_divide_e6 {
         if let Some(v) = $value {
             $vec.push(Metric::gauge_with_tags(
                 concat!("node_power_supply_", $name),
-                concat!("value of /sys/class/power_supply/<power_supply>/", $name),
+                concat!($name, " value of /sys/class/power_supply/<power_supply>"),
                 v as f64 / 1e6,
                 tags! {
                     "power_supply" => $power_supply
@@ -1040,7 +1040,7 @@ macro_rules! power_supply_metric_divide_10 {
         if let Some(v) = $value {
             $vec.push(Metric::gauge_with_tags(
                 concat!("node_power_supply_", $name),
-                concat!("value of /sys/class/power_supply/<power_supply>/", $name),
+                concat!($name, " value of /sys/class/power_supply/<power_supply>"),
                 v as f64 / 10.0,
                 tags! {
                     "power_supply" => $power_supply
