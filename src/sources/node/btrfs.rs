@@ -79,7 +79,7 @@ pub struct Stats {
 }
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = stats(sys_path).await?;
+    let stats = stats(sys_path)?;
 
     let mut metrics = Vec::with_capacity(stats.len() * 12);
     for stat in stats {
@@ -252,25 +252,24 @@ fn get_layout_metrics(typ: &str, uuid: &str, mode: &str, s: LayoutUsage) -> Vec<
     ]
 }
 
-async fn stats(root: PathBuf) -> Result<Vec<Stats>, Error> {
+fn stats(root: PathBuf) -> Result<Vec<Stats>, Error> {
     let pattern = format!("{}/fs/btrfs/*-*", root.to_string_lossy());
     let paths = glob::glob(&pattern)?;
 
     let mut stats = vec![];
     for path in paths.flatten() {
-        let s = get_stats(path).await?;
-        stats.push(s);
+        stats.push(get_stats(path)?);
     }
 
     Ok(stats)
 }
 
-async fn get_stats(root: PathBuf) -> Result<Stats, Error> {
-    let devices = read_device_info(&root).await?;
+fn get_stats(root: PathBuf) -> Result<Stats, Error> {
+    let devices = read_device_info(&root)?;
 
     let label = read_string(root.join("label"))?;
     let uuid = read_string(root.join("metadata_uuid"))?;
-    let features = list_files(root.join("features")).await?;
+    let features = list_files(root.join("features"))?;
     let clone_alignment = read_into(root.join("clone_alignment"))?;
     let node_size = read_into(root.join("nodesize"))?;
     let quota_override = read_into(root.join("quota_override"))?;
@@ -349,26 +348,26 @@ fn read_commit_stats(path: PathBuf) -> Result<CommitStats, Error> {
     })
 }
 
-async fn list_files(path: impl AsRef<Path>) -> Result<Vec<String>, Error> {
+fn list_files(path: impl AsRef<Path>) -> Result<Vec<String>, Error> {
     let dirs = std::fs::read_dir(path)?;
 
     let mut files = vec![];
     for entry in dirs.flatten() {
-        let name = entry.file_name().into_string().unwrap();
+        let name = entry.file_name().to_string_lossy().to_string();
         files.push(name);
     }
 
     Ok(files)
 }
 
-async fn read_device_info(path: &Path) -> Result<BTreeMap<String, Device>, Error> {
+fn read_device_info(path: &Path) -> Result<BTreeMap<String, Device>, Error> {
     let dirs = std::fs::read_dir(path.join("devices"))?;
 
     let mut devices = BTreeMap::new();
     for entry in dirs.flatten() {
         let name = entry.file_name().to_string_lossy().to_string();
         let path = entry.path().join("size");
-        let size: u64 = read_into(path).unwrap_or(0);
+        let size: u64 = read_into(path).unwrap_or_default();
 
         devices.insert(
             name,
@@ -459,10 +458,10 @@ fn calc_ratio(p: &str, n: usize) -> f64 {
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_get_stats() {
+    #[test]
+    fn get_stats() {
         let path = "tests/node/sys";
-        let stats = stats(path.into()).await.unwrap();
+        let stats = stats(path.into()).unwrap();
 
         struct Alloc {
             layout: String,
@@ -583,9 +582,9 @@ mod tests {
         }
     }
 
-    #[tokio::test]
-    async fn test_read_device_info() {
+    #[test]
+    fn device_info() {
         let path = PathBuf::from("tests/node/sys/fs/btrfs/7f07c59f-6136-449c-ab87-e1cf2328731b");
-        let _infos = read_device_info(&path).await.unwrap();
+        let _infos = read_device_info(&path).unwrap();
     }
 }
