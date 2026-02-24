@@ -23,7 +23,7 @@ tracing = { version = "0.1.44", default-features = false }
 
 # TLS
 pem = { version = "3.0.6", default-features = false, features = ["std"] }
-rustls = { version = "0.23.36", default-features = false, features = ["ring"] }
+rustls = { version = "0.23.37", default-features = false, features = ["ring"] }
 rustls-native-certs = { version = "0.8.3", default-features = false }
 
 # Future
