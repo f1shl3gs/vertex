@@ -107,7 +107,7 @@ fn fibre_channel_class(sys_path: PathBuf) -> Result<Vec<FibreChannelHost>, Error
 
 fn parse_fibre_channel_host(root: PathBuf) -> Result<FibreChannelHost, Error> {
     let mut host = FibreChannelHost {
-        name: root.file_name().unwrap().to_str().unwrap().to_string(),
+        name: root.file_name().unwrap().to_string_lossy().to_string(),
         ..Default::default()
     };
 
@@ -231,7 +231,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             tags!(
                 "dev_loss_tmo" => host.dev_loss_tmo,
                 "fabric_name" => host.fabric_name,
-                "fc_host" => name.clone(),
+                "fc_host" => &name,
                 "port_id" => host.port_id,
                 "port_name" => host.port_name,
                 "port_state" => host.port_state,
@@ -249,7 +249,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Number of dumped frames",
                 host.counters.dumped_frames,
                 tags!(
-                    "fc_host" => name.clone()
+                    "fc_host" => &name
                 ),
             ));
         }
@@ -259,7 +259,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Number of errors in frames",
                 host.counters.error_frames,
                 tags!(
-                    "fc_host" => name.clone()
+                    "fc_host" => &name
                 ),
             ));
         }
@@ -269,7 +269,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Invalid Cyclic Redundancy Check count",
                 host.counters.invalid_crc_count,
                 tags!(
-                    "fc_host" => name.clone()
+                    "fc_host" => &name
                 ),
             ));
         }
@@ -279,7 +279,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Number of frames received",
                 host.counters.rx_frames,
                 tags!(
-                    "fc_host" => name.clone()
+                    "fc_host" => &name
                 ),
             ));
         }
@@ -289,7 +289,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Number of words received by host port",
                 host.counters.rx_words,
                 tags!(
-                    "fc_host" => name.clone()
+                    "fc_host" => &name
                 ),
             ));
         }
@@ -299,7 +299,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Number of frames transmitted by host port",
                 host.counters.tx_frames,
                 tags!(
-                    "fc_host" => name.clone()
+                    "fc_host" => &name
                 ),
             ));
         }
@@ -309,7 +309,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Number of words transmitted by host port",
                 host.counters.tx_words,
                 tags!(
-                    "fc_host" => name.clone()
+                    "fc_host" => &name
                 ),
             ));
         }
@@ -319,7 +319,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Number of seconds since last host port reset",
                 host.counters.seconds_since_last_reset,
                 tags!(
-                    "fc_host" => name.clone()
+                    "fc_host" => &name
                 ),
             ));
         }
@@ -329,7 +329,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Number of invalid words transmitted by host port",
                 host.counters.invalid_tx_word_count,
                 tags!(
-                    "fc_host" => name.clone()
+                    "fc_host" => &name
                 ),
             ));
         }
@@ -339,7 +339,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Number of times the host port link has failed",
                 host.counters.link_failure_count,
                 tags!(
-                    "fc_host" => name.clone()
+                    "fc_host" => &name
                 ),
             ));
         }
@@ -349,7 +349,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Number of failures on either bit or transmission word boundaries",
                 host.counters.loss_of_sync_count,
                 tags!(
-                    "fc_host" => name.clone()
+                    "fc_host" => &name
                 ),
             ));
         }
@@ -359,7 +359,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Number of times signal has been lost",
                 host.counters.loss_of_signal_count,
                 tags!(
-                    "fc_host" => name.clone()
+                    "fc_host" => &name
                 ),
             ));
         }
@@ -369,7 +369,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Number Not_Operational Primitive Sequence received by host port",
                 host.counters.nos_count,
                 tags!(
-                    "fc_host" => name.clone()
+                    "fc_host" => &name
                 ),
             ));
         }

@@ -170,8 +170,8 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "Current throttle state of the cooling device",
                 stat.cur_state,
                 tags!(
-                    "name" => stat.name.clone(),
-                    "type" => stat.typ.clone()
+                    "name" => &stat.name,
+                    "type" => &stat.typ
                 ),
             ),
             Metric::gauge_with_tags(

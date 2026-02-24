@@ -1,7 +1,6 @@
 use std::path::PathBuf;
 
 use configurable::Configurable;
-use event::tags::Key;
 use event::{Metric, tags};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
@@ -43,12 +42,12 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
             _ => continue,
         };
 
-        let tags = tags!(Key::from_static("device") => device.clone());
+        let tags = tags!("device" => &device);
         metrics.extend([
             Metric::gauge_with_tags(
                 "node_network_up",
                 "Value is 1 if operstate is 'up', 0 otherwise",
-                if nci.operstate == "up" { 1.0 } else { 0.0 },
+                nci.operstate == "up",
                 tags.clone(),
             ),
             Metric::gauge_with_tags(
@@ -56,13 +55,13 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
                 "Non-numeric data from /sys/class/net/<iface>, value is always 1",
                 1f64,
                 tags!(
-                    Key::from_static("address") => nci.address,
-                    Key::from_static("adminstate") => admin_state(nci.flags),
-                    Key::from_static("broadcast") => nci.broadcast,
-                    Key::from_static("device") => device,
-                    Key::from_static("duplex") => nci.duplex,
-                    Key::from_static("ifalias") => nci.ifalias,
-                    Key::from_static("operstate") => nci.operstate,
+                    "address" => nci.address,
+                    "adminstate" => admin_state(nci.flags),
+                    "broadcast" => nci.broadcast,
+                    "device" => device,
+                    "duplex" => nci.duplex,
+                    "ifalias" => nci.ifalias,
+                    "operstate" => nci.operstate,
                 ),
             ),
         ]);

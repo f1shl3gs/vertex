@@ -20,8 +20,8 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
         let memory_vendor = stat.memory_vram_vendor;
         let power_performance_level = stat.power_dpm_force_performance_level;
         let unique_id = stat.unique_id;
-        let vendor = "amd".to_string();
-        let tags = tags!("card" => card.clone());
+        let vendor = "amd";
+        let tags = tags!("card" => &card);
 
         metrics.extend([
             Metric::gauge_with_tags(

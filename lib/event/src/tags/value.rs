@@ -1,8 +1,9 @@
-use std::borrow::Cow;
 use std::fmt;
 use std::hash::{Hash, Hasher};
 
 use serde::{Deserialize, Serialize};
+
+use super::Key;
 
 /// Array of homogeneous values
 #[derive(Clone, Debug, Deserialize, Serialize, PartialOrd)]
@@ -123,24 +124,9 @@ pub enum Value {
     /// f64 values
     F64(f64),
     /// String values
-    String(String),
+    String(Key),
     /// Array of homogeneous values
     Array(Array),
-}
-
-impl Value {
-    #[allow(clippy::missing_panics_doc)]
-    pub fn to_string_lossy(&self) -> Cow<'_, str> {
-        match self {
-            Value::Bool(b) => if *b { "true" } else { "false" }.into(),
-            Value::I64(i) => i.to_string().into(),
-            Value::F64(f) => f.to_string().into(),
-            Value::String(s) => s.into(),
-            Value::Array(array) => serde_json::to_string(array)
-                .expect("cannot serialize array")
-                .into(),
-        }
-    }
 }
 
 impl Eq for Value {}
@@ -220,7 +206,6 @@ from_values!(
     (bool, Value::Bool);
     (i64, Value::I64);
     (f64, Value::F64);
-    (String, Value::String);
     (Array, Value::Array);
 );
 
@@ -257,13 +242,25 @@ impl From<usize> for Value {
 impl From<&str> for Value {
     /// Convenience method for creating a `Value` from a `&'static str`.
     fn from(s: &str) -> Self {
-        Value::String(s.to_string())
+        Value::String(s.into())
     }
 }
 
 impl From<&String> for Value {
     fn from(s: &String) -> Self {
-        Value::String(s.to_string())
+        Value::String(s.into())
+    }
+}
+
+impl From<String> for Value {
+    fn from(s: String) -> Self {
+        Value::String(s.into())
+    }
+}
+
+impl From<Key> for Value {
+    fn from(k: Key) -> Self {
+        Value::String(k)
     }
 }
 

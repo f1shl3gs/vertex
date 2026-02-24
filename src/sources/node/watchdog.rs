@@ -9,9 +9,8 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, crate::Error> {
 
     let mut metrics = Vec::new();
     for entry in dirs.flatten() {
-        let path = entry.path();
         let name = entry.file_name().to_string_lossy().to_string();
-        let stat = parse_watchdog(path)?;
+        let stat = parse_watchdog(entry.path())?;
 
         if let Some(bootstatus) = stat.bootstatus {
             metrics.push(Metric::gauge_with_tags(

@@ -86,7 +86,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
                 "kstat.zfs.misc.state",
                 value,
                 tags!(
-                    "zpool" => pool_name.to_string(),
+                    "zpool" => pool_name,
                     "state" => key
                 ),
             ))

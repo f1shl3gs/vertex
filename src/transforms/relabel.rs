@@ -1,7 +1,7 @@
 use configurable::{Configurable, configurable_component};
 use event::Events;
 use event::array::EventMutRef;
-use event::tags::{Key, Tags, Value};
+use event::tags::{Array, Key, Tags, Value};
 use framework::config::{
     DataType, InputType, OutputType, TransformConfig, TransformContext, serde_regex,
 };
@@ -71,12 +71,12 @@ impl Operation {
 
             Operation::Lowercase { target } => {
                 if let Some(Value::String(s)) = tags.get_mut(target) {
-                    *s = s.to_lowercase();
+                    *s = s.to_lowercase().into();
                 }
             }
             Operation::Uppercase { target } => {
                 if let Some(Value::String(s)) = tags.get_mut(target) {
-                    *s = s.to_uppercase();
+                    *s = s.to_uppercase().into();
                 }
             }
             Operation::HashMod {
@@ -84,16 +84,47 @@ impl Operation {
                 target,
                 modules,
             } => {
-                if let Some(value) = tags.get(source) {
-                    let s = value.to_string_lossy();
-                    let mut hasher = Md5::new();
-                    hasher.update(s.as_bytes());
-                    let result = hasher.finalize()[8..].try_into().expect("must success");
-                    let m = (<u64>::from_be_bytes(result) % modules) as i64;
-                    match target {
-                        Some(target) => tags.insert(target.clone(), m),
-                        None => tags.insert(source.clone(), m),
+                let Some(value) = tags.get(source) else {
+                    return;
+                };
+
+                let mut hasher = Md5::new();
+                match value {
+                    Value::Bool(b) => hasher.update([*b as u8]),
+                    Value::I64(i) => hasher.update(i.to_be_bytes()),
+                    Value::F64(f) => hasher.update(f.to_be_bytes()),
+                    Value::String(s) => {
+                        hasher.update(s.as_bytes());
                     }
+                    Value::Array(array) => match array {
+                        Array::Bool(arr) => {
+                            for item in arr {
+                                hasher.update([*item as u8]);
+                            }
+                        }
+                        Array::I64(arr) => {
+                            for item in arr {
+                                hasher.update(item.to_be_bytes());
+                            }
+                        }
+                        Array::F64(arr) => {
+                            for item in arr {
+                                hasher.update(item.to_be_bytes());
+                            }
+                        }
+                        Array::String(arr) => {
+                            for item in arr {
+                                hasher.update(item.as_bytes());
+                            }
+                        }
+                    },
+                };
+
+                let result = hasher.finalize()[8..].try_into().expect("must success");
+                let m = (<u64>::from_be_bytes(result) % modules) as i64;
+                match target {
+                    Some(target) => tags.insert(target.clone(), m),
+                    None => tags.insert(source.clone(), m),
                 }
             }
             Operation::Drop { regex } => tags.retain(|key, _value| !regex.is_match(key.as_str())),

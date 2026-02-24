@@ -1,6 +1,6 @@
 use std::path::{Path, PathBuf};
 
-use event::{Metric, tags, tags::Key};
+use event::{Metric, tags};
 
 use super::{Error, read_string};
 
@@ -154,17 +154,17 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             "Non-numeric data from /sys/class/infiniband/<device>, value is always 1.",
             1,
             tags!(
-                Key::from_static("device") => device.name.clone(),
-                Key::from_static("board_id") => device.board_id,
-                Key::from_static("firmware_version") => device.fw_ver,
-                Key::from_static("hca_type") => device.hca_type
+                "device" => &device.name,
+                "board_id" => device.board_id,
+                "firmware_version" => device.fw_ver,
+                "hca_type" => device.hca_type
             ),
         ));
 
         for port in device.ports {
             let tags = tags!(
-                Key::from_static("device") => device.name.clone(),
-                Key::from_static("port") => port.port
+                "device" => &device.name,
+                "port" => port.port
             );
 
             metrics.extend([
@@ -527,12 +527,12 @@ async fn parse_infiniband_port(name: &str, root: PathBuf) -> Result<InfiniBandPo
 
     let content = read_string(root.join("state"))?;
     let (id, name) = parse_state(&content)?;
-    ibp.state = name;
+    ibp.state = name.to_string();
     ibp.state_id = id;
 
     let content = read_string(root.join("phys_state"))?;
     let (id, name) = parse_state(&content)?;
-    ibp.phys_state = name;
+    ibp.phys_state = name.to_string();
     ibp.phys_state_id = id;
 
     let content = read_string(root.join("rate"))?;
@@ -546,13 +546,13 @@ async fn parse_infiniband_port(name: &str, root: PathBuf) -> Result<InfiniBandPo
 }
 
 // Parse InfiniBand state. Expected format: "<id>: <string-representation>"
-fn parse_state(s: &str) -> Result<(u32, String), Error> {
+fn parse_state(s: &str) -> Result<(u32, &str), Error> {
     let parts = s.split(':').map(|p| p.trim()).collect::<Vec<_>>();
     if parts.len() != 2 {
         return Err(format!("failed to split {s} into 'ID: Name'").into());
     }
 
-    let name = parts[1].to_string();
+    let name = parts[1];
     let id = parts[0].parse()?;
 
     Ok((id, name))

@@ -334,7 +334,7 @@ fn decode_tags<B: Buf>(buf: &mut B) -> Result<Tags, Error> {
             1 => TagValue::Bool(true),
             2 => TagValue::I64(buf.get_i64()),
             3 => TagValue::F64(buf.get_f64()),
-            4 => TagValue::String(decode_string(buf)?),
+            4 => TagValue::String(decode_string(buf)?.into()),
             typ => return Err(Error::UnknownType("tag value", typ as u32)),
         };
 

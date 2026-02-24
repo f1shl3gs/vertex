@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::path::PathBuf;
 
-use event::{Metric, tags, tags::Key};
+use event::{Metric, tags};
 
 use super::{Error, read_string};
 
@@ -10,7 +10,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
 
     let mut metrics = Vec::with_capacity(stats.len() * 2);
     for (master, status) in stats {
-        let tags = tags!(Key::from_static("master") => master);
+        let tags = tags!("master" => master);
 
         metrics.extend([
             Metric::gauge_with_tags(

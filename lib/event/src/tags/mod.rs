@@ -803,7 +803,7 @@ mod tests {
         assert_eq!(iter.pos, 1);
         assert_eq!(iter.len, 2);
         assert_eq!(key.as_str(), "a");
-        assert_eq!(value.to_string_lossy(), "a");
+        assert_eq!(value.to_string(), "a");
         drop(iter);
     }
 }

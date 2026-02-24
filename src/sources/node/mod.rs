@@ -71,7 +71,7 @@ use std::time::Duration;
 
 use configurable::{Configurable, configurable_component};
 use error::Error;
-use event::{Metric, tags, tags::Key};
+use event::{Metric, tags};
 use framework::Source;
 use framework::config::{OutputType, SourceConfig, SourceContext, default_interval, default_true};
 use framework::pipeline::Pipeline;
@@ -477,18 +477,18 @@ macro_rules! record_gather {
         metrics.extend([
             Metric::gauge_with_tags(
                 "node_scrape_collector_duration_seconds",
-                "Duration of a collector scrape.",
+                "Duration of a collector scrape",
                 duration,
                 tags! (
-                    Key::from_static("collector") => $name
+                    "collector" => $name
                 )
             ),
             Metric::gauge_with_tags(
                 "node_scrape_collector_success",
-                "Whether a collector succeeded.",
+                "Whether a collector succeeded",
                 success,
                 tags! (
-                    Key::from_static("collector") => $name
+                    "collector" => $name
                 )
             )
         ]);
