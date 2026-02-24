@@ -455,12 +455,10 @@ where
 
 macro_rules! record_gather {
     ($name: expr, $future: expr) => ({
-        let start = std::time::SystemTime::now();
+        let start = std::time::Instant::now();
         let result = $future.await;
-        let duration = std::time::SystemTime::now()
-            .duration_since(start)
-            .unwrap()
-            .as_secs_f64();
+        let elapsed = start.elapsed().as_secs_f64();
+
         let (mut metrics, success) = match result {
             Ok(ms) => (ms, 1.0),
             Err(err) => {
@@ -478,18 +476,14 @@ macro_rules! record_gather {
             Metric::gauge_with_tags(
                 "node_scrape_collector_duration_seconds",
                 "Duration of a collector scrape",
-                duration,
-                tags! (
-                    "collector" => $name
-                )
+                elapsed,
+                tags! ("collector" => $name)
             ),
             Metric::gauge_with_tags(
                 "node_scrape_collector_success",
                 "Whether a collector succeeded",
                 success,
-                tags! (
-                    "collector" => $name
-                )
+                tags! ("collector" => $name)
             )
         ]);
 
