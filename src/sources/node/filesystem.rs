@@ -1,3 +1,4 @@
+use std::collections::BTreeSet;
 use std::ffi::CString;
 use std::path::PathBuf;
 
@@ -49,11 +50,20 @@ pub async fn gather(
     let data = std::fs::read_to_string(proc_path.join("1/mountinfo"))
         .or_else(|_err| std::fs::read_to_string(proc_path.join("self/mountinfo")))?;
 
+    let mut seen = BTreeSet::new();
     let mut metrics = Vec::new();
     for line in data.lines() {
         let Ok(info) = parse_mount_info(line) else {
             continue;
         };
+
+        if !seen.insert(info.mount_point) {
+            debug!(
+                message = "found duplicated mount point",
+                mount_point = info.mount_point
+            );
+            continue;
+        }
 
         if conf.mount_points_exclude.is_match(info.mount_point) {
             debug!(
@@ -74,109 +84,86 @@ pub async fn gather(
         let read_only = info.options.split(',').any(|item| item == "ro")
             || info.super_options.split(',').any(|item| item == "ro");
 
+        let result = statfs(
+            root_path.join(
+                info.mount_point
+                    .strip_prefix("/")
+                    .unwrap_or(info.mount_point),
+            ),
+        );
+        let tags = tags!(
+            "device" => info.device,
+            "mountpoint" => &mount_point,
+            "fstype" => info.fs_type,
+            "device_error" => if let Err(err) = &result {
+                err.kind().to_string()
+            } else {
+                String::new()
+            }
+        );
+
         metrics.extend([
             Metric::gauge_with_tags(
                 "node_filesystem_device_error",
                 "Whether an error occurred while getting statistics for the given device",
-                1,
-                tags!(
-                    "device" => info.device,
-                    "mountpoint" => &mount_point,
-                    "fstype" => info.fs_type,
-                    "device_error" => ""
-                ),
+                result.is_err(),
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "node_filesystem_readonly",
                 "Filesystem read-only status",
                 read_only,
-                tags!(
-                    "device" => info.device,
-                    "mountpoint" => &mount_point,
-                    "fstype" => info.fs_type,
-                    "device_error" => ""
-                ),
+                tags.clone(),
             ),
         ]);
 
-        match statfs(root_path.join(info.mount_point)) {
-            Ok(usage) => {
-                let tags = tags!(
-                    "device" => info.device,
-                    "mountpoint" => info.mount_point,
-                    "fstype" => info.fs_type,
-                    "device_error" => ""
-                );
+        let Ok(usage) = result else {
+            continue;
+        };
 
-                metrics.extend([
-                    Metric::gauge_with_tags(
-                        "node_filesystem_device_error",
-                        "Whether an error occurred while getting statistics for the given device",
-                        1,
-                        tags!(
-                            "device" => info.device,
-                            "mountpoint" => &mount_point,
-                            "fstype" => info.fs_type,
-                            "device_error" => ""
-                        ),
-                    ),
-                    Metric::gauge_with_tags(
-                        "node_filesystem_size_bytes",
-                        "Filesystem size in bytes",
-                        usage.size(),
-                        tags.clone(),
-                    ),
-                    Metric::gauge_with_tags(
-                        "node_filesystem_free_bytes",
-                        "Filesystem free space in bytes",
-                        usage.free(),
-                        tags.clone(),
-                    ),
-                    Metric::gauge_with_tags(
-                        "node_filesystem_avail_bytes",
-                        "Filesystem space available to non-root users in bytes",
-                        usage.avail(),
-                        tags.clone(),
-                    ),
-                    Metric::gauge_with_tags(
-                        "node_filesystem_files",
-                        "Filesystem total file nodes",
-                        usage.files(),
-                        tags.clone(),
-                    ),
-                    Metric::gauge_with_tags(
-                        "node_filesystem_files_free",
-                        "Filesystem total free file nodes",
-                        usage.files_free(),
-                        tags,
-                    ),
-                    Metric::gauge_with_tags(
-                        "node_filesystem_mount_info",
-                        "Filesystem mount information",
-                        1,
-                        tags!(
-                            "device" => info.device,
-                            "major" => info.major,
-                            "minor" => info.minor,
-                            "mountpoint" => info.mount_point,
-                        ),
-                    ),
-                ]);
-            }
-            Err(err) => {
-                metrics.push(Metric::gauge_with_tags(
-                    "node_filesystem_device_error",
-                    "Whether an error occurred while getting statistics for the given device",
-                    1,
-                    tags!(
-                        "device" => info.device,
-                        "mountpoint" => &mount_point,
-                        "fstype" => info.fs_type,
-                        "device_error" => err.kind().to_string(),
-                    ),
-                ));
-            }
-        }
+        metrics.extend([
+            Metric::gauge_with_tags(
+                "node_filesystem_size_bytes",
+                "Filesystem size in bytes",
+                usage.size(),
+                tags.clone(),
+            ),
+            Metric::gauge_with_tags(
+                "node_filesystem_free_bytes",
+                "Filesystem free space in bytes",
+                usage.free(),
+                tags.clone(),
+            ),
+            Metric::gauge_with_tags(
+                "node_filesystem_avail_bytes",
+                "Filesystem space available to non-root users in bytes",
+                usage.avail(),
+                tags.clone(),
+            ),
+            Metric::gauge_with_tags(
+                "node_filesystem_files",
+                "Filesystem total file nodes",
+                usage.files(),
+                tags.clone(),
+            ),
+            Metric::gauge_with_tags(
+                "node_filesystem_files_free",
+                "Filesystem total free file nodes",
+                usage.files_free(),
+                tags,
+            ),
+            Metric::gauge_with_tags(
+                "node_filesystem_mount_info",
+                "Filesystem mount information",
+                1,
+                tags!(
+                    "device" => info.device,
+                    "major" => info.major,
+                    "minor" => info.minor,
+                    "mountpoint" => info.mount_point,
+                ),
+            ),
+        ]);
     }
 
     Ok(metrics)
