@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1771972553724,
+  "lastUpdate": 1771983836585,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c82c1c344ab87028cdf723c3dfa0dac2e0fce788",
-          "message": "Merge pull request #2705 from f1shl3gs/lib/buffer/add_derive_feature_to_serde\n\nlib/buffer: add `derive` feature to serde",
-          "timestamp": "2025-12-04T06:16:46+08:00",
-          "tree_id": "f97442614cc59c7264c0e7dfe71d959de7597477",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c82c1c344ab87028cdf723c3dfa0dac2e0fce788"
-        },
-        "date": 1764800861611,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 574,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41233.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0af7dbf4404d173a2a85367df36343a2afe539b2",
           "message": "Merge pull request #2706 from f1shl3gs/sources/internal_logs/fix_err_handling\n\nsources/internal_logs: fix err handling",
           "timestamp": "2025-12-04T21:53:15+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40464.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "238564b9547cdf0e0174651ea599cc9601f8d6cb",
+          "message": "Merge pull request #2808 from f1shl3gs/sources/node/fix_filesystem\n\nsources/node: fix filesystem metric values",
+          "timestamp": "2026-02-25T09:32:10+08:00",
+          "tree_id": "780e175e527bd2be586be0ad0daeacd7157e8e89",
+          "url": "https://github.com/f1shl3gs/vertex/commit/238564b9547cdf0e0174651ea599cc9601f8d6cb"
+        },
+        "date": 1771983813614,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 589,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40467.6,
             "unit": "KiB"
           }
         ]
