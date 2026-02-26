@@ -1,3 +1,6 @@
+use std::borrow::Cow;
+
+use bytes::Bytes;
 use serde::{Deserialize, Serialize};
 use value::{OwnedSegment, OwnedValuePath, Value};
 
@@ -8,7 +11,7 @@ pub struct Endpoint {
     pub id: String,
     /// Type of the Endpoint, e.g. service, pod, container, etc
     #[serde(rename = "type")]
-    pub typ: String,
+    pub typ: Cow<'static, str>,
     /// Target is an IP address or hostname of the endpoint.
     /// It can also be a hostname/ip:port pair.
     pub target: String,
@@ -32,7 +35,12 @@ impl Endpoint {
             }
             "type" => {
                 if segments.is_empty() {
-                    return Some(Value::Bytes(self.typ.clone().into()));
+                    let value = match &self.typ {
+                        Cow::Borrowed(b) => Bytes::from_static(b.as_bytes()),
+                        Cow::Owned(o) => Bytes::from(o.to_string()),
+                    };
+
+                    return Some(Value::Bytes(value));
                 }
             }
             "target" => {
@@ -58,7 +66,7 @@ mod tests {
     fn get() {
         let endpoint = Endpoint {
             id: "1234".to_string(),
-            typ: "test".to_string(),
+            typ: "test".into(),
             target: "127.0.0.1".to_string(),
             details: value!({
                 "foo": "bar",

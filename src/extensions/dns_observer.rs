@@ -116,7 +116,7 @@ async fn query(
 
                         Some(Endpoint {
                             id,
-                            typ: "SRV".to_string(),
+                            typ: "SRV".into(),
                             target: format!("{target}:{port}"),
                             details,
                         })
@@ -143,7 +143,7 @@ async fn query(
 
                         Some(Endpoint {
                             id,
-                            typ: "A".to_string(),
+                            typ: "A".into(),
                             target,
                             details: Value::Null,
                         })
@@ -170,7 +170,7 @@ async fn query(
 
                         Some(Endpoint {
                             id,
-                            typ: "AAAA".to_string(),
+                            typ: "AAAA".into(),
                             target,
                             details: Value::Null,
                         })
@@ -202,7 +202,7 @@ async fn query(
 
                         Some(Endpoint {
                             id,
-                            typ: "MX".to_string(),
+                            typ: "MX".into(),
                             target,
                             details: value!({
                                 "preference": preference,
@@ -233,7 +233,7 @@ async fn query(
 
                         Some(Endpoint {
                             id,
-                            typ: "NS".to_string(),
+                            typ: "NS".into(),
                             target,
                             details: value!({ "ns": ns }),
                         })

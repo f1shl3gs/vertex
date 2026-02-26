@@ -67,7 +67,7 @@ async fn list_endpoints(root: &PathBuf) -> crate::Result<Vec<Endpoint>> {
 
             Endpoint {
                 id: format!("{}:{}:{}@{}", protocol, addr.ip(), addr.port(), pid),
-                typ: "host".to_string(),
+                typ: "host".into(),
                 target: info.addr.to_string(),
                 details: value!({
                     "name": name,

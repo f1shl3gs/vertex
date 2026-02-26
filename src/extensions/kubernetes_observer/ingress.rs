@@ -124,7 +124,7 @@ impl From<Ingress> for Vec<Endpoint> {
 
                 endpoints.push(Endpoint {
                     id,
-                    typ: "ingress".to_string(),
+                    typ: "ingress".into(),
                     target,
                     details: value!({
                         "ingress": name.clone(),

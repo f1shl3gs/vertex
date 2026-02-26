@@ -295,7 +295,7 @@ impl From<Pod> for Vec<Endpoint> {
 
                     endpoints.push(Endpoint {
                         id,
-                        typ: "pod".to_string(),
+                        typ: "pod".into(),
                         target: pod_ip.clone(),
                         details: value!({
                             "name": name,
@@ -325,7 +325,7 @@ impl From<Pod> for Vec<Endpoint> {
                     endpoints.push(Endpoint {
                         id,
                         target: format!("{}:{}", pod_ip, port.container_port),
-                        typ: "pod".to_string(),
+                        typ: "pod".into(),
                         details: value!({
                             "name": name.clone(),
                             "namespace": pod.metadata.namespace.clone(),
