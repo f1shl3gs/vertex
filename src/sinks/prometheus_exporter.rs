@@ -164,103 +164,26 @@ impl PrometheusExporter {
     }
 }
 
-#[inline]
-fn write_tags<T: Write>(buf: &mut T, tags: &Tags, const_labels: &BTreeMap<String, String>) {
-    if tags.is_empty() && const_labels.is_empty() {
-        let _ = buf.write_all(b" ");
-        return;
-    }
-
-    let mut first = true;
-    for (key, value) in tags {
-        if first {
-            first = false;
-            buf.write_all(b"{").unwrap();
-        } else {
-            buf.write_all(b",").unwrap();
-        }
-
-        buf.write_all(key.as_bytes()).unwrap();
-        buf.write_all(b"=\"").unwrap();
-        match value {
-            Value::String(s) => {
-                buf.write_all(s.as_bytes()).unwrap();
-            }
-            Value::I64(i) => {
-                buf.write_all(i.to_string().as_bytes()).unwrap();
-            }
-            Value::F64(f) => {
-                buf.write_all(f.to_string().as_bytes()).unwrap();
-            }
-            Value::Bool(b) => {
-                let s = if *b { "true" } else { "false" };
-                buf.write_all(s.as_bytes()).unwrap();
-            }
-            Value::Array(arr) => {
-                let value = serde_json::to_string(arr).unwrap();
-                buf.write_all(value.as_bytes()).unwrap();
-            }
-        }
-        buf.write_all(b"\"").unwrap();
-    }
-
-    for (key, value) in const_labels {
-        if tags.contains(key) {
-            continue;
-        }
-
-        if first {
-            first = false;
-            buf.write_all(b"{").unwrap();
-        } else {
-            buf.write_all(b",").unwrap();
-        }
-
-        buf.write_all(key.as_bytes()).unwrap();
-        buf.write_all(b"=\"").unwrap();
-        buf.write_all(value.as_bytes()).unwrap();
-        buf.write_all(b"\"").unwrap();
-    }
-
-    buf.write_all(b"} ").unwrap();
-}
-
-#[inline]
-fn write_simple_metric<T: Write>(
+fn write_sample<T: Write>(
     buf: &mut T,
     name: &str,
+    suffix: Option<&'static str>,
     tags: &Tags,
     value: f64,
     const_labels: &BTreeMap<String, String>,
+    additional: Option<(&'static str, f64)>,
 ) {
     buf.write_all(name.as_bytes()).unwrap();
-    write_tags(buf, tags, const_labels);
-    buf.write_all(value.to_string().as_bytes()).unwrap();
-    buf.write_all(b"\n").unwrap();
-}
+    if let Some(suffix) = suffix {
+        buf.write_all(suffix.as_bytes()).unwrap();
+    }
 
-fn write_summary_metric<T: Write>(
-    buf: &mut T,
-    name: &str,
-    tags: &Tags,
-    quantiles: &[Quantile],
-    sum: f64,
-    count: u64,
-    const_labels: &BTreeMap<String, String>,
-) {
-    // write quantiles
-    for quantile in quantiles {
-        buf.write_all(name.as_bytes()).unwrap();
+    let mut tag_count = tags.len() + const_labels.len() + additional.is_some() as usize;
+    if tag_count != 0 {
+        buf.write_all(b"{").unwrap();
 
-        buf.write_all(b"{quantile=\"").unwrap();
-        buf.write_all(quantile.quantile.to_string().as_bytes())
-            .unwrap();
-        buf.write_all(b"\"").unwrap();
-        // handle other tags
         for (key, value) in tags {
-            buf.write_all(b",").unwrap();
-            buf.write_all(key.as_bytes()).unwrap();
-            buf.write_all(b"=\"").unwrap();
+            buf.write_fmt(format_args!("{}=\"", key.as_str())).unwrap();
             match value {
                 Value::String(s) => {
                     buf.write_all(s.as_bytes()).unwrap();
@@ -280,31 +203,50 @@ fn write_summary_metric<T: Write>(
                     buf.write_all(value.as_bytes()).unwrap();
                 }
             }
-            buf.write_all(b"\"").unwrap();
-        }
-        buf.write_all(b"} ").unwrap();
 
-        buf.write_all(quantile.value.to_string().as_bytes())
-            .unwrap();
-        buf.write_all(b"\n").unwrap();
+            tag_count -= 1;
+            if tag_count != 0 {
+                buf.write_all(b"\",").unwrap();
+            } else {
+                buf.write_all(b"\"").unwrap();
+            }
+        }
+
+        for (key, value) in const_labels {
+            buf.write_fmt(format_args!("{}=\"{}\"", key, value))
+                .unwrap();
+
+            tag_count -= 1;
+            if tag_count != 0 {
+                buf.write_all(b",").unwrap();
+            }
+        }
+
+        if let Some((key, value)) = additional {
+            if value.is_nan() {
+                buf.write_fmt(format_args!("{}=\"NaN\"", key)).unwrap();
+            } else if value == f64::NEG_INFINITY {
+                buf.write_fmt(format_args!("{}=\"-Inf\"", key)).unwrap();
+            } else if value == f64::INFINITY {
+                buf.write_fmt(format_args!("{}=\"+Inf\"", key)).unwrap();
+            } else {
+                buf.write_fmt(format_args!("{}=\"{}\"", key, value))
+                    .unwrap();
+            }
+
+            tag_count -= 1;
+            if tag_count != 0 {
+                buf.write_all(b",").unwrap();
+            }
+        }
+
+        buf.write_all(b"}").unwrap();
     }
 
-    // write sum
-    buf.write_all(name.as_bytes()).unwrap();
-    buf.write_all(b"_sum").unwrap();
-    write_tags(buf, tags, const_labels);
-    buf.write_all(sum.to_string().as_bytes()).unwrap();
-    buf.write_all(b"\n").unwrap();
-
-    // write count
-    buf.write_all(name.as_bytes()).unwrap();
-    buf.write_all(b"_count").unwrap();
-    write_tags(buf, tags, const_labels);
-    buf.write_all(count.to_string().as_bytes()).unwrap();
-    buf.write_all(b"\n").unwrap();
+    buf.write_fmt(format_args!(" {}\n", value)).unwrap();
 }
 
-fn write_histogram_metric<T: Write>(
+fn write_histogram<T: Write>(
     buf: &mut T,
     name: &str,
     tags: &Tags,
@@ -313,63 +255,61 @@ fn write_histogram_metric<T: Write>(
     count: u64,
     const_labels: &BTreeMap<String, String>,
 ) {
-    // write buckets
     for bucket in buckets {
-        buf.write_all(name.as_bytes()).unwrap();
-
-        buf.write_all(b"_bucket{le=\"").unwrap();
-        if bucket.upper == f64::MAX {
-            buf.write_all(b"+Inf\"").unwrap();
-        } else {
-            buf.write_all(bucket.upper.to_string().as_bytes()).unwrap();
-            buf.write_all(b"\"").unwrap();
-        }
-
-        // handle other tags
-        for (key, value) in tags {
-            buf.write_all(b",").unwrap();
-            buf.write_all(key.as_bytes()).unwrap();
-            buf.write_all(b"=\"").unwrap();
-            match value {
-                Value::String(s) => {
-                    buf.write_all(s.as_bytes()).unwrap();
-                }
-                Value::I64(i) => {
-                    buf.write_all(i.to_string().as_bytes()).unwrap();
-                }
-                Value::F64(f) => {
-                    buf.write_all(f.to_string().as_bytes()).unwrap();
-                }
-                Value::Bool(b) => {
-                    let s = if *b { "true" } else { "false" };
-                    buf.write_all(s.as_bytes()).unwrap();
-                }
-                Value::Array(arr) => {
-                    let value = serde_json::to_string(arr).unwrap();
-                    buf.write_all(value.as_bytes()).unwrap();
-                }
-            }
-            buf.write_all(b"\"").unwrap();
-        }
-        buf.write_all(b"} ").unwrap();
-
-        buf.write_all(bucket.count.to_string().as_bytes()).unwrap();
-        buf.write_all(b"\n").unwrap();
+        write_sample(
+            buf,
+            name,
+            Some("_bucket"),
+            tags,
+            bucket.count as f64,
+            const_labels,
+            Some(("le", bucket.upper)),
+        )
     }
 
-    // write sum
-    buf.write_all(name.as_bytes()).unwrap();
-    buf.write_all(b"_sum").unwrap();
-    write_tags(buf, tags, const_labels);
-    buf.write_all(sum.to_string().as_bytes()).unwrap();
-    buf.write_all(b"\n").unwrap();
+    write_sample(buf, name, Some("_sum"), tags, sum, const_labels, None);
+    write_sample(
+        buf,
+        name,
+        Some("_count"),
+        tags,
+        count as f64,
+        const_labels,
+        None,
+    );
+}
 
-    // write count
-    buf.write_all(name.as_bytes()).unwrap();
-    buf.write_all(b"_count").unwrap();
-    write_tags(buf, tags, const_labels);
-    buf.write_all(count.to_string().as_bytes()).unwrap();
-    buf.write_all(b"\n").unwrap();
+fn write_summary<T: Write>(
+    buf: &mut T,
+    name: &str,
+    tags: &Tags,
+    quantiles: &[Quantile],
+    sum: f64,
+    count: u64,
+    const_labels: &BTreeMap<String, String>,
+) {
+    for quantile in quantiles {
+        write_sample(
+            buf,
+            name,
+            None,
+            tags,
+            quantile.value,
+            const_labels,
+            Some(("quantile", quantile.quantile)),
+        );
+    }
+
+    write_sample(buf, name, Some("_sum"), tags, sum, const_labels, None);
+    write_sample(
+        buf,
+        name,
+        Some("_count"),
+        tags,
+        count as f64,
+        const_labels,
+        None,
+    );
 }
 
 fn handle(
@@ -428,18 +368,15 @@ fn handle(
                     }
 
                     match &value {
-                        MetricValue::Sum(value) => {
-                            write_simple_metric(&mut buf, name, tags, *value, &const_labels);
-                        }
-                        MetricValue::Gauge(value) => {
-                            write_simple_metric(&mut buf, name, tags, *value, &const_labels);
+                        MetricValue::Sum(value) | MetricValue::Gauge(value) => {
+                            write_sample(&mut buf, name, None, tags, *value, &const_labels, None);
                         }
                         MetricValue::Histogram {
                             count,
                             sum,
                             buckets,
                         } => {
-                            write_histogram_metric(
+                            write_histogram(
                                 &mut buf,
                                 name,
                                 tags,
@@ -454,7 +391,7 @@ fn handle(
                             sum,
                             quantiles,
                         } => {
-                            write_summary_metric(
+                            write_summary(
                                 &mut buf,
                                 name,
                                 tags,
@@ -730,7 +667,7 @@ mod tests {
 
         // no tags
         let mut buf = RespWriter::plain();
-        write_summary_metric(
+        write_summary(
             &mut buf,
             "rpc_duration_seconds",
             &tags!(),
@@ -740,7 +677,7 @@ mod tests {
             &BTreeMap::new(),
         );
 
-        write_summary_metric(
+        write_summary(
             &mut buf,
             "rpc_duration_seconds",
             &tags!("foo" => "bar"),
@@ -758,11 +695,11 @@ rpc_duration_seconds{quantile="0.9"} 9001
 rpc_duration_seconds{quantile="0.99"} 76656
 rpc_duration_seconds_sum 17560473
 rpc_duration_seconds_count 2693
-rpc_duration_seconds{quantile="0.01",foo="bar"} 3102
-rpc_duration_seconds{quantile="0.05",foo="bar"} 3272
-rpc_duration_seconds{quantile="0.5",foo="bar"} 4773
-rpc_duration_seconds{quantile="0.9",foo="bar"} 9001
-rpc_duration_seconds{quantile="0.99",foo="bar"} 76656
+rpc_duration_seconds{foo="bar",quantile="0.01"} 3102
+rpc_duration_seconds{foo="bar",quantile="0.05"} 3272
+rpc_duration_seconds{foo="bar",quantile="0.5"} 4773
+rpc_duration_seconds{foo="bar",quantile="0.9"} 9001
+rpc_duration_seconds{foo="bar",quantile="0.99"} 76656
 rpc_duration_seconds_sum{foo="bar"} 17560473
 rpc_duration_seconds_count{foo="bar"} 2693
 "#,
@@ -796,14 +733,14 @@ rpc_duration_seconds_count{foo="bar"} 2693
                 count: 133988,
             },
             Bucket {
-                upper: f64::MAX,
+                upper: f64::INFINITY,
                 count: 144320,
             },
         ];
 
         // no tags
         let mut buf = RespWriter::plain();
-        write_histogram_metric(
+        write_histogram(
             &mut buf,
             "http_request_duration_seconds",
             &tags!(),
@@ -814,7 +751,7 @@ rpc_duration_seconds_count{foo="bar"} 2693
         );
 
         // with tags
-        write_histogram_metric(
+        write_histogram(
             &mut buf,
             "http_request_duration_seconds",
             &tags!(
@@ -835,12 +772,12 @@ http_request_duration_seconds_bucket{le="1"} 133988
 http_request_duration_seconds_bucket{le="+Inf"} 144320
 http_request_duration_seconds_sum 53423
 http_request_duration_seconds_count 144320
-http_request_duration_seconds_bucket{le="0.05",foo="bar"} 24054
-http_request_duration_seconds_bucket{le="0.1",foo="bar"} 33444
-http_request_duration_seconds_bucket{le="0.2",foo="bar"} 100392
-http_request_duration_seconds_bucket{le="0.5",foo="bar"} 129389
-http_request_duration_seconds_bucket{le="1",foo="bar"} 133988
-http_request_duration_seconds_bucket{le="+Inf",foo="bar"} 144320
+http_request_duration_seconds_bucket{foo="bar",le="0.05"} 24054
+http_request_duration_seconds_bucket{foo="bar",le="0.1"} 33444
+http_request_duration_seconds_bucket{foo="bar",le="0.2"} 100392
+http_request_duration_seconds_bucket{foo="bar",le="0.5"} 129389
+http_request_duration_seconds_bucket{foo="bar",le="1"} 133988
+http_request_duration_seconds_bucket{foo="bar",le="+Inf"} 144320
 http_request_duration_seconds_sum{foo="bar"} 53423
 http_request_duration_seconds_count{foo="bar"} 144320
 "#,
