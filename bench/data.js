@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1771983836585,
+  "lastUpdate": 1772074449242,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0af7dbf4404d173a2a85367df36343a2afe539b2",
-          "message": "Merge pull request #2706 from f1shl3gs/sources/internal_logs/fix_err_handling\n\nsources/internal_logs: fix err handling",
-          "timestamp": "2025-12-04T21:53:15+08:00",
-          "tree_id": "38a1d793f908f953bc8020261c1138831db170f1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0af7dbf4404d173a2a85367df36343a2afe539b2"
-        },
-        "date": 1764857044718,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 570,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41231.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1d51e1ee4daec904964ebc17c3c5edf3a89a6284",
           "message": "Merge pull request #2707 from f1shl3gs/deps/bump_humanize_to_latest_version\n\ndeps: bump `humanize` to latest version",
           "timestamp": "2025-12-04T22:42:16+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40467.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e0691b632d245055cb2c9248778b148a6dd2396d",
+          "message": "Merge pull request #2809 from f1shl3gs/sinks/prometheus_exporter/simplify_metric_writing\n\nsinks/prometheus_exporter: simplify metric writing",
+          "timestamp": "2026-02-26T10:43:08+08:00",
+          "tree_id": "62b4ae30ab4990672c2036dcc04d3e63a1ea2b5b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e0691b632d245055cb2c9248778b148a6dd2396d"
+        },
+        "date": 1772074426737,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 564,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40456.5,
             "unit": "KiB"
           }
         ]
