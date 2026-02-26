@@ -218,9 +218,7 @@ fn write_sample<T: Write>(
 
             tag_count -= 1;
             if tag_count != 0 {
-                buf.write_all(b"\",").unwrap();
-            } else {
-                buf.write_all(b"\"").unwrap();
+                buf.write_all(b",").unwrap();
             }
         }
 
