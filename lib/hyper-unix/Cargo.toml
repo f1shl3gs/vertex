@@ -6,6 +6,6 @@ edition = "2024"
 [dependencies]
 hyper = { version = "1.8.1", default-features = false, features = ["client"] }
 hyper-util = { version = "0.1.20", default-features = false, features = ["client", "client-legacy"] }
-pin-project-lite = { version = "0.2.16", default-features = false }
+pin-project-lite = { version = "0.2.17", default-features = false }
 tokio = { version = "1.49.0", default-features = false }
 tower = { version = "0.5.3", default-features = false }
