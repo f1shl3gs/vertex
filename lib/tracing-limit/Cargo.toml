@@ -13,7 +13,7 @@ dashmap = { version = "6.1.0", default-features = false }
 criterion = { version = "0.8.2", default-features = false }
 tracing = { version = "0.1.44", default-features = false, features = ["std"] }
 testify = { path = "../testify" }
-tracing-subscriber = { version = "0.3.22", default-features = false, features = ["env-filter", "registry"] }
+tracing-subscriber = { version = "0.3.22", default-features = false, features = ["env-filter", "fmt", "registry"] }
 
 [[bench]]
 name = "limit"
