@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772074449242,
+  "lastUpdate": 1772207567040,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1d51e1ee4daec904964ebc17c3c5edf3a89a6284",
-          "message": "Merge pull request #2707 from f1shl3gs/deps/bump_humanize_to_latest_version\n\ndeps: bump `humanize` to latest version",
-          "timestamp": "2025-12-04T22:42:16+08:00",
-          "tree_id": "624af05fb2db1bd28c7f5434b47e039acc056c39",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1d51e1ee4daec904964ebc17c3c5edf3a89a6284"
-        },
-        "date": 1764860010465,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 591,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41229.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "46554e147f6425453408fd1170e40bb2b422b5b5",
           "message": "Merge pull request #2708 from f1shl3gs/dependabot/cargo/flate2-1.1.7\n\nchore(deps): bump flate2 from 1.1.5 to 1.1.7",
           "timestamp": "2025-12-06T16:59:41+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40456.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e98fa122fb7fff7c0e9d8c2709ccc8c78f33babb",
+          "message": "Merge pull request #2811 from f1shl3gs/dependabot/cargo/pin-project-lite-0.2.17\n\nchore(deps): bump pin-project-lite from 0.2.16 to 0.2.17",
+          "timestamp": "2026-02-27T23:41:29+08:00",
+          "tree_id": "c73788a3f07c6ad5f842ae0802131a02e4a0922b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e98fa122fb7fff7c0e9d8c2709ccc8c78f33babb"
+        },
+        "date": 1772207544538,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 579,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40457.8,
             "unit": "KiB"
           }
         ]
