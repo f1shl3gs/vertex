@@ -56,7 +56,7 @@ log_schema = { path = "../log_schema" }
 metrics = { path = "../metrics" }
 pem = { version = "3.0.6", default-features = false, features = ["std"] }
 percent-encoding = { version = "2.3.2", default-features = false }
-pin-project-lite = { version = "0.2.16", default-features = false }
+pin-project-lite = { version = "0.2.17", default-features = false }
 pkcs8 = { version = "0.10.2", default-features = false, features = ["pkcs5", "std", "encryption"] }
 rand = { version = "0.10.0", default-features = false }
 regex = { version = "1.12.3", default-features = false }
