@@ -377,8 +377,40 @@ mod tests {
         };
     }
 
+    macro_rules! labels {
+        () => { BTreeMap::new() };
+        ($($name:ident => $value:literal), *) => {{
+            let mut result = BTreeMap::< String, String>::new();
+            $ (result.insert(stringify ! ( $ name).into(), $ value.to_string()); ) *
+            result
+        }};
+    }
+
+    macro_rules! match_group {
+        ($group: expr, $name: literal, $kind:ident => $inner:expr) => {{
+            assert_eq!($group.name, $name);
+            let inner = $inner;
+            match &$group.metrics {
+                GroupKind::$kind(metrics) => inner(metrics),
+                _ => panic!("Invalid metric group type"),
+            }
+        }};
+    }
+
+    macro_rules! simple_metric {
+        ($timestamp:expr, $labels:expr, $value:expr) => {
+            (
+                &GroupKey {
+                    timestamp: $timestamp,
+                    labels: $labels,
+                },
+                &SimpleMetric { value: $value },
+            )
+        };
+    }
+
     #[test]
-    fn test_parse_metric() {
+    fn parse_metrics() {
         let tests = [
             (r#"name{registry="} 1890"#, Err(Error::MissingValue)),
             (r#"name{registry=} 1890"#, Err(Error::MissingValue)),
@@ -563,7 +595,7 @@ mod tests {
     }
 
     #[test]
-    fn test_parse() {
+    fn all_kinds() {
         let input = r#"
 # HELP http_requests_total The total number of HTTP requests.
 # TYPE http_requests_total counter
@@ -638,5 +670,127 @@ rpc_duration_seconds_count 2693
 
         let metrics = parse_text(content).unwrap();
         assert!(metrics.is_empty())
+    }
+
+    #[test]
+    fn parse() {
+        // Untyped not supported
+        let input = r#"
+# HELP http_requests_total The total number of HTTP requests.
+# TYPE http_requests_total counter
+http_requests_total{method="post",code="200"} 1027 1395066363000
+http_requests_total{method="post",code="400"}    3 1395066363000
+
+# Escaping in label values:
+# msdos_file_access_time_seconds{path="C:\\DIR\\FILE.TXT",error="Cannot find file:\n\"FILE.TXT\""} 1.458255915e9
+
+# Minimalistic line:
+# metric_without_timestamp_and_labels 12.47
+
+# A weird metric from before the epoch:
+# something_weird{problem="division by zero"} +Inf -3982045
+
+# A histogram, which has a pretty complex representation in the text format:
+# HELP http_request_duration_seconds A histogram of the request duration.
+# TYPE http_request_duration_seconds histogram
+http_request_duration_seconds_bucket{le="0.05"} 24054
+http_request_duration_seconds_bucket{le="0.1"} 33444
+http_request_duration_seconds_bucket{le="0.2"} 100392
+http_request_duration_seconds_bucket{le="0.5"} 129389
+http_request_duration_seconds_bucket{le="1"} 133988
+http_request_duration_seconds_bucket{le="+Inf"} 144320
+http_request_duration_seconds_sum 53423
+http_request_duration_seconds_count 144320
+
+# Finally a summary, which has a complex representation, too:
+# HELP rpc_duration_seconds A summary of the RPC duration in seconds.
+# TYPE rpc_duration_seconds summary
+rpc_duration_seconds{quantile="0.01"} 3102
+rpc_duration_seconds{quantile="0.05"} 3272
+rpc_duration_seconds{quantile="0.5"} 4773
+rpc_duration_seconds{quantile="0.9"} 9001
+rpc_duration_seconds{quantile="0.99"} 76656
+rpc_duration_seconds_sum 1.7560473e+07
+rpc_duration_seconds_count 2693
+"#;
+
+        let output = parse_text(input).unwrap();
+        assert_eq!(output.len(), 3);
+        match_group!(output[0], "http_requests_total", Counter => |metrics: &MetricMap<SimpleMetric>| {
+            assert_eq!(metrics.len(), 2);
+            assert_eq!(
+                metrics.get_index(0).unwrap(),
+                simple_metric!(Some(1395066363000), labels!(method => "post", code => 200), 1027.0)
+            );
+            assert_eq!(
+                metrics.get_index(1).unwrap(),
+                simple_metric!(Some(1395066363000), labels!(method => "post", code => 400), 3.0)
+            );
+        });
+        /*
+                match_group!(output[1], "msdos_file_access_time_seconds", Untyped => |metrics: &MetricMap<SimpleMetric>| {
+                    assert_eq!(metrics.len(), 1);
+                    assert_eq!(metrics.get_index(0).unwrap(), simple_metric!(
+                        None,
+                        labels!(path => "C:\\DIR\\FILE.TXT", error => "Cannot find file:\n\"FILE.TXT\""),
+                        1.458255915e9
+                    ));
+                });
+
+                match_group!(output[2], "metric_without_timestamp_and_labels", Untyped => |metrics: &MetricMap<SimpleMetric>| {
+                    assert_eq!(metrics.len(), 1);
+                    assert_eq!(metrics.get_index(0).unwrap(), simple_metric!(None, labels!(), 12.47));
+                });
+
+                match_group!(output[3], "something_weird", Untyped => |metrics: &MetricMap<SimpleMetric>| {
+                    assert_eq!(metrics.len(), 1);
+                    assert_eq!(
+                        metrics.get_index(0).unwrap(),
+                        simple_metric!(Some(-3982045), labels!(problem => "division by zero"), f64::INFINITY)
+                    );
+                });
+        */
+        match_group!(output[1], "http_request_duration_seconds", Histogram => |metrics: &MetricMap<HistogramMetric>| {
+            assert_eq!(metrics.len(), 1, "length not match");
+            assert_eq!(metrics.get_index(0).unwrap(), (
+                &GroupKey {
+                    timestamp: None,
+                    labels: labels!(),
+                },
+                &HistogramMetric {
+                    buckets: vec![
+                        HistogramBucket { bucket: 0.05, count: 24054 },
+                        HistogramBucket { bucket: 0.1, count: 33444 },
+                        HistogramBucket { bucket: 0.2, count: 100392 },
+                        HistogramBucket { bucket: 0.5, count: 129389 },
+                        HistogramBucket { bucket: 1.0, count: 133988 },
+                        HistogramBucket { bucket: f64::INFINITY, count: 144320 },
+                    ],
+                    count: 144320,
+                    sum: 53423.0,
+                },
+            ));
+        });
+
+        match_group!(output[2], "rpc_duration_seconds", Summary => |metrics: &MetricMap<SummaryMetric>| {
+            assert_eq!(metrics.len(), 1);
+            assert_eq!(metrics.get_index(0).unwrap(), (
+                &GroupKey {
+                    timestamp: None,
+                    labels: labels!(),
+                },
+                &SummaryMetric {
+                    quantiles: vec![
+                        SummaryQuantile { quantile: 0.01, value: 3102.0 },
+                        SummaryQuantile { quantile: 0.05, value: 3272.0 },
+                        SummaryQuantile { quantile: 0.5, value: 4773.0 },
+                        SummaryQuantile { quantile: 0.9, value: 9001.0 },
+                        SummaryQuantile { quantile: 0.99, value: 76656.0 },
+                    ],
+                    count: 2693,
+                    sum: 1.7560473e+07,
+                },
+            ));
+        });
     }
 }

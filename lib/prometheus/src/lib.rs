@@ -1,33 +1,62 @@
-mod error;
+mod pb;
 mod text;
 
 use std::collections::BTreeMap;
+use std::fmt::{Display, Formatter};
+use std::num::{ParseFloatError, ParseIntError};
 
 use indexmap::IndexMap;
 
-// Re-export
-pub use error::Error;
+pub use pb::{parse_request, proto};
 pub use text::parse_text;
 
 pub const METRIC_NAME_LABEL: &str = "__name__";
 
-pub mod proto {
-    include!(concat!(env!("OUT_DIR"), "/prometheus.rs"));
+#[derive(Debug)]
+#[cfg_attr(test, derive(PartialEq))]
+pub enum Error {
+    InvalidType(String),
+    InvalidMetric(String),
 
-    pub use metric_metadata::MetricType;
+    MissingValue,
+    MissingQuantile(String),
+    InvalidQuantile { line: String, err: ParseFloatError },
+    MissingBucket(String),
+    InvalidBucket { line: String, err: ParseFloatError },
 
-    impl MetricType {
-        pub fn as_str(&self) -> &'static str {
-            match self {
-                MetricType::Counter => "counter",
-                MetricType::Gauge => "gauge",
-                MetricType::Histogram => "histogram",
-                MetricType::Summary => "summary",
-                MetricType::Gaugehistogram => "gaugehistogram",
-                MetricType::Info => "info",
-                MetricType::Stateset => "stateset",
-                MetricType::Unknown => "unknown",
+    InvalidMetricValue(ParseFloatError),
+    InvalidTimestamp(ParseIntError),
+
+    MultipleMetricKinds { name: String },
+    RequestNoNameLabel,
+    ValueOutOfRange(f64),
+}
+
+impl From<ParseFloatError> for Error {
+    fn from(err: ParseFloatError) -> Self {
+        Self::InvalidMetricValue(err)
+    }
+}
+
+impl Display for Error {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Error::InvalidType(typ) => write!(f, "invalid metric type {typ}"),
+            Error::InvalidMetric(name) => write!(f, "invalid metric name {name}"),
+            Error::MissingValue => f.write_str("value is not found"),
+            Error::MissingQuantile(line) => write!(f, "quantile label is not found in `{line}`"),
+            Error::InvalidQuantile { line, err } => {
+                write!(f, "invalid quantile label value {line}, {err}")
             }
+            Error::MissingBucket(line) => write!(f, "bucket label is not found in `{line}`"),
+            Error::InvalidBucket { line, err } => {
+                write!(f, "invalid bucket value in {line}, {err}")
+            }
+            Error::InvalidMetricValue(err) => write!(f, "invalid metric value, {err}"),
+            Error::InvalidTimestamp(err) => write!(f, "invalid timestamp {err}"),
+            Error::MultipleMetricKinds { name } => write!(f, "metric `{name}` have multiple kind"),
+            Error::RequestNoNameLabel => f.write_str("metric name label not found"),
+            Error::ValueOutOfRange(value) => write!(f, "metric value `{value}` is out of range"),
         }
     }
 }
@@ -285,34 +314,6 @@ impl MetricGroupSet {
         }
     }
 
-    fn insert_sample(
-        &mut self,
-        name: &str,
-        labels: &BTreeMap<String, String>,
-        sample: proto::Sample,
-    ) -> Result<(), Error> {
-        let (_, basename, group) = self.get_group(name);
-        if let Some(metric) = group.try_push(
-            basename.len(),
-            Metric {
-                name: name.into(),
-                labels: labels.clone(),
-                value: sample.value,
-                timestamp: Some(sample.timestamp),
-            },
-        )? {
-            let key = GroupKey {
-                timestamp: metric.timestamp,
-                labels: metric.labels,
-            };
-
-            let group = GroupKind::new_untyped(key, metric.value);
-            self.0.insert(metric.name, group);
-        }
-
-        Ok(())
-    }
-
     fn finish(self) -> Vec<MetricGroup> {
         self.0
             .into_iter()
@@ -325,213 +326,13 @@ impl MetricGroupSet {
     }
 }
 
-impl From<proto::MetricType> for MetricKind {
-    fn from(kind: proto::MetricType) -> Self {
-        use proto::MetricType::{Counter, Gauge, Gaugehistogram, Histogram, Summary};
-
-        match kind {
-            Counter => MetricKind::Counter,
-            Gauge => MetricKind::Gauge,
-            Histogram => MetricKind::Histogram,
-            Gaugehistogram => MetricKind::Histogram,
-            Summary => MetricKind::Summary,
-            _ => MetricKind::Untyped,
-        }
-    }
-}
-
-pub fn parse_request(req: proto::WriteRequest) -> Result<Vec<MetricGroup>, Error> {
-    let mut groups = MetricGroupSet::default();
-
-    for metadata in req.metadata {
-        let name = metadata.metric_family_name;
-        let kind = proto::MetricType::try_from(metadata.r#type)
-            .unwrap_or(proto::MetricType::Unknown)
-            .into();
-
-        groups.insert_metadata(name, kind)?;
-    }
-
-    for timeseries in req.timeseries {
-        let mut labels: BTreeMap<String, String> = timeseries
-            .labels
-            .into_iter()
-            .map(|label| (label.name, label.value))
-            .collect();
-        let name = match labels.remove(METRIC_NAME_LABEL) {
-            Some(name) => name,
-            None => return Err(Error::RequestNoNameLabel),
-        };
-
-        for sample in timeseries.samples {
-            groups.insert_sample(&name, &labels, sample)?;
-        }
-    }
-
-    Ok(groups.finish())
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::Error;
 
-    macro_rules! match_group {
-        ($group: expr, $name: literal, $kind:ident => $inner:expr) => {{
-            assert_eq!($group.name, $name);
-            let inner = $inner;
-            match &$group.metrics {
-                GroupKind::$kind(metrics) => inner(metrics),
-                _ => panic!("Invalid metric group type"),
-            }
-        }};
-    }
-
-    macro_rules! labels {
-        () => { BTreeMap::new() };
-        ($($name:ident => $value:literal), *) => {{
-            let mut result = BTreeMap::< String, String>::new();
-            $ (result.insert(stringify ! ( $ name).into(), $ value.to_string()); ) *
-            result
-        }};
-    }
-
-    macro_rules! simple_metric {
-        ($timestamp:expr, $labels:expr, $value:expr) => {
-            (
-                &GroupKey {
-                    timestamp: $timestamp,
-                    labels: $labels,
-                },
-                &SimpleMetric { value: $value },
-            )
-        };
-    }
-
     #[test]
-    fn test_parse_text() {
-        // Untyped not supported
-        let input = r#"
-# HELP http_requests_total The total number of HTTP requests.
-# TYPE http_requests_total counter
-http_requests_total{method="post",code="200"} 1027 1395066363000
-http_requests_total{method="post",code="400"}    3 1395066363000
-
-# Escaping in label values:
-# msdos_file_access_time_seconds{path="C:\\DIR\\FILE.TXT",error="Cannot find file:\n\"FILE.TXT\""} 1.458255915e9
-
-# Minimalistic line:
-# metric_without_timestamp_and_labels 12.47
-
-# A weird metric from before the epoch:
-# something_weird{problem="division by zero"} +Inf -3982045
-
-# A histogram, which has a pretty complex representation in the text format:
-# HELP http_request_duration_seconds A histogram of the request duration.
-# TYPE http_request_duration_seconds histogram
-http_request_duration_seconds_bucket{le="0.05"} 24054
-http_request_duration_seconds_bucket{le="0.1"} 33444
-http_request_duration_seconds_bucket{le="0.2"} 100392
-http_request_duration_seconds_bucket{le="0.5"} 129389
-http_request_duration_seconds_bucket{le="1"} 133988
-http_request_duration_seconds_bucket{le="+Inf"} 144320
-http_request_duration_seconds_sum 53423
-http_request_duration_seconds_count 144320
-
-# Finally a summary, which has a complex representation, too:
-# HELP rpc_duration_seconds A summary of the RPC duration in seconds.
-# TYPE rpc_duration_seconds summary
-rpc_duration_seconds{quantile="0.01"} 3102
-rpc_duration_seconds{quantile="0.05"} 3272
-rpc_duration_seconds{quantile="0.5"} 4773
-rpc_duration_seconds{quantile="0.9"} 9001
-rpc_duration_seconds{quantile="0.99"} 76656
-rpc_duration_seconds_sum 1.7560473e+07
-rpc_duration_seconds_count 2693
-"#;
-
-        let output = parse_text(input).unwrap();
-        assert_eq!(output.len(), 3);
-        match_group!(output[0], "http_requests_total", Counter => |metrics: &MetricMap<SimpleMetric>| {
-            assert_eq!(metrics.len(), 2);
-            assert_eq!(
-                metrics.get_index(0).unwrap(),
-                simple_metric!(Some(1395066363000), labels!(method => "post", code => 200), 1027.0)
-            );
-            assert_eq!(
-                metrics.get_index(1).unwrap(),
-                simple_metric!(Some(1395066363000), labels!(method => "post", code => 400), 3.0)
-            );
-        });
-        /*
-                match_group!(output[1], "msdos_file_access_time_seconds", Untyped => |metrics: &MetricMap<SimpleMetric>| {
-                    assert_eq!(metrics.len(), 1);
-                    assert_eq!(metrics.get_index(0).unwrap(), simple_metric!(
-                        None,
-                        labels!(path => "C:\\DIR\\FILE.TXT", error => "Cannot find file:\n\"FILE.TXT\""),
-                        1.458255915e9
-                    ));
-                });
-
-                match_group!(output[2], "metric_without_timestamp_and_labels", Untyped => |metrics: &MetricMap<SimpleMetric>| {
-                    assert_eq!(metrics.len(), 1);
-                    assert_eq!(metrics.get_index(0).unwrap(), simple_metric!(None, labels!(), 12.47));
-                });
-
-                match_group!(output[3], "something_weird", Untyped => |metrics: &MetricMap<SimpleMetric>| {
-                    assert_eq!(metrics.len(), 1);
-                    assert_eq!(
-                        metrics.get_index(0).unwrap(),
-                        simple_metric!(Some(-3982045), labels!(problem => "division by zero"), f64::INFINITY)
-                    );
-                });
-        */
-        match_group!(output[1], "http_request_duration_seconds", Histogram => |metrics: &MetricMap<HistogramMetric>| {
-            assert_eq!(metrics.len(), 1, "length not match");
-            assert_eq!(metrics.get_index(0).unwrap(), (
-                &GroupKey {
-                    timestamp: None,
-                    labels: labels!(),
-                },
-                &HistogramMetric {
-                    buckets: vec![
-                        HistogramBucket { bucket: 0.05, count: 24054 },
-                        HistogramBucket { bucket: 0.1, count: 33444 },
-                        HistogramBucket { bucket: 0.2, count: 100392 },
-                        HistogramBucket { bucket: 0.5, count: 129389 },
-                        HistogramBucket { bucket: 1.0, count: 133988 },
-                        HistogramBucket { bucket: f64::INFINITY, count: 144320 },
-                    ],
-                    count: 144320,
-                    sum: 53423.0,
-                },
-            ));
-        });
-
-        match_group!(output[2], "rpc_duration_seconds", Summary => |metrics: &MetricMap<SummaryMetric>| {
-            assert_eq!(metrics.len(), 1);
-            assert_eq!(metrics.get_index(0).unwrap(), (
-                &GroupKey {
-                    timestamp: None,
-                    labels: labels!(),
-                },
-                &SummaryMetric {
-                    quantiles: vec![
-                        SummaryQuantile { quantile: 0.01, value: 3102.0 },
-                        SummaryQuantile { quantile: 0.05, value: 3272.0 },
-                        SummaryQuantile { quantile: 0.5, value: 4773.0 },
-                        SummaryQuantile { quantile: 0.9, value: 9001.0 },
-                        SummaryQuantile { quantile: 0.99, value: 76656.0 },
-                    ],
-                    count: 2693,
-                    sum: 1.7560473e+07,
-                },
-            ));
-        });
-    }
-
-    #[test]
-    fn test_f64_to_u32() {
+    fn to_u32() {
         let value = -1.0;
         let err = try_f64_to_u32(value).unwrap_err();
         assert_eq!(err, Error::ValueOutOfRange(value));
@@ -554,190 +355,5 @@ rpc_duration_seconds_count 2693
 
         assert_eq!(try_f64_to_u32(0.0).unwrap(), 0);
         assert_eq!(try_f64_to_u32(u32::MAX as f64).unwrap(), u32::MAX);
-    }
-
-    macro_rules! write_request {
-        (
-            [ $( $name:literal = $type:ident ),* ],
-            [
-                $( [ $( $label:ident => $value:literal), * ] => [ $( $sample:literal @ $timestamp:literal ),* ]),*
-            ]
-        ) => {
-            proto::WriteRequest {
-                metadata: vec![
-                    $( proto::MetricMetadata {
-                        r#type: proto::MetricType::$type as i32,
-                        metric_family_name: $name.into(),
-                        help: String::default(),
-                        unit: String::default(),
-                    }, )*
-                ],
-                timeseries: vec![ $(proto::TimeSeries {
-                    labels: vec![ $( proto::Label {
-                        name: stringify!($label).into(),
-                        value: $value.to_string(),
-                    }, )* ],
-                    samples: vec![
-                        $( proto::Sample { value: $sample as f64, timestamp: $timestamp as i64},  )*
-                    ],
-                }, )* ],
-            }
-        };
-    }
-
-    #[test]
-    fn parse_request_empty() {
-        let parsed = parse_request(write_request!([], [])).unwrap();
-        assert!(parsed.is_empty())
-    }
-
-    #[test]
-    fn parse_request_only_metadata() {
-        let parsed = parse_request(write_request!(["one" = Counter, "two" = Gauge], [])).unwrap();
-        assert_eq!(parsed.len(), 2);
-        match_group!(parsed[0], "one", Counter => |metrics: &MetricMap<SimpleMetric>| {
-            assert!(metrics.is_empty());
-        });
-        match_group!(parsed[1], "two", Gauge => |metrics: &MetricMap<SimpleMetric>| {
-            assert!(metrics.is_empty());
-        });
-    }
-
-    #[test]
-    fn parse_request_untyped() {
-        let parsed = parse_request(write_request!(
-            [],
-            [ [__name__ => "one", big => "small"] => [ 123 @ 1395066367500 ]]
-        ))
-        .unwrap();
-
-        assert_eq!(parsed.len(), 1);
-        match_group!(parsed[0], "one", Untyped => |metrics: &MetricMap<SimpleMetric>| {
-            assert_eq!(metrics.len(), 1);
-            assert_eq!(
-                metrics.get_index(0).unwrap(),
-                simple_metric!(Some(1395066367500), labels!(big => "small"), 123.0)
-            );
-        });
-    }
-
-    #[test]
-    fn parse_request_gauge() {
-        let parsed = parse_request(write_request!(
-            ["one" = Gauge],
-            [
-                [__name__ => "one"] => [ 12 @ 1395066367600, 14 @ 1395066367800 ],
-                [__name__ => "two"] => [ 13 @ 1395066367700 ]
-            ]
-        ))
-        .unwrap();
-
-        assert_eq!(parsed.len(), 2);
-        match_group!(parsed[0], "one", Gauge => |metrics: &MetricMap<SimpleMetric>| {
-            assert_eq!(metrics.len(), 2);
-            assert_eq!(
-                metrics.get_index(0).unwrap(),
-                simple_metric!(Some(1395066367600), labels!(), 12.0),
-            );
-            assert_eq!(
-                metrics.get_index(1).unwrap(),
-                simple_metric!(Some(1395066367800), labels!(), 14.0),
-            );
-        });
-        match_group!(parsed[1], "two", Untyped => |metrics: &MetricMap<SimpleMetric>| {
-            assert_eq!(metrics.len(), 1);
-            assert_eq!(
-                metrics.get_index(0).unwrap(),
-                simple_metric!(Some(1395066367700), labels!(), 13.0)
-            )
-        });
-    }
-
-    #[test]
-    fn parse_request_histogram() {
-        let parsed = parse_request(write_request!(
-            ["one" = Histogram],
-            [
-                [__name__ => "one_bucket", le => "1"] => [ 15 @ 1395066367700 ],
-                [__name__ => "one_bucket", le => "+Inf"] => [ 19 @ 1395066367700 ],
-                [__name__ => "one_count"] => [ 19 @ 1395066367700 ],
-                [__name__ => "one_sum"] => [ 12 @ 1395066367700 ],
-                [__name__ => "one_total"] => [24 @ 1395066367700]
-            ]
-        ))
-        .unwrap();
-
-        assert_eq!(parsed.len(), 2);
-        match_group!(parsed[0], "one", Histogram => |metrics: &MetricMap<HistogramMetric>| {
-            assert_eq!(metrics.len(), 1);
-            assert_eq!(
-                metrics.get_index(0).unwrap(), (
-                    &GroupKey {
-                        timestamp: Some(1395066367700),
-                        labels: labels!()
-                    },
-                    &HistogramMetric {
-                        buckets: vec![
-                            HistogramBucket { bucket: 1.0, count: 15 },
-                            HistogramBucket { bucket: f64::INFINITY, count: 19 }
-                        ],
-                        count: 19,
-                        sum: 12.0
-                    }
-                )
-            );
-        });
-
-        match_group!(parsed[1], "one_total", Untyped => |metrics: &MetricMap<SimpleMetric>| {
-            assert_eq!(metrics.len(), 1);
-            assert_eq!(
-                metrics.get_index(0).unwrap(),
-                simple_metric!(Some(1395066367700), labels!(), 24.0)
-            );
-        })
-    }
-
-    #[test]
-    fn parse_request_summary() {
-        let parsed = parse_request(write_request!(
-            ["one" = Summary],
-            [
-                [__name__ => "one", quantile => "0.5"] => [ 15 @ 1395066367700 ],
-                [__name__ => "one", quantile => "0.9"] => [ 19 @ 1395066367700 ],
-                [__name__ => "one_count"] => [ 21 @ 1395066367700 ],
-                [__name__ => "one_sum"] => [ 12 @ 1395066367700 ],
-                [__name__ => "one_total"] => [24 @ 1395066367700]
-            ]
-        ))
-        .unwrap();
-
-        assert_eq!(parsed.len(), 2);
-        match_group!(parsed[0], "one", Summary => |metrics: &MetricMap<SummaryMetric>| {
-            assert_eq!(metrics.len(), 1);
-            assert_eq!(
-                metrics.get_index(0).unwrap(), (
-                    &GroupKey {
-                        timestamp: Some(1395066367700),
-                        labels: labels!(),
-                    },
-                    &SummaryMetric {
-                        quantiles: vec![
-                            SummaryQuantile { quantile: 0.5, value: 15.0 },
-                            SummaryQuantile { quantile: 0.9, value: 19.0 },
-                        ],
-                        count: 21,
-                        sum: 12.0
-                    }
-                )
-            );
-        });
-
-        match_group!(parsed[1], "one_total", Untyped => |metrics: &MetricMap<SimpleMetric>| {
-            assert_eq!(metrics.len(), 1);
-            assert_eq!(
-                metrics.get_index(0).unwrap(),
-                simple_metric!(Some(1395066367700), labels!(), 24.0)
-            );
-        })
     }
 }
