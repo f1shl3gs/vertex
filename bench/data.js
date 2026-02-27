@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772207567040,
+  "lastUpdate": 1772219420930,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "46554e147f6425453408fd1170e40bb2b422b5b5",
-          "message": "Merge pull request #2708 from f1shl3gs/dependabot/cargo/flate2-1.1.7\n\nchore(deps): bump flate2 from 1.1.5 to 1.1.7",
-          "timestamp": "2025-12-06T16:59:41+08:00",
-          "tree_id": "5db2f923b669c9477b3896d97a7935a9741a7a18",
-          "url": "https://github.com/f1shl3gs/vertex/commit/46554e147f6425453408fd1170e40bb2b422b5b5"
-        },
-        "date": 1765012232164,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 572,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41238.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6c951fbae8ab39fe8fcc2e5801465e1824f54985",
           "message": "Merge pull request #2710 from f1shl3gs/lib/buffer/simplify_config\n\nlib/buffer: simplify BufferConfig",
           "timestamp": "2025-12-08T00:58:26+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 579,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40457.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "93c1d5a549ff45960d546c38e1b155c74e9d2389",
+          "message": "Merge pull request #2812 from f1shl3gs/lib/prometheus/restructure\n\nlib/prometheus: split parsers into two files",
+          "timestamp": "2026-02-28T02:59:10+08:00",
+          "tree_id": "730dc40f0335273c05ce8941b1b79681d627ac18",
+          "url": "https://github.com/f1shl3gs/vertex/commit/93c1d5a549ff45960d546c38e1b155c74e9d2389"
+        },
+        "date": 1772219398665,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 575,
             "unit": "s"
           },
           {
