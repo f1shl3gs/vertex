@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772219420930,
+  "lastUpdate": 1772220957622,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "6c951fbae8ab39fe8fcc2e5801465e1824f54985",
-          "message": "Merge pull request #2710 from f1shl3gs/lib/buffer/simplify_config\n\nlib/buffer: simplify BufferConfig",
-          "timestamp": "2025-12-08T00:58:26+08:00",
-          "tree_id": "47da9cf219fd521c0df36d8719287a26bc629316",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6c951fbae8ab39fe8fcc2e5801465e1824f54985"
-        },
-        "date": 1765127364402,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 580,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41230.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c52f976cd5cd3cfddcd034d7eeb5675ff356bbee",
           "message": "Merge pull request #2711 from f1shl3gs/lib/buffer/fix_reader_shutdown\n\nlib/buffer: fix reader shutdown",
           "timestamp": "2025-12-08T03:44:10+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 575,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40457.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ab1d7277ab46563eeb3f3e31ee3f527e90bc6f1d",
+          "message": "Merge pull request #2813 from f1shl3gs/ci/fix_benchmark\n\nci/fix_benchmark: fix benchmarks based on lib/testify",
+          "timestamp": "2026-02-28T03:24:31+08:00",
+          "tree_id": "970705193ebef7d880db6b4b445d2f6f51797872",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ab1d7277ab46563eeb3f3e31ee3f527e90bc6f1d"
+        },
+        "date": 1772220935216,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 587,
             "unit": "s"
           },
           {
