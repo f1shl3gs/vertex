@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772335892093,
+  "lastUpdate": 1772335991645,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "94b621ce8e9f867946e1572a1e4f5451eeaeedc4",
-          "message": "Merge pull request #2712 from f1shl3gs/dependabot/cargo/criterion-0.8.1\n\nchore(deps): bump criterion from 0.8.0 to 0.8.1",
-          "timestamp": "2025-12-08T23:16:51+08:00",
-          "tree_id": "ec1515b75c6c1476a096acbaaeede5df855a2493",
-          "url": "https://github.com/f1shl3gs/vertex/commit/94b621ce8e9f867946e1572a1e4f5451eeaeedc4"
-        },
-        "date": 1765207666541,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 567,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41229.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "db35751171505b9aabb16a9508fbad09401f3bc1",
           "message": "Merge pull request #2713 from f1shl3gs/lib/buffer/fix_flush\n\nlib/buffer: fix flush",
           "timestamp": "2025-12-10T10:28:48+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40457.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "23936397bfb91ac555a044269df2a892e24dbf05",
+          "message": "Merge pull request #2810 from f1shl3gs/lib/framework/use_cow_for_endpoint_typ_field\n\nlib/framework: use Cow<'static, str> for Endpoint's typ field",
+          "timestamp": "2026-03-01T11:21:53+08:00",
+          "tree_id": "dae377a0a4255d535377066fa92f35fe97c27ab0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/23936397bfb91ac555a044269df2a892e24dbf05"
+        },
+        "date": 1772335969557,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 576,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40457.1,
             "unit": "KiB"
           }
         ]
