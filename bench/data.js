@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772331214489,
+  "lastUpdate": 1772331230157,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "404867a4a2579f1cee30f75d2b69ffd7dde722a2",
-          "message": "Merge pull request #2621 from f1shl3gs/lib/configurable-derive/fix_required_value_of_optional_field\n\nlib/configurable-derive: fix required value of optional field",
-          "timestamp": "2025-10-22T21:00:01+08:00",
-          "tree_id": "e5933ec7c4dc7642bd8d2b1791be00e21b01d45e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/404867a4a2579f1cee30f75d2b69ffd7dde722a2"
-        },
-        "date": 1761138165873,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.403,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 158.24,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 313.05,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 656.32,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "318efaeea6d0cf875a37940f06c0bfbee1abc103",
           "message": "Merge pull request #2622 from f1shl3gs/misc/cleanup_unnecessary_required\n\nmisc: remove unnecessary required",
           "timestamp": "2025-10-22T21:44:27+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 712.63,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1ece04bb7930a6d1ff30705aa3a4b1e6eea78e59",
+          "message": "Merge pull request #2814 from f1shl3gs/lib/event/fix_bench\n\nlib/event: fix bench",
+          "timestamp": "2026-03-01T10:11:02+08:00",
+          "tree_id": "c70450203f76cd55ee5d2d2ced2063b2ef80d267",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1ece04bb7930a6d1ff30705aa3a4b1e6eea78e59"
+        },
+        "date": 1772331207298,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.683,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 165.22,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 318.69,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 667.53,
             "unit": "ns/op"
           }
         ]
