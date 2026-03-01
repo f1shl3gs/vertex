@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772220957622,
+  "lastUpdate": 1772331203248,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "18221739aeaa421b12b1aa28a1a0b65d2f92b146",
-          "message": "Merge pull request #2623 from f1shl3gs/cli/vtl/print_return_value_as_output\n\ncli/vtl: print returned value rather than target",
-          "timestamp": "2025-10-22T21:55:32+08:00",
-          "tree_id": "f50074b882a40d8ff339b90c315b6beb024101e5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/18221739aeaa421b12b1aa28a1a0b65d2f92b146"
-        },
-        "date": 1761141465181,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 508850,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 526610,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1ece04bb7930a6d1ff30705aa3a4b1e6eea78e59",
+          "message": "Merge pull request #2814 from f1shl3gs/lib/event/fix_bench\n\nlib/event: fix bench",
+          "timestamp": "2026-03-01T10:11:02+08:00",
+          "tree_id": "c70450203f76cd55ee5d2d2ced2063b2ef80d267",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1ece04bb7930a6d1ff30705aa3a4b1e6eea78e59"
+        },
+        "date": 1772331180128,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 524550,
             "unit": "ns/op"
           }
         ]
