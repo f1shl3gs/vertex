@@ -15,7 +15,7 @@ test = ["value/string_path"]
 
 [dev-dependencies]
 criterion = { version = "0.8.2", default-features = false }
-rand = { version = "0.10.0", default-features = false, features = ["std_rng"] }
+rand = { version = "0.10.0", default-features = false, features = ["thread_rng"] }
 
 [dependencies]
 buffer = { path = "../buffer" }
