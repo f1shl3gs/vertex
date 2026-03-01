@@ -231,7 +231,7 @@ async fn list(client: &Client, exclude_images: &[Regex]) -> Result<Vec<Endpoint>
 
             endpoints.push(Endpoint {
                 id,
-                typ: "docker".to_string(),
+                typ: "docker".into(),
                 target: format!("{host}:{port}"),
                 details,
             });

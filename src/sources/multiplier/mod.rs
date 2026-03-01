@@ -1,5 +1,6 @@
 mod interpolate;
 
+use std::borrow::Cow;
 use std::collections::BTreeMap;
 use std::time::Duration;
 
@@ -321,7 +322,14 @@ impl SourceTemplate {
 
         let mut variables = vec![Value::Null; program.type_state().variables.len()];
         variables[0] = Value::Bytes(Bytes::from(endpoint.id.clone()));
-        variables[1] = Value::Bytes(Bytes::from(endpoint.typ.clone()));
+        variables[1] = {
+            let b = match &endpoint.typ {
+                Cow::Borrowed(b) => Bytes::from_static(b.as_bytes()),
+                Cow::Owned(s) => Bytes::from(s.clone()),
+            };
+
+            Value::Bytes(b)
+        };
         variables[2] = Value::Bytes(Bytes::from(endpoint.target.clone()));
         variables[3] = endpoint.details.clone();
 

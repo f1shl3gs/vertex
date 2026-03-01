@@ -134,7 +134,7 @@ mod tests {
     fn mock_endpoint() -> Endpoint {
         Endpoint {
             id: "1234".to_string(),
-            typ: "mock".to_string(),
+            typ: "mock".into(),
             target: "127.0.0.1".to_string(),
             details: value!({
                 "foo": "bar",
@@ -186,7 +186,7 @@ mod tests {
 
         let endpoint = Endpoint {
             id: "".to_string(),
-            typ: "mock".to_string(),
+            typ: "mock".into(),
             target: "127.0.0.1:33331".to_string(),
             details: Value::Null,
         };

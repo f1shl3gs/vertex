@@ -150,7 +150,7 @@ impl From<Service> for Vec<Endpoint> {
             endpoints.push(Endpoint {
                 id,
                 target,
-                typ: "service".to_string(),
+                typ: "service".into(),
                 details,
             });
         }

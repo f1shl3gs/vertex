@@ -207,7 +207,7 @@ mod tests {
     fn mock_endpoint(id: i32, target: i32) -> Endpoint {
         Endpoint {
             id: id.to_string(),
-            typ: "test".to_string(),
+            typ: "test".into(),
             target: target.to_string(),
             details: Value::Null,
         }
