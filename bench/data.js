@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772335454789,
+  "lastUpdate": 1772335472712,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "30a0dfcaa7aef171b83ab5eab41e7726c1f14539",
-          "message": "Merge pull request #2624 from f1shl3gs/sinks/http/remove_unnecessary_pub\n\nsinks/http: remove unnecessary pub",
-          "timestamp": "2025-10-23T01:30:39+08:00",
-          "tree_id": "ddf4f0d709b4b860b96cb625d83e89f3cb2acad3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/30a0dfcaa7aef171b83ab5eab41e7726c1f14539"
-        },
-        "date": 1761154377878,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.428,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 94.21,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 176.16,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 171.37,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "23936397bfb91ac555a044269df2a892e24dbf05",
+          "message": "Merge pull request #2810 from f1shl3gs/lib/framework/use_cow_for_endpoint_typ_field\n\nlib/framework: use Cow<'static, str> for Endpoint's typ field",
+          "timestamp": "2026-03-01T11:21:53+08:00",
+          "tree_id": "dae377a0a4255d535377066fa92f35fe97c27ab0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/23936397bfb91ac555a044269df2a892e24dbf05"
+        },
+        "date": 1772335450228,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.059,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 101.53,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 173.87,
             "unit": "ns/op"
           }
         ]
