@@ -440,7 +440,7 @@ mod tests {
     fn devices() {
         let devices = load_devices("tests/node/sys/bus/pci/devices".into()).unwrap();
 
-        let wants = vec![
+        let wants = [
             Device {
                 location: Location {
                     segment: 0,
