@@ -3,7 +3,7 @@ use std::time::Duration;
 
 use chrono::Utc;
 use configurable::configurable_component;
-use event::tags::{Key, Tags};
+use event::tags::Tags;
 use event::{Kind as MetricKind, Metric, tags};
 use framework::config::{OutputType, SourceConfig, SourceContext, default_interval};
 use framework::http::{Auth, HttpClient};
@@ -32,11 +32,6 @@ const QTIME_MS_FIELD: usize = 58;
 const CTIME_MS_FIELD: usize = 59;
 const RTIME_MS_FIELD: usize = 60;
 const TTIME_MS_FIELD: usize = 61;
-
-const BACKEND_KEY: Key = Key::from_static("backend");
-const FRONTEND_KEY: Key = Key::from_static("frontend");
-const INSTANCE_KEY: Key = Key::from_static("instance");
-const SERVER_KEY: Key = Key::from_static("server");
 
 /// This source scrapes HAProxy stats.
 ///
@@ -190,7 +185,7 @@ async fn gather(client: &HttpClient, uri: &Uri, auth: &Option<Auth>) -> Vec<Metr
     ]);
 
     metrics.iter_mut().for_each(|m| {
-        m.insert_tag(INSTANCE_KEY, &instance);
+        m.insert_tag("instance", &instance);
     });
 
     metrics
@@ -205,12 +200,16 @@ pub enum ParseError {
     UnknownTypeOfMetrics(String),
 }
 
-pub fn parse_csv(input: &[u8]) -> Result<Vec<Metric>, ParseError> {
+pub fn parse_csv(mut input: &[u8]) -> Result<Vec<Metric>, ParseError> {
     let mut metrics = vec![];
-    let mut lines = input.lines();
 
-    while let Some(Ok(line)) = lines.next() {
-        let parts = line.split(',').collect::<Vec<_>>();
+    let mut line = String::new();
+    while match input.read_line(&mut line) {
+        Ok(len) => len > 0,
+        Err(_err) => false,
+    } {
+        // read_line will append `\n` to the line buffer, so trim_end is necessary
+        let parts = line.trim_end().split(',').collect::<Vec<_>>();
         if parts.len() < MINIMUM_CSV_FIELD_COUNT {
             return Err(ParseError::RowTooShort);
         }
@@ -219,25 +218,21 @@ pub fn parse_csv(input: &[u8]) -> Result<Vec<Metric>, ParseError> {
         let svname = parts[SVNAME_FIELD];
 
         let partial = match parts[TYPE_FIELD] {
-            "0" => parse_row(
-                parts,
-                &FRONTEND_METRIC_INFOS,
-                tags!(FRONTEND_KEY => pxname.to_string()),
-            ),
-            "1" => parse_row(
-                parts,
-                &BACKEND_METRIC_INFOS,
-                tags!(BACKEND_KEY => pxname.to_string()),
-            ),
+            "0" => parse_row(parts, &FRONTEND_METRIC_INFOS, tags!("frontend" => pxname)),
+            "1" => parse_row(parts, &BACKEND_METRIC_INFOS, tags!("backend" => pxname)),
             "2" => parse_row(
                 parts,
                 &SERVER_METRIC_INFOS,
-                tags!(BACKEND_KEY => pxname.to_string(), SERVER_KEY => svname.to_string()),
+                tags!("backend" => pxname, "server" => svname),
             ),
-            _ => continue,
+            _ => {
+                line.clear();
+                continue;
+            }
         };
 
         metrics.extend(partial);
+        line.clear();
     }
 
     Ok(metrics)
