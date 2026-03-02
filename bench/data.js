@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772473548782,
+  "lastUpdate": 1772473630964,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f194eec4b5b690fab852ce7349cc018d1d9d5760",
-          "message": "Merge pull request #2715 from f1shl3gs/dependabot/github_actions/actions/cache-5\n\nchore(ci): bump actions/cache from 4 to 5",
-          "timestamp": "2025-12-12T20:02:57+08:00",
-          "tree_id": "fdc9e474aa59b6fb09b5835b8a2348aa01d071ce",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f194eec4b5b690fab852ce7349cc018d1d9d5760"
-        },
-        "date": 1765541638639,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 567,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41073.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ab695c814e992c4cdeaeebd2f8a50a29df9af6e5",
           "message": "Merge pull request #2716 from f1shl3gs/sinks/alertmanager/init\n\nsinks/alertmanager: init",
           "timestamp": "2025-12-13T01:17:02+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40490.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e44dc2f0580009e9e8ce7c07e7e59f270b25d558",
+          "message": "Merge pull request #2817 from f1shl3gs/tests/use_ttar_to_manage_node_test_fixtures\n\nmanage node test fixtures with ttar",
+          "timestamp": "2026-03-03T01:35:48+08:00",
+          "tree_id": "fdb5bddb228b55dee01f6265eaa3e65ee95fbc1c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e44dc2f0580009e9e8ce7c07e7e59f270b25d558"
+        },
+        "date": 1772473608395,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 576,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40477.5,
             "unit": "KiB"
           }
         ]
