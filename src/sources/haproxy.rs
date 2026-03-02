@@ -208,7 +208,7 @@ pub fn parse_csv(mut input: &[u8]) -> Result<Vec<Metric>, ParseError> {
         Ok(len) => len > 0,
         Err(_err) => false,
     } {
-        // read_line will append `\n` to the line buffer, so trim_end is necessary
+        // Note: read_line will append `\n` to the line buffer, so trim_end is necessary
         let parts = line.trim_end().split(',').collect::<Vec<_>>();
         if parts.len() < MINIMUM_CSV_FIELD_COUNT {
             return Err(ParseError::RowTooShort);
@@ -217,21 +217,25 @@ pub fn parse_csv(mut input: &[u8]) -> Result<Vec<Metric>, ParseError> {
         let pxname = parts[PXNAME_FIELD];
         let svname = parts[SVNAME_FIELD];
 
-        let partial = match parts[TYPE_FIELD] {
-            "0" => parse_row(parts, &FRONTEND_METRIC_INFOS, tags!("frontend" => pxname)),
-            "1" => parse_row(parts, &BACKEND_METRIC_INFOS, tags!("backend" => pxname)),
-            "2" => parse_row(
+        match parts[TYPE_FIELD] {
+            "0" => metrics.extend(parse_row(
+                parts,
+                &FRONTEND_METRIC_INFOS,
+                tags!("frontend" => pxname),
+            )),
+            "1" => metrics.extend(parse_row(
+                parts,
+                &BACKEND_METRIC_INFOS,
+                tags!("backend" => pxname),
+            )),
+            "2" => metrics.extend(parse_row(
                 parts,
                 &SERVER_METRIC_INFOS,
                 tags!("backend" => pxname, "server" => svname),
-            ),
-            _ => {
-                line.clear();
-                continue;
-            }
-        };
+            )),
+            _ => {}
+        }
 
-        metrics.extend(partial);
         line.clear();
     }
 
