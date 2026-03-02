@@ -82,7 +82,19 @@ mod tests {
 
     #[test]
     fn parse() {
-        let content = include_str!("../../../tests/node/fixtures/usr/lib/os-release");
+        let content = r#"NAME="Ubuntu"
+VERSION="20.04.2 LTS (Focal Fossa)"
+ID=ubuntu
+ID_LIKE=debian
+PRETTY_NAME="Ubuntu 20.04.2 LTS"
+VERSION_ID="20.04"
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+VERSION_CODENAME=focal
+UBUNTU_CODENAME=focal
+"#;
         let info = parse_os_release(content);
 
         assert_eq!(*info.get("NAME").unwrap(), "Ubuntu");
