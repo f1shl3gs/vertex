@@ -2,6 +2,7 @@
 
 use std::io::ErrorKind;
 use std::path::PathBuf;
+use std::str::FromStr;
 
 use event::{Metric, tags};
 
@@ -215,12 +216,66 @@ pub async fn collect(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
+fn read_hex(path: PathBuf) -> Result<u32, Error> {
+    let content = std::fs::read_to_string(path)?;
+    let value = content.trim_start_matches("0x").trim_end();
+    u32::from_str_radix(value, 16).map_err(Into::into)
+}
+
+fn read_optional_into<T>(path: PathBuf) -> Result<Option<T>, Error>
+where
+    T: FromStr,
+    T::Err: Into<Error>,
+{
+    match std::fs::read_to_string(path) {
+        Ok(content) => {
+            let content = content.trim();
+            if content.is_empty() {
+                return Ok(None);
+            }
+
+            content.parse::<T>().map(Some).map_err(Into::into)
+        }
+        Err(err) => {
+            if err.kind() == ErrorKind::NotFound {
+                return Ok(None);
+            }
+
+            Err(Error::from(err))
+        }
+    }
+}
+
+fn read_and_parse<F, T>(path: PathBuf, parse: F) -> Result<Option<T>, Error>
+where
+    F: FnOnce(&str) -> Result<T, Error>,
+{
+    match std::fs::read_to_string(path) {
+        Ok(content) => {
+            let content = content.trim();
+            if content.is_empty() {
+                return Ok(None);
+            }
+
+            parse(content).map(Some)
+        }
+        Err(err) => {
+            if err.kind() == ErrorKind::NotFound {
+                return Ok(None);
+            }
+
+            Err(Error::from(err))
+        }
+    }
+}
+
 fn load_devices(root: PathBuf) -> Result<Vec<Device>, Error> {
     let dirs = std::fs::read_dir(root)?;
 
     let mut devices = Vec::new();
     for entry in dirs.flatten() {
-        let Ok(real) = entry.path().read_link() else {
+        let path = entry.path();
+        let Ok(real) = path.read_link() else {
             continue;
         };
 
@@ -248,30 +303,32 @@ fn load_devices(root: PathBuf) -> Result<Vec<Device>, Error> {
         };
 
         // these files must exist in a device directory
-        for filename in [
-            "class",
-            "vendor",
-            "device",
-            "subsystem_vendor",
-            "subsystem_device",
-            "revision",
-        ] {
-            let content = std::fs::read_to_string(entry.path().join(filename))?;
-            let content = content.trim_end().trim_start_matches("0x");
-            let value = u32::from_str_radix(content, 16)?;
-
-            match filename {
-                "class" => device.class = value,
-                "vendor" => device.vendor = value,
-                "device" => device.device = value,
-                "subsystem_vendor" => device.subsystem_vendor = value,
-                "subsystem_device" => device.subsystem_device = value,
-                "revision" => device.revision = value,
-                _ => unreachable!(),
-            }
-        }
+        device.class = read_hex(path.join("class"))?;
+        device.vendor = read_hex(path.join("vendor"))?;
+        device.device = read_hex(path.join("device"))?;
+        device.subsystem_vendor = read_hex(path.join("subsystem_vendor"))?;
+        device.subsystem_device = read_hex(path.join("subsystem_device"))?;
+        device.revision = read_hex(path.join("revision"))?;
 
         // optional files
+        device.max_link_speed = read_and_parse(path.join("max_link_speed"), |content| {
+            let Some((first, _)) = content.split_once(' ') else {
+                return Err(Error::Malformed("max_link_speed"));
+            };
+
+            first.parse::<f64>().map_err(Into::into)
+        })?;
+        device.current_link_speed = read_and_parse(path.join("current_link_speed"), |content| {
+            let Some((first, _)) = content.split_once(' ') else {
+                return Err(Error::Malformed("current_link_speed"));
+            };
+
+            first.parse::<f64>().map_err(Into::into)
+        })?;
+        device.max_link_width = read_optional_into(path.join("max_link_width"))?;
+        device.current_link_width = read_optional_into(path.join("current_link_width"))?;
+        device.numa_node = read_optional_into(path.join("numa_node"))?;
+
         for filename in [
             "max_link_speed",
             "max_link_width",
@@ -279,7 +336,7 @@ fn load_devices(root: PathBuf) -> Result<Vec<Device>, Error> {
             "current_link_width",
             "numa_node",
         ] {
-            let content = match std::fs::read_to_string(entry.path().join(filename)) {
+            let content = match std::fs::read_to_string(path.join(filename)) {
                 Ok(content) => content,
                 Err(err) => {
                     if err.kind() == ErrorKind::NotFound {
@@ -315,94 +372,27 @@ fn load_devices(root: PathBuf) -> Result<Vec<Device>, Error> {
         }
 
         // parse SR-IOV files (these are optional and may not exist for all devices
-        for filename in [
-            "sriov_drivers_autoprobe",
-            "sriov_numvfs",
-            "sriov_offset",
-            "sriov_stride",
-            "sriov_totalvfs",
-            "sriov_vf_device",
-            "sriov_vf_total_msix",
-        ] {
-            let content = match std::fs::read_to_string(entry.path().join(filename)) {
-                Ok(content) => content,
-                Err(err) => {
-                    if err.kind() == ErrorKind::NotFound {
-                        continue;
-                    }
-
-                    return Err(Error::from(err));
-                }
-            };
-
-            let content = content.trim();
-            if content.is_empty() {
-                continue;
-            }
-
-            match filename {
-                "sriov_drivers_autoprobe" => {
-                    device.sriov_drivers_autoprobe = content.parse::<u32>().ok();
-                }
-                "sriov_numvfs" => {
-                    device.sriov_numvfs = content.parse().ok();
-                }
-                "sriov_offset" => {
-                    device.sriov_offset = content.parse().ok();
-                }
-                "sriov_stride" => {
-                    device.sriov_stride = content.parse().ok();
-                }
-                "sriov_totalvfs" => {
-                    device.sriov_totalvfs = content.parse().ok();
-                }
-                "sriov_vf_device" => {
-                    device.sriov_vf_device = content.parse().ok();
-                }
-                "sriov_vf_total_msix" => {
-                    device.sriov_vf_total_msix = content.parse().ok();
-                }
-                _ => unreachable!(),
-            }
-        }
+        device.sriov_drivers_autoprobe = read_optional_into(path.join("sriov_drivers_autoprobe"))?;
+        device.sriov_numvfs = read_optional_into(path.join("sriov_numvfs"))?;
+        device.sriov_offset = read_optional_into(path.join("sriov_offset"))?;
+        device.sriov_stride = read_optional_into(path.join("sriov_stride"))?;
+        device.sriov_totalvfs = read_optional_into(path.join("sriov_totalvfs"))?;
+        device.sriov_vf_device = read_optional_into(path.join("sriov_vf_device"))?;
+        device.sriov_vf_total_msix = read_optional_into(path.join("sriov_vf_total_msix"))?;
 
         // parse power management files (there are optional and may not exist for all devices)
-        for filename in ["d3cold_allowed", "power_state"] {
-            let content = match std::fs::read_to_string(entry.path().join(filename)) {
-                Ok(content) => content,
-                Err(err) => {
-                    if err.kind() == ErrorKind::NotFound {
-                        continue;
-                    }
-
-                    return Err(Error::from(err));
-                }
-            };
-
-            let content = content.trim();
-            if content.is_empty() {
-                continue;
-            }
-
-            match filename {
-                "d3cold_allowed" => {
-                    device.d3cold_allowed = content.parse::<u32>().ok();
-                }
-                "power_state" => {
-                    // power_state is a string (one of: "unknown", "error", "D0", "D1", "D2", "D3hot", "D3cold")
-                    device.power_state = Some(match content {
-                        "D0" => PowerState::D0,
-                        "D1" => PowerState::D1,
-                        "D2" => PowerState::D2,
-                        "D3hot" => PowerState::D3Hot,
-                        "D3cold" => PowerState::D3Cold,
-                        "error" => PowerState::Error,
-                        _ => PowerState::Unknown,
-                    });
-                }
-                _ => unreachable!(),
-            }
-        }
+        device.d3cold_allowed = read_optional_into(path.join("d3cold_allowed"))?;
+        device.power_state = read_and_parse(path.join("power_state"), |content| {
+            Ok(match content {
+                "D0" => PowerState::D0,
+                "D1" => PowerState::D1,
+                "D2" => PowerState::D2,
+                "D3hot" => PowerState::D3Hot,
+                "D3cold" => PowerState::D3Cold,
+                "error" => PowerState::Error,
+                _ => PowerState::Unknown,
+            })
+        })?;
 
         devices.push(device);
     }
