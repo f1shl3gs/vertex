@@ -558,7 +558,9 @@ mod tests {
 
         // assert_eq cannot be used here, because the order of devices is not guaranteed
         for device in &devices {
-            let want = wants.iter().find(|w| w.location == device.location)
+            let want = wants
+                .iter()
+                .find(|w| w.location == device.location)
                 .expect("wanted device is not found in the load");
 
             assert_eq!(want, device);
