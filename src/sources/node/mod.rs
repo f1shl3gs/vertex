@@ -35,6 +35,7 @@ mod nfs;
 mod nfsd;
 mod nvme;
 mod os_release;
+mod pcidevice;
 mod powersupplyclass;
 mod pressure;
 mod processes;
@@ -212,6 +213,9 @@ struct Collectors {
     #[serde(default = "default_true")]
     os_release: bool,
 
+    #[serde(default)]
+    pcidevice: bool,
+
     #[serde(default = "default_powersupply_config")]
     power_supply: Option<powersupplyclass::Config>,
 
@@ -320,6 +324,7 @@ impl Default for Collectors {
             nfsd: true,
             nvme: true,
             os_release: true,
+            pcidevice: false,
             power_supply: default_powersupply_config(),
             pressure: true,
             processes: false,
@@ -683,6 +688,12 @@ async fn run(
         if collectors.os_release {
             let root_path = root_path.clone();
             tasks.spawn(async { record_gather!("os", os_release::gather(root_path)) });
+        }
+
+        #[cfg(target_os = "linux")]
+        if collectors.pcidevice {
+            let sys_path = sys_path.clone();
+            tasks.spawn(async { record_gather!("pcidevice", pcidevice::collect(sys_path)) });
         }
 
         if let Some(conf) = &collectors.power_supply {
