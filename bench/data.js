@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772473116405,
+  "lastUpdate": 1772473138715,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c9b9a323347783b415f2da1b34e00c32d2230340",
-          "message": "Merge pull request #2625 from f1shl3gs/sources/jaeger/unify_listen\n\nsources/jaeger: unify listen name",
-          "timestamp": "2025-10-23T01:34:30+08:00",
-          "tree_id": "474bd00eb635e6cb6ea41b249e10876b6e76db0a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c9b9a323347783b415f2da1b34e00c32d2230340"
-        },
-        "date": 1761154623393,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.262,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 165.51,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 326.85,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 673.87,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ddc0147c4193c715da031908d80023bdbbc76a31",
           "message": "Merge pull request #2626 from f1shl3gs/lib/configurable/remove_default\n\nlib/configurable: remove default support",
           "timestamp": "2025-10-23T01:40:41+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 700.51,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e44dc2f0580009e9e8ce7c07e7e59f270b25d558",
+          "message": "Merge pull request #2817 from f1shl3gs/tests/use_ttar_to_manage_node_test_fixtures\n\nmanage node test fixtures with ttar",
+          "timestamp": "2026-03-03T01:35:48+08:00",
+          "tree_id": "fdb5bddb228b55dee01f6265eaa3e65ee95fbc1c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e44dc2f0580009e9e8ce7c07e7e59f270b25d558"
+        },
+        "date": 1772473112345,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.633,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 171.49,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 341.02,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 723.17,
             "unit": "ns/op"
           }
         ]
