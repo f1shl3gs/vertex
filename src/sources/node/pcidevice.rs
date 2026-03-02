@@ -440,7 +440,7 @@ mod tests {
     fn devices() {
         let devices = load_devices("tests/node/sys/bus/pci/devices".into()).unwrap();
 
-        let want = vec![
+        let wants = vec![
             Device {
                 location: Location {
                     segment: 0,
@@ -554,6 +554,14 @@ mod tests {
             },
         ];
 
-        assert_eq!(want, devices);
+        assert_eq!(wants.len(), devices.len());
+
+        // assert_eq cannot be used here, because the order of devices is not guaranteed
+        for device in &devices {
+            let want = wants.iter().find(|w| w.location == device.location)
+                .expect("wanted device is not found in the load");
+
+            assert_eq!(want, device);
+        }
     }
 }
