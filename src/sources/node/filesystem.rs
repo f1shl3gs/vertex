@@ -382,7 +382,7 @@ mod tests {
 
     #[test]
     fn test_get_stats() {
-        let path = PathBuf::from("tests/node/proc");
+        let path = PathBuf::from("tests/node/fixtures/proc");
         let conf = Config::default();
         let stats = get_stats(&conf, path).unwrap();
         assert_ne!(stats.len(), 0);

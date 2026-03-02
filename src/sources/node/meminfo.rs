@@ -121,7 +121,7 @@ mod tests {
 
     #[tokio::test]
     async fn get_mem() {
-        let root = PathBuf::from("tests/node/proc");
+        let root = PathBuf::from("tests/node/fixtures/proc");
         let infos = get_mem_info(root).await.unwrap();
 
         fn find(infos: &[(&str, u64)], key: &str) -> u64 {

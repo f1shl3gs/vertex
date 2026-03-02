@@ -12,3 +12,4 @@ temp
 temp.*
 temp_.*
 bloat.txt
+tests/node/fixtures

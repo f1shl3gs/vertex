@@ -1287,7 +1287,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_power_supply_class() {
-        let root = PathBuf::from("tests/node/sys");
+        let root = PathBuf::from("tests/node/fixtures/sys");
         let mut pss = power_supply_class(&root).await.unwrap();
 
         // The readdir_r is not guaranteed to return in any specific order.

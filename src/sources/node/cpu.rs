@@ -383,7 +383,7 @@ mod tests {
 
     #[test]
     fn cpu_stats() {
-        let proc_path = PathBuf::from("tests/node/proc");
+        let proc_path = PathBuf::from("tests/node/fixtures/proc");
         let stats = get_cpu_stat(proc_path).unwrap();
 
         assert_eq!(stats.len(), 8);
@@ -403,7 +403,7 @@ mod tests {
 
     #[test]
     fn cpu_info() {
-        let content = std::fs::read_to_string("tests/node/proc/cpuinfo").unwrap();
+        let content = std::fs::read_to_string("tests/node/fixtures/proc/cpuinfo").unwrap();
         let infos = parse_cpu_info(&content);
 
         println!("{:#?}", infos)

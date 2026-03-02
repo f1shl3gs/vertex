@@ -36,7 +36,7 @@ mod tests {
 
     #[test]
     fn read() {
-        let path = "tests/node/proc".into();
+        let path = "tests/node/fixtures/proc".into();
         let (avail, pool_size) = read_random(path).unwrap();
 
         assert_eq!(avail, 3943);

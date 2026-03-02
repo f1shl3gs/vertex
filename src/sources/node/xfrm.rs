@@ -129,7 +129,7 @@ mod tests {
 
     #[tokio::test]
     async fn parse() {
-        let path = PathBuf::from("tests/node/proc");
+        let path = PathBuf::from("tests/node/fixtures/proc");
         let metrics = collect(path).await.unwrap();
 
         for metric in metrics {

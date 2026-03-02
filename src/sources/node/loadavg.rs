@@ -36,7 +36,7 @@ mod tests {
 
     #[test]
     fn parse() {
-        let root = PathBuf::from("tests/node/proc");
+        let root = PathBuf::from("tests/node/fixtures/proc");
         let loads = get_load(root).unwrap();
 
         assert_eq!(loads[0], 0.02);

@@ -438,7 +438,7 @@ mod tests {
 
     #[test]
     fn devices() {
-        let devices = load_devices("tests/node/sys/bus/pci/devices".into()).unwrap();
+        let devices = load_devices("tests/node/fixtures/sys/bus/pci/devices".into()).unwrap();
 
         let wants = [
             Device {

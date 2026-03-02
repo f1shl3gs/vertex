@@ -460,7 +460,7 @@ mod tests {
 
     #[test]
     fn get_stats() {
-        let path = "tests/node/sys";
+        let path = "tests/node/fixtures/sys";
         let stats = stats(path.into()).unwrap();
 
         struct Alloc {
@@ -584,7 +584,8 @@ mod tests {
 
     #[test]
     fn device_info() {
-        let path = PathBuf::from("tests/node/sys/fs/btrfs/7f07c59f-6136-449c-ab87-e1cf2328731b");
+        let path =
+            PathBuf::from("tests/node/fixtures/sys/fs/btrfs/7f07c59f-6136-449c-ab87-e1cf2328731b");
         let _infos = read_device_info(&path).unwrap();
     }
 }

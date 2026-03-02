@@ -738,7 +738,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_infiniband_class() {
-        let root = PathBuf::from("tests/node/sys/class/infiniband");
+        let root = PathBuf::from("tests/node/fixtures/sys/class/infiniband");
         let mut devs = infiniband_class(root).await.unwrap();
 
         // The readdir_r is not guaranteed to return in any specific order.

@@ -616,7 +616,7 @@ mod tests {
 
     #[test]
     fn parse() {
-        let path = "tests/node/sys".into();
+        let path = "tests/node/fixtures/sys".into();
         let stats = bcache_stats(path, true).unwrap();
 
         assert_eq!(stats.len(), 1);
@@ -628,7 +628,7 @@ mod tests {
 
     #[test]
     fn writeback_rate_debug() {
-        let path = "tests/node/sys/fs/bcache/deaddd54-c735-46d5-868e-f331c5fd7c74/bdev0/writeback_rate_debug";
+        let path = "tests/node/fixtures/sys/fs/bcache/deaddd54-c735-46d5-868e-f331c5fd7c74/bdev0/writeback_rate_debug";
         let stats = read_writeback_rate_debug(path.into()).unwrap();
         println!("{:#?}", stats);
     }
@@ -636,7 +636,7 @@ mod tests {
     #[test]
     fn priority_stats() {
         let path =
-            "tests/node/sys/fs/bcache/deaddd54-c735-46d5-868e-f331c5fd7c74/cache0/priority_stats"
+            "tests/node/fixtures/sys/fs/bcache/deaddd54-c735-46d5-868e-f331c5fd7c74/cache0/priority_stats"
                 .into();
         let stats = read_priority_stats(path).unwrap();
         assert_eq!(stats.unused_percent, 99);

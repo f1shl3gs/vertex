@@ -82,7 +82,7 @@ mod tests {
 
     #[test]
     fn parse() {
-        let content = include_str!("../../../tests/node/usr/lib/os-release");
+        let content = include_str!("../../../tests/node/fixtures/usr/lib/os-release");
         let info = parse_os_release(content);
 
         assert_eq!(*info.get("NAME").unwrap(), "Ubuntu");

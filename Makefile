@@ -131,7 +131,7 @@ doc-test:
 	cargo test --doc --workspace
 
 .PHONY: test
-test:
+test: node_fixtures
 	cargo nextest run --workspace --no-fail-fast
 
 .PHONY: check_clippy
@@ -154,7 +154,7 @@ bench-event:
 	cargo bench --manifest-path lib/event/Cargo.toml
 
 .PHONY: bench-vertex
-bench-vertex:
+bench-vertex: node_fixtures
 	cargo bench --no-default-features \
 		--features sources-haproxy \
 		--features sources-node \
@@ -191,3 +191,14 @@ deploy-dev: build
 	strip target/release/vertex && cp target/release/vertex distribution/docker/kind/vertex
 	cd distribution/docker/kind && docker build -t f1shl3gs/vertex:nightly-distroless .
 	kind load docker-image f1shl3gs/vertex:nightly-distroless --name dev
+
+# targets for node tests
+%/.unpacked: %.ttar
+	@echo "extracting fixtures $*"
+	./scripts/ttar -C $(dir $*) -x -f $*.ttar
+	touch $@
+
+node_fixtures: tests/node/fixtures/.unpacked
+
+update_node_fixtures:
+	./scripts/ttar -c -f tests/node/fixtures.ttar -C tests/node fixtures

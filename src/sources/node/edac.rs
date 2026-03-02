@@ -111,7 +111,7 @@ mod tests {
 
     #[test]
     fn edac_stats() {
-        let path = PathBuf::from("tests/node/sys/devices/system/edac/mc/mc0");
+        let path = PathBuf::from("tests/node/fixtures/sys/devices/system/edac/mc/mc0");
         let (ce_count, ce_noinfo_count, ue_count, ue_noinfo_count) =
             read_edac_stats(&path).unwrap();
 
@@ -123,7 +123,7 @@ mod tests {
 
     #[test]
     fn edac_csrow_stats() {
-        let path = PathBuf::from("tests/node/sys/devices/system/edac/mc/mc0/csrow0");
+        let path = PathBuf::from("tests/node/fixtures/sys/devices/system/edac/mc/mc0/csrow0");
         let (ce_count, ue_count) = read_edac_csrow_stats(&path).unwrap();
 
         assert_eq!(ce_count, 3);

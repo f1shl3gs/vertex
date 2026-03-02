@@ -255,7 +255,7 @@ mod tests {
 
     #[test]
     fn proc_stat() {
-        let root = Path::new("tests/node/proc");
+        let root = Path::new("tests/node/fixtures/proc");
         let (cpu_time, threads, _, vsize, rss) = get_proc_stat(root, 26231).unwrap();
 
         assert_eq!(cpu_time, 17.21);

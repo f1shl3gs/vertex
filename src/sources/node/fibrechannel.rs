@@ -394,7 +394,7 @@ mod tests {
 
     #[test]
     fn parse() {
-        let fcc = fibre_channel_class("tests/node/sys".into()).unwrap();
+        let fcc = fibre_channel_class("tests/node/fixtures/sys".into()).unwrap();
         assert_eq!(fcc.len(), 1);
         let host = &fcc[0];
 

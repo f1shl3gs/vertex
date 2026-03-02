@@ -39,7 +39,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_read_file_nr() {
-        let path = "tests/node/proc".into();
+        let path = "tests/node/fixtures/proc".into();
         let (allocated, maximum) = read_file_nr(path).await.unwrap();
 
         assert_eq!(allocated, 1024);
