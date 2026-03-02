@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772466738220,
+  "lastUpdate": 1772467088677,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c9b9a323347783b415f2da1b34e00c32d2230340",
-          "message": "Merge pull request #2625 from f1shl3gs/sources/jaeger/unify_listen\n\nsources/jaeger: unify listen name",
-          "timestamp": "2025-10-23T01:34:30+08:00",
-          "tree_id": "474bd00eb635e6cb6ea41b249e10876b6e76db0a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c9b9a323347783b415f2da1b34e00c32d2230340"
-        },
-        "date": 1761155034482,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14983000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 646990,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.227,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ddc0147c4193c715da031908d80023bdbbc76a31",
           "message": "Merge pull request #2626 from f1shl3gs/lib/configurable/remove_default\n\nlib/configurable: remove default support",
           "timestamp": "2025-10-23T01:40:41+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.29,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7cf66d2420d7299ad9e134921d354a02144ef95e",
+          "message": "Merge pull request #2816 from f1shl3gs/sources/node/add_pcidevice_collector\n\nsources/node: add pcidevice collector",
+          "timestamp": "2026-03-02T23:48:11+08:00",
+          "tree_id": "a3d219ccea69aa6dd14e87a4eed09c0c1bafd665",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7cf66d2420d7299ad9e134921d354a02144ef95e"
+        },
+        "date": 1772467065648,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7692400,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 738470,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.186,
             "unit": "ns/op"
           }
         ]
