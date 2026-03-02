@@ -145,7 +145,7 @@ mod tests {
 
     #[test]
     fn read() {
-        let path = Path::new("tests/node/sys/class/scsi_tape/st0");
+        let path = Path::new("tests/node/fixtures/sys/class/scsi_tape/st0");
         let stats = read_stats(path).unwrap();
 
         assert_eq!(stats.write_ns, 5233597394395);

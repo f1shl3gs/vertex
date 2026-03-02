@@ -390,7 +390,7 @@ mod tests {
 
     #[test]
     fn parse() {
-        let path = "tests/node/sys/class/net/eth0";
+        let path = "tests/node/fixtures/sys/class/net/eth0";
         let nci = NetClassInterface::parse(path.into()).unwrap();
 
         assert_eq!(nci.addr_assign_type, Some(3));

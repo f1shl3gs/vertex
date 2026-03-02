@@ -195,7 +195,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_thermal_zone_stats() {
-        let root = PathBuf::from("tests/node/sys");
+        let root = PathBuf::from("tests/node/fixtures/sys");
         let stats = thermal_zone_stats(&root).await.unwrap();
 
         assert_eq!(
@@ -223,7 +223,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_cooling_device_stats() {
-        let root = "tests/node/sys".into();
+        let root = "tests/node/fixtures/sys".into();
         let stats = cooling_device_stats(root).await.unwrap();
         assert_eq!(
             stats,

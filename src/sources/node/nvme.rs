@@ -48,7 +48,7 @@ mod tests {
 
     #[test]
     fn test_read_nvme_device() {
-        let root = PathBuf::from("tests/node/sys/class/nvme/nvme0");
+        let root = PathBuf::from("tests/node/fixtures/sys/class/nvme/nvme0");
         let infos = read_nvme_device(root).unwrap();
 
         assert_eq!(infos[0], "nvme0");

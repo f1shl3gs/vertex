@@ -245,7 +245,7 @@ mod tests {
 
     #[test]
     fn pool_procfs_file() {
-        let paths = glob("tests/node/proc/spl/kstat/zfs/*/io").unwrap();
+        let paths = glob("tests/node/fixtures/proc/spl/kstat/zfs/*/io").unwrap();
         let mut parsed = 0;
         for path in paths.flatten() {
             let path = path.to_str().unwrap();
@@ -269,7 +269,7 @@ mod tests {
 
     #[test]
     fn pool_objset_file() {
-        let paths = glob("tests/node/proc/spl/kstat/zfs/*/objset-*").unwrap();
+        let paths = glob("tests/node/fixtures/proc/spl/kstat/zfs/*/objset-*").unwrap();
         for path in paths.flatten() {
             let kvs = parse_pool_objset_file(path).unwrap();
 
@@ -288,7 +288,7 @@ mod tests {
 
     #[test]
     fn pool_state_file() {
-        let paths = glob("tests/node/proc/spl/kstat/zfs/*/state").unwrap();
+        let paths = glob("tests/node/fixtures/proc/spl/kstat/zfs/*/state").unwrap();
         let mut handled = 0;
         for path in paths.flatten() {
             handled += 1;

@@ -64,7 +64,7 @@ mod tests {
     #[tokio::test]
     async fn test_gather() {
         let conf = Config::default();
-        let proc = "tests/node/proc".into();
+        let proc = "tests/node/fixtures/proc".into();
         let ms = gather(conf, proc).await.unwrap();
         assert_ne!(ms.len(), 0);
     }

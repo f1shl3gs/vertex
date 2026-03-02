@@ -168,7 +168,7 @@ mod tests {
 
     #[test]
     fn parse() {
-        let ns = parse_sockstat("tests/node/proc/net/sockstat6".into()).unwrap();
+        let ns = parse_sockstat("tests/node/fixtures/proc/net/sockstat6".into()).unwrap();
         assert_eq!(ns.used, None);
 
         // TCP6

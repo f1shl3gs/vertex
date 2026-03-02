@@ -145,7 +145,7 @@ mod tests {
 
     #[test]
     fn clocksource() {
-        let path = PathBuf::from("tests/node/sys");
+        let path = PathBuf::from("tests/node/fixtures/sys");
         let sources = parse_clock_sources(&path).unwrap();
         assert_eq!(sources.len(), 1);
 

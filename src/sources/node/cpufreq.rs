@@ -5,7 +5,7 @@ use event::{Metric, tags};
 use super::{Error, read_into, read_string};
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = get_cpu_freq_stat(sys_path).await?;
+    let stats = get_cpu_freq_stat(sys_path)?;
     let mut metrics = Vec::with_capacity(stats.len() * 6);
 
     for stat in stats {
@@ -112,7 +112,7 @@ struct Stat {
     set_speed: String,
 }
 
-async fn get_cpu_freq_stat(sys_path: PathBuf) -> Result<Vec<Stat>, Error> {
+fn get_cpu_freq_stat(sys_path: PathBuf) -> Result<Vec<Stat>, Error> {
     let cpus = glob::glob(&format!(
         "{}/devices/system/cpu/cpu[0-9]*",
         sys_path.to_string_lossy()
@@ -120,14 +120,14 @@ async fn get_cpu_freq_stat(sys_path: PathBuf) -> Result<Vec<Stat>, Error> {
 
     let mut stats = Vec::new();
     for path in cpus.flatten() {
-        let stat = parse_cpu_freq_cpu_info(path).await?;
+        let stat = parse_cpu_freq_cpu_info(path)?;
         stats.push(stat)
     }
 
     Ok(stats)
 }
 
-async fn parse_cpu_freq_cpu_info(root: PathBuf) -> Result<Stat, Error> {
+fn parse_cpu_freq_cpu_info(root: PathBuf) -> Result<Stat, Error> {
     let index = root
         .file_name()
         .unwrap()
@@ -166,10 +166,10 @@ async fn parse_cpu_freq_cpu_info(root: PathBuf) -> Result<Stat, Error> {
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_get_cpu_freq_stat() {
-        let sys_path = "tests/node/sys";
-        let stats = get_cpu_freq_stat(sys_path.into()).await.unwrap();
+    #[test]
+    fn cpu_freq_stat() {
+        let sys_path = "tests/node/fixtures/sys";
+        let stats = get_cpu_freq_stat(sys_path.into()).unwrap();
 
         assert_eq!(
             stats[0],

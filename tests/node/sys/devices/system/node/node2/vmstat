@@ -1,6 +1,0 @@
-nr_free_pages 7
-nr_zone_inactive_anon 8
-nr_zone_active_anon 9
-nr_zone_inactive_file 10
-nr_zone_active_file 11
-nr_zone_unevictable 12

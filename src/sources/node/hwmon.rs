@@ -592,7 +592,7 @@ mod tests {
 
     #[test]
     fn sensor_data() {
-        let path = "tests/node/sys/class/hwmon/hwmon3";
+        let path = "tests/node/fixtures/sys/class/hwmon/hwmon3";
         let kvs = collect_sensor_data(path).unwrap();
 
         assert_eq!(kvs.get("fan2").unwrap().get("input").unwrap(), "1098");
@@ -601,7 +601,7 @@ mod tests {
 
     #[test]
     fn hwmon_name() {
-        let path = PathBuf::from("tests/node/sys/class/hwmon/hwmon2");
+        let path = PathBuf::from("tests/node/fixtures/sys/class/hwmon/hwmon2");
         let name = read_hwmon_name(&path).unwrap();
         assert_eq!(name, "platform_applesmc_768")
     }
