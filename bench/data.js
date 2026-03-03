@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772473630964,
+  "lastUpdate": 1772517671053,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "61a23b9494349b5fe0911155abea13f4d6a11396",
-          "message": "Merge pull request #2628 from f1shl3gs/sources/dnstap/unify_listen\n\nsources/dnstap: unify listen",
-          "timestamp": "2025-10-23T03:15:05+08:00",
-          "tree_id": "2e29ff2d8f3ff1df9f19a4c6dfaed005ae2d1f28",
-          "url": "https://github.com/f1shl3gs/vertex/commit/61a23b9494349b5fe0911155abea13f4d6a11396"
-        },
-        "date": 1761160630918,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 503230,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 527390,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9260ec5a083354608779c8908c2d4c3c0782c89c",
+          "message": "Merge pull request #2818 from f1shl3gs/sources/node/restructure\n\nsources/node: simplify & restructure",
+          "timestamp": "2026-03-03T13:58:50+08:00",
+          "tree_id": "84c6c9d8613aa4cc426d1e3f46c827724e36780c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9260ec5a083354608779c8908c2d4c3c0782c89c"
+        },
+        "date": 1772517644012,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 499930,
             "unit": "ns/op"
           }
         ]
