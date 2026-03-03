@@ -135,7 +135,7 @@ test: node_fixtures
 	cargo nextest run --workspace --no-fail-fast
 
 .PHONY: check_clippy
-check_clippy:
+check_clippy: node_fixtures
 	cargo clippy --workspace --all-targets --features all-integration-tests -- -D warnings
 
 .PHONY: check_shell
