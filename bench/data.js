@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772539804025,
+  "lastUpdate": 1772539807322,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "107c1dbb3ea6e766e85bd2c34cafdc8e9d46ca41",
-          "message": "Merge pull request #2630 from f1shl3gs/sources/chrony/unify_endpoint\n\nsources/chrony: unify endpoint",
-          "timestamp": "2025-10-23T03:40:04+08:00",
-          "tree_id": "941141e0171b9ad4ed1783ee5dff844a7384f7da",
-          "url": "https://github.com/f1shl3gs/vertex/commit/107c1dbb3ea6e766e85bd2c34cafdc8e9d46ca41"
-        },
-        "date": 1761162147725,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.443,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 96.42,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 182.68,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 171.34,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a00ffcd763baccabccd90bd55953d712dc06265c",
+          "message": "Merge pull request #2821 from f1shl3gs/dependabot/cargo/tokio-1.50.0\n\nchore(deps): bump tokio from 1.49.0 to 1.50.0",
+          "timestamp": "2026-03-03T20:07:38+08:00",
+          "tree_id": "aa08924b90a3d58ad453e96d9dddb77bbca3bd12",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a00ffcd763baccabccd90bd55953d712dc06265c"
+        },
+        "date": 1772539784986,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.038,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 100.18,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 171.28,
             "unit": "ns/op"
           }
         ]
