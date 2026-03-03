@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772539807322,
+  "lastUpdate": 1772539830947,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d7cca71ae4675d4bd2698a9430bad77a73d023e7",
-          "message": "Merge pull request #2627 from f1shl3gs/sources/jaeger/unify_listen\n\nsources/jaeger: unify listen",
-          "timestamp": "2025-10-23T01:56:44+08:00",
-          "tree_id": "067bc67f2114ae76954b448c7a30dfaab65435dd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d7cca71ae4675d4bd2698a9430bad77a73d023e7"
-        },
-        "date": 1761155969364,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.291,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 167.86,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 307.38,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 649.31,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "61a23b9494349b5fe0911155abea13f4d6a11396",
           "message": "Merge pull request #2628 from f1shl3gs/sources/dnstap/unify_listen\n\nsources/dnstap: unify listen",
           "timestamp": "2025-10-23T03:15:05+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 649.14,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a00ffcd763baccabccd90bd55953d712dc06265c",
+          "message": "Merge pull request #2821 from f1shl3gs/dependabot/cargo/tokio-1.50.0\n\nchore(deps): bump tokio from 1.49.0 to 1.50.0",
+          "timestamp": "2026-03-03T20:07:38+08:00",
+          "tree_id": "aa08924b90a3d58ad453e96d9dddb77bbca3bd12",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a00ffcd763baccabccd90bd55953d712dc06265c"
+        },
+        "date": 1772539808121,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.711,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 168.01,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 335.68,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 685.38,
             "unit": "ns/op"
           }
         ]
