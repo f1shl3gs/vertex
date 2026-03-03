@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772540255015,
+  "lastUpdate": 1772540331164,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7aba6f9593c4c5337095bf0053be17f9080ddfb3",
-          "message": "Merge pull request #2717 from f1shl3gs/lib/framework/simplify_tracked_writer\n\nlib/framework: simplify TrackedWriter",
-          "timestamp": "2025-12-13T03:28:55+08:00",
-          "tree_id": "95e402175e7210793334a194d5d6371d12c4c5d2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7aba6f9593c4c5337095bf0053be17f9080ddfb3"
-        },
-        "date": 1765568416283,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 589,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41283.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4bab706466e096b57905a2374c1322ee8e560d4c",
           "message": "Merge pull request #2718 from f1shl3gs/regression/fix_http_to_http_json\n\nregression: fix http_to_http_json",
           "timestamp": "2025-12-14T02:56:43+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40365,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b39cdc6fdf6795e9c3e8e962c93790a64c09aeb1",
+          "message": "Merge pull request #2820 from f1shl3gs/dependabot/cargo/ipnet-2.12.0\n\nchore(deps): bump ipnet from 2.11.0 to 2.12.0",
+          "timestamp": "2026-03-03T20:07:26+08:00",
+          "tree_id": "d26e97b952445f3f399770ad5df3025dbe1f6571",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b39cdc6fdf6795e9c3e8e962c93790a64c09aeb1"
+        },
+        "date": 1772540305697,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 579,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40373.4,
             "unit": "KiB"
           }
         ]
