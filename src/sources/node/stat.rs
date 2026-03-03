@@ -7,7 +7,7 @@ use event::Metric;
 use super::Error;
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stat = read_stat(proc_path).await?;
+    let stat = read_stat(proc_path)?;
 
     Ok(vec![
         Metric::sum(
@@ -49,7 +49,7 @@ struct Stat {
     procs_blocked: u64,
 }
 
-async fn read_stat(proc_path: PathBuf) -> Result<Stat, Error> {
+fn read_stat(proc_path: PathBuf) -> Result<Stat, Error> {
     let data = std::fs::read_to_string(proc_path.join("stat"))?;
 
     let mut stat = Stat::default();
@@ -96,10 +96,10 @@ async fn read_stat(proc_path: PathBuf) -> Result<Stat, Error> {
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_read_stat() {
+    #[test]
+    fn stat() {
         let proc = "tests/node/fixtures/proc".into();
-        let stat = read_stat(proc).await.unwrap();
+        let stat = read_stat(proc).unwrap();
 
         assert_eq!(stat.ctxt, 38014093);
         assert_eq!(stat.btime, 1418183276);

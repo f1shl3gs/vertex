@@ -2,19 +2,18 @@
 //!
 //! Linux (kernel 4.4+)
 
-use std::num::ParseIntError;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use event::{Metric, tags};
 
 use super::Error;
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = xfs_sys_stats(sys_path).await?;
+    let stats = load_xfs_sys_stats(sys_path)?;
 
     let mut metrics = Vec::with_capacity(stats.len() * 39);
-    for stat in stats {
-        let tags = tags!("device" => stat.name);
+    for (device, stat) in stats {
+        let tags = tags!("device" => device);
 
         metrics.extend([
             Metric::sum_with_tags(
@@ -152,7 +151,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_xfs_directory_operation_getdents_total",
                 "Number of times the directory getdents operation was performed for a filesystem.",
-                stat.directory_operation.get_dents,
+                stat.directory_operation.getdents,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
@@ -258,6 +257,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
 }
 
 // ExtentAllocationStats contains statistics regarding XFS extent allocations.
+#[cfg_attr(test, derive(PartialEq))]
 #[derive(Debug, Default)]
 struct ExtentAllocationStats {
     extents_allocated: u32,
@@ -267,6 +267,7 @@ struct ExtentAllocationStats {
 }
 
 // BtreeStats contains statistics regarding an XFS internal B-tree
+#[cfg_attr(test, derive(PartialEq))]
 #[derive(Debug, Default)]
 struct BTreeStats {
     lookups: u32,
@@ -276,6 +277,7 @@ struct BTreeStats {
 }
 
 // BlockMappingStats contains statistics regarding XFS block maps
+#[cfg_attr(test, derive(PartialEq))]
 #[derive(Debug, Default)]
 struct BlockMappingStats {
     reads: u32,
@@ -288,15 +290,17 @@ struct BlockMappingStats {
 }
 
 // DirectoryOperationStats contains statistics regarding XFS directory entries
+#[cfg_attr(test, derive(PartialEq))]
 #[derive(Debug, Default)]
 struct DirectoryOperationStats {
     lookups: u32,
     creates: u32,
     removes: u32,
-    get_dents: u32,
+    getdents: u32,
 }
 
 // TransactionStats contains statistics regarding XFS metadata transactions
+#[cfg_attr(test, derive(PartialEq))]
 #[derive(Debug, Default)]
 struct TransactionStats {
     synchronous: u32,
@@ -305,6 +309,7 @@ struct TransactionStats {
 }
 
 // InodeOperationStats contains statistics regarding XFS inode operations
+#[cfg_attr(test, derive(PartialEq))]
 #[derive(Debug, Default)]
 struct InodeOperationStats {
     attempts: u32,
@@ -316,18 +321,19 @@ struct InodeOperationStats {
     attribute_change: u32,
 }
 
-// LogOperationStats contains statistics regarding the XFS log buffer
-#[derive(Debug, Default)]
-struct LogOperationStats {
-    writes: u32,
-    blocks: u32,
-    no_internal_buffers: u32,
-    force: u32,
-    force_sleep: u32,
-}
+// // LogOperationStats contains statistics regarding the XFS log buffer
+// #[derive(Debug, Default)]
+// struct LogOperationStats {
+//     writes: u32,
+//     blocks: u32,
+//     no_internal_buffers: u32,
+//     force: u32,
+//     force_sleep: u32,
+// }
 
 // ReadWriteStats contains statistics regarding the number of read
 // and write system calls for XFS filesystems.
+#[cfg_attr(test, derive(PartialEq))]
 #[derive(Debug, Default)]
 struct ReadWriteStats {
     write: u32,
@@ -335,6 +341,7 @@ struct ReadWriteStats {
 }
 
 // VnodeStats contains statistics regarding XFS vnode operations
+#[cfg_attr(test, derive(PartialEq))]
 #[derive(Debug, Default)]
 struct VnodeStats {
     active: u32,
@@ -347,6 +354,9 @@ struct VnodeStats {
     free: u32,
 }
 
+// ExtendedPrecisionStats contains high precision counters used to track the
+// total number of bytes read, written, or flushed, during XFS operations.
+#[cfg_attr(test, derive(PartialEq))]
 #[derive(Debug, Default)]
 struct ExtendedPrecisionStats {
     flush_bytes: u64,
@@ -362,13 +372,9 @@ struct ExtendedPrecisionStats {
 /// Linux kernel source. Most counters are uint32 (same data types
 /// used in xfs_stats.h), but some of the "extended precision stats"
 /// are uint64s.
+#[cfg_attr(test, derive(PartialEq))]
 #[derive(Debug, Default)]
 struct Stats {
-    // The name of the filesystem used to source these statistics.
-    // If empty, this indicates aggregated statistics for all XFS
-    // filesystems on the host
-    name: String,
-
     extent_allocation: ExtentAllocationStats,
     allocation_btree: BTreeStats,
     block_mapping: BlockMappingStats,
@@ -376,7 +382,7 @@ struct Stats {
     directory_operation: DirectoryOperationStats,
     transaction: TransactionStats,
     inode_operation: InodeOperationStats,
-    log_operation: LogOperationStats,
+    // log_operation: LogOperationStats,
     read_write: ReadWriteStats,
     vnode: VnodeStats,
 
@@ -387,7 +393,7 @@ struct Stats {
 /// xfs_sys_stats retrieves XFS filesystem runtime statistics for each mounted
 /// XFS filesystem. Only available on kernel 4.4+. On older kernels, an empty
 /// vector will be returned.
-async fn xfs_sys_stats(sys_path: PathBuf) -> Result<Vec<Stats>, Error> {
+fn load_xfs_sys_stats(sys_path: PathBuf) -> Result<Vec<(String, Stats)>, Error> {
     let paths = glob::glob(&format!(
         "{}/fs/xfs/*/stats/stats",
         sys_path.to_string_lossy()
@@ -395,33 +401,26 @@ async fn xfs_sys_stats(sys_path: PathBuf) -> Result<Vec<Stats>, Error> {
     .map_err(|err| Error::from(format!("glob xfs stats failed, {err}")))?;
 
     let mut stats = Vec::new();
-    for ent in paths {
-        match ent {
-            Ok(path) => {
+    for path in paths.flatten() {
+        match parse_stat(&path) {
+            Ok(stat) => {
                 let name = path
-                    .iter()
-                    .rev()
-                    .nth(2)
+                    .parent()
                     .unwrap()
-                    .to_str()
+                    .parent()
                     .unwrap()
+                    .file_name()
+                    .unwrap()
+                    .to_string_lossy()
                     .to_string();
 
-                match parse_stat(path).await {
-                    Ok(mut stat) => {
-                        stat.name = name;
-                        stats.push(stat)
-                    }
-                    Err(err) => {
-                        warn!(
-                            message = "parse xfs stat failed",
-                            %err
-                        );
-                    }
-                }
+                stats.push((name, stat))
             }
             Err(err) => {
-                warn!(message = "Iterate glob result failed", %err);
+                warn!(
+                    message = "parse xfs stat failed",
+                    %err
+                );
             }
         }
     }
@@ -429,153 +428,177 @@ async fn xfs_sys_stats(sys_path: PathBuf) -> Result<Vec<Stats>, Error> {
     Ok(stats)
 }
 
-async fn parse_stat(path: PathBuf) -> Result<Stats, Error> {
-    let data = std::fs::read_to_string(path)?;
+fn parse_stat(path: &Path) -> Result<Stats, Error> {
+    let content = std::fs::read_to_string(path)?;
 
     let mut stat = Stats::default();
-    for line in data.lines() {
-        let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
-
-        // Expact at least a string label and a single integer value, ex:
-        // - abt 0
-        // - rw 1 2
-        if parts.len() < 2 {
+    for line in content.lines() {
+        let mut parts = line.split_ascii_whitespace();
+        let Some(label) = parts.next() else {
             continue;
-        }
-
-        let label = parts[0];
-
-        // Extended precision counters are uint64 values
-        if label == "xpc" {
-            let us = parse_u64s(&parts[1..]).map_err(Error::from)?;
-
-            if us.len() != 3 {
-                return Err("incorrect number of values for XFS extended precision stats".into());
-            }
-
-            stat.extended_precision.flush_bytes = us[0];
-            stat.extended_precision.write_bytes = us[1];
-            stat.extended_precision.read_bytes = us[2];
-
-            continue;
-        }
-
-        // all other counters are u32 values
-        let us = parse_u32s(&parts[1..]).map_err(Error::from)?;
+        };
 
         match label {
             "extent_alloc" => {
-                if us.len() != 4 {
-                    return Err("incorrect number of values for XFS extent allocation stats".into());
+                let values = parts
+                    .take(4)
+                    .map(|x| x.parse::<u32>())
+                    .collect::<Result<Vec<_>, _>>()?;
+
+                if values.len() != 4 {
+                    return Err(Error::Malformed("extent_alloc line of stat file"));
                 }
 
-                stat.extent_allocation.extents_allocated = us[0];
-                stat.extent_allocation.blocks_allocated = us[1];
-                stat.extent_allocation.extents_freed = us[2];
-                stat.extent_allocation.blocks_freed = us[3];
+                stat.extent_allocation.extents_allocated = values[0];
+                stat.extent_allocation.blocks_allocated = values[1];
+                stat.extent_allocation.extents_freed = values[2];
+                stat.extent_allocation.blocks_freed = values[3];
             }
             "abt" => {
-                if us.len() != 4 {
-                    return Err("incorrect number of values for XFS btree stats".into());
+                let values = parts
+                    .take(4)
+                    .map(|x| x.parse::<u32>())
+                    .collect::<Result<Vec<_>, _>>()?;
+
+                if values.len() != 4 {
+                    return Err(Error::Malformed("abt line of stat file"));
                 }
 
-                stat.allocation_btree.lookups = us[0];
-                stat.allocation_btree.compares = us[1];
-                stat.allocation_btree.records_inserted = us[2];
-                stat.allocation_btree.records_deleted = us[3];
+                stat.allocation_btree.lookups = values[0];
+                stat.allocation_btree.compares = values[1];
+                stat.allocation_btree.records_inserted = values[2];
+                stat.allocation_btree.records_deleted = values[3];
             }
             "blk_map" => {
-                if us.len() != 7 {
-                    return Err("invalid number of values for XFS block mapping stats".into());
+                let values = parts
+                    .take(7)
+                    .map(|x| x.parse::<u32>())
+                    .collect::<Result<Vec<_>, _>>()?;
+
+                if values.len() != 7 {
+                    return Err(Error::Malformed("blk_map line of stat file"));
                 }
 
-                stat.block_mapping.reads = us[0];
-                stat.block_mapping.writes = us[1];
-                stat.block_mapping.unmaps = us[2];
-                stat.block_mapping.extent_list_insertions = us[3];
-                stat.block_mapping.extent_list_deletions = us[4];
-                stat.block_mapping.extent_list_lookups = us[5];
-                stat.block_mapping.extent_list_compares = us[6];
+                stat.block_mapping.reads = values[0];
+                stat.block_mapping.writes = values[1];
+                stat.block_mapping.unmaps = values[2];
+                stat.block_mapping.extent_list_insertions = values[3];
+                stat.block_mapping.extent_list_deletions = values[4];
+                stat.block_mapping.extent_list_lookups = values[5];
+                stat.block_mapping.extent_list_compares = values[6];
             }
             "bmbt" => {
-                if us.len() != 4 {
-                    return Err("invalid number of values for XFS BlockMapBTree stats".into());
+                let values = parts
+                    .take(4)
+                    .map(|x| x.parse::<u32>())
+                    .collect::<Result<Vec<_>, _>>()?;
+
+                if values.len() != 4 {
+                    return Err(Error::Malformed("bmbt line of stat file"));
                 }
 
-                stat.block_map_btree.lookups = us[0];
-                stat.block_map_btree.compares = us[1];
-                stat.block_map_btree.records_inserted = us[2];
-                stat.block_map_btree.records_deleted = us[3];
+                stat.block_map_btree.lookups = values[0];
+                stat.block_map_btree.compares = values[1];
+                stat.block_map_btree.records_inserted = values[2];
+                stat.block_map_btree.records_deleted = values[3];
             }
             "dir" => {
-                if us.len() != 4 {
-                    return Err(
-                        "incorrect number of values for XFS directory operation stats".into(),
-                    );
+                let values = parts
+                    .take(4)
+                    .map(|x| x.parse::<u32>())
+                    .collect::<Result<Vec<_>, _>>()?;
+
+                if values.len() != 4 {
+                    return Err(Error::Malformed("dir line of stat file"));
                 }
 
-                stat.directory_operation.lookups = us[0];
-                stat.directory_operation.creates = us[1];
-                stat.directory_operation.removes = us[2];
-                stat.directory_operation.get_dents = us[3];
+                stat.directory_operation.lookups = values[0];
+                stat.directory_operation.creates = values[1];
+                stat.directory_operation.removes = values[2];
+                stat.directory_operation.getdents = values[3];
             }
-            "trans" => {}
+            "trans" => {
+                let values = parts
+                    .take(3)
+                    .map(|x| x.parse::<u32>())
+                    .collect::<Result<Vec<_>, _>>()?;
+
+                if values.len() != 3 {
+                    return Err(Error::Malformed("trans line of stat file"));
+                }
+
+                stat.transaction.synchronous = values[0];
+                stat.transaction.asynchronous = values[1];
+                stat.transaction.empty = values[2];
+            }
             "ig" => {
-                if us.len() != 7 {
-                    return Err("incorrect number of values for XFS inode operation stats".into());
+                let values = parts
+                    .take(7)
+                    .map(|x| x.parse::<u32>())
+                    .collect::<Result<Vec<_>, _>>()?;
+
+                if values.len() != 7 {
+                    return Err(Error::Malformed("trans line of stat file"));
                 }
 
-                stat.inode_operation.attempts = us[0];
-                stat.inode_operation.found = us[1];
-                stat.inode_operation.recycle = us[2];
-                stat.inode_operation.missed = us[3];
-                stat.inode_operation.duplicate = us[4];
-                stat.inode_operation.reclaims = us[5];
-                stat.inode_operation.attribute_change = us[6];
+                stat.inode_operation.attempts = values[0];
+                stat.inode_operation.found = values[1];
+                stat.inode_operation.recycle = values[2];
+                stat.inode_operation.missed = values[3];
+                stat.inode_operation.duplicate = values[4];
+                stat.inode_operation.reclaims = values[5];
+                stat.inode_operation.attribute_change = values[6];
             }
-            "log" => {}
-            "push_ail" => {}
-            "xstrat" => {}
+            "xpc" => {
+                let values = parts
+                    .take(3)
+                    .map(|x| x.parse::<u64>())
+                    .collect::<Result<Vec<_>, _>>()?;
+
+                // take(3) make sure of that the values's max length is 3
+                if values.len() != 3 {
+                    return Err(Error::Malformed("xpc line of stat file"));
+                }
+
+                stat.extended_precision.flush_bytes = values[0];
+                stat.extended_precision.write_bytes = values[1];
+                stat.extended_precision.read_bytes = values[2];
+            }
             "rw" => {
-                if us.len() != 2 {
-                    return Err("incorrect number of values for XFS read write stats".into());
+                let values = parts
+                    .take(2)
+                    .map(|x| x.parse::<u32>())
+                    .collect::<Result<Vec<_>, _>>()?;
+
+                if values.len() != 2 {
+                    return Err(Error::Malformed("rw line of stat file"));
                 }
 
-                stat.read_write.write = us[0];
-                stat.read_write.read = us[1];
+                stat.read_write.write = values[0];
+                stat.read_write.read = values[1];
             }
-            "attr" => {}
-            "icluster" => {}
             "vnodes" => {
-                // The attribute "Free" appears to not be available on older XFS
-                // stats versions. Therefore, 7 or 8 elements may appear in this slice
-                let length = us.len();
-                if length != 7 && length != 8 {
-                    return Err(Error::from(
-                        "incorrect number of values for XFS vnode stats",
-                    ));
+                let values = parts
+                    .take(8)
+                    .map(|x| x.parse::<u32>())
+                    .collect::<Result<Vec<_>, _>>()?;
+
+                if values.len() < 7 {
+                    return Err(Error::Malformed("vnodes line of stat file"));
                 }
 
-                stat.vnode.active = us[0];
-                stat.vnode.allocate = us[1];
-                stat.vnode.get = us[2];
-                stat.vnode.hold = us[3];
-                stat.vnode.release = us[4];
-                stat.vnode.reclaim = us[5];
-                stat.vnode.remove = us[6];
+                stat.vnode.active = values[0];
+                stat.vnode.allocate = values[1];
+                stat.vnode.get = values[2];
+                stat.vnode.hold = values[3];
+                stat.vnode.release = values[4];
+                stat.vnode.reclaim = values[5];
+                stat.vnode.remove = values[6];
 
-                // Skip adding free, unless it is present. The zero value will be
-                // used in place of an actual count.
-                if length == 8 {
-                    stat.vnode.free = us[7];
+                if values.len() == 8 {
+                    stat.vnode.free = values[7];
                 }
             }
-            "buf" => {}
-            "xpc" => {}
-            "abtb2" => {}
-            "abtc2" => {}
-            "bmbt2" => {}
-            "ibt2" => {}
             _ => {}
         }
     }
@@ -583,42 +606,230 @@ async fn parse_stat(path: PathBuf) -> Result<Stats, Error> {
     Ok(stat)
 }
 
-fn parse_u64s(ss: &[&str]) -> Result<Vec<u64>, ParseIntError> {
-    let mut us = Vec::with_capacity(ss.len());
-
-    for s in ss {
-        let v = s.parse()?;
-        us.push(v);
-    }
-
-    Ok(us)
-}
-
-fn parse_u32s(ss: &[&str]) -> Result<Vec<u32>, ParseIntError> {
-    let mut us = Vec::with_capacity(ss.len());
-
-    for s in ss {
-        let v = s.parse()?;
-        us.push(v);
-    }
-
-    Ok(us)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_xfs_sys_stats() {
+    #[test]
+    fn proc_stat() {
+        let path = PathBuf::from("tests/node/fixtures/proc/fs/xfs/stat");
+        let stat = parse_stat(&path).unwrap();
+        assert_eq!(stat.extent_allocation.extents_allocated, 92447);
+    }
+
+    #[test]
+    fn sys_stats() {
         let sys_path = "tests/node/fixtures/sys".into();
-        let stats = xfs_sys_stats(sys_path).await.unwrap();
-        assert_eq!(stats.len(), 2);
+        let array = load_xfs_sys_stats(sys_path).unwrap();
+        assert_eq!(array.len(), 2);
 
-        assert_eq!(stats[0].name, "sda1");
-        assert_eq!(stats[0].extent_allocation.extents_allocated, 1);
+        let (name, stats) = &array[0];
+        assert_eq!(name, "sda1");
+        assert_eq!(stats.extent_allocation.extents_allocated, 1);
 
-        assert_eq!(stats[1].name, "sdb1");
-        assert_eq!(stats[1].extent_allocation.extents_allocated, 2);
+        let (name, stats) = &array[1];
+        assert_eq!(name, "sdb1");
+        assert_eq!(stats.extent_allocation.extents_allocated, 2);
+    }
+
+    #[test]
+    fn ok() {
+        let want = Stats {
+            extent_allocation: ExtentAllocationStats {
+                extents_allocated: 92447,
+                blocks_allocated: 97589,
+                extents_freed: 92448,
+                blocks_freed: 93751,
+            },
+            allocation_btree: BTreeStats {
+                lookups: 0,
+                compares: 0,
+                records_inserted: 0,
+                records_deleted: 0,
+            },
+            block_mapping: BlockMappingStats {
+                reads: 1767055,
+                writes: 188820,
+                unmaps: 184891,
+                extent_list_insertions: 92447,
+                extent_list_deletions: 92448,
+                extent_list_lookups: 2140766,
+                extent_list_compares: 0,
+            },
+            block_map_btree: BTreeStats {
+                lookups: 0,
+                compares: 0,
+                records_inserted: 0,
+                records_deleted: 0,
+            },
+            directory_operation: DirectoryOperationStats {
+                lookups: 185039,
+                creates: 92447,
+                removes: 92444,
+                getdents: 136422,
+            },
+            transaction: TransactionStats {
+                synchronous: 706,
+                asynchronous: 944304,
+                empty: 0,
+            },
+            inode_operation: InodeOperationStats {
+                attempts: 185045,
+                found: 58807,
+                recycle: 0,
+                missed: 126238,
+                duplicate: 0,
+                reclaims: 33637,
+                attribute_change: 22,
+            },
+            // log_operation: LogOperationStats {
+            //     writes: 2883,
+            //     blocks: 113448,
+            //     no_internal_buffers: 9,
+            //     force: 17360,
+            //     force_sleep: 739,
+            // },
+            read_write: ReadWriteStats {
+                write: 107739,
+                read: 94045,
+            },
+            // attribute_operation: AttributeOperationStats {
+            //     Get: 4,
+            //     Set: 0,
+            //     Remove: 0,
+            //     List: 0,
+            // },
+            // inode_clustering: InodeClusteringStats {
+            //     Iflush: 8677,
+            //     Flush: 7849,
+            //     FlushInode: 135802,
+            // },
+            vnode: VnodeStats {
+                active: 92601,
+                allocate: 0,
+                get: 0,
+                hold: 0,
+                release: 92444,
+                reclaim: 92444,
+                remove: 92444,
+                free: 0,
+            },
+            // buffer: BufferStats {
+            //     Get: 2666287,
+            //     Create: 7122,
+            //     GetLocked: 2659202,
+            //     GetLockedWaited: 3599,
+            //     BusyLocked: 2,
+            //     MissLocked: 7085,
+            //     PageRetries: 0,
+            //     PageFound: 10297,
+            //     GetRead: 7085,
+            // },
+            extended_precision: ExtendedPrecisionStats {
+                flush_bytes: 399724544,
+                write_bytes: 92823103,
+                read_bytes: 86219234,
+            },
+            // push_ail: PushAilStats {
+            //     TryLogspace: 945014,
+            //     SleepLogspace: 0,
+            //     Pushes: 134260,
+            //     Success: 15483,
+            //     PushBuf: 0,
+            //     Pinned: 3940,
+            //     Locked: 464,
+            //     Flushing: 159985,
+            //     Restarts: 0,
+            //     Flush: 40,
+            // },
+            // xstrat: XstratStats {
+            //     Quick: 92447,
+            //     Split: 0,
+            // },
+            // Debug: DebugStats { Enabled: 0 },
+            // QuotaManager: QuotaManagerStats {
+            //     Reclaims: 0,
+            //     ReclaimMisses: 0,
+            //     DquoteDups: 0,
+            //     CacheMisses: 0,
+            //     CacheHits: 0,
+            //     Wants: 0,
+            //     ShakeReclaims: 0,
+            //     InactReclaims: 0,
+            // },
+            // BtreeAllocBlocks2: BtreeAllocBlocks2Stats {
+            //     Lookup: 184941,
+            //     Compare: 1277345,
+            //     Insrec: 13257,
+            //     Delrec: 13278,
+            //     NewRoot: 0,
+            //     KillRoot: 0,
+            //     Increment: 0,
+            //     Decrement: 0,
+            //     Lshift: 0,
+            //     Rshift: 0,
+            //     Split: 0,
+            //     Join: 0,
+            //     Alloc: 0,
+            //     Free: 0,
+            //     Moves: 2746147,
+            // },
+            // BtreeAllocContig2: BtreeAllocContig2Stats {
+            //     Lookup: 345295,
+            //     Compare: 2416764,
+            //     Insrec: 172637,
+            //     Delrec: 172658,
+            //     NewRoot: 0,
+            //     KillRoot: 0,
+            //     Increment: 0,
+            //     Decrement: 0,
+            //     Lshift: 0,
+            //     Rshift: 0,
+            //     Split: 0,
+            //     Join: 0,
+            //     Alloc: 0,
+            //     Free: 0,
+            //     Moves: 21406023,
+            // },
+            // BtreeBlockMap2: BtreeBlockMap2Stats {
+            //     Lookup: 0,
+            //     Compare: 0,
+            //     Insrec: 0,
+            //     Delrec: 0,
+            //     NewRoot: 0,
+            //     KillRoot: 0,
+            //     Increment: 0,
+            //     Decrement: 0,
+            //     Lshift: 0,
+            //     Rshift: 0,
+            //     Split: 0,
+            //     Join: 0,
+            //     Alloc: 0,
+            //     Free: 0,
+            //     Moves: 0,
+            // },
+            // BtreeInode2: BtreeInode2Stats {
+            //     Lookup: 343004,
+            //     Compare: 1358467,
+            //     Insrec: 0,
+            //     Delrec: 0,
+            //     NewRoot: 0,
+            //     KillRoot: 0,
+            //     Increment: 0,
+            //     Decrement: 0,
+            //     Lshift: 0,
+            //     Rshift: 0,
+            //     Split: 0,
+            //     Join: 0,
+            //     Alloc: 0,
+            //     Free: 0,
+            //     Moves: 0,
+            // },
+        };
+
+        let path = PathBuf::from("tests/node/fixtures/proc/fs/xfs/stat");
+        let got = parse_stat(&path).unwrap();
+
+        assert_eq!(want, got)
     }
 }

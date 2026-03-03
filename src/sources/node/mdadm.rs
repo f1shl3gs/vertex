@@ -51,7 +51,7 @@ struct MDStat {
     devices: Vec<String>,
 }
 
-async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
+fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
     let content = std::fs::read_to_string(path)?;
     let lines = content.split('\n').collect::<Vec<_>>();
 
@@ -259,7 +259,7 @@ fn recovery_line(input: &str) -> Result<(f64, i64, f64, f64), Error> {
 }
 
 pub async fn gather(proc_path: PathBuf, sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = parse_mdstat(proc_path.join("mdstat")).await?;
+    let stats = parse_mdstat(proc_path.join("mdstat"))?;
 
     let mut metrics = Vec::with_capacity(stats.len() * 11);
     for stat in stats {
@@ -438,10 +438,10 @@ mod tests {
         assert_eq!(speed, 259783.0);
     }
 
-    #[tokio::test]
-    async fn test_parse_mdstat() {
+    #[test]
+    fn mdstat() {
         let path = Path::new("tests/node/fixtures/proc/mdstat");
-        let stats = parse_mdstat(path).await.unwrap();
+        let stats = parse_mdstat(path).unwrap();
 
         assert_eq!(
             stats,

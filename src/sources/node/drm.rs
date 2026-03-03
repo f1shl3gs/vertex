@@ -93,7 +93,7 @@ async fn class_drm_card_amdgpu_stats(
     let mut stats = Vec::new();
     for path in paths.flatten() {
         let card = path.to_str().unwrap();
-        if let Ok(stat) = parse_class_drm_amdgpu_card(card).await {
+        if let Ok(stat) = parse_class_drm_amdgpu_card(card) {
             stats.push(stat);
         };
     }
@@ -101,9 +101,8 @@ async fn class_drm_card_amdgpu_stats(
     Ok(stats)
 }
 
-async fn read_drm_card_field(card: &str, field: &str) -> Result<u64, Error> {
-    let path = format!("{card}/device/{field}");
-    read_into(path)
+fn read_drm_card_field(card: &str, field: &str) -> Result<u64, Error> {
+    read_into(format!("{card}/device/{field}"))
 }
 
 /// ClassDRMCardAMDGPUStats contains info from files in
@@ -146,34 +145,21 @@ struct ClassDRMCardAMDGPUStats {
     unique_id: String,
 }
 
-async fn parse_class_drm_amdgpu_card(card: &str) -> Result<ClassDRMCardAMDGPUStats, Error> {
+fn parse_class_drm_amdgpu_card(card: &str) -> Result<ClassDRMCardAMDGPUStats, Error> {
     let uevent = read_string(format!("{card}/device/uevent"))?;
     if !uevent.contains("DRIVER=amdgpu") {
         return Err(Error::from("the device is not an amdgpu"));
     }
 
     let name = &card[card.len() - 5..];
-    let gpu_busy_percent = read_drm_card_field(card, "gpu_busy_percent")
-        .await
-        .unwrap_or(0);
-    let memory_gtt_size = read_drm_card_field(card, "mem_info_gtt_total")
-        .await
-        .unwrap_or(0);
-    let memory_gtt_used = read_drm_card_field(card, "mem_info_gtt_used")
-        .await
-        .unwrap_or(0);
-    let memory_visible_vram_size = read_drm_card_field(card, "mem_info_vis_vram_total")
-        .await
-        .unwrap_or(0);
-    let memory_visible_vram_used = read_drm_card_field(card, "mem_info_vis_vram_used")
-        .await
-        .unwrap_or(0);
-    let memory_vram_size = read_drm_card_field(card, "mem_info_vram_total")
-        .await
-        .unwrap_or(0);
-    let memory_vram_used = read_drm_card_field(card, "mem_info_vram_used")
-        .await
-        .unwrap_or(0);
+    let gpu_busy_percent = read_drm_card_field(card, "gpu_busy_percent").unwrap_or(0);
+    let memory_gtt_size = read_drm_card_field(card, "mem_info_gtt_total").unwrap_or(0);
+    let memory_gtt_used = read_drm_card_field(card, "mem_info_gtt_used").unwrap_or(0);
+    let memory_visible_vram_size =
+        read_drm_card_field(card, "mem_info_vis_vram_total").unwrap_or(0);
+    let memory_visible_vram_used = read_drm_card_field(card, "mem_info_vis_vram_used").unwrap_or(0);
+    let memory_vram_size = read_drm_card_field(card, "mem_info_vram_total").unwrap_or(0);
+    let memory_vram_used = read_drm_card_field(card, "mem_info_vram_used").unwrap_or(0);
 
     let path = format!("{card}/device/mem_info_vram_vendor");
     let memory_vram_vendor = read_string(path).unwrap_or_default();

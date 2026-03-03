@@ -31,7 +31,7 @@ struct ThermalZoneStats {
     passive: Option<u64>,
 }
 
-async fn thermal_zone_stats(root: &Path) -> Result<Vec<ThermalZoneStats>, Error> {
+fn thermal_zone_stats(root: &Path) -> Result<Vec<ThermalZoneStats>, Error> {
     let pattern = format!(
         "{}/class/thermal/thermal_zone[0-9]*",
         root.to_string_lossy()
@@ -146,7 +146,7 @@ async fn parse_cooling_device_stats(root: PathBuf) -> Result<CoolingDeviceStats,
 }
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = thermal_zone_stats(&sys_path).await?;
+    let stats = thermal_zone_stats(&sys_path)?;
 
     let mut metrics = Vec::with_capacity(stats.len());
     for stat in stats {
@@ -193,10 +193,10 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_thermal_zone_stats() {
+    #[test]
+    fn zone_stats() {
         let root = PathBuf::from("tests/node/fixtures/sys");
-        let stats = thermal_zone_stats(&root).await.unwrap();
+        let stats = thermal_zone_stats(&root).unwrap();
 
         assert_eq!(
             stats,

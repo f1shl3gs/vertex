@@ -29,9 +29,9 @@ fn default_fields() -> Regex {
 }
 
 pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let mut net_stats = get_net_stats(proc_path.join("net/netstat")).await?;
-    let snmp_stats = get_net_stats(proc_path.join("net/snmp")).await?;
-    let snmp6_stats = get_snmp6_stats(proc_path.join("net/snmp6")).await?;
+    let mut net_stats = get_net_stats(proc_path.join("net/netstat"))?;
+    let snmp_stats = get_net_stats(proc_path.join("net/snmp"))?;
+    let snmp6_stats = get_snmp6_stats(proc_path.join("net/snmp6"))?;
 
     // Merge the results of snmpStats into netStats (collisions are possible,
     // but we know that the keys are always unique for the give use case.
@@ -66,7 +66,7 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
     Ok(metrics)
 }
 
-async fn get_net_stats(path: PathBuf) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
+fn get_net_stats(path: PathBuf) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
     let data = std::fs::read_to_string(path)?;
     let mut lines = data.lines();
 
@@ -96,9 +96,7 @@ async fn get_net_stats(path: PathBuf) -> Result<BTreeMap<String, BTreeMap<String
     Ok(stats)
 }
 
-async fn get_snmp6_stats(
-    path: PathBuf,
-) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
+fn get_snmp6_stats(path: PathBuf) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
     let data = std::fs::read_to_string(path)?;
 
     let mut stats: BTreeMap<String, BTreeMap<String, String>> = BTreeMap::new();
@@ -136,11 +134,11 @@ async fn get_snmp6_stats(
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_net_stats() {
+    #[test]
+    fn net_stats() {
         let path = "tests/node/fixtures/proc/net/netstat".into();
 
-        let stats = get_net_stats(path).await.unwrap();
+        let stats = get_net_stats(path).unwrap();
 
         let props = stats.get("TcpExt").unwrap();
         assert_eq!(props.get("DelayedACKs").unwrap(), "102471");
@@ -149,10 +147,10 @@ mod tests {
         assert_eq!(props.get("OutOctets").unwrap(), "2786264347");
     }
 
-    #[tokio::test]
-    async fn test_snmp_stats() {
+    #[test]
+    fn snmp() {
         let path = "tests/node/fixtures/proc/net/snmp".into();
-        let stats = get_net_stats(path).await.unwrap();
+        let stats = get_net_stats(path).unwrap();
 
         let props = stats.get("Udp").unwrap();
         assert_eq!(props.get("RcvbufErrors").unwrap(), "9");
@@ -161,10 +159,10 @@ mod tests {
         assert_eq!(props.get("SndbufErrors").unwrap(), "8");
     }
 
-    #[tokio::test]
-    async fn test_snmp6_stats() {
+    #[test]
+    fn snmp6() {
         let path = "tests/node/fixtures/proc/net/snmp6".into();
-        let stats = get_snmp6_stats(path).await.unwrap();
+        let stats = get_snmp6_stats(path).unwrap();
 
         let props = stats.get("Ip6").unwrap();
         assert_eq!(props.get("InOctets").unwrap(), "460");

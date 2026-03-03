@@ -6,7 +6,7 @@ use event::{Metric, tags};
 use super::{Error, read_into, read_string};
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let (procs, threads) = get_procs_and_threads(&proc_path).await?;
+    let (procs, threads) = get_procs_and_threads(&proc_path)?;
     let mut metrics = vec![];
 
     let max_threads: usize = read_into(proc_path.join("sys/kernel/threads-max"))?;
@@ -87,7 +87,7 @@ impl Stats {
     }
 }
 
-async fn get_procs_and_threads(root: &Path) -> Result<(Stats, Stats), Error> {
+fn get_procs_and_threads(root: &Path) -> Result<(Stats, Stats), Error> {
     let dirs = std::fs::read_dir(root)?;
 
     let mut procs = Stats::new();

@@ -96,7 +96,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
-fn parse_procfs_file(path: PathBuf) -> Result<BTreeMap<String, i64>, Error> {
+fn parse_procfs_file(path: PathBuf) -> Result<BTreeMap<String, f64>, Error> {
     let data = std::fs::read_to_string(path)?;
 
     let mut kvs = BTreeMap::new();
@@ -117,11 +117,13 @@ fn parse_procfs_file(path: PathBuf) -> Result<BTreeMap<String, i64>, Error> {
 
         // kstat data type (column 2) should be KSTAT_DATA_UINT64, otherwise ignore
         // TODO: when other KSTAT_DATA_* types arrive, much of this will need to be restructured
-        if fields[1] == "3" || fields[1] == "4" {
-            let key = fields[0].to_string();
-            let value = fields[2].parse().unwrap_or(0i64);
-            kvs.insert(key, value);
-        }
+        let value = match fields[1] {
+            "3" => fields[2].parse::<i64>()? as f64,
+            "4" => fields[2].parse::<u64>()? as f64,
+            _ => continue,
+        };
+
+        kvs.insert(fields[0].to_string(), value);
     }
 
     Ok(kvs)

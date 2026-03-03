@@ -1,4 +1,3 @@
-use std::io::BufRead;
 use std::path::PathBuf;
 
 use event::Metric;
@@ -6,18 +5,10 @@ use event::Metric;
 use super::Error;
 
 pub async fn collect(proc: PathBuf) -> Result<Vec<Metric>, Error> {
-    let file = std::fs::File::open(proc.join("net/xfrm_stat"))?;
-    let mut reader = std::io::BufReader::new(file);
+    let content = std::fs::read_to_string(proc.join("net/xfrm_stat"))?;
 
     let mut metrics = Vec::with_capacity(30);
-    let mut line = String::new();
-    loop {
-        line.clear();
-        let len = reader.read_line(&mut line)?;
-        if len == 0 {
-            break;
-        }
-
+    for line in content.lines() {
         let mut fields = line.split_ascii_whitespace();
         let Some(key) = fields.next() else { continue };
         let Some(value) = fields.next() else { continue };
@@ -128,7 +119,7 @@ mod tests {
     use super::*;
 
     #[tokio::test]
-    async fn parse() {
+    async fn smoke() {
         let path = PathBuf::from("tests/node/fixtures/proc");
         let metrics = collect(path).await.unwrap();
 
