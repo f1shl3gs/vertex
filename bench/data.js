@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772540828883,
+  "lastUpdate": 1772540905382,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fe1fd40e9006bd17ec973ecf194a2beca3a0ac9e",
-          "message": "Merge pull request #2719 from f1shl3gs/dependabot/cargo/tracing-0.1.44\n\nchore(deps): bump tracing from 0.1.43 to 0.1.44",
-          "timestamp": "2025-12-20T17:21:59+08:00",
-          "tree_id": "cf63f167b4de5db53f6cb4bb84e6941d22ca349a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fe1fd40e9006bd17ec973ecf194a2beca3a0ac9e"
-        },
-        "date": 1766223165249,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 570,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41273,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a364678075a8298bbd28e7cb76fe59d01615f24d",
           "message": "Merge pull request #2721 from f1shl3gs/dependabot/cargo/serde_json-1.0.146\n\nchore(deps): bump serde_json from 1.0.145 to 1.0.146",
           "timestamp": "2025-12-22T21:56:40+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40365.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e7bca2995622e3f6227fdaafdcb5cdefdd8064b1",
+          "message": "Merge pull request #2819 from f1shl3gs/sources/node/add_zoneinfo\n\nsources/node: add zoneinfo collector",
+          "timestamp": "2026-03-03T20:16:49+08:00",
+          "tree_id": "de37af8b88eb14cf95ac5263a15a4cf9df485354",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e7bca2995622e3f6227fdaafdcb5cdefdd8064b1"
+        },
+        "date": 1772540883094,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 587,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40421.1,
             "unit": "KiB"
           }
         ]
