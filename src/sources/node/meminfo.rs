@@ -8,7 +8,7 @@ use event::Metric;
 use super::Error;
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let infos = get_mem_info(proc_path).await?;
+    let infos = get_mem_info(proc_path)?;
 
     let mut metrics = Vec::with_capacity(infos.len());
     for (key, value) in infos {
@@ -25,7 +25,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
-async fn get_mem_info(root: PathBuf) -> std::io::Result<Vec<(&'static str, u64)>> {
+fn get_mem_info(root: PathBuf) -> std::io::Result<Vec<(&'static str, u64)>> {
     let file = std::fs::File::open(root.join("meminfo"))?;
     let mut reader = BufReader::new(file);
 
@@ -119,10 +119,10 @@ async fn get_mem_info(root: PathBuf) -> std::io::Result<Vec<(&'static str, u64)>
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn get_mem() {
+    #[test]
+    fn get_mem() {
         let root = PathBuf::from("tests/node/fixtures/proc");
-        let infos = get_mem_info(root).await.unwrap();
+        let infos = get_mem_info(root).unwrap();
 
         fn find(infos: &[(&str, u64)], key: &str) -> u64 {
             infos

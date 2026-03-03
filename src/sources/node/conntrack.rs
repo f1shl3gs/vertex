@@ -16,7 +16,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let path = proc_path.join("sys/net/netfilter/nf_conntrack_max");
     let max = read_into::<_, u64, _>(path)?;
 
-    let stats = get_conntrack_statistics(proc_path).await?;
+    let stats = get_conntrack_statistics(proc_path)?;
 
     let statistic = stats
         .iter()
@@ -148,7 +148,7 @@ impl ConntrackStatEntry {
     }
 }
 
-async fn get_conntrack_statistics(proc_path: PathBuf) -> Result<Vec<ConntrackStatEntry>, Error> {
+fn get_conntrack_statistics(proc_path: PathBuf) -> Result<Vec<ConntrackStatEntry>, Error> {
     let data = std::fs::read_to_string(proc_path.join("net/stat/nf_conntrack"))?;
 
     let mut stats = Vec::new();

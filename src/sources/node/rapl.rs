@@ -35,7 +35,7 @@ struct RaplZone {
 /// `get_rapl_zones` returns a slice of RaplZones
 /// When RAPL files are not present, returns nil with error
 /// https://www.kernel.org/doc/Documentation/power/powercap/powercap.txt
-async fn get_rapl_zones(sys_path: PathBuf) -> Result<Vec<RaplZone>, Error> {
+fn get_rapl_zones(sys_path: PathBuf) -> Result<Vec<RaplZone>, Error> {
     let root = sys_path.join("class/powercap");
     let dirs = std::fs::read_dir(&root)?;
 
@@ -92,7 +92,7 @@ fn get_name_and_index(s: &str) -> Option<(&str, i32)> {
 }
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let zones = get_rapl_zones(sys_path).await?;
+    let zones = get_rapl_zones(sys_path)?;
     let mut metrics = vec![];
 
     for zone in zones {
@@ -121,10 +121,10 @@ mod tests {
         assert_eq!(get_name_and_index("package-"), None)
     }
 
-    #[tokio::test]
-    async fn test_get_rapl_zones() {
+    #[test]
+    fn rapl_zones() {
         let root = "tests/node/fixtures/sys".into();
-        let mut zones = get_rapl_zones(root).await.unwrap();
+        let mut zones = get_rapl_zones(root).unwrap();
 
         // The readdir_r is not guaranteed to return in any specific order.
         // And the order of Github CI and Centos Stream is different, so it must be sorted

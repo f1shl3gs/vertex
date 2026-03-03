@@ -5,7 +5,7 @@ use event::Metric;
 use super::{Error, read_string};
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let (allocated, maximum) = read_file_nr(proc_path).await?;
+    let (allocated, maximum) = read_file_nr(proc_path)?;
 
     Ok(vec![
         Metric::gauge(
@@ -21,7 +21,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     ])
 }
 
-async fn read_file_nr(proc_path: PathBuf) -> Result<(u64, u64), Error> {
+fn read_file_nr(proc_path: PathBuf) -> Result<(u64, u64), Error> {
     let content = read_string(proc_path.join("sys/fs/file-nr"))?;
 
     // the file-nr proc is only 1 line with 3 values
@@ -37,10 +37,10 @@ async fn read_file_nr(proc_path: PathBuf) -> Result<(u64, u64), Error> {
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_read_file_nr() {
+    #[test]
+    fn file_nr() {
         let path = "tests/node/fixtures/proc".into();
-        let (allocated, maximum) = read_file_nr(path).await.unwrap();
+        let (allocated, maximum) = read_file_nr(path).unwrap();
 
         assert_eq!(allocated, 1024);
         assert_eq!(maximum, 1631329);

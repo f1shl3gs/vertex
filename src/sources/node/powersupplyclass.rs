@@ -151,19 +151,19 @@ struct PowerSupply {
 
 /// power_supply_class returns info for all power supplies read
 /// from /sys/class/power_supply
-async fn power_supply_class(root: &Path) -> Result<Vec<PowerSupply>, Error> {
+fn power_supply_class(root: &Path) -> Result<Vec<PowerSupply>, Error> {
     let dirs = std::fs::read_dir(root.join("class/power_supply"))?;
 
     let mut pss = vec![];
     for entry in dirs.flatten() {
-        let ps = parse_power_supply(entry.path()).await?;
+        let ps = parse_power_supply(entry.path())?;
         pss.push(ps);
     }
 
     Ok(pss)
 }
 
-async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
+fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
     // parse name from path
     let name = path.file_name().unwrap().to_str().unwrap();
     let mut ps = PowerSupply {
@@ -1051,7 +1051,7 @@ macro_rules! power_supply_metric_divide_10 {
 }
 
 pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let psc = power_supply_class(&sys_path).await?;
+    let psc = power_supply_class(&sys_path)?;
     let mut metrics = vec![];
     for ps in psc {
         if conf.ignored.is_match(&ps.name) {
@@ -1285,10 +1285,10 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_power_supply_class() {
+    #[test]
+    fn power_supply_classes() {
         let root = PathBuf::from("tests/node/fixtures/sys");
-        let mut pss = power_supply_class(&root).await.unwrap();
+        let mut pss = power_supply_class(&root).unwrap();
 
         // The readdir_r is not guaranteed to return in any specific order.
         // And the order of Github CI and Centos Stream is different, so it must be sorted

@@ -1,3 +1,4 @@
+use std::io::ErrorKind;
 use std::path::{Path, PathBuf};
 
 use event::{Metric, tags};
@@ -145,7 +146,7 @@ struct InfiniBandDevice {
 }
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let devices = infiniband_class(sys_path.join("class/infiniband")).await?;
+    let devices = infiniband_class(sys_path.join("class/infiniband"))?;
 
     let mut metrics = vec![];
     for device in devices {
@@ -463,19 +464,19 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
-async fn infiniband_class<P: AsRef<Path>>(root: P) -> Result<Vec<InfiniBandDevice>, Error> {
+fn infiniband_class<P: AsRef<Path>>(root: P) -> Result<Vec<InfiniBandDevice>, Error> {
     let dirs = std::fs::read_dir(root)?;
 
     let mut devices = vec![];
     for entry in dirs.flatten() {
-        let dev = parse_infiniband_device(entry.path()).await?;
+        let dev = parse_infiniband_device(entry.path())?;
         devices.push(dev);
     }
 
     Ok(devices)
 }
 
-async fn parse_infiniband_device(root: PathBuf) -> Result<InfiniBandDevice, Error> {
+fn parse_infiniband_device(root: PathBuf) -> Result<InfiniBandDevice, Error> {
     let name = root.file_name().unwrap().to_str().unwrap();
     let mut device = InfiniBandDevice {
         name: name.to_string(),
@@ -486,7 +487,7 @@ async fn parse_infiniband_device(root: PathBuf) -> Result<InfiniBandDevice, Erro
         let content = match read_string(root.join(sub)) {
             Ok(c) => c,
             Err(err) => {
-                if err.kind() == std::io::ErrorKind::NotFound {
+                if err.kind() == ErrorKind::NotFound {
                     continue;
                 }
 
@@ -504,7 +505,7 @@ async fn parse_infiniband_device(root: PathBuf) -> Result<InfiniBandDevice, Erro
 
     let dirs = std::fs::read_dir(root.join("ports"))?;
     for entry in dirs.flatten() {
-        let port = parse_infiniband_port(name, entry.path()).await?;
+        let port = parse_infiniband_port(name, entry.path())?;
         device.ports.push(port);
     }
 
@@ -513,7 +514,7 @@ async fn parse_infiniband_device(root: PathBuf) -> Result<InfiniBandDevice, Erro
 
 /// parse_infiniband_port scans predefined files in /sys/class/infiniband/<device>/ports/<port>
 /// directory and gets their contents
-async fn parse_infiniband_port(name: &str, root: PathBuf) -> Result<InfiniBandPort, Error> {
+fn parse_infiniband_port(name: &str, root: PathBuf) -> Result<InfiniBandPort, Error> {
     let port = root
         .file_name()
         .expect("filename should present in path")
@@ -539,7 +540,7 @@ async fn parse_infiniband_port(name: &str, root: PathBuf) -> Result<InfiniBandPo
     let rate = parse_rate(&content)?;
     ibp.rate = rate;
 
-    let counters = parse_infiniband_counters(root).await?;
+    let counters = parse_infiniband_counters(root)?;
     ibp.counters = counters;
 
     Ok(ibp)
@@ -572,7 +573,7 @@ fn parse_rate(s: &str) -> Result<u64, Error> {
     Ok(rate as u64)
 }
 
-async fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, Error> {
+fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, Error> {
     let dirs = std::fs::read_dir(root.join("counters"))?;
 
     let mut counters = InfiniBandCounters::default();
@@ -584,7 +585,7 @@ async fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, 
         let content = match read_string(path) {
             Ok(c) => c,
             Err(err) => {
-                if err.kind() == std::io::ErrorKind::NotFound {
+                if err.kind() == ErrorKind::NotFound {
                     continue;
                 }
 
@@ -643,7 +644,7 @@ async fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, 
                 let content = match read_string(entry.path()) {
                     Ok(c) => c,
                     Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
+                        if err.kind() == ErrorKind::NotFound {
                             continue;
                         }
 
@@ -695,7 +696,7 @@ async fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, 
             }
         }
         Err(err) => {
-            if err.kind() != std::io::ErrorKind::NotFound {
+            if err.kind() != ErrorKind::NotFound {
                 return Err(err.into());
             }
         }
@@ -736,10 +737,10 @@ mod tests {
         }
     }
 
-    #[tokio::test]
-    async fn test_infiniband_class() {
+    #[test]
+    fn infiniband_classes() {
         let root = PathBuf::from("tests/node/fixtures/sys/class/infiniband");
-        let mut devs = infiniband_class(root).await.unwrap();
+        let mut devs = infiniband_class(root).unwrap();
 
         // The readdir_r is not guaranteed to return in any specific order.
         // And the order of Github CI and Centos Stream is different, so it must be sorted

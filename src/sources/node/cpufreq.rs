@@ -6,8 +6,8 @@ use super::{Error, read_into, read_string};
 
 pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     let stats = get_cpu_freq_stat(sys_path)?;
-    let mut metrics = Vec::with_capacity(stats.len() * 6);
 
+    let mut metrics = Vec::with_capacity(stats.len() * 6);
     for stat in stats {
         if let Some(v) = stat.current_frequency {
             metrics.push(Metric::gauge_with_tags(

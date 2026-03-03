@@ -28,7 +28,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, crate::Error> {
                 "node_watchdog_fw_version",
                 "Value of /sys/class/watchdog/<watchdog>/fw_version",
                 fw_version,
-                tags!( "name" => &name ),
+                tags!("name" => &name ),
             ));
         }
 
@@ -37,7 +37,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, crate::Error> {
                 "node_watchdog_nowayout",
                 "Value of /sys/class/watchdog/<watchdog>/nowayout",
                 nowayout,
-                tags!( "name" => &name ),
+                tags!("name" => &name ),
             ));
         }
 
@@ -46,7 +46,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, crate::Error> {
                 "node_watchdog_timeleft_seconds",
                 "Value of /sys/class/watchdog/<watchdog>/timeleft",
                 timeleft,
-                tags!( "name" => &name ),
+                tags!("name" => &name ),
             ));
         }
 
@@ -55,7 +55,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, crate::Error> {
                 "node_watchdog_timeout_seconds",
                 "Value of /sys/class/watchdog/<watchdog>/timeout",
                 timeout,
-                tags!( "name" => &name ),
+                tags!("name" => &name ),
             ));
         }
 
@@ -64,7 +64,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, crate::Error> {
                 "node_watchdog_pretimeout_seconds",
                 "Value of /sys/class/watchdog/<watchdog>/pretimeout",
                 pretimeout,
-                tags!( "name" => &name ),
+                tags!("name" => &name ),
             ));
         }
 
@@ -73,7 +73,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, crate::Error> {
                 "node_watchdog_access_cs0",
                 "Value of /sys/class/watchdog/<watchdog>/access_cs0",
                 access_cs0,
-                tags!( "name" => &name ),
+                tags!("name" => &name ),
             ));
         }
 

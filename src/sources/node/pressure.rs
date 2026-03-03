@@ -17,10 +17,10 @@ use event::Metric;
 use super::Error;
 
 pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let cpu = psi_stats(proc_path.join("pressure/cpu")).await?;
-    let io = psi_stats(proc_path.join("pressure/io")).await?;
-    let memory = psi_stats(proc_path.join("pressure/memory")).await?;
-    let irq = psi_stats(proc_path.join("pressure/irq")).await?;
+    let cpu = psi_stats(proc_path.join("pressure/cpu"))?;
+    let io = psi_stats(proc_path.join("pressure/io"))?;
+    let memory = psi_stats(proc_path.join("pressure/memory"))?;
+    let irq = psi_stats(proc_path.join("pressure/irq"))?;
 
     let mut metrics = Vec::with_capacity(6);
     if let Some(some) = cpu.some {
@@ -92,7 +92,7 @@ struct PSIStats {
     full: Option<PSIStat>,
 }
 
-async fn psi_stats(path: PathBuf) -> Result<PSIStats, Error> {
+fn psi_stats(path: PathBuf) -> Result<PSIStats, Error> {
     let data = std::fs::read_to_string(path)?;
     let mut stats = PSIStats {
         some: None,
