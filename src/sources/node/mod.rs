@@ -63,6 +63,7 @@ mod xfrm;
 #[cfg(target_os = "linux")]
 mod xfs;
 mod zfs;
+mod zoneinfo;
 
 use std::io::Read;
 use std::path::Path;
@@ -131,6 +132,11 @@ struct Collectors {
 
     #[serde(default = "default_true")]
     bonding: bool,
+
+    // MacOS
+    #[cfg(target_os = "macos")]
+    #[serde(default = "default_true")]
+    boot_time: bool,
 
     #[serde(default = "default_true")]
     btrfs: bool,
@@ -286,10 +292,9 @@ struct Collectors {
     #[serde(default = "default_true")]
     zfs: bool,
 
-    // MacOS
-    #[cfg(target_os = "macos")]
-    #[serde(default = "default_true")]
-    boot_time: bool,
+    #[cfg(target_os = "linux")]
+    #[serde(default)]
+    zoneinfo: bool,
 }
 
 impl Default for Collectors {
@@ -299,6 +304,8 @@ impl Default for Collectors {
             bcache: default_bcache_config(),
             btrfs: true,
             bonding: true,
+            #[cfg(target_os = "macos")]
+            boot_time: true,
             conntrack: true,
             cpu: default_cpu_config(),
             cpufreq: true,
@@ -348,10 +355,7 @@ impl Default for Collectors {
             xfrm: false,
             xfs: true,
             zfs: true,
-
-            // MacOS
-            #[cfg(target_os = "macos")]
-            boot_time: true,
+            zoneinfo: false,
         }
     }
 }
@@ -819,6 +823,11 @@ async fn run(
         if collectors.zfs {
             let proc_path = proc_path.clone();
             tasks.spawn(async move { record_gather!("zfs", zfs::gather(proc_path)) });
+        }
+
+        if collectors.zoneinfo {
+            let proc_path = proc_path.clone();
+            tasks.spawn(async move { record_gather!("zoneinfo", zoneinfo::collect(proc_path)) });
         }
 
         // MacOS
