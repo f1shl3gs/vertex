@@ -601,8 +601,8 @@ mod tests {
 
     #[test]
     fn parse() {
-        let content = include_str!("../../../tests/node/fixtures/proc/zoneinfo");
-        let got = parse_zoneinfo(content).unwrap();
+        let content = std::fs::read_to_string("tests/node/fixtures/proc/zoneinfo").unwrap();
+        let got = parse_zoneinfo(&content).unwrap();
 
         let want = [
             ZoneInfo {
