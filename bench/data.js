@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772540349427,
+  "lastUpdate": 1772540353268,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "17ba501ff93ea52336a6548c1a95097e62611f19",
-          "message": "Merge pull request #2631 from f1shl3gs/sources/grpc_check/reorder_config_field_option\n\nsources/grpc_check: re-order config field",
-          "timestamp": "2025-10-23T03:40:17+08:00",
-          "tree_id": "87ffe96434caf7d967cc8d8f5236fa8288ee4798",
-          "url": "https://github.com/f1shl3gs/vertex/commit/17ba501ff93ea52336a6548c1a95097e62611f19"
-        },
-        "date": 1761162144995,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 507130,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 524960,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e7bca2995622e3f6227fdaafdcb5cdefdd8064b1",
+          "message": "Merge pull request #2819 from f1shl3gs/sources/node/add_zoneinfo\n\nsources/node: add zoneinfo collector",
+          "timestamp": "2026-03-03T20:16:49+08:00",
+          "tree_id": "de37af8b88eb14cf95ac5263a15a4cf9df485354",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e7bca2995622e3f6227fdaafdcb5cdefdd8064b1"
+        },
+        "date": 1772540330714,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 527570,
             "unit": "ns/op"
           }
         ]
