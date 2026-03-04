@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772641611499,
+  "lastUpdate": 1772641640261,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f64b404180e27a2729e24eb0d12648170c208e13",
-          "message": "Merge pull request #2634 from f1shl3gs/sources/prometheus_remote_write/unify_listen\n\nsources/prometheus_remote_write: unify listen",
-          "timestamp": "2025-10-23T05:02:27+08:00",
-          "tree_id": "805223e686bc346fd5e390972d858e225e5d10ee",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f64b404180e27a2729e24eb0d12648170c208e13"
-        },
-        "date": 1761167089696,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.363,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 95.477,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 185.23,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 171.74,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8db37963159df7d03cf9ca98c687b849eaf36023",
+          "message": "Merge pull request #2824 from f1shl3gs/sources/node/add_buddyinfo\n\nsources/node: add buddyinfo collector",
+          "timestamp": "2026-03-05T00:24:24+08:00",
+          "tree_id": "93b07572622459447a4ad819ddf26d468caaae6b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8db37963159df7d03cf9ca98c687b849eaf36023"
+        },
+        "date": 1772641617987,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.173,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 99.84,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 173.78,
             "unit": "ns/op"
           }
         ]
