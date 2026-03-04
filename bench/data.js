@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772648534808,
+  "lastUpdate": 1772648600388,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d99c4171d46f7d8b9552b83633ad5b2a47d78ce2",
-          "message": "Merge pull request #2725 from f1shl3gs/dependabot/cargo/rustls-native-certs-0.8.3\n\nchore(deps): bump rustls-native-certs from 0.8.2 to 0.8.3",
-          "timestamp": "2025-12-29T23:25:31+08:00",
-          "tree_id": "682965638e2f27a65c93744f34e3a4735697d04f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d99c4171d46f7d8b9552b83633ad5b2a47d78ce2"
-        },
-        "date": 1767022603681,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 593,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41291.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "689268eb2cb18161be634200fe9548d9291a01df",
           "message": "Merge pull request #2726 from f1shl3gs/dependabot/cargo/syn-2.0.112\n\nchore(deps): bump syn from 2.0.111 to 2.0.112",
           "timestamp": "2025-12-31T04:32:39+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40513.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eeddbd4783ae657d44934ab7da7dcb64da94b2fb",
+          "message": "Merge pull request #2826 from f1shl3gs/sources/node/cgroups\n\nsources/node: add cgroups collector",
+          "timestamp": "2026-03-05T02:11:36+08:00",
+          "tree_id": "8bfc60493612b223cec24a348ba41890e7ec7599",
+          "url": "https://github.com/f1shl3gs/vertex/commit/eeddbd4783ae657d44934ab7da7dcb64da94b2fb"
+        },
+        "date": 1772648578133,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 581,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40526,
             "unit": "KiB"
           }
         ]
