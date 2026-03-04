@@ -191,6 +191,7 @@ struct Collectors {
     #[serde(default)]
     kernel_hung: bool,
 
+    /// Exposes stats from /proc/net/stat/
     #[serde(default)]
     lnstat: bool,
 
