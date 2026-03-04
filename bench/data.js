@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772642081286,
+  "lastUpdate": 1772642158967,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d26ae6756c483833a6eeacd875ca44c2637fbc8c",
-          "message": "Merge pull request #2723 from f1shl3gs/dependabot/cargo/serde_json-1.0.148\n\nchore(deps): bump serde_json from 1.0.147 to 1.0.148",
-          "timestamp": "2025-12-27T19:24:31+08:00",
-          "tree_id": "996b6c36d15dfcb27136badaac85adc983b6a49b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d26ae6756c483833a6eeacd875ca44c2637fbc8c"
-        },
-        "date": 1766835340415,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 584,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41290.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "63ffb642230b3ebe632e0a6a3218cc42c20529f9",
           "message": "Merge pull request #2724 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.104\n\nchore(deps): bump proc-macro2 from 1.0.103 to 1.0.104",
           "timestamp": "2025-12-28T20:24:42+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40481,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8db37963159df7d03cf9ca98c687b849eaf36023",
+          "message": "Merge pull request #2824 from f1shl3gs/sources/node/add_buddyinfo\n\nsources/node: add buddyinfo collector",
+          "timestamp": "2026-03-05T00:24:24+08:00",
+          "tree_id": "93b07572622459447a4ad819ddf26d468caaae6b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8db37963159df7d03cf9ca98c687b849eaf36023"
+        },
+        "date": 1772642135884,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 590,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40496.5,
             "unit": "KiB"
           }
         ]
