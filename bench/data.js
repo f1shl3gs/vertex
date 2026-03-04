@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772646858855,
+  "lastUpdate": 1772647236078,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f64b404180e27a2729e24eb0d12648170c208e13",
-          "message": "Merge pull request #2634 from f1shl3gs/sources/prometheus_remote_write/unify_listen\n\nsources/prometheus_remote_write: unify listen",
-          "timestamp": "2025-10-23T05:02:27+08:00",
-          "tree_id": "805223e686bc346fd5e390972d858e225e5d10ee",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f64b404180e27a2729e24eb0d12648170c208e13"
-        },
-        "date": 1761167511466,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14663000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 616670,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.097,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f937f8e20ab11968dc34cf6b299f9caf0abb92c8",
           "message": "Merge pull request #2635 from f1shl3gs/sources/syslog/unify_listen\n\nsources/syslog: unify listen",
           "timestamp": "2025-10-23T05:36:46+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.281,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f701b9d908b47aad4fbc402fc1e2278e4dcb4477",
+          "message": "Merge pull request #2825 from f1shl3gs/sources/node/lnstat\n\nsources/node/: add lnstat collector",
+          "timestamp": "2026-03-05T01:50:41+08:00",
+          "tree_id": "fce2c7f7ec7bc8009e2c8b74fe6ccd542e656f76",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f701b9d908b47aad4fbc402fc1e2278e4dcb4477"
+        },
+        "date": 1772647213449,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7499100,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 745320,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.887,
             "unit": "ns/op"
           }
         ]
