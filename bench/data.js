@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772647236078,
+  "lastUpdate": 1772647322789,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "63ffb642230b3ebe632e0a6a3218cc42c20529f9",
-          "message": "Merge pull request #2724 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.104\n\nchore(deps): bump proc-macro2 from 1.0.103 to 1.0.104",
-          "timestamp": "2025-12-28T20:24:42+08:00",
-          "tree_id": "d133ff1f21e3649e0050e3dae67eed84beb52142",
-          "url": "https://github.com/f1shl3gs/vertex/commit/63ffb642230b3ebe632e0a6a3218cc42c20529f9"
-        },
-        "date": 1766925324589,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 566,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41289.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d99c4171d46f7d8b9552b83633ad5b2a47d78ce2",
           "message": "Merge pull request #2725 from f1shl3gs/dependabot/cargo/rustls-native-certs-0.8.3\n\nchore(deps): bump rustls-native-certs from 0.8.2 to 0.8.3",
           "timestamp": "2025-12-29T23:25:31+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40496.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f701b9d908b47aad4fbc402fc1e2278e4dcb4477",
+          "message": "Merge pull request #2825 from f1shl3gs/sources/node/lnstat\n\nsources/node/: add lnstat collector",
+          "timestamp": "2026-03-05T01:50:41+08:00",
+          "tree_id": "fce2c7f7ec7bc8009e2c8b74fe6ccd542e656f76",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f701b9d908b47aad4fbc402fc1e2278e4dcb4477"
+        },
+        "date": 1772647300212,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 578,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40513.3,
             "unit": "KiB"
           }
         ]
