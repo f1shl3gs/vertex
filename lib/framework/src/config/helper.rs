@@ -32,6 +32,31 @@ pub mod serde_regex {
     }
 }
 
+pub mod serde_regex_option {
+    use std::borrow::Cow;
+
+    use regex::Regex;
+    use serde::{Deserializer, Serializer};
+
+    pub fn deserialize<'de, D: Deserializer<'de>>(
+        deserializer: D,
+    ) -> Result<Option<Regex>, D::Error> {
+        let value: Option<Cow<'de, str>> = serde::Deserialize::deserialize(deserializer)?;
+
+        match value {
+            None => Ok(None),
+            Some(s) => Regex::new(&s).map(Some).map_err(serde::de::Error::custom),
+        }
+    }
+
+    pub fn serialize<S: Serializer>(re: &Option<Regex>, s: S) -> Result<S::Ok, S::Error> {
+        match re {
+            Some(re) => s.serialize_str(re.as_str()),
+            None => s.serialize_none(),
+        }
+    }
+}
+
 pub mod serde_uri {
     use std::borrow::Cow;
 
