@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772648057158,
+  "lastUpdate": 1772648068489,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f64b404180e27a2729e24eb0d12648170c208e13",
-          "message": "Merge pull request #2634 from f1shl3gs/sources/prometheus_remote_write/unify_listen\n\nsources/prometheus_remote_write: unify listen",
-          "timestamp": "2025-10-23T05:02:27+08:00",
-          "tree_id": "805223e686bc346fd5e390972d858e225e5d10ee",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f64b404180e27a2729e24eb0d12648170c208e13"
-        },
-        "date": 1761167104061,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.383,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 165.63,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 332.7,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 669.07,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f937f8e20ab11968dc34cf6b299f9caf0abb92c8",
           "message": "Merge pull request #2635 from f1shl3gs/sources/syslog/unify_listen\n\nsources/syslog: unify listen",
           "timestamp": "2025-10-23T05:36:46+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 716.05,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eeddbd4783ae657d44934ab7da7dcb64da94b2fb",
+          "message": "Merge pull request #2826 from f1shl3gs/sources/node/cgroups\n\nsources/node: add cgroups collector",
+          "timestamp": "2026-03-05T02:11:36+08:00",
+          "tree_id": "8bfc60493612b223cec24a348ba41890e7ec7599",
+          "url": "https://github.com/f1shl3gs/vertex/commit/eeddbd4783ae657d44934ab7da7dcb64da94b2fb"
+        },
+        "date": 1772648044879,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 23.882,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 179.44,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 338.04,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 695.19,
             "unit": "ns/op"
           }
         ]
