@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772635122569,
+  "lastUpdate": 1772635498560,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ae3d84df868784bec61f47842f8533809405d4c8",
-          "message": "Merge pull request #2633 from f1shl3gs/sources/prometheus_pushgateway/unify_listen\n\nsources/prometheus_pushgateway: unify listen",
-          "timestamp": "2025-10-23T04:06:04+08:00",
-          "tree_id": "94b909996d2074714e1cf84e1a9096cc1caf7e2b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ae3d84df868784bec61f47842f8533809405d4c8"
-        },
-        "date": 1761164138393,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14983000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 642090,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.866,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d2aeea0cb8078548cf98d016ae0f664c3357d163",
           "message": "Merge pull request #2632 from f1shl3gs/sources/mysqld/unify_endpoint\n\nsources/mysqld: unify endpoint",
           "timestamp": "2025-10-23T04:13:51+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.668,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "625a6f7062c19654bc39329014a8c181e9d00b1d",
+          "message": "Merge pull request #2823 from f1shl3gs/sources/node/add_slabinfo\n\nsources/node: add slabinfo",
+          "timestamp": "2026-03-04T22:34:52+08:00",
+          "tree_id": "f56c6dca11f262b7e7dba44a56b2b3852bfc5f67",
+          "url": "https://github.com/f1shl3gs/vertex/commit/625a6f7062c19654bc39329014a8c181e9d00b1d"
+        },
+        "date": 1772635475567,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7079100,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 731330,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.935,
             "unit": "ns/op"
           }
         ]
