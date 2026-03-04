@@ -191,6 +191,9 @@ struct Collectors {
     #[serde(default)]
     kernel_hung: bool,
 
+    #[serde(default)]
+    lnstat: bool,
+
     #[serde(default = "default_true")]
     loadavg: bool,
 
@@ -330,6 +333,7 @@ impl Default for Collectors {
             infiniband: true,
             ipvs: default_ipvs_config(),
             kernel_hung: false,
+            lnstat: false,
             loadavg: true,
             mdadm: true,
             memory: true,
@@ -657,6 +661,11 @@ async fn run(
             tasks.spawn(
                 async move { record_gather!("kernel_hung", kernel_hung::gather(proc_path)) },
             );
+        }
+
+        if collectors.lnstat {
+            let proc_path = proc_path.clone();
+            tasks.spawn(async move { record_gather!("lnstat", lnstat::collect(proc_path)) });
         }
 
         if collectors.loadavg {
