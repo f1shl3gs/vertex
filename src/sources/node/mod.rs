@@ -7,6 +7,7 @@ mod bonding;
 mod boot_time;
 mod btrfs;
 mod buddyinfo;
+mod cgroups;
 mod conntrack;
 mod cpu;
 mod cpufreq;
@@ -145,6 +146,9 @@ struct Collectors {
 
     #[serde(default)]
     buddyinfo: bool,
+
+    #[serde(default)]
+    cgroups: bool,
 
     #[serde(default = "default_true")]
     conntrack: bool,
@@ -319,6 +323,7 @@ impl Default for Collectors {
             boot_time: true,
             btrfs: true,
             buddyinfo: false,
+            cgroups: false,
             conntrack: true,
             cpu: default_cpu_config(),
             cpufreq: true,
@@ -566,6 +571,11 @@ async fn run(
         if collectors.buddyinfo {
             let proc_path = proc_path.clone();
             tasks.spawn(async move { record_gather!("buddyinfo", buddyinfo::collect(proc_path)) });
+        }
+
+        if collectors.cgroups {
+            let proc_path = proc_path.clone();
+            tasks.spawn(async move { record_gather!("cgroups", cgroups::collect(proc_path)) });
         }
 
         if collectors.conntrack {
