@@ -27,7 +27,7 @@ pub use format::{Format, FormatHint};
 pub use global::GlobalOptions;
 pub use healthcheck::HealthcheckOptions;
 pub use helper::{
-    default_interval, default_true, serde_http_method, serde_regex, serde_uri,
+    default_interval, default_true, serde_http_method, serde_regex, serde_regex_option, serde_uri,
     skip_serializing_if_default,
 };
 pub use id::{ComponentKey, OutputId};
