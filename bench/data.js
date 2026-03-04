@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772635498560,
+  "lastUpdate": 1772635583857,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "534bbb060e2463c1c41232a21c7d3a5caf4583a4",
-          "message": "Merge pull request #2722 from f1shl3gs/dependabot/cargo/serde_json-1.0.147\n\nchore(deps): bump serde_json from 1.0.146 to 1.0.147",
-          "timestamp": "2025-12-24T19:36:57+08:00",
-          "tree_id": "8f46e9243e33be848afb7dad990fabeb3cdfbe55",
-          "url": "https://github.com/f1shl3gs/vertex/commit/534bbb060e2463c1c41232a21c7d3a5caf4583a4"
-        },
-        "date": 1766576879340,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 575,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41287.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d26ae6756c483833a6eeacd875ca44c2637fbc8c",
           "message": "Merge pull request #2723 from f1shl3gs/dependabot/cargo/serde_json-1.0.148\n\nchore(deps): bump serde_json from 1.0.147 to 1.0.148",
           "timestamp": "2025-12-27T19:24:31+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40420.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "625a6f7062c19654bc39329014a8c181e9d00b1d",
+          "message": "Merge pull request #2823 from f1shl3gs/sources/node/add_slabinfo\n\nsources/node: add slabinfo",
+          "timestamp": "2026-03-04T22:34:52+08:00",
+          "tree_id": "f56c6dca11f262b7e7dba44a56b2b3852bfc5f67",
+          "url": "https://github.com/f1shl3gs/vertex/commit/625a6f7062c19654bc39329014a8c181e9d00b1d"
+        },
+        "date": 1772635560982,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 584,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40481,
             "unit": "KiB"
           }
         ]
