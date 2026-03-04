@@ -43,6 +43,7 @@ mod protocols;
 mod rapl;
 mod schedstat;
 mod selinux;
+mod slabinfo;
 mod sockstat;
 mod softirqs;
 mod softnet;
@@ -240,6 +241,9 @@ struct Collectors {
     #[serde(default = "default_true")]
     selinux: bool,
 
+    #[serde(default)]
+    slabinfo: Option<slabinfo::Config>,
+
     #[serde(default = "default_true")]
     sockstat: bool,
 
@@ -338,6 +342,7 @@ impl Default for Collectors {
             rapl: true,
             schedstat: true,
             selinux: true,
+            slabinfo: None,
             sockstat: true,
             softnet: true,
             softirqs: false,
@@ -733,6 +738,14 @@ async fn run(
             let sys_path = sys_path.clone();
             tasks.spawn(
                 async move { record_gather!("selinux", selinux::gather(proc_path, sys_path)) },
+            );
+        }
+
+        if let Some(config) = &collectors.slabinfo {
+            let config = config.clone();
+            let proc_path = proc_path.clone();
+            tasks.spawn(
+                async move { record_gather!("slabinfo", slabinfo::collect(config, proc_path)) },
             );
         }
 
