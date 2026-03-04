@@ -6,6 +6,7 @@ mod bonding;
 #[cfg(target_os = "macos")]
 mod boot_time;
 mod btrfs;
+mod buddyinfo;
 mod conntrack;
 mod cpu;
 mod cpufreq;
@@ -141,6 +142,9 @@ struct Collectors {
 
     #[serde(default = "default_true")]
     btrfs: bool,
+
+    #[serde(default)]
+    buddyinfo: bool,
 
     #[serde(default = "default_true")]
     conntrack: bool,
@@ -306,10 +310,11 @@ impl Default for Collectors {
         Self {
             arp: true,
             bcache: default_bcache_config(),
-            btrfs: true,
             bonding: true,
             #[cfg(target_os = "macos")]
             boot_time: true,
+            btrfs: true,
+            buddyinfo: false,
             conntrack: true,
             cpu: default_cpu_config(),
             cpufreq: true,
@@ -543,9 +548,19 @@ async fn run(
             tasks.spawn(async move { record_gather!("bonding", bonding::gather(sys_path)) });
         }
 
+        #[cfg(target_os = "macos")]
+        if collectors.boot_time {
+            tasks.spawn(async { record_gather!("boot_time", boot_time::gather()) });
+        }
+
         if collectors.btrfs {
             let sys_path = sys_path.clone();
             tasks.spawn(async move { record_gather!("btrfs", btrfs::gather(sys_path)) });
+        }
+
+        if collectors.buddyinfo {
+            let proc_path = proc_path.clone();
+            tasks.spawn(async move { record_gather!("buddyinfo", buddyinfo::collect(proc_path)) });
         }
 
         if collectors.conntrack {
@@ -841,12 +856,6 @@ async fn run(
         if collectors.zoneinfo {
             let proc_path = proc_path.clone();
             tasks.spawn(async move { record_gather!("zoneinfo", zoneinfo::collect(proc_path)) });
-        }
-
-        // MacOS
-        #[cfg(target_os = "macos")]
-        if collectors.boot_time {
-            tasks.spawn(async { record_gather!("boot_time", boot_time::gather()) });
         }
 
         while let Some(Ok(mut metrics)) = tasks.join_next().await {
