@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772648113721,
+  "lastUpdate": 1772648534808,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f937f8e20ab11968dc34cf6b299f9caf0abb92c8",
-          "message": "Merge pull request #2635 from f1shl3gs/sources/syslog/unify_listen\n\nsources/syslog: unify listen",
-          "timestamp": "2025-10-23T05:36:46+08:00",
-          "tree_id": "991ab10df134aea14afffe4f98c2ff09bc6a435f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f937f8e20ab11968dc34cf6b299f9caf0abb92c8"
-        },
-        "date": 1761169611400,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14953000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 614460,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.935,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "06230575e2947028aa9af7b46fd70a4f63293caf",
           "message": "Merge pull request #2637 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.102\n\nchore(deps): bump proc-macro2 from 1.0.101 to 1.0.102",
           "timestamp": "2025-10-23T19:18:19+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.887,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eeddbd4783ae657d44934ab7da7dcb64da94b2fb",
+          "message": "Merge pull request #2826 from f1shl3gs/sources/node/cgroups\n\nsources/node: add cgroups collector",
+          "timestamp": "2026-03-05T02:11:36+08:00",
+          "tree_id": "8bfc60493612b223cec24a348ba41890e7ec7599",
+          "url": "https://github.com/f1shl3gs/vertex/commit/eeddbd4783ae657d44934ab7da7dcb64da94b2fb"
+        },
+        "date": 1772648510706,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7326100,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 739360,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 53.73,
             "unit": "ns/op"
           }
         ]
