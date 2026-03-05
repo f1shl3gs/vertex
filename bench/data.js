@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772684330280,
+  "lastUpdate": 1772684339981,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "08f1b38253a19e54dd6a7a3a6a41b8456829a295",
-          "message": "Merge pull request #2638 from f1shl3gs/dependabot/cargo/syn-2.0.108\n\nchore(deps): bump syn from 2.0.107 to 2.0.108",
-          "timestamp": "2025-10-23T19:18:34+08:00",
-          "tree_id": "474e54f6a83b1268570712d23a453d6a47b6d6a0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/08f1b38253a19e54dd6a7a3a6a41b8456829a295"
-        },
-        "date": 1761218461736,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.515,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 102.19,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 185.95,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 172.75,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e43dc5a22b787c54aa03f2f7aa68bebe023397dc",
+          "message": "Merge pull request #2829 from f1shl3gs/ci/tests/timeout\n\nci/tests: add timeout for tests",
+          "timestamp": "2026-03-05T12:15:59+08:00",
+          "tree_id": "e85ecb1afe00f8a95870eba8bf2f2f6f40adc2ec",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e43dc5a22b787c54aa03f2f7aa68bebe023397dc"
+        },
+        "date": 1772684317225,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.992,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 100.25,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 172.46,
             "unit": "ns/op"
           }
         ]
