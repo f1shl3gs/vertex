@@ -2,14 +2,12 @@
 //!
 //! https://github.com/prometheus/node_exporter/pull/1771
 
-use std::path::PathBuf;
-
 use event::{Metric, tags};
 
-use super::{Error, read_string};
+use super::{Error, Paths, read_string};
 
-pub async fn collect(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let dirs = std::fs::read_dir(proc_path.join("net/stat"))?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let dirs = std::fs::read_dir(paths.proc().join("net/stat"))?;
 
     let mut metrics = Vec::new();
     for entry in dirs.flatten() {

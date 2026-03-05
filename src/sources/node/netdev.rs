@@ -1,12 +1,10 @@
-use std::path::PathBuf;
-
 use configurable::Configurable;
 use event::{Metric, tags};
 use framework::config::serde_regex;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
-use super::Error;
+use super::{Error, Paths};
 
 #[derive(Clone, Configurable, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -21,8 +19,8 @@ pub enum Config {
     All,
 }
 
-pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let data = std::fs::read_to_string(proc_path.join("net/dev"))?;
+pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
+    let data = std::fs::read_to_string(paths.proc().join("net/dev"))?;
 
     let mut metrics = Vec::new();
     for line in data.lines().skip(2) {

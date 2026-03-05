@@ -1,16 +1,17 @@
 //! Exposes statistics from /sys/class/scsi_tape
 
-use std::path::{Path, PathBuf};
+use std::path::Path;
+use std::sync::LazyLock;
 
 use event::{Metric, tags};
+use regex::Regex;
 
-use super::{Error, read_into};
+use super::{Error, Paths, read_into};
 
-pub async fn collect(sysfs: PathBuf) -> Result<Vec<Metric>, Error> {
-    let valid_device = regex::Regex::new(r#"^st\d+$"#).unwrap();
+static VALID_DEVICE_PATTERN: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"^st\d+$"#).unwrap());
 
-    let root = sysfs.join("class/scsi_tape");
-    let dirs = root.read_dir()?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let dirs = paths.sys().join("class/scsi_tape").read_dir()?;
 
     let mut metrics = Vec::with_capacity(10);
     for entry in dirs.flatten() {
@@ -20,7 +21,7 @@ pub async fn collect(sysfs: PathBuf) -> Result<Vec<Metric>, Error> {
         }
 
         let name = path.file_name().map(|name| name.to_string_lossy()).unwrap();
-        if !valid_device.is_match(name.as_ref()) {
+        if !VALID_DEVICE_PATTERN.is_match(name.as_ref()) {
             continue;
         }
 

@@ -1,10 +1,10 @@
 use std::convert::TryFrom;
 use std::convert::TryInto;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use event::{Metric, tags};
 
-use super::Error;
+use super::{Error, Paths};
 
 /// Network models the "net" line.
 #[derive(Debug, Default, PartialEq)]
@@ -373,8 +373,8 @@ macro_rules! procedure_metric {
     };
 }
 
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = load_client_rpc_stats(proc_path.join("net/rpc/nfs"))?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let stats = load_client_rpc_stats(paths.proc().join("net/rpc/nfs"))?;
 
     // collect statistics for network packets/connections
     let mut metrics = vec![

@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 
 use event::{Metric, tags};
 
-use super::{Error, read_into, read_string};
+use super::{Error, Paths, read_into, read_string};
 
 /// ThermalStats contains info from files in /sys/class/thermal_zone<zone>
 /// for a single <zone>
@@ -106,7 +106,7 @@ struct CoolingDeviceStats {
     cur_state: i64,
 }
 
-async fn cooling_device_stats(root: PathBuf) -> Result<Vec<CoolingDeviceStats>, Error> {
+fn cooling_device_stats(root: &Path) -> Result<Vec<CoolingDeviceStats>, Error> {
     let pattern = format!(
         "{}/class/thermal/cooling_device[0-9]*",
         root.to_string_lossy()
@@ -115,14 +115,14 @@ async fn cooling_device_stats(root: PathBuf) -> Result<Vec<CoolingDeviceStats>, 
 
     let mut stats = vec![];
     for path in paths.flatten() {
-        let stat = parse_cooling_device_stats(path).await?;
+        let stat = parse_cooling_device_stats(path)?;
         stats.push(stat);
     }
 
     Ok(stats)
 }
 
-async fn parse_cooling_device_stats(root: PathBuf) -> Result<CoolingDeviceStats, Error> {
+fn parse_cooling_device_stats(root: PathBuf) -> Result<CoolingDeviceStats, Error> {
     let name = root
         .file_name()
         .unwrap()
@@ -145,8 +145,8 @@ async fn parse_cooling_device_stats(root: PathBuf) -> Result<CoolingDeviceStats,
     })
 }
 
-pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = thermal_zone_stats(&sys_path)?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let stats = thermal_zone_stats(paths.sys())?;
 
     let mut metrics = Vec::with_capacity(stats.len());
     for stat in stats {
@@ -161,7 +161,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
         ));
     }
 
-    let stats = cooling_device_stats(sys_path).await?;
+    let stats = cooling_device_stats(paths.sys())?;
     metrics.reserve(stats.len() * 2);
     for stat in stats {
         metrics.extend([
@@ -195,8 +195,8 @@ mod tests {
 
     #[test]
     fn zone_stats() {
-        let root = PathBuf::from("tests/node/fixtures/sys");
-        let stats = thermal_zone_stats(&root).unwrap();
+        let root = Path::new("tests/node/fixtures/sys");
+        let stats = thermal_zone_stats(root).unwrap();
 
         assert_eq!(
             stats,
@@ -221,10 +221,10 @@ mod tests {
         );
     }
 
-    #[tokio::test]
-    async fn test_cooling_device_stats() {
-        let root = "tests/node/fixtures/sys".into();
-        let stats = cooling_device_stats(root).await.unwrap();
+    #[test]
+    fn test_cooling_device_stats() {
+        let root = Path::new("tests/node/fixtures/sys");
+        let stats = cooling_device_stats(root).unwrap();
         assert_eq!(
             stats,
             vec![

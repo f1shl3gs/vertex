@@ -1,12 +1,12 @@
 //! Exposes statistics about devices in `/proc/mdstat` (does nothing if no `/proc/mdstat` present).
 
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::sync::LazyLock;
 
 use event::{Metric, tags};
 use regex::Regex;
 
-use super::{Error, read_into};
+use super::{Error, Paths, read_into};
 
 /// MDStat holds info parsed from /proc/mdstat
 #[derive(Debug, PartialEq)]
@@ -258,8 +258,8 @@ fn recovery_line(input: &str) -> Result<(f64, i64, f64, f64), Error> {
     Ok((percent, synced_blocks, finish, speed))
 }
 
-pub async fn gather(proc_path: PathBuf, sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = parse_mdstat(proc_path.join("mdstat"))?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let stats = parse_mdstat(paths.proc().join("mdstat"))?;
 
     let mut metrics = Vec::with_capacity(stats.len() * 11);
     for stat in stats {
@@ -366,7 +366,7 @@ pub async fn gather(proc_path: PathBuf, sys_path: PathBuf) -> Result<Vec<Metric>
         ]);
     }
 
-    if let Ok(raids) = md_raids(sys_path) {
+    if let Ok(raids) = md_raids(paths.sys()) {
         for raid in raids {
             let tags = tags!("device" => raid.device);
 
@@ -399,7 +399,7 @@ struct MdRaid {
     degraded_disks: u64,
 }
 
-fn md_raids(sys_path: PathBuf) -> Result<Vec<MdRaid>, Error> {
+fn md_raids(sys_path: &Path) -> Result<Vec<MdRaid>, Error> {
     let mut paths = glob::glob(sys_path.join("block/md*/md").to_string_lossy().as_ref())?;
 
     let mut raids = Vec::new();

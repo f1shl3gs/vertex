@@ -1,10 +1,10 @@
 use std::convert::{TryFrom, TryInto};
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use event::{Metric, tags};
 
-use super::Error;
 use super::nfs::{Network, V2Stats, V3Stats};
+use super::{Error, Paths};
 
 // ReplyCache models the "rc" line.
 #[derive(Debug, Default, PartialEq)]
@@ -361,8 +361,8 @@ macro_rules! rpc_metric {
     };
 }
 
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = load_server_rpc_stats(proc_path.join("net/rpc/nfsd"))?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let stats = load_server_rpc_stats(paths.proc().join("net/rpc/nfsd"))?;
     let metrics = vec![
         // collects statistics for the reply cache
         Metric::sum(

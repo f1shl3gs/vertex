@@ -1,11 +1,11 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use event::{Metric, tags};
 
-use super::{Error, read_into, read_string};
+use super::{Error, Paths, read_into, read_string};
 
-pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = get_cpu_freq_stat(sys_path)?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let stats = get_cpu_freq_stat(paths.sys())?;
 
     let mut metrics = Vec::with_capacity(stats.len() * 6);
     for stat in stats {
@@ -112,7 +112,7 @@ struct Stat {
     set_speed: String,
 }
 
-fn get_cpu_freq_stat(sys_path: PathBuf) -> Result<Vec<Stat>, Error> {
+fn get_cpu_freq_stat(sys_path: &Path) -> Result<Vec<Stat>, Error> {
     let cpus = glob::glob(&format!(
         "{}/devices/system/cpu/cpu[0-9]*",
         sys_path.to_string_lossy()
@@ -168,8 +168,8 @@ mod tests {
 
     #[test]
     fn cpu_freq_stat() {
-        let sys_path = "tests/node/fixtures/sys";
-        let stats = get_cpu_freq_stat(sys_path.into()).unwrap();
+        let sys_path = Path::new("tests/node/fixtures/sys");
+        let stats = get_cpu_freq_stat(sys_path).unwrap();
 
         assert_eq!(
             stats[0],

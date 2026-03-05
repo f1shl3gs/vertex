@@ -10,11 +10,11 @@
 //!   Not that you cannot get readings for individual processes, the results are for the entire CPU socket.
 
 use std::collections::BTreeMap;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use event::{Metric, tags};
 
-use super::{Error, read_into, read_string};
+use super::{Error, Paths, read_into, read_string};
 
 /// RaplZone stores the information for one RAPL power zone
 #[derive(Debug)]
@@ -35,7 +35,7 @@ struct RaplZone {
 /// `get_rapl_zones` returns a slice of RaplZones
 /// When RAPL files are not present, returns nil with error
 /// https://www.kernel.org/doc/Documentation/power/powercap/powercap.txt
-fn get_rapl_zones(sys_path: PathBuf) -> Result<Vec<RaplZone>, Error> {
+fn get_rapl_zones(sys_path: &Path) -> Result<Vec<RaplZone>, Error> {
     let root = sys_path.join("class/powercap");
     let dirs = std::fs::read_dir(&root)?;
 
@@ -91,8 +91,8 @@ fn get_name_and_index(s: &str) -> Option<(&str, i32)> {
     Some((name, index))
 }
 
-pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let zones = get_rapl_zones(sys_path)?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let zones = get_rapl_zones(paths.sys())?;
     let mut metrics = vec![];
 
     for zone in zones {
@@ -123,7 +123,7 @@ mod tests {
 
     #[test]
     fn rapl_zones() {
-        let root = "tests/node/fixtures/sys".into();
+        let root = Path::new("tests/node/fixtures/sys");
         let mut zones = get_rapl_zones(root).unwrap();
 
         // The readdir_r is not guaranteed to return in any specific order.

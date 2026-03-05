@@ -1,12 +1,12 @@
 use std::collections::HashMap;
-use std::path::PathBuf;
+use std::path::Path;
 
 use event::{Metric, tags};
 
-use super::{Error, read_string};
+use super::{Error, Paths, read_string};
 
-pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = read_bonding_stats(sys_path)?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let stats = read_bonding_stats(paths.sys())?;
 
     let mut metrics = Vec::with_capacity(stats.len() * 2);
     for (master, status) in stats {
@@ -31,7 +31,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
-fn read_bonding_stats(sys_path: PathBuf) -> Result<HashMap<String, Vec<f64>>, Error> {
+fn read_bonding_stats(sys_path: &Path) -> Result<HashMap<String, Vec<f64>>, Error> {
     let masters = read_string(sys_path.join("class/net/bonding_masters"))?;
 
     let mut status = HashMap::new();
@@ -78,7 +78,7 @@ mod tests {
 
     #[test]
     fn bonding_stats() {
-        let path = PathBuf::from("tests/bonding/sys");
+        let path = Path::new("tests/bonding/sys");
         let stats = read_bonding_stats(path).unwrap();
 
         assert_ne!(stats.len(), 0);

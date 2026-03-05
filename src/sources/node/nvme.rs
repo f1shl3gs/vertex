@@ -4,13 +4,13 @@ use std::sync::LazyLock;
 use event::{Metric, tags};
 use regex::Regex;
 
-use super::{Error, read_into, read_string};
+use super::{Error, Paths, read_into, read_string};
 
 static NAMESPACE_PATTERN: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"nvme\d+c\d+n(\d+)"#).unwrap());
 
-pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let dirs = std::fs::read_dir(sys_path.join("class/nvme"))?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let dirs = std::fs::read_dir(paths.sys().join("class/nvme"))?;
 
     let mut metrics = Vec::new();
     for entry in dirs.flatten() {

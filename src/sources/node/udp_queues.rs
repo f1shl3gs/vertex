@@ -2,15 +2,15 @@ use std::path::PathBuf;
 
 use event::{Metric, tags};
 
-use super::Error;
+use super::{Error, Paths};
 
 /// Exposes UDP total lengths of the rx_queue and tx_queue
 /// from `/proc/net/udp` and `/proc/net/udp6`
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     let mut metrics = Vec::with_capacity(4);
 
     for (ip, path) in [("v4", "net/udp"), ("v6", "net/udp6")] {
-        let path = proc_path.join(path);
+        let path = paths.proc().join(path);
         if !path.exists() {
             continue;
         }

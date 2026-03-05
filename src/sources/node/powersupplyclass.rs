@@ -5,7 +5,7 @@ use event::{Metric, tags};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 
-use super::{Error, read_string};
+use super::{Error, Paths, read_string};
 
 /// PowerSupply contains info from files in /sys/class/power_supply for
 /// a single power supply
@@ -1050,8 +1050,8 @@ macro_rules! power_supply_metric_divide_10 {
     };
 }
 
-pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let psc = power_supply_class(&sys_path)?;
+pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
+    let psc = power_supply_class(paths.sys())?;
     let mut metrics = vec![];
     for ps in psc {
         if conf.ignored.is_match(&ps.name) {
@@ -1287,8 +1287,8 @@ mod tests {
 
     #[test]
     fn power_supply_classes() {
-        let root = PathBuf::from("tests/node/fixtures/sys");
-        let mut pss = power_supply_class(&root).unwrap();
+        let root = Path::new("tests/node/fixtures/sys");
+        let mut pss = power_supply_class(root).unwrap();
 
         // The readdir_r is not guaranteed to return in any specific order.
         // And the order of Github CI and Centos Stream is different, so it must be sorted

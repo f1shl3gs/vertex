@@ -1,11 +1,11 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use configurable::Configurable;
 use event::{Metric, tags};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 
-use super::{Error, read_string};
+use super::{Error, Paths, read_string};
 
 #[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
@@ -27,8 +27,8 @@ fn default_ignores() -> regex::Regex {
     regex::Regex::new("^$").unwrap()
 }
 
-pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let devices = net_class_devices(sys_path.clone())?;
+pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
+    let devices = net_class_devices(paths.sys())?;
 
     let mut metrics = Vec::new();
     for device in devices {
@@ -36,7 +36,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
             continue;
         }
 
-        let path = sys_path.join("class/net").join(&device);
+        let path = paths.sys().join("class/net").join(&device);
         let nci = match NetClassInterface::parse(path) {
             Ok(nci) => nci,
             _ => continue,
@@ -239,7 +239,7 @@ fn admin_state(flags: Option<i64>) -> &'static str {
     }
 }
 
-fn net_class_devices(sys_path: PathBuf) -> Result<Vec<String>, Error> {
+fn net_class_devices(sys_path: &Path) -> Result<Vec<String>, Error> {
     let dirs = std::fs::read_dir(sys_path.join("class/net"))?;
 
     let mut devices = Vec::new();

@@ -2,14 +2,14 @@
 //!
 //! Linux (kernel 4.4+)
 
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use event::{Metric, tags};
 
-use super::Error;
+use super::{Error, Paths};
 
-pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = load_xfs_sys_stats(sys_path)?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let stats = load_xfs_sys_stats(paths.sys())?;
 
     let mut metrics = Vec::with_capacity(stats.len() * 39);
     for (device, stat) in stats {
@@ -393,7 +393,7 @@ struct Stats {
 /// xfs_sys_stats retrieves XFS filesystem runtime statistics for each mounted
 /// XFS filesystem. Only available on kernel 4.4+. On older kernels, an empty
 /// vector will be returned.
-fn load_xfs_sys_stats(sys_path: PathBuf) -> Result<Vec<(String, Stats)>, Error> {
+fn load_xfs_sys_stats(sys_path: &Path) -> Result<Vec<(String, Stats)>, Error> {
     let paths = glob::glob(&format!(
         "{}/fs/xfs/*/stats/stats",
         sys_path.to_string_lossy()
@@ -612,14 +612,14 @@ mod tests {
 
     #[test]
     fn proc_stat() {
-        let path = PathBuf::from("tests/node/fixtures/proc/fs/xfs/stat");
-        let stat = parse_stat(&path).unwrap();
+        let path = Path::new("tests/node/fixtures/proc/fs/xfs/stat");
+        let stat = parse_stat(path).unwrap();
         assert_eq!(stat.extent_allocation.extents_allocated, 92447);
     }
 
     #[test]
     fn sys_stats() {
-        let sys_path = "tests/node/fixtures/sys".into();
+        let sys_path = Path::new("tests/node/fixtures/sys");
         let array = load_xfs_sys_stats(sys_path).unwrap();
         assert_eq!(array.len(), 2);
 
@@ -827,8 +827,8 @@ mod tests {
             // },
         };
 
-        let path = PathBuf::from("tests/node/fixtures/proc/fs/xfs/stat");
-        let got = parse_stat(&path).unwrap();
+        let path = Path::new("tests/node/fixtures/proc/fs/xfs/stat");
+        let got = parse_stat(path).unwrap();
 
         assert_eq!(want, got)
     }

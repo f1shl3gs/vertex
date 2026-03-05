@@ -1,22 +1,22 @@
-use std::path::PathBuf;
+use std::path::Path;
 
 use event::Metric;
 
-use super::{Error, read_into};
+use super::{Error, Paths, read_into};
 
 /// Shows conntrack statistics (does nothing if no `/proc/sys/net/netfilter/` present)
 ///
 /// Maybe we can fetch conntrack statistics from netlink api
 /// https://github.com/torvalds/linux/blob/master/net/netfilter/nf_conntrack_netlink.c
 /// https://github.com/ti-mo/conntrack/blob/5b022d74eb6f79d2ddbddd0100e93b3aeeadfff8/conn.go#L465
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let path = proc_path.join("sys/net/netfilter/nf_conntrack_count");
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let path = paths.proc().join("sys/net/netfilter/nf_conntrack_count");
     let count = read_into::<_, u64, _>(path)?;
 
-    let path = proc_path.join("sys/net/netfilter/nf_conntrack_max");
+    let path = paths.proc().join("sys/net/netfilter/nf_conntrack_max");
     let max = read_into::<_, u64, _>(path)?;
 
-    let stats = get_conntrack_statistics(proc_path)?;
+    let stats = get_conntrack_statistics(paths.proc())?;
 
     let statistic = stats
         .iter()
@@ -148,7 +148,7 @@ impl ConntrackStatEntry {
     }
 }
 
-fn get_conntrack_statistics(proc_path: PathBuf) -> Result<Vec<ConntrackStatEntry>, Error> {
+fn get_conntrack_statistics(proc_path: &Path) -> Result<Vec<ConntrackStatEntry>, Error> {
     let data = std::fs::read_to_string(proc_path.join("net/stat/nf_conntrack"))?;
 
     let mut stats = Vec::new();

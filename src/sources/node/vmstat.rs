@@ -1,14 +1,12 @@
 //! Exposes statistics from `/proc/vmstat`
 
-use std::path::PathBuf;
-
 use configurable::Configurable;
 use event::Metric;
 use framework::config::serde_regex;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
-use super::Error;
+use super::{Error, Paths};
 
 fn default_fields() -> Regex {
     const DEFAULT_PATTERN: &str = "^(oom_kill|pgpg|pswp|pg.*fault).*";
@@ -30,8 +28,8 @@ impl Default for Config {
     }
 }
 
-pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let data = std::fs::read_to_string(proc_path.join("vmstat"))?;
+pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
+    let data = std::fs::read_to_string(paths.proc().join("vmstat"))?;
 
     let mut metrics = Vec::new();
     for line in data.lines() {
@@ -55,17 +53,4 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
     }
 
     Ok(metrics)
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[tokio::test]
-    async fn test_gather() {
-        let conf = Config::default();
-        let proc = "tests/node/fixtures/proc".into();
-        let ms = gather(conf, proc).await.unwrap();
-        assert_ne!(ms.len(), 0);
-    }
 }

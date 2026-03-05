@@ -5,14 +5,14 @@
 //!
 //! https://github.com/prometheus/node_exporter/pull/1998
 
-use std::path::PathBuf;
+use std::path::Path;
 
 use event::{Metric, tags};
 
-use super::{Error, read_into, read_string};
+use super::{Error, Paths, read_into, read_string};
 
-pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = class_drm_card_amdgpu_stats(sys_path).await?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let stats = class_drm_card_amdgpu_stats(paths.sys())?;
 
     let mut metrics = Vec::with_capacity(8 * stats.len());
     for stat in stats {
@@ -84,9 +84,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
-async fn class_drm_card_amdgpu_stats(
-    sys_path: PathBuf,
-) -> Result<Vec<ClassDRMCardAMDGPUStats>, Error> {
+fn class_drm_card_amdgpu_stats(sys_path: &Path) -> Result<Vec<ClassDRMCardAMDGPUStats>, Error> {
     let pattern = format!("{}/class/drm/card[0-9]", sys_path.to_string_lossy());
     let paths = glob::glob(&pattern)?;
 
@@ -187,10 +185,10 @@ fn parse_class_drm_amdgpu_card(card: &str) -> Result<ClassDRMCardAMDGPUStats, Er
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_class_dram_card_amdgpu_stats() {
-        let path = "tests/node/fixtures/sys".into();
-        let stats = class_drm_card_amdgpu_stats(path).await.unwrap();
+    #[test]
+    fn amdgpu_stats() {
+        let path = Path::new("tests/node/fixtures/sys");
+        let stats = class_drm_card_amdgpu_stats(path).unwrap();
 
         assert_eq!(stats.len(), 1);
         assert_eq!(
