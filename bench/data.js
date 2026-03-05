@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772697871722,
+  "lastUpdate": 1772697955347,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "27a81e473c068370d7084a8f2b312d3f99c2c09c",
-          "message": "Merge pull request #2731 from f1shl3gs/lib/tracing-internal/optimize_attributes_insertions\n\nlib/tracing-internal: optimize attributes insertions",
-          "timestamp": "2026-01-03T06:52:50+08:00",
-          "tree_id": "2561b1a9f7a5059122d246ea8034b37e58127e49",
-          "url": "https://github.com/f1shl3gs/vertex/commit/27a81e473c068370d7084a8f2b312d3f99c2c09c"
-        },
-        "date": 1767395026418,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 575,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41211.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ccbebceace01dfc421c9660bb520391e99da2705",
           "message": "Merge pull request #2732 from f1shl3gs/dependabot/cargo/libc-0.2.179\n\nchore(deps): bump libc from 0.2.178 to 0.2.179",
           "timestamp": "2026-01-03T20:33:06+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40546,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "653aa84acd7ffcbeb18ffb263236198d7b2e42b1",
+          "message": "Merge pull request #2832 from f1shl3gs/sources/node/ksmd\n\nsources/node: add ksmd collector",
+          "timestamp": "2026-03-05T15:54:01+08:00",
+          "tree_id": "b0d41df422bcf7a8af159eb0db5acf3417f17371",
+          "url": "https://github.com/f1shl3gs/vertex/commit/653aa84acd7ffcbeb18ffb263236198d7b2e42b1"
+        },
+        "date": 1772697932859,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 600,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40558.3,
             "unit": "KiB"
           }
         ]
