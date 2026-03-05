@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772693685831,
+  "lastUpdate": 1772693759210,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8a2ad266d47277cfad556c0184be085e87b37ca9",
-          "message": "Merge pull request #2730 from f1shl3gs/lib/event/simplify_trace\n\nlib/event: simplify trace structure",
-          "timestamp": "2026-01-03T04:53:06+08:00",
-          "tree_id": "81a74f05f02080ac3b5e282ade91433b048d7dbb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8a2ad266d47277cfad556c0184be085e87b37ca9"
-        },
-        "date": 1767387853252,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 590,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41212.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "27a81e473c068370d7084a8f2b312d3f99c2c09c",
           "message": "Merge pull request #2731 from f1shl3gs/lib/tracing-internal/optimize_attributes_insertions\n\nlib/tracing-internal: optimize attributes insertions",
           "timestamp": "2026-01-03T06:52:50+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40526.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "932f68632761b4354a06a5b7a11063a01b2a5048",
+          "message": "Merge pull request #2831 from f1shl3gs/sources/node/interrupts\n\nsources/node: add interrupts collector",
+          "timestamp": "2026-03-05T14:44:18+08:00",
+          "tree_id": "3d6711f0bfadad500fa032f2737e6a5d6097dcca",
+          "url": "https://github.com/f1shl3gs/vertex/commit/932f68632761b4354a06a5b7a11063a01b2a5048"
+        },
+        "date": 1772693736069,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 597,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40546,
             "unit": "KiB"
           }
         ]
