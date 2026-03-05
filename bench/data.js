@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772726005101,
+  "lastUpdate": 1772726012954,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5a69b04119f4d32625814f0f5b0761ea4f4b2233",
-          "message": "Merge pull request #2641 from f1shl3gs/dependabot/cargo/flate2-1.1.5\n\nchore(deps): bump flate2 from 1.1.4 to 1.1.5",
-          "timestamp": "2025-10-24T19:49:03+08:00",
-          "tree_id": "af6b9848e85fd1f71b38e88dd19960b7649da6ea",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5a69b04119f4d32625814f0f5b0761ea4f4b2233"
-        },
-        "date": 1761306701323,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 18.564,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 134.26,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 295,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 644.37,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e5c104854e6140218e68a40c35a0a381a3cd39d3",
           "message": "Merge pull request #2643 from f1shl3gs/lib/framework/fix_multiple_config\n\ncli: fix multiple configs",
           "timestamp": "2025-10-25T03:50:23+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 641.82,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ecac551549f199eb86591ba3a2f3ca541611c0dc",
+          "message": "Merge pull request #2834 from f1shl3gs/sources/mysqld/remove_unnecessary_path\n\nsources/mysqld: remove unnecessary path",
+          "timestamp": "2026-03-05T23:50:41+08:00",
+          "tree_id": "2d2bbd5e6b597fa3d6e7095aa977097c74754708",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ecac551549f199eb86591ba3a2f3ca541611c0dc"
+        },
+        "date": 1772725990636,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.754,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 181.17,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 319.39,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 672.05,
             "unit": "ns/op"
           }
         ]
