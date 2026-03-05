@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772688910848,
+  "lastUpdate": 1772689014546,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5fe9b975f08c1fda600d4470174dd9498df893e7",
-          "message": "Merge pull request #2729 from f1shl3gs/cargo/update\n\ncargo: update",
-          "timestamp": "2026-01-02T18:27:42+08:00",
-          "tree_id": "46161b2bb00984d372f06e641f13531658d9eef9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5fe9b975f08c1fda600d4470174dd9498df893e7"
-        },
-        "date": 1767350294343,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 558,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41273.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8a2ad266d47277cfad556c0184be085e87b37ca9",
           "message": "Merge pull request #2730 from f1shl3gs/lib/event/simplify_trace\n\nlib/event: simplify trace structure",
           "timestamp": "2026-01-03T04:53:06+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 589,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40526.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7e3b8e0e3d3492d53ab6b43a81670a192df7e874",
+          "message": "Merge pull request #2828 from f1shl3gs/dependabot/cargo/argh-0.1.15\n\nchore(deps): bump argh from 0.1.14 to 0.1.15",
+          "timestamp": "2026-03-05T13:25:14+08:00",
+          "tree_id": "e57ce3d07508ab403bb0f526438c9ae9f67c987a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7e3b8e0e3d3492d53ab6b43a81670a192df7e874"
+        },
+        "date": 1772688991538,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 594,
             "unit": "s"
           },
           {
