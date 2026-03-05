@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772684317406,
+  "lastUpdate": 1772684330280,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f937f8e20ab11968dc34cf6b299f9caf0abb92c8",
-          "message": "Merge pull request #2635 from f1shl3gs/sources/syslog/unify_listen\n\nsources/syslog: unify listen",
-          "timestamp": "2025-10-23T05:36:46+08:00",
-          "tree_id": "991ab10df134aea14afffe4f98c2ff09bc6a435f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f937f8e20ab11968dc34cf6b299f9caf0abb92c8"
-        },
-        "date": 1761169165931,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 18.398,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 136.99,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 294.03,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 603.43,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "06230575e2947028aa9af7b46fd70a4f63293caf",
           "message": "Merge pull request #2637 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.102\n\nchore(deps): bump proc-macro2 from 1.0.101 to 1.0.102",
           "timestamp": "2025-10-23T19:18:19+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 695.19,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e43dc5a22b787c54aa03f2f7aa68bebe023397dc",
+          "message": "Merge pull request #2829 from f1shl3gs/ci/tests/timeout\n\nci/tests: add timeout for tests",
+          "timestamp": "2026-03-05T12:15:59+08:00",
+          "tree_id": "e85ecb1afe00f8a95870eba8bf2f2f6f40adc2ec",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e43dc5a22b787c54aa03f2f7aa68bebe023397dc"
+        },
+        "date": 1772684307780,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.642,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 179.57,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 324.47,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 676.52,
             "unit": "ns/op"
           }
         ]
