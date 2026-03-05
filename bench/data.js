@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772684389411,
+  "lastUpdate": 1772684764460,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "06230575e2947028aa9af7b46fd70a4f63293caf",
-          "message": "Merge pull request #2637 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.102\n\nchore(deps): bump proc-macro2 from 1.0.101 to 1.0.102",
-          "timestamp": "2025-10-23T19:18:19+08:00",
-          "tree_id": "188ced6df6ebeac27ea1b9aa155d09c10983c352",
-          "url": "https://github.com/f1shl3gs/vertex/commit/06230575e2947028aa9af7b46fd70a4f63293caf"
-        },
-        "date": 1761218874044,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14595000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 616180,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.103,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "08f1b38253a19e54dd6a7a3a6a41b8456829a295",
           "message": "Merge pull request #2638 from f1shl3gs/dependabot/cargo/syn-2.0.108\n\nchore(deps): bump syn from 2.0.107 to 2.0.108",
           "timestamp": "2025-10-23T19:18:34+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 53.73,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e43dc5a22b787c54aa03f2f7aa68bebe023397dc",
+          "message": "Merge pull request #2829 from f1shl3gs/ci/tests/timeout\n\nci/tests: add timeout for tests",
+          "timestamp": "2026-03-05T12:15:59+08:00",
+          "tree_id": "e85ecb1afe00f8a95870eba8bf2f2f6f40adc2ec",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e43dc5a22b787c54aa03f2f7aa68bebe023397dc"
+        },
+        "date": 1772684740832,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7679900,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 769440,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 61.965,
             "unit": "ns/op"
           }
         ]
