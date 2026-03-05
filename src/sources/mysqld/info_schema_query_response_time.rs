@@ -1,7 +1,6 @@
 use event::{Bucket, Metric};
-use sqlx;
 use sqlx::mysql::MySqlRow;
-use sqlx::{FromRow, MySqlPool, Row};
+use sqlx::{FromRow, MySqlPool, Row, query_as, query_scalar};
 
 use super::MysqlError;
 
@@ -36,7 +35,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, MysqlError> {
 }
 
 async fn check_stats(pool: &MySqlPool) -> Result<bool, MysqlError> {
-    let status = sqlx::query_scalar::<_, i32>(RESPONSE_TIME_CHECK_QUERY)
+    let status = query_scalar::<_, i32>(RESPONSE_TIME_CHECK_QUERY)
         .fetch_one(pool)
         .await;
 
@@ -83,7 +82,7 @@ impl<'r> FromRow<'r, MySqlRow> for Statistic {
 }
 
 async fn query_response_time(pool: &MySqlPool, query: &'static str) -> Result<Metric, MysqlError> {
-    let records = sqlx::query_as::<_, Statistic>(query)
+    let records = query_as::<_, Statistic>(query)
         .fetch_all(pool)
         .await
         .map_err(|err| MysqlError::Query { query, err })?;
