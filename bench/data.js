@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772684775964,
+  "lastUpdate": 1772684811512,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "06230575e2947028aa9af7b46fd70a4f63293caf",
-          "message": "Merge pull request #2637 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.102\n\nchore(deps): bump proc-macro2 from 1.0.101 to 1.0.102",
-          "timestamp": "2025-10-23T19:18:19+08:00",
-          "tree_id": "188ced6df6ebeac27ea1b9aa155d09c10983c352",
-          "url": "https://github.com/f1shl3gs/vertex/commit/06230575e2947028aa9af7b46fd70a4f63293caf"
-        },
-        "date": 1761218462574,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 18.527,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 151.08,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 266.94,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 566.53,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "08f1b38253a19e54dd6a7a3a6a41b8456829a295",
           "message": "Merge pull request #2638 from f1shl3gs/dependabot/cargo/syn-2.0.108\n\nchore(deps): bump syn from 2.0.107 to 2.0.108",
           "timestamp": "2025-10-23T19:18:34+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 676.52,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e8c42ddd4ea1195549c00227896b10488f8590ef",
+          "message": "Merge pull request #2830 from f1shl3gs/deps/humanize/bump_to_latest\n\ndeps/humanize: bump to latest version",
+          "timestamp": "2026-03-05T12:23:55+08:00",
+          "tree_id": "0a4467b9cada613b8125c38a9d3b76acfc832e1f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e8c42ddd4ea1195549c00227896b10488f8590ef"
+        },
+        "date": 1772684787882,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.776,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 173.88,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 323.24,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 701.31,
             "unit": "ns/op"
           }
         ]
