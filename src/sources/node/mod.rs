@@ -26,6 +26,7 @@ mod interrupts;
 mod ipvs;
 #[cfg(target_os = "linux")]
 mod kernel_hung;
+mod ksmd;
 mod lnstat;
 mod loadavg;
 mod mdadm;
@@ -199,6 +200,9 @@ struct Collectors {
     #[serde(default)]
     kernel_hung: bool,
 
+    #[serde(default)]
+    ksmd: bool,
+
     /// Exposes stats from /proc/net/stat/
     #[serde(default)]
     lnstat: bool,
@@ -344,6 +348,7 @@ impl Default for Collectors {
             interrupts: false,
             ipvs: default_ipvs_config(),
             kernel_hung: false,
+            ksmd: false,
             lnstat: false,
             loadavg: true,
             mdadm: true,
@@ -683,6 +688,11 @@ async fn run(
             tasks.spawn(
                 async move { record_gather!("kernel_hung", kernel_hung::gather(proc_path)) },
             );
+        }
+
+        if collectors.ksmd {
+            let sys_path = sys_path.clone();
+            tasks.spawn(async move { record_gather!("ksmd", ksmd::collect(sys_path)) });
         }
 
         if collectors.lnstat {
