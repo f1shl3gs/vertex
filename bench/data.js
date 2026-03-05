@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772707115837,
+  "lastUpdate": 1772725983564,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "57b8912d84d8aa850723e3837a50a6e6b382f97c",
-          "message": "Merge pull request #2644 from f1shl3gs/lib/framework/remove_secret_string\n\nlib/framework: remove SecretString",
-          "timestamp": "2025-10-25T04:30:00+08:00",
-          "tree_id": "7ec6c12b40d4431c10d0a7f53c18c8a3246c5871",
-          "url": "https://github.com/f1shl3gs/vertex/commit/57b8912d84d8aa850723e3837a50a6e6b382f97c"
-        },
-        "date": 1761337939469,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 520920,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 529340,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ecac551549f199eb86591ba3a2f3ca541611c0dc",
+          "message": "Merge pull request #2834 from f1shl3gs/sources/mysqld/remove_unnecessary_path\n\nsources/mysqld: remove unnecessary path",
+          "timestamp": "2026-03-05T23:50:41+08:00",
+          "tree_id": "2d2bbd5e6b597fa3d6e7095aa977097c74754708",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ecac551549f199eb86591ba3a2f3ca541611c0dc"
+        },
+        "date": 1772725961340,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 522810,
             "unit": "ns/op"
           }
         ]
