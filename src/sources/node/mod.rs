@@ -22,6 +22,7 @@ mod filefd;
 mod filesystem;
 pub mod hwmon;
 mod infiniband;
+mod interrupts;
 mod ipvs;
 #[cfg(target_os = "linux")]
 mod kernel_hung;
@@ -189,6 +190,9 @@ struct Collectors {
     #[serde(default = "default_true")]
     infiniband: bool,
 
+    #[serde(default)]
+    interrupts: bool,
+
     #[serde(default = "default_ipvs_config")]
     ipvs: Option<ipvs::Config>,
 
@@ -337,6 +341,7 @@ impl Default for Collectors {
             filesystem: default_filesystem_config(),
             hwmon: true,
             infiniband: true,
+            interrupts: false,
             ipvs: default_ipvs_config(),
             kernel_hung: false,
             lnstat: false,
@@ -659,6 +664,12 @@ async fn run(
         if collectors.infiniband {
             let sys_path = sys_path.clone();
             tasks.spawn(async move { record_gather!("infiniband", infiniband::gather(sys_path)) });
+        }
+
+        if collectors.interrupts {
+            let proc_path = proc_path.clone();
+            tasks
+                .spawn(async move { record_gather!("interrupts", interrupts::collect(proc_path)) });
         }
 
         if let Some(conf) = &collectors.ipvs {
