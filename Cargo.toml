@@ -490,7 +490,7 @@ exitcode = { version = "1.1.2" }
 flate2 = { version = "1.1.9", optional = true }
 gcra = { git = "https://github.com/f1shl3gs/gcra.git", rev = "c4011e32aa408947decf812dd6fa2eee7492be16", optional = true }
 glob = { version = "0.3.3", default-features = false }
-humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes", "duration", "serde"], rev = "29e9225d05de76c6d48134497aa4a94c2cd08380" }
+humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes", "duration", "serde"], rev = "84cfd7acea8e3c69512a2f33496641a92efaff66" }
 hyper-unix = { path = "lib/hyper-unix", optional = true }
 indexmap = { version = "2.13.0", default-features = false, features = ["serde"] }
 inventory = { version = "0.3.22", default-features = false }
