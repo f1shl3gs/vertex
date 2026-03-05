@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772726438879,
+  "lastUpdate": 1772726537562,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "eb2cc8abb676f3a5865eaedb4fefee0711fbc94b",
-          "message": "Merge pull request #2733 from f1shl3gs/dependabot/cargo/tokio-1.49.0\n\nchore(deps): bump tokio from 1.48.0 to 1.49.0",
-          "timestamp": "2026-01-03T20:34:05+08:00",
-          "tree_id": "963f629e9d3f2813c8e10831c9e8b66e4a552980",
-          "url": "https://github.com/f1shl3gs/vertex/commit/eb2cc8abb676f3a5865eaedb4fefee0711fbc94b"
-        },
-        "date": 1767444304212,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 577,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41205.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f37014d16931f60dfe1291a36024f84d3d7e67b7",
           "message": "Merge pull request #2734 from f1shl3gs/dependabot/cargo/syn-2.0.113\n\nchore(deps): bump syn from 2.0.112 to 2.0.113",
           "timestamp": "2026-01-04T20:06:58+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 585,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40565.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ecac551549f199eb86591ba3a2f3ca541611c0dc",
+          "message": "Merge pull request #2834 from f1shl3gs/sources/mysqld/remove_unnecessary_path\n\nsources/mysqld: remove unnecessary path",
+          "timestamp": "2026-03-05T23:50:41+08:00",
+          "tree_id": "2d2bbd5e6b597fa3d6e7095aa977097c74754708",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ecac551549f199eb86591ba3a2f3ca541611c0dc"
+        },
+        "date": 1772726515113,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 588,
             "unit": "s"
           },
           {
