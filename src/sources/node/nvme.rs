@@ -125,7 +125,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_read_nvme_device() {
+    fn read() {
         let root = PathBuf::from("tests/node/fixtures/sys/class/nvme/nvme0");
         let infos = read_nvme_device(root).unwrap();
 
