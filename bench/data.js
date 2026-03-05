@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772706657352,
+  "lastUpdate": 1772707086162,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ca55932293994590bd148b78d785f335cf44ef99",
-          "message": "Merge pull request #2642 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.103\n\nchore(deps): bump proc-macro2 from 1.0.102 to 1.0.103",
-          "timestamp": "2025-10-24T19:48:36+08:00",
-          "tree_id": "8e6106f40d75b995dd0daac80e3de6321fa50571",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ca55932293994590bd148b78d785f335cf44ef99"
-        },
-        "date": 1761307116436,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 16108000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 417620,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 48.355,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e5c104854e6140218e68a40c35a0a381a3cd39d3",
           "message": "Merge pull request #2643 from f1shl3gs/lib/framework/fix_multiple_config\n\ncli: fix multiple configs",
           "timestamp": "2025-10-25T03:50:23+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.815,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b517983d90235a5ebcce718be839a519bec2fbb2",
+          "message": "Merge pull request #2833 from f1shl3gs/sources/node/add_nvme_namespace_metrics\n\nsources/node: add nvme namespace metrics",
+          "timestamp": "2026-03-05T18:27:02+08:00",
+          "tree_id": "77aa0d4625e18bd1ed282bffb2a0a75fb2f94501",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b517983d90235a5ebcce718be839a519bec2fbb2"
+        },
+        "date": 1772707063290,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 8227700,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 670320,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.516,
             "unit": "ns/op"
           }
         ]
