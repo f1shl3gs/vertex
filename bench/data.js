@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772779176321,
+  "lastUpdate": 1772779297508,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "52df23451aa9ad448ab4f9b7582446fbe41add9b",
-          "message": "Merge pull request #2736 from f1shl3gs/dependabot/cargo/tokio-util-0.7.18\n\nchore(deps): bump tokio-util from 0.7.17 to 0.7.18",
-          "timestamp": "2026-01-06T17:10:13+08:00",
-          "tree_id": "91f4671ec7a600a53b2efeda57ea98091ebf1e64",
-          "url": "https://github.com/f1shl3gs/vertex/commit/52df23451aa9ad448ab4f9b7582446fbe41add9b"
-        },
-        "date": 1767691332196,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 636,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41205.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6fd34e240cb97b10695e67b63ed1fa8156215546",
           "message": "Merge pull request #2741 from f1shl3gs/dependabot/cargo/url-2.5.8\n\nchore(deps): bump url from 2.5.7 to 2.5.8",
           "timestamp": "2026-01-06T17:43:28+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40511.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ad6b73a0e9b4071ff761e647509f0c35eb4e706a",
+          "message": "Merge pull request #2839 from f1shl3gs/sinks/prometheus_exporter/simplify_http_handler\n\nsinks/prometheus_exporter: simplify http handler",
+          "timestamp": "2026-03-06T14:29:29+08:00",
+          "tree_id": "dc8d8143e2bd01c3ef3c4b99191d53473b8148aa",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ad6b73a0e9b4071ff761e647509f0c35eb4e706a"
+        },
+        "date": 1772779269569,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 600,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40512.1,
             "unit": "KiB"
           }
         ]
