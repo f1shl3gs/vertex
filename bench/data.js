@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772776845331,
+  "lastUpdate": 1772776859938,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "03a5642aa2e3c46ffebc39a262370381c6bc4f92",
-          "message": "Merge pull request #2646 from f1shl3gs/lib/framework/add_env_expansion_comment\n\nlib/framework: add env expansion comment",
-          "timestamp": "2025-10-25T23:38:05+08:00",
-          "tree_id": "0c38c7bf282f3ff6c3ee9c6a7370e15179f0ab4f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/03a5642aa2e3c46ffebc39a262370381c6bc4f92"
-        },
-        "date": 1761406830435,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.326,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 97.591,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 175.22,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 174.9,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1c6e150bcca39b6887ad25984e8a5d6d6918b96e",
+          "message": "Merge pull request #2837 from f1shl3gs/toolchain/1.94.0\n\ntoolchain: bump to 1.94.0",
+          "timestamp": "2026-03-06T13:58:11+08:00",
+          "tree_id": "73388af9582fcfa4ac128fd3e3c683bac5a7bbfe",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1c6e150bcca39b6887ad25984e8a5d6d6918b96e"
+        },
+        "date": 1772776836683,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.351,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 101.41,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 184.16,
             "unit": "ns/op"
           }
         ]
