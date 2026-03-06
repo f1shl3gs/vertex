@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772777313321,
+  "lastUpdate": 1772777376466,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "37d9a5548fda67812afdf8bec3acd6f78ce74183",
-          "message": "Merge pull request #2737 from f1shl3gs/dependabot/cargo/tokio-test-0.4.5\n\nchore(deps): bump tokio-test from 0.4.4 to 0.4.5",
-          "timestamp": "2026-01-06T10:14:08+08:00",
-          "tree_id": "c11fbbb9e208aff7062a3f2f3cd4fbed5a7f363b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/37d9a5548fda67812afdf8bec3acd6f78ce74183"
-        },
-        "date": 1767666305846,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 580,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41204.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7ff093607e1627c8481547408681171226eaa4f6",
           "message": "Merge pull request #2735 from f1shl3gs/dependabot/cargo/tokio-stream-0.1.18\n\nchore(deps): bump tokio-stream from 0.1.17 to 0.1.18",
           "timestamp": "2026-01-06T10:14:33+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40565.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1c6e150bcca39b6887ad25984e8a5d6d6918b96e",
+          "message": "Merge pull request #2837 from f1shl3gs/toolchain/1.94.0\n\ntoolchain: bump to 1.94.0",
+          "timestamp": "2026-03-06T13:58:11+08:00",
+          "tree_id": "73388af9582fcfa4ac128fd3e3c683bac5a7bbfe",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1c6e150bcca39b6887ad25984e8a5d6d6918b96e"
+        },
+        "date": 1772777352919,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 574,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40511.2,
             "unit": "KiB"
           }
         ]
