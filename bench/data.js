@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772778653550,
+  "lastUpdate": 1772778676328,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7d7c91f47e5dbd04dc5c56cc1d5e7463db975f90",
-          "message": "Merge pull request #2645 from f1shl3gs/misc/cleanup\n\nmisc: cleanup",
-          "timestamp": "2025-10-25T23:20:12+08:00",
-          "tree_id": "707caf08e136fd8278ebdb48350a6a9ecb2abfd3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7d7c91f47e5dbd04dc5c56cc1d5e7463db975f90"
-        },
-        "date": 1761405777595,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.254,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 169.95,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 328.22,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 677.64,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "03a5642aa2e3c46ffebc39a262370381c6bc4f92",
           "message": "Merge pull request #2646 from f1shl3gs/lib/framework/add_env_expansion_comment\n\nlib/framework: add env expansion comment",
           "timestamp": "2025-10-25T23:38:05+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 677.14,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ca4232dc2a56c87f43f2951f747cac4189282f78",
+          "message": "Merge pull request #2840 from f1shl3gs/sources/journald/cleanup\n\nsources/journald: cleanup",
+          "timestamp": "2026-03-06T14:28:13+08:00",
+          "tree_id": "7995f01533bfaf33450b3f46ad76157ff6885468",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ca4232dc2a56c87f43f2951f747cac4189282f78"
+        },
+        "date": 1772778653318,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.136,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 186.5,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 364.84,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 763.72,
             "unit": "ns/op"
           }
         ]
