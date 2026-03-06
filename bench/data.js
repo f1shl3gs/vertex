@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772778736972,
+  "lastUpdate": 1772778757330,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "03a5642aa2e3c46ffebc39a262370381c6bc4f92",
-          "message": "Merge pull request #2646 from f1shl3gs/lib/framework/add_env_expansion_comment\n\nlib/framework: add env expansion comment",
-          "timestamp": "2025-10-25T23:38:05+08:00",
-          "tree_id": "0c38c7bf282f3ff6c3ee9c6a7370e15179f0ab4f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/03a5642aa2e3c46ffebc39a262370381c6bc4f92"
-        },
-        "date": 1761406845544,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.236,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 179.08,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 335.57,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 677.81,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "906faca7b2eb0cfb204f55d9549ef60f173456a1",
           "message": "Merge pull request #2649 from f1shl3gs/dependabot/cargo/proptest-derive-0.7.0\n\nchore(deps): bump proptest-derive from 0.6.0 to 0.7.0",
           "timestamp": "2025-10-27T19:11:14+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 763.72,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ad6b73a0e9b4071ff761e647509f0c35eb4e706a",
+          "message": "Merge pull request #2839 from f1shl3gs/sinks/prometheus_exporter/simplify_http_handler\n\nsinks/prometheus_exporter: simplify http handler",
+          "timestamp": "2026-03-06T14:29:29+08:00",
+          "tree_id": "dc8d8143e2bd01c3ef3c4b99191d53473b8148aa",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ad6b73a0e9b4071ff761e647509f0c35eb4e706a"
+        },
+        "date": 1772778734484,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.838,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 184.21,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 331.24,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 712.73,
             "unit": "ns/op"
           }
         ]
