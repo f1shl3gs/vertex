@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772776859938,
+  "lastUpdate": 1772776864673,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "57b8912d84d8aa850723e3837a50a6e6b382f97c",
-          "message": "Merge pull request #2644 from f1shl3gs/lib/framework/remove_secret_string\n\nlib/framework: remove SecretString",
-          "timestamp": "2025-10-25T04:30:00+08:00",
-          "tree_id": "7ec6c12b40d4431c10d0a7f53c18c8a3246c5871",
-          "url": "https://github.com/f1shl3gs/vertex/commit/57b8912d84d8aa850723e3837a50a6e6b382f97c"
-        },
-        "date": 1761337957116,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.248,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 148.27,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 308.08,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 666.95,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7d7c91f47e5dbd04dc5c56cc1d5e7463db975f90",
           "message": "Merge pull request #2645 from f1shl3gs/misc/cleanup\n\nmisc: cleanup",
           "timestamp": "2025-10-25T23:20:12+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 680.82,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1c6e150bcca39b6887ad25984e8a5d6d6918b96e",
+          "message": "Merge pull request #2837 from f1shl3gs/toolchain/1.94.0\n\ntoolchain: bump to 1.94.0",
+          "timestamp": "2026-03-06T13:58:11+08:00",
+          "tree_id": "73388af9582fcfa4ac128fd3e3c683bac5a7bbfe",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1c6e150bcca39b6887ad25984e8a5d6d6918b96e"
+        },
+        "date": 1772776842336,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.6,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 173.86,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 327.66,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 677.14,
             "unit": "ns/op"
           }
         ]
