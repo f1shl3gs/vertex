@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772778676328,
+  "lastUpdate": 1772778731043,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "906f036f74616a7e4b9b8cae0c8f6dcb446d7843",
-          "message": "Merge pull request #2650 from f1shl3gs/dependabot/cargo/proptest-1.9.0\n\nchore(deps): bump proptest from 1.8.0 to 1.9.0",
-          "timestamp": "2025-10-27T19:22:11+08:00",
-          "tree_id": "31e0533e118efeb7290615abbf50a085b7324bfd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/906f036f74616a7e4b9b8cae0c8f6dcb446d7843"
-        },
-        "date": 1761564277154,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.387,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 97.142,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 171.52,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 184.44,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ad6b73a0e9b4071ff761e647509f0c35eb4e706a",
+          "message": "Merge pull request #2839 from f1shl3gs/sinks/prometheus_exporter/simplify_http_handler\n\nsinks/prometheus_exporter: simplify http handler",
+          "timestamp": "2026-03-06T14:29:29+08:00",
+          "tree_id": "dc8d8143e2bd01c3ef3c4b99191d53473b8148aa",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ad6b73a0e9b4071ff761e647509f0c35eb4e706a"
+        },
+        "date": 1772778708743,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.075,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 101.09,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 184.47,
             "unit": "ns/op"
           }
         ]
