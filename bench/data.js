@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772779106948,
+  "lastUpdate": 1772779175279,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7ff093607e1627c8481547408681171226eaa4f6",
-          "message": "Merge pull request #2735 from f1shl3gs/dependabot/cargo/tokio-stream-0.1.18\n\nchore(deps): bump tokio-stream from 0.1.17 to 0.1.18",
-          "timestamp": "2026-01-06T10:14:33+08:00",
-          "tree_id": "648b87d7cc5c2d83d8bb2d8f765b76158d1f02d2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7ff093607e1627c8481547408681171226eaa4f6"
-        },
-        "date": 1767666352019,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 594,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41204.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "52df23451aa9ad448ab4f9b7582446fbe41add9b",
           "message": "Merge pull request #2736 from f1shl3gs/dependabot/cargo/tokio-util-0.7.18\n\nchore(deps): bump tokio-util from 0.7.17 to 0.7.18",
           "timestamp": "2026-01-06T17:10:13+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 574,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40511.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ca4232dc2a56c87f43f2951f747cac4189282f78",
+          "message": "Merge pull request #2840 from f1shl3gs/sources/journald/cleanup\n\nsources/journald: cleanup",
+          "timestamp": "2026-03-06T14:28:13+08:00",
+          "tree_id": "7995f01533bfaf33450b3f46ad76157ff6885468",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ca4232dc2a56c87f43f2951f747cac4189282f78"
+        },
+        "date": 1772779152662,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 575,
             "unit": "s"
           },
           {
