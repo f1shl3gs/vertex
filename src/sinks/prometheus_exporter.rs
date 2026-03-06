@@ -316,112 +316,91 @@ fn handle(
     req: Request<Incoming>,
     metrics: Arc<RwLock<BTreeMap<Cow<'static, str>, Sets>>>,
     const_labels: BTreeMap<String, String>,
-) -> Response<Full<Bytes>> {
-    match (req.method(), req.uri().path()) {
-        (&Method::GET, "/metrics") => {
-            let now = Utc::now().timestamp_millis();
+) -> http::Result<Response<Full<Bytes>>> {
+    if req.method() != Method::GET || req.uri().path() != "/metrics" {
+        return Response::builder()
+            .status(StatusCode::NOT_FOUND)
+            .body(Full::default());
+    }
 
-            let mut buf = match req.headers().get(ACCEPT_ENCODING) {
-                None => RespWriter::plain(),
-                Some(value) => {
-                    if value.as_bytes().windows(4).any(|s| s == b"gzip") {
-                        RespWriter::gzip()
-                    } else {
-                        RespWriter::plain()
-                    }
-                }
-            };
+    let mut buf = match req.headers().get(ACCEPT_ENCODING) {
+        None => RespWriter::plain(),
+        Some(value) => {
+            if value.as_bytes().windows(4).any(|s| s == b"gzip") {
+                RespWriter::gzip()
+            } else {
+                RespWriter::plain()
+            }
+        }
+    };
 
-            metrics.read().iter().for_each(|(name, sets)| {
-                let mut header = false;
-                for entry in &sets.metrics {
-                    let ExpiringEntry {
-                        tags,
-                        value,
-                        expired_at,
-                        ..
-                    } = entry;
+    let now = Utc::now().timestamp_millis();
+    metrics.read().iter().for_each(|(name, sets)| {
+        let mut header = false;
+        for entry in &sets.metrics {
+            let ExpiringEntry {
+                tags,
+                value,
+                expired_at,
+                ..
+            } = entry;
 
-                    if *expired_at < now {
-                        continue;
-                    }
-
-                    if !header {
-                        header = true;
-
-                        // write header like this
-                        // # HELP node_cpu_scaling_governor Current enabled CPU frequency governor
-                        // # TYPE node_cpu_scaling_governor gauge
-                        let kind = match value {
-                            MetricValue::Gauge(_) => "gauge",
-                            MetricValue::Sum(_) => "counter",
-                            MetricValue::Histogram { .. } => "histogram",
-                            MetricValue::Summary { .. } => "summary",
-                        };
-
-                        writeln!(
-                            &mut buf,
-                            "# HELP {} {}\n# TYPE {} {}",
-                            name, sets.description, name, kind
-                        )
-                        .unwrap();
-                    }
-
-                    match &value {
-                        MetricValue::Sum(value) | MetricValue::Gauge(value) => {
-                            write_sample(&mut buf, name, None, tags, *value, &const_labels, None);
-                        }
-                        MetricValue::Histogram {
-                            count,
-                            sum,
-                            buckets,
-                        } => {
-                            write_histogram(
-                                &mut buf,
-                                name,
-                                tags,
-                                buckets,
-                                *sum,
-                                *count,
-                                &const_labels,
-                            );
-                        }
-                        MetricValue::Summary {
-                            count,
-                            sum,
-                            quantiles,
-                        } => {
-                            write_summary(
-                                &mut buf,
-                                name,
-                                tags,
-                                quantiles,
-                                *sum,
-                                *count,
-                                &const_labels,
-                            );
-                        }
-                    }
-                }
-            });
-
-            let mut builder = Response::builder()
-                .header(CONTENT_TYPE, "text/plain; charset=utf-8")
-                .status(StatusCode::OK);
-
-            if let Some(encoding) = buf.content_encoding() {
-                builder = builder.header(CONTENT_ENCODING, encoding);
+            if *expired_at < now {
+                continue;
             }
 
-            builder
-                .body(Full::new(buf.into_bytes()))
-                .expect("Response build failed") // error should never have happened
+            if !header {
+                header = true;
+
+                // write header like this
+                // # HELP node_cpu_scaling_governor Current enabled CPU frequency governor
+                // # TYPE node_cpu_scaling_governor gauge
+                let kind = match value {
+                    MetricValue::Gauge(_) => "gauge",
+                    MetricValue::Sum(_) => "counter",
+                    MetricValue::Histogram { .. } => "histogram",
+                    MetricValue::Summary { .. } => "summary",
+                };
+
+                writeln!(
+                    &mut buf,
+                    "# HELP {} {}\n# TYPE {} {}",
+                    name, sets.description, name, kind
+                )
+                .unwrap();
+            }
+
+            match &value {
+                MetricValue::Sum(value) | MetricValue::Gauge(value) => {
+                    write_sample(&mut buf, name, None, tags, *value, &const_labels, None);
+                }
+                MetricValue::Histogram {
+                    count,
+                    sum,
+                    buckets,
+                } => {
+                    write_histogram(&mut buf, name, tags, buckets, *sum, *count, &const_labels);
+                }
+                MetricValue::Summary {
+                    count,
+                    sum,
+                    quantiles,
+                } => {
+                    write_summary(&mut buf, name, tags, quantiles, *sum, *count, &const_labels);
+                }
+            }
         }
-        _ => Response::builder()
-            .status(StatusCode::NOT_FOUND)
-            .body(Full::default())
-            .expect("Response build failed"),
+    });
+
+    let mut builder = Response::builder()
+        .header(CONTENT_TYPE, "text/plain; charset=utf-8")
+        .status(StatusCode::OK);
+
+    if let Some(encoding) = buf.content_encoding() {
+        builder = builder.header(CONTENT_ENCODING, encoding);
     }
+
+    builder.body(Full::new(buf.into_bytes()))
 }
 
 #[async_trait::async_trait]
@@ -451,17 +430,12 @@ impl StreamSink for PrometheusExporter {
                 if let Some(auth) = auth.as_ref()
                     && !auth.authorized(&req)
                 {
-                    let resp = Response::builder()
+                    return Response::builder()
                         .status(StatusCode::UNAUTHORIZED)
-                        .body(Full::new(Bytes::new()))
-                        .unwrap();
-
-                    return Ok(resp);
+                        .body(Full::new(Bytes::new()));
                 }
 
-                let resp = handle(req, metrics, const_labels);
-
-                Ok::<_, hyper::Error>(resp)
+                handle(req, metrics, const_labels)
             }
         });
         tokio::spawn(async move {
