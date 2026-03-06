@@ -538,7 +538,6 @@ impl Decoder for EntryCodec {
 
     fn decode(&mut self, buf: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
         loop {
-            //
             let read_to = cmp::min(self.max_length, buf.len());
             let newline_pos = buf[0..read_to].iter().position(|b| *b == b'\n');
 
