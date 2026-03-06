@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772771244467,
+  "lastUpdate": 1772771249658,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7d7c91f47e5dbd04dc5c56cc1d5e7463db975f90",
-          "message": "Merge pull request #2645 from f1shl3gs/misc/cleanup\n\nmisc: cleanup",
-          "timestamp": "2025-10-25T23:20:12+08:00",
-          "tree_id": "707caf08e136fd8278ebdb48350a6a9ecb2abfd3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7d7c91f47e5dbd04dc5c56cc1d5e7463db975f90"
-        },
-        "date": 1761405758399,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 36.892,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 110.56,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 171.8,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 174.02,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "84accf8705ffb1e9100a62788f02687b105900d0",
+          "message": "Merge pull request #2836 from f1shl3gs/dependabot/cargo/argh-0.1.16\n\nchore(deps): bump argh from 0.1.15 to 0.1.16",
+          "timestamp": "2026-03-06T12:24:46+08:00",
+          "tree_id": "250bf221ed51ef93b5d1eaccb2f9c8a4b794ebb2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/84accf8705ffb1e9100a62788f02687b105900d0"
+        },
+        "date": 1772771226613,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.42,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 105.14,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 174.9,
             "unit": "ns/op"
           }
         ]
