@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772771249658,
+  "lastUpdate": 1772771259184,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e5c104854e6140218e68a40c35a0a381a3cd39d3",
-          "message": "Merge pull request #2643 from f1shl3gs/lib/framework/fix_multiple_config\n\ncli: fix multiple configs",
-          "timestamp": "2025-10-25T03:50:23+08:00",
-          "tree_id": "2fd00d295b626eeca13c77d5a6e58acaad48ef25",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e5c104854e6140218e68a40c35a0a381a3cd39d3"
-        },
-        "date": 1761335582325,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.794,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 162.76,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 324.94,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 690.97,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "57b8912d84d8aa850723e3837a50a6e6b382f97c",
           "message": "Merge pull request #2644 from f1shl3gs/lib/framework/remove_secret_string\n\nlib/framework: remove SecretString",
           "timestamp": "2025-10-25T04:30:00+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 672.05,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "84accf8705ffb1e9100a62788f02687b105900d0",
+          "message": "Merge pull request #2836 from f1shl3gs/dependabot/cargo/argh-0.1.16\n\nchore(deps): bump argh from 0.1.15 to 0.1.16",
+          "timestamp": "2026-03-06T12:24:46+08:00",
+          "tree_id": "250bf221ed51ef93b5d1eaccb2f9c8a4b794ebb2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/84accf8705ffb1e9100a62788f02687b105900d0"
+        },
+        "date": 1772771236687,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.689,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 165.99,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 323.17,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 680.82,
             "unit": "ns/op"
           }
         ]
