@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772869169596,
+  "lastUpdate": 1772869190362,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "906f036f74616a7e4b9b8cae0c8f6dcb446d7843",
-          "message": "Merge pull request #2650 from f1shl3gs/dependabot/cargo/proptest-1.9.0\n\nchore(deps): bump proptest from 1.8.0 to 1.9.0",
-          "timestamp": "2025-10-27T19:22:11+08:00",
-          "tree_id": "31e0533e118efeb7290615abbf50a085b7324bfd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/906f036f74616a7e4b9b8cae0c8f6dcb446d7843"
-        },
-        "date": 1761564291170,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 18.513,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 149.91,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 274.24,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 624.17,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e121725349111602d973d0eed85de28adc7d627a",
           "message": "Merge pull request #2651 from f1shl3gs/secrets/init\n\nadding secrets support",
           "timestamp": "2025-10-30T03:47:32+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 707.6,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1bce36a9d92b0b38fccdcaf575bfcda9586d5e5c",
+          "message": "Merge pull request #2842 from f1shl3gs/dependabot/cargo/argh-0.1.17\n\nchore(deps): bump argh from 0.1.16 to 0.1.17",
+          "timestamp": "2026-03-07T15:36:42+08:00",
+          "tree_id": "7f3ec5f8e0104f9010248c4dad90ef0cebb6bb1e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1bce36a9d92b0b38fccdcaf575bfcda9586d5e5c"
+        },
+        "date": 1772869167785,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.877,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 173.9,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 359.91,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 710.97,
             "unit": "ns/op"
           }
         ]
