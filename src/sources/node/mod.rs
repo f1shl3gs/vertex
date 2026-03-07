@@ -31,6 +31,7 @@ mod lnstat;
 mod loadavg;
 mod mdadm;
 mod meminfo;
+mod mountstats;
 mod netclass;
 mod netdev;
 mod netstat;
@@ -216,6 +217,9 @@ struct Collectors {
     #[serde(default = "default_true")]
     memory: bool,
 
+    #[serde(default)]
+    mountstats: bool,
+
     #[serde(default = "default_netclass_config")]
     netclass: Option<netclass::Config>,
 
@@ -353,6 +357,7 @@ impl Default for Collectors {
             loadavg: true,
             mdadm: true,
             memory: true,
+            mountstats: false,
             netclass: default_netclass_config(),
             netdev: default_netdev_config(),
             netstat: default_netstat_config(),
@@ -714,6 +719,12 @@ async fn run(
         if collectors.memory {
             let proc_path = proc_path.clone();
             tasks.spawn(async move { record_gather!("meminfo", meminfo::gather(proc_path)) });
+        }
+
+        if collectors.mountstats {
+            let proc_path = proc_path.clone();
+            tasks
+                .spawn(async move { record_gather!("mountstats", mountstats::collect(proc_path)) });
         }
 
         if let Some(conf) = &collectors.netclass {
