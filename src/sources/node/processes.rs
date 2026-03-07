@@ -1,22 +1,22 @@
 use std::collections::HashMap;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use event::{Metric, tags};
 
-use super::{Error, read_into, read_string};
+use super::{Error, Paths, read_into, read_string};
 
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let (procs, threads) = get_procs_and_threads(&proc_path)?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let (procs, threads) = get_procs_and_threads(paths.proc())?;
     let mut metrics = vec![];
 
-    let max_threads: usize = read_into(proc_path.join("sys/kernel/threads-max"))?;
+    let max_threads: usize = read_into(paths.proc().join("sys/kernel/threads-max"))?;
     metrics.push(Metric::gauge(
         "node_processes_max_threads",
         "Limit of threads in the system",
         max_threads,
     ));
 
-    let max_processes: usize = read_into(proc_path.join("sys/kernel/pid_max"))?;
+    let max_processes: usize = read_into(paths.proc().join("sys/kernel/pid_max"))?;
     metrics.push(Metric::gauge(
         "node_processes_max_processes",
         "Number of max PIDs limit",

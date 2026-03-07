@@ -4,11 +4,11 @@ use std::path::PathBuf;
 
 use event::Metric;
 
-use super::Error;
+use super::{Error, Paths};
 
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stat4 = parse_sockstat(proc_path.join("net/sockstat"))?;
-    let stat6 = parse_sockstat(proc_path.join("net/sockstat6"))?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let stat4 = parse_sockstat(paths.proc().join("net/sockstat"))?;
+    let stat6 = parse_sockstat(paths.proc().join("net/sockstat6"))?;
 
     let mut metrics = stat4.metrics(false);
     metrics.extend(stat6.metrics(true));

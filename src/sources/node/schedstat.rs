@@ -1,10 +1,8 @@
 //! Exposes task scheduler statistics from /proc/schedstat
 
-use std::path::PathBuf;
-
 use event::{Metric, tags};
 
-use super::Error;
+use super::{Error, Paths};
 
 #[derive(Debug, Default)]
 struct SchedStat<'a> {
@@ -15,8 +13,8 @@ struct SchedStat<'a> {
     run_time_slices: u64,
 }
 
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let content = std::fs::read_to_string(proc_path.join("schedstat"))?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let content = std::fs::read_to_string(paths.proc().join("schedstat"))?;
 
     let mut metrics = Vec::new();
     for line in content.lines() {

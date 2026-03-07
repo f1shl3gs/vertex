@@ -6,14 +6,12 @@
 //! * Linux 4.17 https://elixir.bootlin.com/linux/v4.17/source/net/core/net-procfs.c#L162
 //!   and https://elixir.bootlin.com/linux/v4.17/source/include/linux/netdevice.h#L2810.
 
-use std::path::PathBuf;
-
 use event::{Metric, tags};
 
-use super::Error;
+use super::{Error, Paths};
 
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let data = std::fs::read_to_string(proc_path.join("net/softnet_stat"))?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let data = std::fs::read_to_string(paths.proc().join("net/softnet_stat"))?;
     let mut metrics = Vec::new();
 
     for (index, line) in data.lines().enumerate() {

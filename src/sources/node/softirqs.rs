@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 use event::{Metric, tags};
 
-use super::Error;
+use super::{Error, Paths};
 
 /// Softirqs represents the softirq statistics.
 #[derive(Default)]
@@ -76,8 +76,8 @@ macro_rules! build_metrics {
     };
 }
 
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stat = Softirqs::parse(proc_path.join("softirqs"))?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let stat = Softirqs::parse(paths.proc().join("softirqs"))?;
     let mut metrics = vec![];
 
     build_metrics!(metrics, "HI", stat.hi);

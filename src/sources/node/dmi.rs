@@ -4,7 +4,7 @@ use std::path::PathBuf;
 use event::Metric;
 use event::tags::Tags;
 
-use super::{Error, read_string};
+use super::{Error, Paths, read_string};
 
 /// `DesktopManagementInterface` contains info from files in /sys/class/dmi/id
 #[derive(Default)]
@@ -345,8 +345,8 @@ impl DesktopManagementInterface {
     }
 }
 
-pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let path = sys_path.join("class/dmi/id");
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let path = paths.sys().join("class/dmi/id");
     let dmi = DesktopManagementInterface::parse(path)?;
 
     let mut tags = Tags::with_capacity(20);

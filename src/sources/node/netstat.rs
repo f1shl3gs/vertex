@@ -7,7 +7,7 @@ use framework::config::serde_regex;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
-use super::Error;
+use super::{Error, Paths};
 
 #[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
@@ -28,10 +28,10 @@ fn default_fields() -> Regex {
     Regex::new("^(.*_(InErrors|InErrs)|Ip_Forwarding|Ip(6|Ext)_(InOctets|OutOctets)|Icmp6?_(InMsgs|OutMsgs)|TcpExt_(Listen.*|Syncookies.*|TCPSynRetrans|TCPTimeouts|TCPOFOQueue|TCPRcvQDrop)|Tcp_(ActiveOpens|InSegs|OutSegs|OutRsts|PassiveOpens|RetransSegs|CurrEstab)|Udp6?_(InDatagrams|OutDatagrams|NoPorts|RcvbufErrors|SndbufErrors))$").unwrap()
 }
 
-pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let mut net_stats = get_net_stats(proc_path.join("net/netstat"))?;
-    let snmp_stats = get_net_stats(proc_path.join("net/snmp"))?;
-    let snmp6_stats = get_snmp6_stats(proc_path.join("net/snmp6"))?;
+pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
+    let mut net_stats = get_net_stats(paths.proc().join("net/netstat"))?;
+    let snmp_stats = get_net_stats(paths.proc().join("net/snmp"))?;
+    let snmp6_stats = get_snmp6_stats(paths.proc().join("net/snmp6"))?;
 
     // Merge the results of snmpStats into netStats (collisions are possible,
     // but we know that the keys are always unique for the give use case.

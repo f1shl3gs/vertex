@@ -2,7 +2,7 @@ use event::{Metric, tags};
 
 use super::Error;
 
-pub async fn gather() -> Result<Vec<Metric>, Error> {
+pub async fn collect() -> Result<Vec<Metric>, Error> {
     let mut u = libc::utsname {
         sysname: [0; 65],
         nodename: [0; 65],

@@ -1,13 +1,13 @@
 //! Exposes various statistics from /proc/stat. This includes boot time, forks and interrupts.
 
-use std::path::PathBuf;
+use std::path::Path;
 
 use event::Metric;
 
-use super::Error;
+use super::{Error, Paths};
 
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stat = read_stat(proc_path)?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let stat = read_stat(paths.proc())?;
 
     Ok(vec![
         Metric::sum(
@@ -49,7 +49,7 @@ struct Stat {
     procs_blocked: u64,
 }
 
-fn read_stat(proc_path: PathBuf) -> Result<Stat, Error> {
+fn read_stat(proc_path: &Path) -> Result<Stat, Error> {
     let data = std::fs::read_to_string(proc_path.join("stat"))?;
 
     let mut stat = Stat::default();
@@ -98,7 +98,7 @@ mod tests {
 
     #[test]
     fn stat() {
-        let proc = "tests/node/fixtures/proc".into();
+        let proc = Path::new("tests/node/fixtures/proc");
         let stat = read_stat(proc).unwrap();
 
         assert_eq!(stat.ctxt, 38014093);

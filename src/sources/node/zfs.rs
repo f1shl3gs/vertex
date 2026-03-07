@@ -5,14 +5,14 @@ use std::path::PathBuf;
 
 use event::{Metric, tags};
 
-use super::{Error, read_string};
+use super::{Error, Paths, read_string};
 
 macro_rules! parse_subsystem_metrics {
     ($metrics: expr, $root: expr, $subsystem: expr, $path: expr) => {
         let path = $root.join("spl/kstat/zfs").join($path);
         for (k, v) in parse_procfs_file(path)? {
             $metrics.push(Metric::gauge(
-                format!("node_{}_{}", $subsystem, k.replace("-", "_")),
+                format!("node_zfs_{}_{}", $subsystem, k.replace("-", "_")),
                 format!("kstat.zfs.misc.{}.{}", $path, k),
                 v,
             ));
@@ -20,28 +20,28 @@ macro_rules! parse_subsystem_metrics {
     };
 }
 
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     let mut metrics = Vec::new();
 
-    parse_subsystem_metrics!(metrics, proc_path, "zfs_abd", "abdstats");
-    parse_subsystem_metrics!(metrics, proc_path, "zfs_arc", "arcstats");
-    parse_subsystem_metrics!(metrics, proc_path, "zfs_dbuf", "dbufstats");
-    parse_subsystem_metrics!(metrics, proc_path, "zfs_dmu_tx", "dmu_tx");
-    parse_subsystem_metrics!(metrics, proc_path, "zfs_dnode", "dnodestats");
-    parse_subsystem_metrics!(metrics, proc_path, "zfs_fm", "fm");
+    parse_subsystem_metrics!(metrics, paths.proc(), "abd", "abdstats");
+    parse_subsystem_metrics!(metrics, paths.proc(), "arc", "arcstats");
+    parse_subsystem_metrics!(metrics, paths.proc(), "dbuf", "dbufstats");
+    parse_subsystem_metrics!(metrics, paths.proc(), "dmu_tx", "dmu_tx");
+    parse_subsystem_metrics!(metrics, paths.proc(), "dnode", "dnodestats");
+    parse_subsystem_metrics!(metrics, paths.proc(), "fm", "fm");
     // vdev_cache is deprecated
-    parse_subsystem_metrics!(metrics, proc_path, "zfs_vdev_cache", "vdev_cache_stats");
-    parse_subsystem_metrics!(metrics, proc_path, "zfs_vdev_mirror", "vdev_mirror_stats");
+    parse_subsystem_metrics!(metrics, paths.proc(), "vdev_cache", "vdev_cache_stats");
+    parse_subsystem_metrics!(metrics, paths.proc(), "vdev_mirror", "vdev_mirror_stats");
     // no known consumers of the XUIO interface on Linux exist
-    parse_subsystem_metrics!(metrics, proc_path, "zfs_xuio", "xuio_stats");
-    parse_subsystem_metrics!(metrics, proc_path, "zfs_zfetch", "zfetchstats");
-    parse_subsystem_metrics!(metrics, proc_path, "zfs_zil", "zil");
+    parse_subsystem_metrics!(metrics, paths.proc(), "xuio", "xuio_stats");
+    parse_subsystem_metrics!(metrics, paths.proc(), "zfetch", "zfetchstats");
+    parse_subsystem_metrics!(metrics, paths.proc(), "zil", "zil");
 
     // pool stats
-    let pattern = format!("{}/spl/kstat/zfs/*/io", proc_path.to_string_lossy());
-    let paths = glob::glob(&pattern)?;
+    let pattern = format!("{}/spl/kstat/zfs/*/io", paths.proc().to_string_lossy());
+    let matches = glob::glob(&pattern)?;
 
-    for path in paths.flatten() {
+    for path in matches.flatten() {
         let path = path.to_str().unwrap();
         let pool_name = parse_pool_name(path)?;
         let kvs = parse_pool_procfs_file(path)?;
@@ -57,9 +57,12 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         }
     }
 
-    let pattern = format!("{}/spl/kstat/zfs/*/objset-*", proc_path.to_string_lossy());
-    let paths = glob::glob(&pattern)?;
-    for path in paths.flatten() {
+    let pattern = format!(
+        "{}/spl/kstat/zfs/*/objset-*",
+        paths.proc().to_string_lossy()
+    );
+    let matches = glob::glob(&pattern)?;
+    for path in matches.flatten() {
         let kvs = parse_pool_objset_file(path)?;
         for ((key, pool, dataset), value) in kvs {
             metrics.push(Metric::gauge_with_tags(
@@ -74,7 +77,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
         }
     }
 
-    let pattern = format!("{}/spl/kstat/zfs/*/state", proc_path.to_string_lossy());
+    let pattern = format!("{}/spl/kstat/zfs/*/state", paths.proc().to_string_lossy());
     let paths = glob::glob(&pattern)?;
     for path in paths.flatten() {
         let path = path.to_string_lossy();

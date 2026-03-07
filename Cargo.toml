@@ -378,12 +378,6 @@ path = "benches/loki.rs"
 required-features = ["sinks-loki"]
 
 [[bench]]
-name = "hwmon_gather"
-harness = false
-path = "benches/node_source_hwmon.rs"
-required-features = ["sources-node"]
-
-[[bench]]
 name = "haproxy"
 harness = false
 path = "benches/haproxy.rs"

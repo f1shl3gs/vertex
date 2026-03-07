@@ -1,12 +1,12 @@
 use std::ffi::CStr;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use event::{Metric, tags};
 
-use super::{Error, read_string};
+use super::{Error, Paths, read_string};
 
 /// Exposes the current system time
-pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     let local_now = chrono::Local::now();
     let offset = local_now.offset().local_minus_utc() as f64;
     let now_sec = local_now.timestamp_nanos_opt().unwrap() as f64 / 1e9;
@@ -31,7 +31,7 @@ pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
         ),
     ];
 
-    let sources = parse_clock_sources(&sys_path)?;
+    let sources = parse_clock_sources(paths.sys())?;
 
     for source in sources {
         for available in source.available {
@@ -123,7 +123,6 @@ fn parse_clock_sources(root: &Path) -> Result<Vec<ClockSource>, Error> {
 #[cfg(test)]
 mod tests {
     use std::ffi::CStr;
-    use std::path::PathBuf;
 
     use super::*;
 
@@ -145,8 +144,8 @@ mod tests {
 
     #[test]
     fn clocksource() {
-        let path = PathBuf::from("tests/node/fixtures/sys");
-        let sources = parse_clock_sources(&path).unwrap();
+        let path = Path::new("tests/node/fixtures/sys");
+        let sources = parse_clock_sources(path).unwrap();
         assert_eq!(sources.len(), 1);
 
         assert_eq!(sources[0].name, "0");

@@ -1,13 +1,9 @@
-use std::path::PathBuf;
-
 use event::{Metric, tags};
 
-use super::{Error, read_string};
+use super::{Error, Paths, read_string};
 
-pub async fn collect(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let path = proc_path.join("zoneinfo");
-
-    let content = read_string(path)?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let content = read_string(paths.proc().join("zoneinfo"))?;
     let infos = parse_zoneinfo(&content)?;
 
     let mut metrics = Vec::with_capacity(infos.len() * 20);

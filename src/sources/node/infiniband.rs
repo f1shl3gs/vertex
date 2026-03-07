@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 
 use event::{Metric, tags};
 
-use super::{Error, read_string};
+use super::{Error, Paths, read_string};
 
 /// InfiniBandCounters contains counter values from files in
 /// /sys/class/infiniband/<Name>/ports/<Port>/counters or
@@ -145,8 +145,8 @@ struct InfiniBandDevice {
     ports: Vec<InfiniBandPort>,
 }
 
-pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let devices = infiniband_class(sys_path.join("class/infiniband"))?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let devices = infiniband_class(paths.sys().join("class/infiniband"))?;
 
     let mut metrics = vec![];
     for device in devices {

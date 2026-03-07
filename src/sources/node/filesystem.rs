@@ -7,7 +7,7 @@ use event::{Metric, tags};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 
-use super::Error;
+use super::{Error, Paths};
 
 #[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
@@ -42,13 +42,9 @@ fn default_fs_type_exclude() -> regex::Regex {
     ).unwrap()
 }
 
-pub async fn gather(
-    conf: Config,
-    root_path: PathBuf,
-    proc_path: PathBuf,
-) -> Result<Vec<Metric>, Error> {
-    let data = std::fs::read_to_string(proc_path.join("1/mountinfo"))
-        .or_else(|_err| std::fs::read_to_string(proc_path.join("self/mountinfo")))?;
+pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
+    let data = std::fs::read_to_string(paths.proc().join("1/mountinfo"))
+        .or_else(|_err| std::fs::read_to_string(paths.proc().join("self/mountinfo")))?;
 
     let mut seen = BTreeSet::new();
     let mut metrics = Vec::new();
@@ -85,7 +81,7 @@ pub async fn gather(
             || info.super_options.split(',').any(|item| item == "ro");
 
         let result = statfs(
-            root_path.join(
+            paths.root().join(
                 info.mount_point
                     .strip_prefix("/")
                     .unwrap_or(info.mount_point),

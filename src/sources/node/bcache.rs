@@ -1,11 +1,11 @@
 use std::io::ErrorKind;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use configurable::Configurable;
 use event::{Metric, tags};
 use serde::{Deserialize, Serialize};
 
-use super::{Error, read_string};
+use super::{Error, Paths, read_string};
 
 #[derive(Clone, Configurable, Debug, Default, Deserialize, Serialize)]
 pub struct Config {
@@ -13,8 +13,8 @@ pub struct Config {
     priority_stats: bool,
 }
 
-pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = bcache_stats(sys_path, conf.priority_stats)?;
+pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
+    let stats = bcache_stats(paths.sys(), conf.priority_stats)?;
     let mut metrics = vec![];
 
     for stat in stats {
@@ -250,7 +250,7 @@ pub async fn gather(conf: Config, sys_path: PathBuf) -> Result<Vec<Metric>, Erro
     Ok(metrics)
 }
 
-fn bcache_stats(sys_path: PathBuf, priority_stats: bool) -> Result<Vec<Stat>, Error> {
+fn bcache_stats(sys_path: &Path, priority_stats: bool) -> Result<Vec<Stat>, Error> {
     let paths = glob::glob(&format!("{}/fs/bcache/*-*", sys_path.to_string_lossy()))?;
 
     let mut stats = vec![];
@@ -616,7 +616,7 @@ mod tests {
 
     #[test]
     fn parse() {
-        let path = "tests/node/fixtures/sys".into();
+        let path = Path::new("tests/node/fixtures/sys");
         let stats = bcache_stats(path, true).unwrap();
 
         assert_eq!(stats.len(), 1);

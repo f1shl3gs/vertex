@@ -1,12 +1,12 @@
 use std::collections::BTreeMap;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use configurable::Configurable;
 use event::Metric;
 use event::tags::Tags;
 use serde::{Deserialize, Serialize};
 
-use super::Error;
+use super::{Error, Paths};
 
 #[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
@@ -33,8 +33,8 @@ fn default_labels() -> Vec<String> {
     ]
 }
 
-pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = parse_ipvs_stats(&proc_path)?;
+pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
+    let stats = parse_ipvs_stats(paths.proc())?;
 
     let mut metrics = vec![
         Metric::sum(
@@ -64,7 +64,7 @@ pub async fn gather(conf: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Err
         ),
     ];
 
-    let backends = parse_ipvs_backend_status(proc_path)?;
+    let backends = parse_ipvs_backend_status(paths.proc())?;
     let mut sums = BTreeMap::new();
     let mut label_values = BTreeMap::new();
     for backend in backends {
@@ -212,7 +212,7 @@ struct IPVSBackendStatus {
     weight: u64,
 }
 
-fn parse_ipvs_backend_status(root: PathBuf) -> Result<Vec<IPVSBackendStatus>, Error> {
+fn parse_ipvs_backend_status(root: &Path) -> Result<Vec<IPVSBackendStatus>, Error> {
     let data = std::fs::read_to_string(root.join("net/ip_vs"))?;
 
     let mut status = vec![];

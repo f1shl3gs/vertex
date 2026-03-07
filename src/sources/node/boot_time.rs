@@ -3,7 +3,7 @@ use libc::{c_int, sysctl, timeval};
 
 use super::Error;
 
-pub fn gather() -> Result<Vec<Metric>, Error> {
+pub fn collect() -> Result<Vec<Metric>, Error> {
     let ts = boot_time()?;
 
     // This conversion maintains the usec precision.

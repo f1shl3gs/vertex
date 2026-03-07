@@ -16,7 +16,7 @@ const STA_NANO: i32 = 0x2000;
 const NANOSECONDS: f64 = 1000000000.0;
 const MICROSECONDS: f64 = 1000000.0;
 
-pub async fn gather() -> Result<Vec<Metric>, Error> {
+pub async fn collect() -> Result<Vec<Metric>, Error> {
     let (tx, status) = adjtimex()?;
 
     // TIME_ERROR is not an actually error, see

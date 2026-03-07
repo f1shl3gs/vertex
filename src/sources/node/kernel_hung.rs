@@ -1,11 +1,9 @@
-use std::path::PathBuf;
-
 use event::Metric;
 
-use super::Error;
+use super::{Error, Paths};
 
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let path = proc_path.join("sys/kernel/hung_task_detect_count");
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let path = paths.proc().join("sys/kernel/hung_task_detect_count");
 
     let count = std::fs::read_to_string(path)?.trim().parse::<u64>()?;
 
