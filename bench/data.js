@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772883235299,
+  "lastUpdate": 1772883253800,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e121725349111602d973d0eed85de28adc7d627a",
-          "message": "Merge pull request #2651 from f1shl3gs/secrets/init\n\nadding secrets support",
-          "timestamp": "2025-10-30T03:47:32+08:00",
-          "tree_id": "ac2fe469211a9cd24a65f22a3d82af17e41c03d9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e121725349111602d973d0eed85de28adc7d627a"
-        },
-        "date": 1761767480876,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 19.846,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 138.27,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 268.39,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 572.75,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d3d6a292b029062100dd0c66a3af0982f162065b",
           "message": "Merge pull request #2652 from f1shl3gs/cargo/update\n\nCargo/update",
           "timestamp": "2025-10-30T04:31:09+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 710.97,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cfe1b56ff5523d3c0881b6cb9c826d78599fcd2b",
+          "message": "Merge pull request #2843 from f1shl3gs/sources/node/add_mountstats\n\nsources/node: add mountstats colletor",
+          "timestamp": "2026-03-07T19:31:22+08:00",
+          "tree_id": "da8b583e7654e65ac891f64f51421bac2da98e97",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cfe1b56ff5523d3c0881b6cb9c826d78599fcd2b"
+        },
+        "date": 1772883231666,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.852,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 174.77,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 329.88,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 690.14,
             "unit": "ns/op"
           }
         ]
