@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772883680274,
+  "lastUpdate": 1772883776322,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4347b2450be10bc09ad2acaa27481147c191b969",
-          "message": "Merge pull request #2739 from f1shl3gs/dependabot/cargo/quote-1.0.43\n\nchore(deps): bump quote from 1.0.42 to 1.0.43",
-          "timestamp": "2026-01-06T18:16:47+08:00",
-          "tree_id": "24cf658b2f5c1b594bb7b3989c3c421e20efda18",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4347b2450be10bc09ad2acaa27481147c191b969"
-        },
-        "date": 1767695263220,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 575,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41212.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ceef3653a7dc5eb2cfb6218daada12e1da4bee7e",
           "message": "Merge pull request #2743 from f1shl3gs/dependabot/cargo/serde_json-1.0.149\n\nchore(deps): bump serde_json from 1.0.148 to 1.0.149",
           "timestamp": "2026-01-07T12:54:54+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40526.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cfe1b56ff5523d3c0881b6cb9c826d78599fcd2b",
+          "message": "Merge pull request #2843 from f1shl3gs/sources/node/add_mountstats\n\nsources/node: add mountstats colletor",
+          "timestamp": "2026-03-07T19:31:22+08:00",
+          "tree_id": "da8b583e7654e65ac891f64f51421bac2da98e97",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cfe1b56ff5523d3c0881b6cb9c826d78599fcd2b"
+        },
+        "date": 1772883748894,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 581,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40582.3,
             "unit": "KiB"
           }
         ]
