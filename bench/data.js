@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772859097548,
+  "lastUpdate": 1772859469951,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "906f036f74616a7e4b9b8cae0c8f6dcb446d7843",
-          "message": "Merge pull request #2650 from f1shl3gs/dependabot/cargo/proptest-1.9.0\n\nchore(deps): bump proptest from 1.8.0 to 1.9.0",
-          "timestamp": "2025-10-27T19:22:11+08:00",
-          "tree_id": "31e0533e118efeb7290615abbf50a085b7324bfd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/906f036f74616a7e4b9b8cae0c8f6dcb446d7843"
-        },
-        "date": 1761564725557,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14956000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 604550,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.118,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e121725349111602d973d0eed85de28adc7d627a",
           "message": "Merge pull request #2651 from f1shl3gs/secrets/init\n\nadding secrets support",
           "timestamp": "2025-10-30T03:47:32+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.306,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ccd29d9d0e79d9d496012138a8a84647486dc092",
+          "message": "Merge pull request #2841 from f1shl3gs/dependabot/cargo/socket2-0.6.3\n\nchore(deps): bump socket2 from 0.6.2 to 0.6.3",
+          "timestamp": "2026-03-07T12:47:46+08:00",
+          "tree_id": "2048c684667aa50c03b894845371de93d662e2ea",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ccd29d9d0e79d9d496012138a8a84647486dc092"
+        },
+        "date": 1772859447381,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7452600,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 704380,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.241,
             "unit": "ns/op"
           }
         ]
