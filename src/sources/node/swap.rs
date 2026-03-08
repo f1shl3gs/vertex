@@ -1,8 +1,6 @@
-use std::path::PathBuf;
-
 use event::{Metric, tags};
 
-use super::Error;
+use super::{Error, Paths};
 
 // Swap represents an entry in /proc/swaps
 #[cfg_attr(test, derive(Debug, PartialEq))]
@@ -14,8 +12,8 @@ struct Swap<'a> {
     priority: i32,
 }
 
-pub async fn gather(proc: PathBuf) -> Result<Vec<Metric>, Error> {
-    let content = std::fs::read_to_string(proc.join("swaps"))?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let content = std::fs::read_to_string(paths.proc().join("swaps"))?;
     let mut metrics = Vec::new();
 
     // skip header line

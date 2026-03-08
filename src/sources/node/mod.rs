@@ -35,16 +35,14 @@ mod mountstats;
 mod netclass;
 mod netdev;
 mod netstat;
-mod network_route;
 mod nfs;
 mod nfsd;
 mod nvme;
-mod os_release;
+mod os;
 mod pcidevice;
 mod powersupplyclass;
 mod pressure;
 mod processes;
-mod protocols;
 mod rapl;
 mod schedstat;
 mod selinux;
@@ -64,7 +62,6 @@ mod udp_queues;
 mod uname;
 mod vmstat;
 mod watchdog;
-mod wifi;
 mod xfrm;
 #[cfg(target_os = "linux")]
 mod xfs;
@@ -75,6 +72,7 @@ use std::io::Read;
 use std::path::Path;
 use std::path::PathBuf;
 use std::str::FromStr;
+use std::sync::Arc;
 use std::time::Duration;
 
 use configurable::{Configurable, configurable_component};
@@ -242,7 +240,7 @@ struct Collectors {
     nvme: bool,
 
     #[serde(default = "default_true")]
-    os_release: bool,
+    os: bool,
 
     #[serde(default)]
     pcidevice: bool,
@@ -364,7 +362,7 @@ impl Default for Collectors {
             nfs: true,
             nfsd: true,
             nvme: true,
-            os_release: true,
+            os: true,
             pcidevice: false,
             power_supply: default_powersupply_config(),
             pressure: true,
@@ -497,51 +495,101 @@ where
     Ok(<T as FromStr>::from_str(content.as_str())?)
 }
 
-macro_rules! record_gather {
-    ($name: expr, $future: expr) => ({
-        let start = std::time::Instant::now();
-        let result = $future.await;
-        let elapsed = start.elapsed().as_secs_f64();
+macro_rules! collect {
+    ($collector: ident $(, $arg:expr)*) => {
+        async move {
+            let start = std::time::Instant::now();
+            let result = $collector::collect( $( $arg, )* ).await;
+            let elapsed = start.elapsed().as_secs_f64();
 
-        let (mut metrics, success) = match result {
-            Ok(ms) => (ms, 1.0),
-            Err(err) => {
-                debug!(
-                    message = "gather metrics failed",
-                    collector = $name,
-                    %err,
-                );
+            let (mut metrics, success) = match result {
+                Ok(ms) => (ms, 1.0),
+                Err(err) => {
+                    debug!(
+                        message = "collect metrics failed",
+                        collector = stringify!( $collector ),
+                        %elapsed,
+                        %err,
+                    );
+                    (Vec::with_capacity(2), 0.0)
+                },
+            };
 
-                (vec![], 0.0)
-            },
-        };
+            metrics.extend([
+                Metric::gauge_with_tags(
+                    "node_scrape_collector_duration_seconds",
+                    "Duration of a collector scrape",
+                    elapsed,
+                    tags! ("collector" => stringify!($collector))
+                ),
+                Metric::gauge_with_tags(
+                    "node_scrape_collector_success",
+                    "Whether a collector succeeded",
+                    success,
+                    tags! ("collector" => stringify!($collector))
+                )
+            ]);
 
-        metrics.extend([
-            Metric::gauge_with_tags(
-                "node_scrape_collector_duration_seconds",
-                "Duration of a collector scrape",
-                elapsed,
-                tags! ("collector" => $name)
-            ),
-            Metric::gauge_with_tags(
-                "node_scrape_collector_success",
-                "Whether a collector succeeded",
-                success,
-                tags! ("collector" => $name)
-            )
-        ]);
+            metrics
+        }
+    };
+}
 
-        metrics
-    })
+struct PathsInner {
+    root: PathBuf,
+    proc: PathBuf,
+    sys: PathBuf,
+    udev: PathBuf,
+}
+
+#[derive(Clone)]
+pub struct Paths(Arc<PathsInner>);
+
+impl Paths {
+    pub fn new(root: PathBuf, proc: PathBuf, sys: PathBuf, udev: PathBuf) -> Self {
+        Paths(Arc::new(PathsInner {
+            root,
+            proc,
+            sys,
+            udev,
+        }))
+    }
+
+    #[cfg(test)]
+    fn test() -> Self {
+        Paths::new(
+            PathBuf::from("tests/node/fixtures/"),
+            PathBuf::from("tests/node/fixtures/proc"),
+            PathBuf::from("tests/node/fixtures/sys"),
+            PathBuf::from("tests/node/fixtures/udev"),
+        )
+    }
+
+    #[inline]
+    fn root(&self) -> &Path {
+        self.0.root.as_path()
+    }
+
+    #[inline]
+    fn proc(&self) -> &Path {
+        self.0.proc.as_path()
+    }
+
+    #[inline]
+    fn sys(&self) -> &Path {
+        self.0.sys.as_path()
+    }
+
+    #[inline]
+    fn udev(&self) -> &Path {
+        self.0.udev.as_path()
+    }
 }
 
 async fn run(
-    interval: Duration,
-    proc_path: PathBuf,
-    root_path: PathBuf,
-    sys_path: PathBuf,
-    udev_path: PathBuf,
+    paths: Paths,
     collectors: Collectors,
+    interval: Duration,
     mut shutdown: ShutdownSignal,
     mut out: Pipeline,
 ) -> Result<(), ()> {
@@ -558,356 +606,323 @@ async fn run(
         let mut tasks = JoinSet::new();
 
         if collectors.arp {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("arp", arp::gather(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(arp, paths));
         }
 
         if let Some(conf) = &collectors.bcache {
-            let sys_path = sys_path.clone();
             let conf = conf.clone();
-            tasks.spawn(async move { record_gather!("bcache", bcache::gather(conf, sys_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(bcache, conf, paths));
         }
 
         if collectors.bonding {
-            let sys_path = sys_path.clone();
-            tasks.spawn(async move { record_gather!("bonding", bonding::gather(sys_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(bonding, paths));
         }
 
         #[cfg(target_os = "macos")]
         if collectors.boot_time {
-            tasks.spawn(async { record_gather!("boot_time", boot_time::gather()) });
+            tasks.spawn(collect!(boot_time));
         }
 
         if collectors.btrfs {
-            let sys_path = sys_path.clone();
-            tasks.spawn(async move { record_gather!("btrfs", btrfs::gather(sys_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(btrfs, paths));
         }
 
         if collectors.buddyinfo {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("buddyinfo", buddyinfo::collect(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(buddyinfo, paths));
         }
 
         if collectors.cgroups {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("cgroups", cgroups::collect(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(cgroups, paths));
         }
 
         if collectors.conntrack {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("conntrack", conntrack::gather(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(conntrack, paths));
         }
 
         if let Some(conf) = &collectors.cpu {
             let conf = conf.clone();
-            let proc_path = proc_path.clone();
-            let sys_path = sys_path.clone();
-            tasks.spawn(
-                async move { record_gather!("cpu", cpu::gather(conf, proc_path, sys_path)) },
-            );
+            let paths = paths.clone();
+            tasks.spawn(collect!(cpu, conf, paths));
         }
 
         if collectors.cpufreq {
-            let sys_path = sys_path.clone();
-            tasks.spawn(async move { record_gather!("cpufreq", cpufreq::gather(sys_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(cpufreq, paths));
         }
 
         if let Some(conf) = &collectors.diskstats {
             let conf = conf.clone();
-            let proc_path = proc_path.clone();
-            let sys_path = sys_path.clone();
-            let udev_path = udev_path.clone();
-            tasks.spawn(async move {
-                record_gather!(
-                    "diskstats",
-                    diskstats::gather(conf, proc_path, sys_path, udev_path)
-                )
-            });
+            let paths = paths.clone();
+            tasks.spawn(collect!(diskstats, conf, paths));
         }
 
         if collectors.dmi {
-            let sys_path = sys_path.clone();
-            tasks.spawn(async move { record_gather!("dmi", dmi::gather(sys_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(dmi, paths));
         }
 
         if collectors.drm {
-            let sys_path = sys_path.clone();
-            tasks.spawn(async move { record_gather!("drm", drm::gather(sys_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(drm, paths));
         }
 
         if collectors.edac {
-            let sys_path = sys_path.clone();
-            tasks.spawn(async move { record_gather!("edac", edac::gather(sys_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(edac, paths));
         }
 
         if collectors.entropy {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("entropy", entropy::gather(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(entropy, paths));
         }
 
         if collectors.fibrechannel {
-            let sys_path = sys_path.clone();
-            tasks.spawn(
-                async move { record_gather!("fibrechannel", fibrechannel::gather(sys_path)) },
-            );
+            let paths = paths.clone();
+            tasks.spawn(collect!(fibrechannel, paths));
         }
 
         if collectors.filefd {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("filefd", filefd::gather(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(filefd, paths));
         }
 
         if let Some(conf) = &collectors.filesystem {
             let conf = conf.clone();
-            let proc_path = proc_path.clone();
-            let root_path = root_path.clone();
-            tasks.spawn(async move {
-                record_gather!("filesystem", filesystem::gather(conf, root_path, proc_path))
-            });
+            let paths = paths.clone();
+            tasks.spawn(collect!(filesystem, conf, paths));
         }
 
         if collectors.hwmon {
-            let sys_path = sys_path.clone();
-            tasks.spawn(async move { record_gather!("hwmon", hwmon::gather(sys_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(hwmon, paths));
         }
 
         if collectors.infiniband {
-            let sys_path = sys_path.clone();
-            tasks.spawn(async move { record_gather!("infiniband", infiniband::gather(sys_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(infiniband, paths));
         }
 
         if collectors.interrupts {
-            let proc_path = proc_path.clone();
-            tasks
-                .spawn(async move { record_gather!("interrupts", interrupts::collect(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(interrupts, paths));
         }
 
         if let Some(conf) = &collectors.ipvs {
-            let proc_path = proc_path.clone();
             let conf = conf.clone();
-            tasks.spawn(async move { record_gather!("ipvs", ipvs::gather(conf, proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(ipvs, conf, paths));
         }
 
         if collectors.kernel_hung {
-            let proc_path = proc_path.clone();
-            tasks.spawn(
-                async move { record_gather!("kernel_hung", kernel_hung::gather(proc_path)) },
-            );
+            let paths = paths.clone();
+            tasks.spawn(collect!(kernel_hung, paths));
         }
 
         if collectors.ksmd {
-            let sys_path = sys_path.clone();
-            tasks.spawn(async move { record_gather!("ksmd", ksmd::collect(sys_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(ksmd, paths));
         }
 
         if collectors.lnstat {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("lnstat", lnstat::collect(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(lnstat, paths));
         }
 
         if collectors.loadavg {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("loadavg", loadavg::gather(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(loadavg, paths));
         }
 
         if collectors.mdadm {
-            let proc_path = proc_path.clone();
-            let sys_path = sys_path.clone();
-            tasks.spawn(async move { record_gather!("mdadm", mdadm::gather(proc_path, sys_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(mdadm, paths));
         }
 
         if collectors.memory {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("meminfo", meminfo::gather(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(meminfo, paths));
         }
 
         if collectors.mountstats {
-            let proc_path = proc_path.clone();
-            tasks
-                .spawn(async move { record_gather!("mountstats", mountstats::collect(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(mountstats, paths));
         }
 
         if let Some(conf) = &collectors.netclass {
-            let sys_path = sys_path.clone();
             let conf = conf.clone();
-            tasks
-                .spawn(async move { record_gather!("netclass", netclass::gather(conf, sys_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(netclass, conf, paths));
         }
 
         if let Some(conf) = &collectors.netdev {
-            let proc_path = proc_path.clone();
             let conf = conf.clone();
-            tasks.spawn(async move { record_gather!("netdev", netdev::gather(conf, proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(netdev, conf, paths));
         }
 
         if let Some(conf) = &collectors.netstat {
-            let proc_path = proc_path.clone();
             let conf = conf.clone();
-            tasks.spawn(async move { record_gather!("netstat", netstat::gather(conf, proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(netstat, conf, paths));
         }
 
         if collectors.nfs {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("nfs", nfs::gather(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(nfs, paths));
         }
 
         if collectors.nfsd {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("nfsd", nfsd::gather(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(nfsd, paths));
         }
 
         if collectors.nvme {
-            let sys_path = sys_path.clone();
-            tasks.spawn(async move { record_gather!("nvme", nvme::gather(sys_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(nvme, paths));
         }
 
-        if collectors.os_release {
-            let root_path = root_path.clone();
-            tasks.spawn(async { record_gather!("os", os_release::gather(root_path)) });
+        if collectors.os {
+            let paths = paths.clone();
+            tasks.spawn(collect!(os, paths));
         }
 
         #[cfg(target_os = "linux")]
         if collectors.pcidevice {
-            let sys_path = sys_path.clone();
-            tasks.spawn(async { record_gather!("pcidevice", pcidevice::collect(sys_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(pcidevice, paths));
         }
 
         if let Some(conf) = &collectors.power_supply {
             let conf = conf.clone();
-            let sys_path = sys_path.clone();
-            tasks.spawn(async move {
-                record_gather!("powersupplyclass", powersupplyclass::gather(conf, sys_path))
-            });
+            let paths = paths.clone();
+            tasks.spawn(collect!(powersupplyclass, conf, paths));
         }
 
         if collectors.pressure {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("pressure", pressure::gather(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(pressure, paths));
         }
 
         if collectors.processes {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("processes", processes::gather(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(processes, paths));
         }
 
         if collectors.rapl {
-            let sys_path = sys_path.clone();
-            tasks.spawn(async move { record_gather!("rapl", rapl::gather(sys_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(rapl, paths));
         }
 
         if collectors.schedstat {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("schedstat", schedstat::gather(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(schedstat, paths));
         }
 
         if collectors.selinux {
-            let proc_path = proc_path.clone();
-            let sys_path = sys_path.clone();
-            tasks.spawn(
-                async move { record_gather!("selinux", selinux::gather(proc_path, sys_path)) },
-            );
+            let paths = paths.clone();
+            tasks.spawn(collect!(selinux, paths));
         }
 
-        if let Some(config) = &collectors.slabinfo {
-            let config = config.clone();
-            let proc_path = proc_path.clone();
-            tasks.spawn(
-                async move { record_gather!("slabinfo", slabinfo::collect(config, proc_path)) },
-            );
+        if let Some(conf) = &collectors.slabinfo {
+            let conf = conf.clone();
+            let paths = paths.clone();
+            tasks.spawn(collect!(slabinfo, conf, paths));
         }
 
         if collectors.sockstat {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("sockstat", sockstat::gather(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(sockstat, paths));
         }
 
         if collectors.softnet {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("softnet", softnet::gather(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(softnet, paths));
         }
 
         if collectors.softirqs {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("softirqs", softirqs::gather(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(softirqs, paths));
         }
 
         if collectors.stat {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("stat", stat::gather(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(stat, paths));
         }
 
         if collectors.swap {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("swap", swap::gather(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(swap, paths));
         }
 
         if collectors.tapestats {
-            let sys_path = sys_path.clone();
-            tasks.spawn(async move { record_gather!("tapestats", tapestats::collect(sys_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(tapestats, paths));
         }
 
         if collectors.tcpstat {
-            tasks.spawn(async { record_gather!("tcpstat", tcpstat::gather()) });
+            tasks.spawn(collect!(tcpstat));
         }
 
         if collectors.thermal_zone {
-            let sys_path = sys_path.clone();
-            tasks.spawn(
-                async move { record_gather!("thermal_zone", thermal_zone::gather(sys_path)) },
-            );
+            let paths = paths.clone();
+            tasks.spawn(collect!(thermal_zone, paths));
         }
 
         if collectors.time {
-            let sys_path = sys_path.clone();
-
-            tasks.spawn(async { record_gather!("time", time::gather(sys_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(time, paths));
         }
 
         if collectors.timex {
-            tasks.spawn(async { record_gather!("timex", timex::gather()) });
+            tasks.spawn(collect!(timex));
         }
 
         if collectors.udp_queues {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("udp_queues", udp_queues::gather(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(udp_queues, paths));
         }
 
         if collectors.uname {
-            tasks.spawn(async { record_gather!("uname", uname::gather()) });
+            tasks.spawn(collect!(uname));
         }
 
         if let Some(conf) = &collectors.vmstat {
-            let proc_path = proc_path.clone();
             let conf = conf.clone();
-            tasks.spawn(async move { record_gather!("vmstat", vmstat::gather(conf, proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(vmstat, conf, paths));
         }
 
         if collectors.watchdog {
-            let sys_path = sys_path.clone();
-
-            tasks.spawn(async move { record_gather!("watchdog", watchdog::gather(sys_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(watchdog, paths));
         }
 
         if collectors.xfrm {
-            let proc = proc_path.clone();
-
-            tasks.spawn(async move { record_gather!("xfrm", xfrm::collect(proc)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(xfrm, paths));
         }
 
         #[cfg(target_os = "linux")]
         if collectors.xfs {
-            let sys_path = sys_path.clone();
-            tasks.spawn(async move { record_gather!("xfs", xfs::gather(sys_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(xfs, paths));
         }
 
         if collectors.zfs {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("zfs", zfs::gather(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(zfs, paths));
         }
 
         if collectors.zoneinfo {
-            let proc_path = proc_path.clone();
-            tasks.spawn(async move { record_gather!("zoneinfo", zoneinfo::collect(proc_path)) });
+            let paths = paths.clone();
+            tasks.spawn(collect!(zoneinfo, paths));
         }
 
         while let Some(Ok(mut metrics)) = tasks.join_next().await {
@@ -935,12 +950,14 @@ async fn run(
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         Ok(Box::pin(run(
-            self.interval,
-            self.proc_path.clone(),
-            self.root_path.clone(),
-            self.sys_path.clone(),
-            self.udev_path.clone(),
+            Paths::new(
+                self.root_path.clone(),
+                self.proc_path.clone(),
+                self.sys_path.clone(),
+                self.udev_path.clone(),
+            ),
             self.collectors.clone(),
+            self.interval,
             cx.shutdown,
             cx.output,
         )))

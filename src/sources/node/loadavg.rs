@@ -1,11 +1,11 @@
-use std::path::PathBuf;
+use std::path::Path;
 
 use event::Metric;
 
-use super::{Error, read_string};
+use super::{Error, Paths, read_string};
 
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let loads = get_load(proc_path)?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let loads = get_load(paths.proc())?;
 
     Ok(vec![
         Metric::gauge("node_load1", "1m load average", loads[0]),
@@ -14,7 +14,7 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     ])
 }
 
-fn get_load(path: PathBuf) -> Result<Vec<f64>, Error> {
+fn get_load(path: &Path) -> Result<Vec<f64>, Error> {
     let content = read_string(path.join("loadavg"))?;
 
     let loads = content
@@ -36,7 +36,7 @@ mod tests {
 
     #[test]
     fn parse() {
-        let root = PathBuf::from("tests/node/fixtures/proc");
+        let root = Path::new("tests/node/fixtures/proc");
         let loads = get_load(root).unwrap();
 
         assert_eq!(loads[0], 0.02);

@@ -14,13 +14,13 @@ use std::path::PathBuf;
 
 use event::Metric;
 
-use super::Error;
+use super::{Error, Paths};
 
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let cpu = psi_stats(proc_path.join("pressure/cpu"))?;
-    let io = psi_stats(proc_path.join("pressure/io"))?;
-    let memory = psi_stats(proc_path.join("pressure/memory"))?;
-    let irq = psi_stats(proc_path.join("pressure/irq"))?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let cpu = psi_stats(paths.proc().join("pressure/cpu"))?;
+    let io = psi_stats(paths.proc().join("pressure/io"))?;
+    let memory = psi_stats(paths.proc().join("pressure/memory"))?;
+    let irq = psi_stats(paths.proc().join("pressure/irq"))?;
 
     let mut metrics = Vec::with_capacity(6);
     if let Some(some) = cpu.some {

@@ -14,7 +14,7 @@ pub enum ParseError {
 
 #[derive(Debug, Error)]
 pub enum Error {
-    #[error("glob pattern error, {0}")]
+    #[error(transparent)]
     Glob(#[from] glob::PatternError),
     #[error("io error: {err}, {msg}")]
     Io { err: std::io::Error, msg: String },

@@ -2,10 +2,10 @@ use std::path::PathBuf;
 
 use event::{Metric, tags};
 
-use super::{read_into, read_string};
+use super::{Paths, read_into, read_string};
 
-pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, crate::Error> {
-    let dirs = sys_path.join("class/watchdog").read_dir()?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, crate::Error> {
+    let dirs = paths.sys().join("class/watchdog").read_dir()?;
 
     let mut metrics = Vec::new();
     for entry in dirs.flatten() {

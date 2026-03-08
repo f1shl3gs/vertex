@@ -1,22 +1,22 @@
-use std::path::PathBuf;
+use std::path::Path;
 
 use event::Metric;
 
-use super::{Error, read_into};
+use super::{Error, Paths, read_into};
 
 /// Shows conntrack statistics (does nothing if no `/proc/sys/net/netfilter/` present)
 ///
 /// Maybe we can fetch conntrack statistics from netlink api
 /// https://github.com/torvalds/linux/blob/master/net/netfilter/nf_conntrack_netlink.c
 /// https://github.com/ti-mo/conntrack/blob/5b022d74eb6f79d2ddbddd0100e93b3aeeadfff8/conn.go#L465
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let path = proc_path.join("sys/net/netfilter/nf_conntrack_count");
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let path = paths.proc().join("sys/net/netfilter/nf_conntrack_count");
     let count = read_into::<_, u64, _>(path)?;
 
-    let path = proc_path.join("sys/net/netfilter/nf_conntrack_max");
+    let path = paths.proc().join("sys/net/netfilter/nf_conntrack_max");
     let max = read_into::<_, u64, _>(path)?;
 
-    let stats = get_conntrack_statistics(proc_path)?;
+    let stats = get_conntrack_statistics(paths.proc())?;
 
     let statistic = stats
         .iter()
@@ -102,21 +102,6 @@ struct ConntrackStatEntry {
     search_restart: u64,
 }
 
-#[inline]
-fn hex_u64(input: &[u8]) -> Result<u64, Error> {
-    let res = input
-        .iter()
-        .rev()
-        .enumerate()
-        .map(|(k, &v)| {
-            let digit = v as char;
-            (digit.to_digit(16).unwrap_or(0) as u64) << (k * 4)
-        })
-        .sum();
-
-    Ok(res)
-}
-
 impl ConntrackStatEntry {
     fn new(line: &str) -> Result<Self, Error> {
         let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
@@ -124,15 +109,15 @@ impl ConntrackStatEntry {
             return Err(Error::from("No processor were found"));
         }
 
-        let entries = hex_u64(parts[0].as_bytes())?;
-        let found = hex_u64(parts[2].as_bytes())?;
-        let invalid = hex_u64(parts[4].as_bytes())?;
-        let ignore = hex_u64(parts[5].as_bytes())?;
-        let insert = hex_u64(parts[8].as_bytes())?;
-        let insert_failed = hex_u64(parts[9].as_bytes())?;
-        let drop = hex_u64(parts[10].as_bytes())?;
-        let early_drop = hex_u64(parts[11].as_bytes())?;
-        let search_restart = hex_u64(parts[16].as_bytes())?;
+        let entries = u64::from_str_radix(parts[0], 16)?;
+        let found = u64::from_str_radix(parts[2], 16)?;
+        let invalid = u64::from_str_radix(parts[4], 16)?;
+        let ignore = u64::from_str_radix(parts[5], 16)?;
+        let insert = u64::from_str_radix(parts[8], 16)?;
+        let insert_failed = u64::from_str_radix(parts[9], 16)?;
+        let drop = u64::from_str_radix(parts[10], 16)?;
+        let early_drop = u64::from_str_radix(parts[11], 16)?;
+        let search_restart = u64::from_str_radix(parts[16], 16)?;
 
         Ok(Self {
             entries,
@@ -148,8 +133,8 @@ impl ConntrackStatEntry {
     }
 }
 
-fn get_conntrack_statistics(proc_path: PathBuf) -> Result<Vec<ConntrackStatEntry>, Error> {
-    let data = std::fs::read_to_string(proc_path.join("net/stat/nf_conntrack"))?;
+fn get_conntrack_statistics(root: &Path) -> Result<Vec<ConntrackStatEntry>, Error> {
+    let data = std::fs::read_to_string(root.join("net/stat/nf_conntrack"))?;
 
     let mut stats = Vec::new();
     for line in data.lines().skip(1) {
@@ -171,11 +156,5 @@ mod tests {
         let ent = ConntrackStatEntry::new(line).unwrap();
 
         assert_eq!(ent.search_restart, 4)
-    }
-
-    #[test]
-    fn test_hex_u64() {
-        let v = hex_u64(b"0000000a").unwrap();
-        assert_eq!(v, 10u64)
     }
 }

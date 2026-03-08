@@ -6,14 +6,12 @@
 //! * Linux 4.17 https://elixir.bootlin.com/linux/v4.17/source/net/core/net-procfs.c#L162
 //!   and https://elixir.bootlin.com/linux/v4.17/source/include/linux/netdevice.h#L2810.
 
-use std::path::PathBuf;
-
 use event::{Metric, tags};
 
-use super::Error;
+use super::{Error, Paths};
 
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let data = std::fs::read_to_string(proc_path.join("net/softnet_stat"))?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let data = std::fs::read_to_string(paths.proc().join("net/softnet_stat"))?;
     let mut metrics = Vec::new();
 
     for (index, line) in data.lines().enumerate() {
@@ -109,26 +107,26 @@ fn parse_softnet(line: &str, index: u32) -> Result<SoftnetStat, Error> {
     let mut stat = SoftnetStat::default();
     // Linux 2.6.23 https://elixir.bootlin.com/linux/v2.6.23/source/net/core/dev.c#L2347
     if parts.len() >= MIN_COLUMNS {
-        stat.processed = hex_u32(parts[0].as_bytes());
-        stat.dropped = hex_u32(parts[1].as_bytes());
-        stat.time_squeezed = hex_u32(parts[2].as_bytes());
-        stat.cpu_collision = hex_u32(parts[8].as_bytes());
+        stat.processed = u32::from_str_radix(parts[0], 16)?;
+        stat.dropped = u32::from_str_radix(parts[1], 16)?;
+        stat.time_squeezed = u32::from_str_radix(parts[2], 16)?;
+        stat.cpu_collision = u32::from_str_radix(parts[8], 16)?;
     }
 
     // Linux 2.6.39 https://elixir.bootlin.com/linux/v2.6.39/source/net/core/dev.c#L4086
     if parts.len() >= 10 {
-        stat.received_rps = hex_u32(parts[9].as_bytes());
+        stat.received_rps = u32::from_str_radix(parts[9], 16)?;
     }
 
     // Linux 4.18 https://elixir.bootlin.com/linux/v4.18/source/net/core/net-procfs.c#L162
     if parts.len() >= 11 {
-        stat.flow_limit_count = hex_u32(parts[10].as_bytes());
+        stat.flow_limit_count = u32::from_str_radix(parts[10], 16)?;
     }
 
     // Linux 5.14 https://elixir.bootlin.com/linux/v5.14/source/net/core/net-procfs.c#L169
     if parts.len() >= 13 {
-        stat.softnet_backlog_len = hex_u32(parts[11].as_bytes());
-        stat.index = hex_u32(parts[12].as_bytes());
+        stat.softnet_backlog_len = u32::from_str_radix(parts[11], 16)?;
+        stat.index = u32::from_str_radix(parts[12], 16)?;
     } else {
         // for older kernels, create the index based on the scan line number.
         stat.index = index;
@@ -137,19 +135,6 @@ fn parse_softnet(line: &str, index: u32) -> Result<SoftnetStat, Error> {
     stat.width = parts.len() as i16;
 
     Ok(stat)
-}
-
-#[inline]
-fn hex_u32(input: &[u8]) -> u32 {
-    input
-        .iter()
-        .rev()
-        .enumerate()
-        .map(|(k, &v)| {
-            let digit = v as char;
-            (digit.to_digit(16).unwrap_or(0)) << (k * 4)
-        })
-        .sum()
 }
 
 #[cfg(test)]

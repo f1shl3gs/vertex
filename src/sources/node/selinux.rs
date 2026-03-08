@@ -1,11 +1,11 @@
-use std::path::PathBuf;
+use std::path::Path;
 
 use event::Metric;
 
-use super::{Error, read_into};
+use super::{Error, Paths, read_into};
 
-pub async fn gather(proc_path: PathBuf, sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let enabled = get_enabled(proc_path)?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let enabled = get_enabled(paths.proc())?;
     let mut metrics = vec![Metric::gauge(
         "node_selinux_enabled",
         "SELinux is enabled, 1 is true, 0 is false",
@@ -22,7 +22,7 @@ pub async fn gather(proc_path: PathBuf, sys_path: PathBuf) -> Result<Vec<Metric>
             Metric::gauge(
                 "node_selinux_current_mode",
                 "Current SELinux enforcement mode",
-                read_into::<_, i32, _>(sys_path.join("fs/selinux/enforce"))?,
+                read_into::<_, i32, _>(paths.sys().join("fs/selinux/enforce"))?,
             ),
         ]);
     }
@@ -30,14 +30,14 @@ pub async fn gather(proc_path: PathBuf, sys_path: PathBuf) -> Result<Vec<Metric>
     Ok(metrics)
 }
 
-fn get_enabled(proc_path: PathBuf) -> Result<bool, Error> {
-    let thread_self = proc_path.join("thread-self/attr/current");
+fn get_enabled(root: &Path) -> Result<bool, Error> {
+    let thread_self = root.join("thread-self/attr/current");
     let path = if thread_self.exists() {
         // Linux >= 3.17 provides this
         thread_self
     } else {
         let thread_id = unsafe { libc::syscall(libc::SYS_gettid) as i64 };
-        proc_path.join(format!("self/task/{thread_id}/attr/current"))
+        root.join(format!("self/task/{thread_id}/attr/current"))
     };
 
     // The content is end with '0x0000'

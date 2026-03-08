@@ -1,13 +1,13 @@
 //! Exposes available entropy
 
-use std::path::PathBuf;
+use std::path::Path;
 
 use event::Metric;
 
-use super::{Error, read_into};
+use super::{Error, Paths, read_into};
 
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let (avail, pool_size) = read_random(proc_path)?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let (avail, pool_size) = read_random(paths.proc())?;
 
     Ok(vec![
         Metric::gauge(
@@ -23,9 +23,9 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     ])
 }
 
-fn read_random(proc_path: PathBuf) -> Result<(u64, u64), Error> {
-    let avail = read_into(proc_path.join("sys/kernel/random/entropy_avail"))?;
-    let pool_size = read_into(proc_path.join("sys/kernel/random/poolsize"))?;
+fn read_random(root: &Path) -> Result<(u64, u64), Error> {
+    let avail = read_into(root.join("sys/kernel/random/entropy_avail"))?;
+    let pool_size = read_into(root.join("sys/kernel/random/poolsize"))?;
 
     Ok((avail, pool_size))
 }
@@ -36,7 +36,7 @@ mod tests {
 
     #[test]
     fn read() {
-        let path = "tests/node/fixtures/proc".into();
+        let path = Path::new("tests/node/fixtures/proc");
         let (avail, pool_size) = read_random(path).unwrap();
 
         assert_eq!(avail, 3943);

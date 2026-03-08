@@ -1,11 +1,9 @@
-use std::path::PathBuf;
-
 use event::Metric;
 
-use super::Error;
+use super::{Error, Paths};
 
-pub async fn collect(proc: PathBuf) -> Result<Vec<Metric>, Error> {
-    let content = std::fs::read_to_string(proc.join("net/xfrm_stat"))?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let content = std::fs::read_to_string(paths.proc().join("net/xfrm_stat"))?;
 
     let mut metrics = Vec::with_capacity(30);
     for line in content.lines() {
@@ -120,8 +118,8 @@ mod tests {
 
     #[tokio::test]
     async fn smoke() {
-        let path = PathBuf::from("tests/node/fixtures/proc");
-        let metrics = collect(path).await.unwrap();
+        let paths = Paths::test();
+        let metrics = collect(paths).await.unwrap();
 
         for metric in metrics {
             println!("{metric}");

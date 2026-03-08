@@ -131,7 +131,7 @@ async fn add_tcp_stats(
     Ok(())
 }
 
-pub async fn gather() -> Result<Vec<Metric>, Error> {
+pub async fn collect() -> Result<Vec<Metric>, Error> {
     let mut sock = NetlinkSocket::connect()?;
     let mut stats = Statistics::default();
 

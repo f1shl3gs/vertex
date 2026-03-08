@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 
 use event::{Metric, tags};
 
-use super::{Error, read_into, read_string};
+use super::{Error, Paths, read_into, read_string};
 
 const SECTOR_SIZE: u64 = 512;
 
@@ -78,8 +78,8 @@ pub struct Stats {
     commit_stats: CommitStats,
 }
 
-pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stats = stats(sys_path)?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let stats = stats(paths.sys())?;
 
     let mut metrics = Vec::with_capacity(stats.len() * 12);
     for stat in stats {
@@ -252,7 +252,7 @@ fn get_layout_metrics(typ: &str, uuid: &str, mode: &str, s: LayoutUsage) -> Vec<
     ]
 }
 
-fn stats(root: PathBuf) -> Result<Vec<Stats>, Error> {
+fn stats(root: &Path) -> Result<Vec<Stats>, Error> {
     let pattern = format!("{}/fs/btrfs/*-*", root.to_string_lossy());
     let paths = glob::glob(&pattern)?;
 
@@ -460,8 +460,8 @@ mod tests {
 
     #[test]
     fn get_stats() {
-        let path = "tests/node/fixtures/sys";
-        let stats = stats(path.into()).unwrap();
+        let path = Path::new("tests/node/fixtures/sys");
+        let stats = stats(path).unwrap();
 
         struct Alloc {
             layout: String,
