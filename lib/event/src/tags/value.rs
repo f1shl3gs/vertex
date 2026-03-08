@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::fmt;
 use std::hash::{Hash, Hasher};
 
@@ -243,6 +244,17 @@ impl From<&str> for Value {
     /// Convenience method for creating a `Value` from a `&'static str`.
     fn from(s: &str) -> Self {
         Value::String(s.into())
+    }
+}
+
+impl From<Cow<'_, str>> for Value {
+    fn from(s: Cow<'_, str>) -> Self {
+        let s = match s {
+            Cow::Borrowed(s) => Key::from(s),
+            Cow::Owned(s) => Key::from_string(s),
+        };
+
+        Value::String(s)
     }
 }
 

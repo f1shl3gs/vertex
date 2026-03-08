@@ -1,11 +1,9 @@
-use std::path::PathBuf;
-
 use configurable::Configurable;
 use event::{Metric, tags};
 use framework::config::{serde_regex, serde_regex_option};
 use serde::{Deserialize, Serialize};
 
-use super::{Error, read_string};
+use super::{Error, Paths, read_string};
 
 fn default_include() -> regex::Regex {
     regex::Regex::new(".*").unwrap()
@@ -44,8 +42,8 @@ impl Config {
     }
 }
 
-pub async fn collect(config: Config, proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let content = read_string(proc_path.join("slabinfo"))?;
+pub async fn collect(config: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
+    let content = read_string(paths.proc().join("slabinfo"))?;
 
     let slabs = parse_slab_info(&content)?;
     let mut metrics = Vec::with_capacity(slabs.len() * 5);

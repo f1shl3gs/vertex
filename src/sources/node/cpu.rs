@@ -1,14 +1,14 @@
 //! Collect metrics from `/proc/stat`
 
 use std::collections::BTreeMap;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use configurable::Configurable;
 use event::{Metric, tags};
 use framework::config::{default_true, serde_regex};
 use serde::{Deserialize, Serialize};
 
-use super::{Error, read_into};
+use super::{Error, Paths, read_into};
 
 const USER_HZ: f64 = 100.0;
 
@@ -63,15 +63,11 @@ macro_rules! state_metric {
     };
 }
 
-pub async fn gather(
-    conf: Config,
-    proc_path: PathBuf,
-    sys_path: PathBuf,
-) -> Result<Vec<Metric>, Error> {
+pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
     let mut metrics = Vec::new();
 
     if conf.info {
-        let content = std::fs::read_to_string(proc_path.join("cpuinfo"))?;
+        let content = std::fs::read_to_string(paths.proc().join("cpuinfo"))?;
         let infos = parse_cpu_info(&content);
 
         for info in infos {
@@ -95,7 +91,7 @@ pub async fn gather(
         }
     }
 
-    let stats = get_cpu_stat(proc_path)?;
+    let stats = get_cpu_stat(paths.proc())?;
     for (cpu, stat) in stats.iter().enumerate() {
         metrics.extend([
             state_metric!(cpu, "user", stat.user),
@@ -136,13 +132,13 @@ pub async fn gather(
 
     let pattern = format!(
         "{}/devices/system/cpu/cpu[0-9]*",
-        sys_path.to_string_lossy()
+        paths.sys().to_string_lossy()
     );
-    let mut paths = glob::glob(pattern.as_str())?;
+    let mut matched = glob::glob(pattern.as_str())?;
 
     let mut package_throttles = BTreeMap::<u64, u64>::new();
     let mut package_core_throttles = BTreeMap::<u64, BTreeMap<u64, u64>>::new();
-    while let Some(Ok(path)) = paths.next() {
+    while let Some(Ok(path)) = matched.next() {
         let Ok(physical_package_id) = read_into(path.join("topology/physical_package_id")) else {
             continue;
         };
@@ -191,7 +187,7 @@ pub async fn gather(
         }
     }
 
-    match std::fs::read_to_string(sys_path.join("devices/system/cpu/isolated")) {
+    match std::fs::read_to_string(paths.sys().join("devices/system/cpu/isolated")) {
         Ok(content) => {
             let cpus = parse_cpu_range(&content)?;
 
@@ -299,8 +295,8 @@ struct CPUStat {
     guest_nice: f64,
 }
 
-fn get_cpu_stat(proc_path: PathBuf) -> Result<Vec<CPUStat>, Error> {
-    let data = std::fs::read_to_string(proc_path.join("stat"))?;
+fn get_cpu_stat(root: &Path) -> Result<Vec<CPUStat>, Error> {
+    let data = std::fs::read_to_string(root.join("stat"))?;
 
     let mut stats = Vec::new();
     for line in data.lines() {
@@ -383,7 +379,7 @@ mod tests {
 
     #[test]
     fn cpu_stats() {
-        let proc_path = PathBuf::from("tests/node/fixtures/proc");
+        let proc_path = Path::new("tests/node/fixtures/proc");
         let stats = get_cpu_stat(proc_path).unwrap();
 
         assert_eq!(stats.len(), 8);

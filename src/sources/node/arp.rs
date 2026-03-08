@@ -1,14 +1,13 @@
 //! Exposes ARP statistics from `/proc/net/arp`.
 
 use std::collections::HashMap;
-use std::path::PathBuf;
 
 use event::{Metric, tags};
 
-use super::Error;
+use super::{Error, Paths};
 
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let data = std::fs::read_to_string(proc_path.join("net/arp"))?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let data = std::fs::read_to_string(paths.proc().join("net/arp"))?;
 
     let mut devices = HashMap::new();
     // the first line is title, so we don't need it

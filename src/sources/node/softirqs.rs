@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 use event::{Metric, tags};
 
-use super::Error;
+use super::{Error, Paths};
 
 /// Softirqs represents the softirq statistics.
 #[derive(Default)]
@@ -61,35 +61,37 @@ impl Softirqs {
 }
 
 macro_rules! build_metrics {
-    ($metrics: expr, $name: tt, $values: expr) => {
-        for (cpu, value) in $values.into_iter().enumerate() {
-            $metrics.push(Metric::sum_with_tags(
-                "node_softirqs_functions_total",
-                "Softirq counts per CPU",
-                value,
-                tags!(
-                    "cpu" => cpu,
-                    "type" => $name
-                ),
-            ));
-        }
+    ($name: tt, $values: expr) => {
+        $values.into_iter()
+            .enumerate()
+            .map(|(cpu, value)| {
+                Metric::sum_with_tags(
+                    "node_softirqs_functions_total",
+                    "Softirq counts per CPU",
+                    value,
+                    tags!(
+                        "cpu" => cpu,
+                        "type" => $name
+                    ),
+                )
+            })
     };
 }
 
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let stat = Softirqs::parse(proc_path.join("softirqs"))?;
-    let mut metrics = vec![];
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let stat = Softirqs::parse(paths.proc().join("softirqs"))?;
 
-    build_metrics!(metrics, "HI", stat.hi);
-    build_metrics!(metrics, "TIMER", stat.timer);
-    build_metrics!(metrics, "NET_TX", stat.net_tx);
-    build_metrics!(metrics, "NET_RX", stat.net_rx);
-    build_metrics!(metrics, "BLOCK", stat.block);
-    build_metrics!(metrics, "IRQ_POLL", stat.irq_poll);
-    build_metrics!(metrics, "TASKLET", stat.tasklet);
-    build_metrics!(metrics, "SCHED", stat.sched);
-    build_metrics!(metrics, "HRTIMER", stat.hr_timer);
-    build_metrics!(metrics, "RCU", stat.rcu);
+    let mut metrics = Vec::with_capacity(10 * stat.hi.len());
+    metrics.extend(build_metrics!("HI", stat.hi));
+    metrics.extend(build_metrics!("TIMER", stat.timer));
+    metrics.extend(build_metrics!("NET_TX", stat.net_tx));
+    metrics.extend(build_metrics!("NET_RX", stat.net_rx));
+    metrics.extend(build_metrics!("BLOCK", stat.block));
+    metrics.extend(build_metrics!("IRQ_POLL", stat.irq_poll));
+    metrics.extend(build_metrics!("TASKLET", stat.tasklet));
+    metrics.extend(build_metrics!("SCHED", stat.sched));
+    metrics.extend(build_metrics!("HRTIMER", stat.hr_timer));
+    metrics.extend(build_metrics!("RCU", stat.rcu));
 
     Ok(metrics)
 }

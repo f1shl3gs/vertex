@@ -1,14 +1,14 @@
 use std::collections::BTreeMap;
 use std::fs::{canonicalize, read_link};
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use event::{Metric, tags};
 use tokio::task::JoinSet;
 
-use super::{Error, read_string};
+use super::{Error, Paths, read_string};
 
-pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let dirs = std::fs::read_dir(sys_path.join("class/hwmon"))?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let dirs = std::fs::read_dir(paths.sys().join("class/hwmon"))?;
 
     let mut tasks = JoinSet::new();
     for entry in dirs.flatten() {
@@ -601,8 +601,8 @@ mod tests {
 
     #[test]
     fn hwmon_name() {
-        let path = PathBuf::from("tests/node/fixtures/sys/class/hwmon/hwmon2");
-        let name = read_hwmon_name(&path).unwrap();
+        let path = Path::new("tests/node/fixtures/sys/class/hwmon/hwmon2");
+        let name = read_hwmon_name(path).unwrap();
         assert_eq!(name, "platform_applesmc_768")
     }
 }

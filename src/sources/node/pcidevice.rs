@@ -6,7 +6,7 @@ use std::str::FromStr;
 
 use event::{Metric, tags};
 
-use super::Error;
+use super::{Error, Paths};
 
 /// The location of the device attached
 /// "0000:00:00.0" represents Segment:Bus:Device.Function
@@ -79,8 +79,8 @@ struct Device {
     power_state: Option<PowerState>, // /sys/bus/pci/devices/<Location>/power_state
 }
 
-pub async fn collect(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let devices = load_devices(sys_path.join("bus/pci/devices"))?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let devices = load_devices(paths.sys().join("bus/pci/devices"))?;
 
     let mut metrics = Vec::with_capacity(devices.len() * 12);
     for device in devices {

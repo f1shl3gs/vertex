@@ -1,17 +1,16 @@
 use std::collections::BTreeMap;
-use std::path::PathBuf;
 
 use chrono::NaiveDate;
 use event::{Metric, tags};
 
-use super::Error;
+use super::{Error, Paths};
 
 const ETC_OS_RELEASE: &str = "etc/os-release";
 const USR_LIB_OS_RELEASE: &str = "usr/lib/os-release";
 
-pub async fn gather(root_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let content = std::fs::read_to_string(root_path.join(ETC_OS_RELEASE))
-        .or_else(|_err| std::fs::read_to_string(root_path.join(USR_LIB_OS_RELEASE)))
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let content = std::fs::read_to_string(paths.root().join(ETC_OS_RELEASE))
+        .or_else(|_err| std::fs::read_to_string(paths.root().join(USR_LIB_OS_RELEASE)))
         .map_err(|_err| Error::NoData)?;
 
     let infos = parse_os_release(&content);

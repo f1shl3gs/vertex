@@ -1,11 +1,11 @@
-use std::path::PathBuf;
+use std::path::Path;
 
 use event::Metric;
 
-use super::{Error, read_string};
+use super::{Error, Paths, read_string};
 
-pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let (allocated, maximum) = read_file_nr(proc_path)?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let (allocated, maximum) = read_file_nr(paths.proc())?;
 
     Ok(vec![
         Metric::gauge(
@@ -21,8 +21,8 @@ pub async fn gather(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     ])
 }
 
-fn read_file_nr(proc_path: PathBuf) -> Result<(u64, u64), Error> {
-    let content = read_string(proc_path.join("sys/fs/file-nr"))?;
+fn read_file_nr(root: &Path) -> Result<(u64, u64), Error> {
+    let content = read_string(root.join("sys/fs/file-nr"))?;
 
     // the file-nr proc is only 1 line with 3 values
     let parts = content.split_ascii_whitespace().collect::<Vec<_>>();
@@ -39,7 +39,7 @@ mod tests {
 
     #[test]
     fn file_nr() {
-        let path = "tests/node/fixtures/proc".into();
+        let path = Path::new("tests/node/fixtures/proc");
         let (allocated, maximum) = read_file_nr(path).unwrap();
 
         assert_eq!(allocated, 1024);

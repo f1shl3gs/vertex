@@ -3,14 +3,14 @@
 //! Docs from https://www.kernel.org/doc/Documentation/iostats.txt
 
 use std::collections::HashMap;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use configurable::Configurable;
 use event::{Metric, tags};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 
-use super::{Error, read_into};
+use super::{Error, Paths, read_into};
 
 const DISK_SECTOR_SIZE: f64 = 512.0;
 
@@ -32,13 +32,8 @@ impl Default for Config {
     }
 }
 
-pub async fn gather(
-    conf: Config,
-    proc_path: PathBuf,
-    sys_path: PathBuf,
-    udev_path: PathBuf,
-) -> Result<Vec<Metric>, Error> {
-    let data = std::fs::read_to_string(proc_path.join("diskstats"))?;
+pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
+    let data = std::fs::read_to_string(paths.proc().join("diskstats"))?;
 
     // https://www.kernel.org/doc/Documentation/ABI/testing/procfs-diskstats
     //
@@ -97,7 +92,7 @@ pub async fn gather(
             continue;
         }
 
-        let info = match udev_device_properties(&udev_path, major, minor) {
+        let info = match udev_device_properties(paths.udev(), major, minor) {
             Ok(info) => info,
             Err(err) => {
                 debug!(
@@ -120,7 +115,11 @@ pub async fn gather(
             .unwrap_or_default();
 
         // stats for /sys/block/xxx/queue where xxx is a device name.
-        let path = sys_path.join("block").join(device).join("queue/rotational");
+        let path = paths
+            .sys()
+            .join("block")
+            .join(device)
+            .join("queue/rotational");
         let rotational = match read_into::<_, u64, _>(&path) {
             Ok(rotational) => rotational,
             Err(err) => {

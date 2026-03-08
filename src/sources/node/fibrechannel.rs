@@ -1,9 +1,9 @@
 use std::io::ErrorKind;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use event::{Metric, tags};
 
-use super::{Error, read_string};
+use super::{Error, Paths, read_string};
 
 #[derive(Debug, Default)]
 pub struct FibreChannelCounters {
@@ -93,8 +93,8 @@ pub struct FibreChannelHost {
 }
 
 /// fibre_channel_class parse everything in /sys/class/fc_host
-fn fibre_channel_class(sys_path: PathBuf) -> Result<Vec<FibreChannelHost>, Error> {
-    let dirs = std::fs::read_dir(sys_path.join("class/fc_host"))?;
+fn fibre_channel_class(root: &Path) -> Result<Vec<FibreChannelHost>, Error> {
+    let dirs = std::fs::read_dir(root.join("class/fc_host"))?;
 
     let mut fcc = Vec::new();
     for entry in dirs.flatten() {
@@ -217,8 +217,8 @@ fn parse_fibre_channel_statistics(root: PathBuf) -> Result<FibreChannelCounters,
     Ok(counters)
 }
 
-pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let hosts = fibre_channel_class(sys_path)?;
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let hosts = fibre_channel_class(paths.sys())?;
 
     let mut metrics = vec![];
     for host in hosts {
@@ -394,7 +394,8 @@ mod tests {
 
     #[test]
     fn parse() {
-        let fcc = fibre_channel_class("tests/node/fixtures/sys".into()).unwrap();
+        let path = Path::new("tests/node/fixtures/sys");
+        let fcc = fibre_channel_class(path).unwrap();
         assert_eq!(fcc.len(), 1);
         let host = &fcc[0];
 

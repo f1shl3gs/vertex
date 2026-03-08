@@ -1,11 +1,9 @@
-use std::path::PathBuf;
-
 use event::{Metric, tags};
 
-use super::{Error, read_string};
+use super::{Error, Paths, read_string};
 
-pub async fn collect(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let path = proc_path.join("interrupts");
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let path = paths.proc().join("interrupts");
     let content = read_string(path)?;
 
     let mut metrics = Vec::new();

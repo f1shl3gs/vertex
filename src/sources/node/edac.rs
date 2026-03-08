@@ -1,15 +1,15 @@
 //! Exposes error detection and correction statistics
 
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use event::{Metric, tags};
 
-use super::{Error, read_into};
+use super::{Error, Paths, read_into};
 
-pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     let paths = glob::glob(&format!(
         "{}/devices/system/edac/mc/mc[0-9]*",
-        sys_path.to_string_lossy()
+        paths.sys().to_string_lossy()
     ))?;
 
     let mut metrics = Vec::new();
@@ -111,9 +111,8 @@ mod tests {
 
     #[test]
     fn edac_stats() {
-        let path = PathBuf::from("tests/node/fixtures/sys/devices/system/edac/mc/mc0");
-        let (ce_count, ce_noinfo_count, ue_count, ue_noinfo_count) =
-            read_edac_stats(&path).unwrap();
+        let path = Path::new("tests/node/fixtures/sys/devices/system/edac/mc/mc0");
+        let (ce_count, ce_noinfo_count, ue_count, ue_noinfo_count) = read_edac_stats(path).unwrap();
 
         assert_eq!(ce_count, 1);
         assert_eq!(ce_noinfo_count, 2);
@@ -123,8 +122,8 @@ mod tests {
 
     #[test]
     fn edac_csrow_stats() {
-        let path = PathBuf::from("tests/node/fixtures/sys/devices/system/edac/mc/mc0/csrow0");
-        let (ce_count, ue_count) = read_edac_csrow_stats(&path).unwrap();
+        let path = Path::new("tests/node/fixtures/sys/devices/system/edac/mc/mc0/csrow0");
+        let (ce_count, ue_count) = read_edac_csrow_stats(path).unwrap();
 
         assert_eq!(ce_count, 3);
         assert_eq!(ue_count, 4);

@@ -1,11 +1,9 @@
-use std::path::PathBuf;
-
 use event::Metric;
 
-use super::{Error, read_into};
+use super::{Error, Paths, read_into};
 
-pub async fn collect(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let path = sys_path.join("kernel/mm/ksm");
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let root = paths.sys().join("kernel/mm/ksm");
 
     let mut metrics = Vec::with_capacity(9);
     for filename in [
@@ -19,7 +17,7 @@ pub async fn collect(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
         "run",
         "sleep_millisecs",
     ] {
-        let mut value: f64 = read_into(path.join(filename))?;
+        let mut value: f64 = read_into(root.join(filename))?;
 
         let name = match filename {
             "full_scans" => {

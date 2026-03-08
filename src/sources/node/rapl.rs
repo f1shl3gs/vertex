@@ -10,11 +10,11 @@
 //!   Not that you cannot get readings for individual processes, the results are for the entire CPU socket.
 
 use std::collections::BTreeMap;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use event::{Metric, tags};
 
-use super::{Error, read_into, read_string};
+use super::{Error, Paths, read_into, read_string};
 
 /// RaplZone stores the information for one RAPL power zone
 #[derive(Debug)]
@@ -35,9 +35,8 @@ struct RaplZone {
 /// `get_rapl_zones` returns a slice of RaplZones
 /// When RAPL files are not present, returns nil with error
 /// https://www.kernel.org/doc/Documentation/power/powercap/powercap.txt
-fn get_rapl_zones(sys_path: PathBuf) -> Result<Vec<RaplZone>, Error> {
-    let root = sys_path.join("class/powercap");
-    let dirs = std::fs::read_dir(&root)?;
+fn get_rapl_zones(root: &Path) -> Result<Vec<RaplZone>, Error> {
+    let dirs = std::fs::read_dir(root.join("class/powercap"))?;
 
     // count name usages to avoid duplicates (label them with an index)
     let mut names: BTreeMap<String, i32> = BTreeMap::new();
@@ -91,10 +90,10 @@ fn get_name_and_index(s: &str) -> Option<(&str, i32)> {
     Some((name, index))
 }
 
-pub async fn gather(sys_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let zones = get_rapl_zones(sys_path)?;
-    let mut metrics = vec![];
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let zones = get_rapl_zones(paths.sys())?;
 
+    let mut metrics = Vec::with_capacity(zones.len());
     for zone in zones {
         metrics.push(Metric::sum_with_tags(
             format!("node_rapl_{}_joules_total", zone.name),
@@ -115,7 +114,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_get_name_and_index() {
+    fn name_and_index() {
         assert_eq!(get_name_and_index("package-10"), Some(("package", 10)));
         assert_eq!(get_name_and_index("abc"), None);
         assert_eq!(get_name_and_index("package-"), None)
@@ -123,7 +122,7 @@ mod tests {
 
     #[test]
     fn rapl_zones() {
-        let root = "tests/node/fixtures/sys".into();
+        let root = Path::new("tests/node/fixtures/sys");
         let mut zones = get_rapl_zones(root).unwrap();
 
         // The readdir_r is not guaranteed to return in any specific order.

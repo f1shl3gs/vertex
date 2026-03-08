@@ -1,14 +1,13 @@
 use std::collections::BTreeSet;
 use std::io::ErrorKind;
-use std::path::PathBuf;
 use std::time::Duration;
 
 use event::{Metric, tags};
 
-use super::Error;
+use super::{Error, Paths};
 
-pub async fn collect(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
-    let content = match std::fs::read_to_string(proc_path.join("self/mountstats")) {
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let content = match std::fs::read_to_string(paths.proc().join("self/mountstats")) {
         Ok(content) => content,
         Err(err) => {
             if err.kind() == ErrorKind::NotFound {
@@ -20,7 +19,7 @@ pub async fn collect(proc_path: PathBuf) -> Result<Vec<Metric>, Error> {
     };
     let mounts = parse_mount_stats(&content)?;
 
-    let content = std::fs::read_to_string(proc_path.join("self/mountinfo"))?;
+    let content = std::fs::read_to_string(paths.proc().join("self/mountinfo"))?;
     let infos = parse_mount_info(&content)?;
 
     let mut seen = BTreeSet::new();
