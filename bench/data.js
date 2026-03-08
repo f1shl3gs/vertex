@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772972058934,
+  "lastUpdate": 1772972068642,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "bc7b79d900715f158b492913486acf260543741b",
-          "message": "Merge pull request #2655 from f1shl3gs/secrets/add_features\n\nsecrets: add secret features",
-          "timestamp": "2025-10-31T00:16:14+08:00",
-          "tree_id": "8e9d2caf57ce6b422815639de38dd8fcbac26c63",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bc7b79d900715f158b492913486acf260543741b"
-        },
-        "date": 1761841096857,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 493680,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 529580,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "354d8ed6cca9e9a924d7cfb590216f767b7b9def",
+          "message": "Merge pull request #2845 from f1shl3gs/sources/node/simplify_and_cleanup\n\nsources/node: cleanup and simplify",
+          "timestamp": "2026-03-08T20:11:55+08:00",
+          "tree_id": "7f8a16a7e08a4d4da04378e96c58a08126fd7c57",
+          "url": "https://github.com/f1shl3gs/vertex/commit/354d8ed6cca9e9a924d7cfb590216f767b7b9def"
+        },
+        "date": 1772972046068,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 538940,
             "unit": "ns/op"
           }
         ]
