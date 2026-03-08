@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772972047536,
+  "lastUpdate": 1772972058934,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d3d6a292b029062100dd0c66a3af0982f162065b",
-          "message": "Merge pull request #2652 from f1shl3gs/cargo/update\n\nCargo/update",
-          "timestamp": "2025-10-30T04:31:09+08:00",
-          "tree_id": "8de9a2ad401559181f75be0ae950d08972baf472",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d3d6a292b029062100dd0c66a3af0982f162065b"
-        },
-        "date": 1761770054132,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.989,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 180.47,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 332.43,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 680.58,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "99377939745bc31bd042e1ee28de9dced24481b9",
           "message": "Merge pull request #2654 from f1shl3gs/extensions/remote_tap\n\nextensions/remote_tap: init & remove extensions/zpages",
           "timestamp": "2025-10-30T23:33:02+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 690.14,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "316865e466a61b9e2a5751decbb2158417cd5ffa",
+          "message": "Merge pull request #2844 from f1shl3gs/dependabot/cargo/libc-0.2.183\n\nchore(deps): bump libc from 0.2.182 to 0.2.183",
+          "timestamp": "2026-03-08T20:11:21+08:00",
+          "tree_id": "d69e519baae7e54e187babe313d99904100efd96",
+          "url": "https://github.com/f1shl3gs/vertex/commit/316865e466a61b9e2a5751decbb2158417cd5ffa"
+        },
+        "date": 1772972035813,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.66,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 182.94,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 325.32,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 680.05,
             "unit": "ns/op"
           }
         ]
