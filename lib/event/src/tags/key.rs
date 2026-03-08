@@ -59,12 +59,6 @@ impl Key {
         key.last = HEAP_MASK;
 
         key
-
-        // if s.len() <= INLINE_CAP {
-        //     Key::inline(&s)
-        // } else {
-        //     unsafe { transmute::<String, Key>(s) }
-        // }
     }
 
     fn inline(text: &str) -> Key {
