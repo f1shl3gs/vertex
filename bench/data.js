@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772972068642,
+  "lastUpdate": 1772972073811,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "bc7b79d900715f158b492913486acf260543741b",
-          "message": "Merge pull request #2655 from f1shl3gs/secrets/add_features\n\nsecrets: add secret features",
-          "timestamp": "2025-10-31T00:16:14+08:00",
-          "tree_id": "8e9d2caf57ce6b422815639de38dd8fcbac26c63",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bc7b79d900715f158b492913486acf260543741b"
-        },
-        "date": 1761841110721,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.445,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 95.31,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 172.95,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 173.19,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "354d8ed6cca9e9a924d7cfb590216f767b7b9def",
+          "message": "Merge pull request #2845 from f1shl3gs/sources/node/simplify_and_cleanup\n\nsources/node: cleanup and simplify",
+          "timestamp": "2026-03-08T20:11:55+08:00",
+          "tree_id": "7f8a16a7e08a4d4da04378e96c58a08126fd7c57",
+          "url": "https://github.com/f1shl3gs/vertex/commit/354d8ed6cca9e9a924d7cfb590216f767b7b9def"
+        },
+        "date": 1772972051063,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.019,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 98.661,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 173.94,
             "unit": "ns/op"
           }
         ]
