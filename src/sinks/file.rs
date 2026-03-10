@@ -1,5 +1,5 @@
 use std::io::SeekFrom;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::time::Duration;
 
 use bytes::BytesMut;
@@ -38,13 +38,92 @@ struct RotationConfig {
     max_files: usize,
 }
 
+impl RotationConfig {
+    async fn rotate(&self, path: &Path) -> std::io::Result<File> {
+        fn parse_timestamp(input: &str) -> Option<DateTime<Utc>> {
+            let pos = input.len().checked_sub(23)?;
+            let (_name, ts) = input.split_at(pos);
+
+            NaiveDateTime::parse_from_str(ts, TIMESTAMP_FORMAT)
+                .map(|n| n.and_utc())
+                .ok()
+        }
+
+        // trying to clean up outdated
+        let root = path.parent().unwrap_or(path);
+        let mut files = Vec::with_capacity(self.max_files);
+        for entry in root.read_dir()?.flatten() {
+            if let Ok(typ) = entry.file_type()
+                && !typ.is_file()
+            {
+                continue;
+            }
+
+            let path = entry.path();
+            let Some(stem) = path.file_stem() else {
+                continue;
+            };
+            let Some(timestamp) = parse_timestamp(stem.to_string_lossy().as_ref()) else {
+                continue;
+            };
+
+            files.push((path, timestamp));
+        }
+
+        // `>=` can make sure (after rotate), files won't exceed the limit
+        if files.len() >= self.max_files {
+            files.sort_by(|a, b| a.0.cmp(&b.0));
+
+            // we might have to remove a lot of files
+            while files.len() >= self.max_files {
+                let Some((oldest, _ts)) = files.pop() else {
+                    continue;
+                };
+
+                match std::fs::remove_file(&oldest) {
+                    Ok(()) => {
+                        debug!(message = "remove oldest rotated file", path = ?oldest);
+                    }
+                    Err(err) => {
+                        error!(
+                            message = "remove oldest rotated file failed",
+                            path = ?oldest,
+                            ?err
+                        );
+                    }
+                }
+            }
+        }
+
+        let stem = path.file_stem().expect("good file name");
+
+        let now = Utc::now();
+        let mut name = format!(
+            "{}-{}",
+            stem.to_string_lossy(),
+            now.format(TIMESTAMP_FORMAT)
+        );
+
+        if let Some(ext) = path.extension() {
+            name.push('.');
+            name.push_str(ext.to_string_lossy().as_ref());
+        }
+
+        let new = path.with_file_name(name);
+        tokio::fs::rename(path, new).await?;
+
+        open_file(path).await
+    }
+}
+
 #[configurable_component(sink, name = "file")]
 struct Config {
     /// Path of the file to write to. Path could be a relative one to current directory,
     /// but absolute path is recommended.
     path: PathBuf,
 
-    rotation: RotationConfig,
+    #[serde(default)]
+    rotation: Option<RotationConfig>,
 
     #[serde(flatten)]
     encoding: EncodingConfigWithFraming,
@@ -96,104 +175,22 @@ struct FileSink {
     transformer: Transformer,
     encoder: Encoder<Framer>,
 
-    rotation: RotationConfig,
+    rotation: Option<RotationConfig>,
 }
 
-impl FileSink {
-    async fn open(&self) -> std::io::Result<File> {
-        File::options()
-            .write(true)
-            .append(true)
-            .create(true)
-            .open(&self.path)
-            .await
-    }
-
-    async fn rotate(&self) -> std::io::Result<File> {
-        fn parse_timestamp(input: &str) -> Option<DateTime<Utc>> {
-            if input.len() < 23 {
-                return None;
-            }
-
-            let (_name, ts) = input.split_at(input.len() - 23);
-            NaiveDateTime::parse_from_str(ts, TIMESTAMP_FORMAT)
-                .map(|n| n.and_utc())
-                .ok()
-        }
-
-        // trying to clean up oldest
-        if let Some(parent) = self.path.parent() {
-            let mut files = Vec::with_capacity(self.rotation.max_files);
-            for entry in parent.read_dir()?.flatten() {
-                let Ok(typ) = entry.file_type() else {
-                    continue;
-                };
-
-                if !typ.is_file() {
-                    continue;
-                }
-
-                let path = entry.path();
-                let Some(stem) = path.file_stem() else {
-                    continue;
-                };
-                let Some(timestamp) = parse_timestamp(stem.to_string_lossy().as_ref()) else {
-                    continue;
-                };
-
-                files.push((path, timestamp));
-            }
-
-            if files.len() > self.rotation.max_files - 1 {
-                files.sort_by(|a, b| a.0.cmp(&b.0));
-
-                // we might have to remove a lot of files
-                while files.len() > self.rotation.max_files - 1 {
-                    let Some((oldest, _ts)) = files.pop() else {
-                        continue;
-                    };
-
-                    match std::fs::remove_file(&oldest) {
-                        Ok(()) => {
-                            debug!(message = "remove oldest rotated file", path = ?oldest);
-                        }
-                        Err(err) => {
-                            error!(
-                                message = "remove oldest rotated file failed",
-                                path = ?oldest,
-                                ?err
-                            );
-                        }
-                    }
-                }
-            }
-        }
-
-        let stem = self.path.file_stem().expect("good file name");
-
-        let now = Utc::now();
-        let mut name = format!(
-            "{}-{}",
-            stem.to_string_lossy(),
-            now.format(TIMESTAMP_FORMAT)
-        );
-
-        if let Some(ext) = self.path.extension() {
-            name.push('.');
-            name.push_str(ext.to_string_lossy().as_ref());
-        }
-
-        let new = self.path.with_file_name(name);
-        tokio::fs::rename(&self.path, new).await?;
-
-        self.open().await
-    }
+async fn open_file(path: &Path) -> std::io::Result<File> {
+    File::options()
+        .write(true)
+        .append(true)
+        .create(true)
+        .open(path)
+        .await
 }
 
 #[async_trait::async_trait]
 impl StreamSink for FileSink {
     async fn run(mut self: Box<Self>, mut input: BoxStream<'_, Events>) -> Result<(), ()> {
-        let mut file = match self.open().await {
+        let mut file = match open_file(&self.path).await {
             Ok(file) => file,
             Err(err) => {
                 error!(
@@ -207,18 +204,20 @@ impl StreamSink for FileSink {
 
         let mut interval = tokio::time::interval(Duration::from_secs(5));
 
-        let mut buf = BytesMut::new();
-        let mut written = 0;
+        let mut buf = BytesMut::with_capacity(4 * 1024);
         let mut size = file.seek(SeekFrom::End(0)).await.expect("seek success") as usize;
+        let mut written = 0;
         loop {
             // if the file is big enough, then rotate
-            if size > self.rotation.max_size {
-                match self.rotate().await {
+            if let Some(rotation) = &self.rotation
+                && size > rotation.max_size
+            {
+                match rotation.rotate(&self.path).await {
                     Ok(new) => {
                         debug!(message = "rotate success");
 
-                        written = 0;
                         size = 0;
+                        written = 0;
                         file = new;
                     }
                     Err(err) => {
@@ -250,27 +249,25 @@ impl StreamSink for FileSink {
                                 continue;
                             }
 
-                            let status = match file.write_all(&buf).await {
+                            finalizers.update_status(match file.write_all(&buf).await {
                                 Ok(()) => {
-                                    written += buf.len();
                                     size += buf.len();
+                                    written += buf.len();
                                     EventStatus::Delivered
                                 },
                                 Err(err) => {
                                     warn!(
-                                        message = "Write event to file failed",
+                                        message = "write event to file failed",
                                         path = ?self.path,
                                         %err,
+                                        internal_log_rate_limit = true,
                                     );
                                     EventStatus::Errored
                                 }
-                            };
-                            finalizers.update_status(status);
+                            });
                         }
                     },
-                    None => {
-                        break
-                    },
+                    None => break,
                 },
                 _ = interval.tick(), if written > 0 => {
                     if let Err(err) = file.sync_all().await {
@@ -287,6 +284,8 @@ impl StreamSink for FileSink {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use codecs::encoding::{FramingConfig, SerializerConfig};
+    use event::LogRecord;
 
     #[test]
     fn generate_config() {
@@ -311,15 +310,48 @@ mod tests {
             path: root.join("metrics.txt"),
             transformer: Default::default(),
             encoder: Default::default(),
-            rotation: RotationConfig {
+            rotation: Some(RotationConfig {
                 max_size: 0,
                 max_files: 2,
-            },
+            }),
         };
 
-        sink.rotate().await.unwrap();
+        sink.rotation.unwrap().rotate(&sink.path).await.unwrap();
 
         // 2 backups and 1 current
         assert_eq!(3, root.read_dir().unwrap().count());
+    }
+
+    #[tokio::test]
+    async fn rotate_once() {
+        let root = testify::temp_dir();
+        let config = Config {
+            path: root.join("logs.txt"),
+            rotation: Some(RotationConfig {
+                max_size: 10,
+                max_files: 2,
+            }),
+            encoding: (None::<FramingConfig>, SerializerConfig::Text).into(),
+            acknowledgements: false,
+        };
+
+        let (sink, healthcheck) = config.build(SinkContext::new_test()).await.unwrap();
+        healthcheck.await.unwrap();
+
+        run_and_assert(sink, &["abcdefgh", "12345678"]).await;
+
+        root.read_dir()
+            .unwrap()
+            .flatten()
+            .for_each(|entry| println!("{:?}", entry));
+
+        // one backup and one current
+        assert_eq!(root.read_dir().unwrap().count(), 2);
+    }
+
+    async fn run_and_assert(sink: Sink, msgs: &[&str]) {
+        let input =
+            futures::stream::iter(msgs.iter().map(|msg| LogRecord::from(*msg)).map(Into::into));
+        sink.run(input).await.unwrap();
     }
 }
