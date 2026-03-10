@@ -330,6 +330,7 @@ sinks-blackhole = []
 sinks-clickhouse = []
 sinks-console = ["tokio/io-std"]
 sinks-elasticsearch = []
+sinks-file = ["dep:finalize", "tokio/fs"]
 sinks-http = []
 sinks-influxdb = []
 sinks-jaeger = ["dep:jaeger"]
@@ -346,6 +347,7 @@ sinks = [
     "sinks-clickhouse",
     "sinks-console",
     "sinks-elasticsearch",
+    "sinks-file",
     "sinks-http",
     "sinks-influxdb",
     "sinks-jaeger",

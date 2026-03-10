@@ -8,6 +8,8 @@ mod clickhouse;
 mod console;
 #[cfg(feature = "sinks-elasticsearch")]
 mod elasticsearch;
+#[cfg(feature = "sinks-file")]
+mod file;
 #[cfg(feature = "sinks-http")]
 mod http;
 #[cfg(feature = "sinks-influxdb")]
