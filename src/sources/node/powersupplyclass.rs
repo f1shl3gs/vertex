@@ -1,3 +1,4 @@
+use std::io::ErrorKind;
 use std::path::{Path, PathBuf};
 
 use configurable::Configurable;
@@ -11,8 +12,6 @@ use super::{Error, Paths, read_string};
 /// a single power supply
 #[derive(Debug, Default, PartialEq)]
 struct PowerSupply {
-    // Power Supply Name
-    name: String,
     // /sys/class/power_supply/<name>/authentic
     authentic: Option<i64>,
     // /sys/class/power_supply/<name>/calibrate
@@ -149,852 +148,181 @@ struct PowerSupply {
     voltage_ocv: Option<i64>,
 }
 
-/// power_supply_class returns info for all power supplies read
-/// from /sys/class/power_supply
-fn power_supply_class(root: &Path) -> Result<Vec<PowerSupply>, Error> {
-    let dirs = std::fs::read_dir(root.join("class/power_supply"))?;
+fn read_optional(path: PathBuf) -> Result<String, Error> {
+    match read_string(path) {
+        Ok(content) => Ok(content),
+        Err(err) => {
+            if err.kind() == ErrorKind::NotFound {
+                return Ok(String::new());
+            }
 
-    let mut pss = vec![];
-    for entry in dirs.flatten() {
-        let ps = parse_power_supply(entry.path())?;
-        pss.push(ps);
+            Err(err.into())
+        }
     }
-
-    Ok(pss)
 }
 
-fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
-    // parse name from path
-    let name = path.file_name().unwrap().to_str().unwrap();
-    let mut ps = PowerSupply {
-        name: name.to_string(),
-        ..Default::default()
-    };
-
-    let dirs = std::fs::read_dir(path)?;
-    for entry in dirs.flatten() {
-        // TODO: node_exporter will skip none regular entry
-        let meta = entry.metadata()?;
-        if !meta.is_file() {
-            continue;
-        }
-
-        match entry.file_name().to_string_lossy().as_ref() {
-            "authentic" => {
-                ps.authentic = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "calibrate" => {
-                ps.calibrate = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "capacity" => {
-                ps.capacity = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "capacity_alert_max" => {
-                ps.capacity_alert_max = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "capacity_alert_min" => {
-                ps.capacity_alert_min = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "capacity_level" => {
-                ps.capacity_level = match read_string(entry.path()) {
-                    Ok(content) => content,
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "charge_avg" => {
-                ps.charge_avg = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "charge_control_limit" => {
-                ps.charge_control_limit = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "charge_control_limit_max" => {
-                ps.charge_control_limit_max = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "charge_counter" => {
-                ps.charge_counter = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "charge_empty" => {
-                ps.charge_empty = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "charge_empty_design" => {
-                ps.charge_empty_design = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "charge_full" => {
-                ps.charge_full = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "charge_full_design" => {
-                ps.charge_full_design = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "charge_now" => {
-                ps.charge_now = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "charge_term_current" => {
-                ps.charge_term_current = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "charge_type" => {
-                ps.charge_type = match read_string(entry.path()) {
-                    Ok(content) => content,
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "constant_charge_current" => {
-                ps.constant_charge_current = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "constant_charge_current_max" => {
-                ps.constant_charge_current_max = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "constant_charge_voltage" => {
-                ps.constant_charge_voltage = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "constant_charge_voltage_max" => {
-                ps.constant_charge_voltage_max = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "current_avg" => {
-                ps.current_avg = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "current_boot" => {
-                ps.current_boot = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "current_max" => {
-                ps.current_max = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "current_now" => {
-                ps.current_now = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "cycle_count" => {
-                ps.cycle_count = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "energy_avg" => {
-                ps.energy_avg = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "energy_empty" => {
-                ps.energy_empty = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "energy_empty_design" => {
-                ps.energy_empty_design = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "energy_full" => {
-                ps.energy_full = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "energy_full_design" => {
-                ps.energy_full_design = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "energy_now" => {
-                ps.energy_now = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "health" => {
-                ps.health = match read_string(entry.path()) {
-                    Ok(content) => content,
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "input_current_limit" => {
-                ps.input_current_limit = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "manufacturer" => {
-                ps.manufacturer = match read_string(entry.path()) {
-                    Ok(content) => content,
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "model_name" => {
-                ps.model_name = match read_string(entry.path()) {
-                    Ok(content) => content,
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "online" => {
-                ps.online = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "power_avg" => {
-                ps.power_avg = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "power_now" => {
-                ps.power_now = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "precharge_current" => {
-                ps.precharge_current = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "present" => {
-                ps.present = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "scope" => {
-                ps.scope = match read_string(entry.path()) {
-                    Ok(content) => content,
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "serial_number" => {
-                ps.serial_number = match read_string(entry.path()) {
-                    Ok(content) => content,
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "status" => {
-                ps.status = match read_string(entry.path()) {
-                    Ok(content) => content,
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "technology" => {
-                ps.technology = match read_string(entry.path()) {
-                    Ok(content) => content,
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "temp" => {
-                ps.temp = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "temp_alert_max" => {
-                ps.temp_alert_max = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "temp_alert_min" => {
-                ps.temp_alert_min = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "temp_ambient" => {
-                ps.temp_ambient = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "temp_ambient_max" => {
-                ps.temp_ambient_max = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "temp_ambient_min" => {
-                ps.temp_ambient_min = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "temp_max" => {
-                ps.temp_max = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "temp_min" => {
-                ps.temp_min = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "time_to_empty_avg" => {
-                ps.time_to_empty_avg = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "time_to_empty_now" => {
-                ps.time_to_empty_now = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "time_to_full_avg" => {
-                ps.time_to_full_avg = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "time_to_full_now" => {
-                ps.time_to_full_now = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "type" => {
-                ps.typ = match read_string(entry.path()) {
-                    Ok(content) => content,
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "usb_type" => {
-                ps.usb_type = match read_string(entry.path()) {
-                    Ok(content) => content,
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "voltage_avg" => {
-                ps.voltage_avg = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "voltage_boot" => {
-                ps.voltage_boot = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "voltage_max" => {
-                ps.voltage_max = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "voltage_max_design" => {
-                ps.voltage_max_design = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "voltage_min" => {
-                ps.voltage_min = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "voltage_min_design" => {
-                ps.voltage_min_design = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "voltage_now" => {
-                ps.voltage_now = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            "voltage_ocv" => {
-                ps.voltage_ocv = match read_string(entry.path()) {
-                    Ok(content) => content.parse().ok(),
-                    Err(err) => {
-                        if err.kind() == std::io::ErrorKind::NotFound {
-                            continue;
-                        }
-
-                        return Err(err.into());
-                    }
-                }
-            }
-            _ => continue,
+fn read_optional_i64(path: PathBuf) -> Result<Option<i64>, Error> {
+    match read_string(path) {
+        Ok(content) => Ok(content.parse().ok()),
+        Err(err) => {
+            if err.kind() == ErrorKind::NotFound {
+                return Ok(None);
+            }
+
+            Err(err.into())
         }
     }
+}
 
-    Ok(ps)
+fn parse_power_supply(path: &Path) -> Result<PowerSupply, Error> {
+    let capacity_level = read_optional(path.join("capacity_level"))?;
+    let charge_type = read_optional(path.join("charge_type"))?;
+    let health = read_optional(path.join("health"))?;
+    let manufacturer = read_optional(path.join("manufacturer"))?;
+    let model_name = read_optional(path.join("model_name"))?;
+    let scope = read_optional(path.join("scope"))?;
+    let serial_number = read_optional(path.join("serial_number"))?;
+    let status = read_optional(path.join("status"))?;
+    let technology = read_optional(path.join("technology"))?;
+    let typ = read_optional(path.join("type"))?;
+    let usb_type = read_optional(path.join("usb_type"))?;
+
+    let authentic = read_optional_i64(path.join("authentic"))?;
+    let calibrate = read_optional_i64(path.join("calibrate"))?;
+    let capacity = read_optional_i64(path.join("capacity"))?;
+    let capacity_alert_max = read_optional_i64(path.join("capacity_alert_max"))?;
+    let capacity_alert_min = read_optional_i64(path.join("capacity_alert_min"))?;
+    let charge_avg = read_optional_i64(path.join("charge_avg"))?;
+    let charge_control_limit = read_optional_i64(path.join("charge_control_limit"))?;
+    let charge_control_limit_max = read_optional_i64(path.join("charge_control_limit_max"))?;
+    let charge_counter = read_optional_i64(path.join("charge_counter"))?;
+    let charge_empty = read_optional_i64(path.join("charge_empty"))?;
+    let charge_empty_design = read_optional_i64(path.join("charge_empty_design"))?;
+    let charge_full = read_optional_i64(path.join("charge_full"))?;
+    let charge_full_design = read_optional_i64(path.join("charge_full_design"))?;
+    let charge_now = read_optional_i64(path.join("charge_now"))?;
+    let charge_term_current = read_optional_i64(path.join("charge_term_current"))?;
+    let constant_charge_current = read_optional_i64(path.join("constant_charge_current"))?;
+    let constant_charge_current_max = read_optional_i64(path.join("constant_charge_current_max"))?;
+    let constant_charge_voltage = read_optional_i64(path.join("constant_charge_voltage"))?;
+    let constant_charge_voltage_max = read_optional_i64(path.join("constant_charge_voltage_max"))?;
+    let current_avg = read_optional_i64(path.join("current_avg"))?;
+    let current_boot = read_optional_i64(path.join("current_boot"))?;
+    let current_max = read_optional_i64(path.join("current_max"))?;
+    let current_now = read_optional_i64(path.join("current_now"))?;
+    let cycle_count = read_optional_i64(path.join("cycle_count"))?;
+    let energy_avg = read_optional_i64(path.join("energy_avg"))?;
+    let energy_empty = read_optional_i64(path.join("energy_empty"))?;
+    let energy_empty_design = read_optional_i64(path.join("energy_empty_design"))?;
+    let energy_full = read_optional_i64(path.join("energy_full"))?;
+    let energy_full_design = read_optional_i64(path.join("energy_full_design"))?;
+    let energy_now = read_optional_i64(path.join("energy_now"))?;
+    let input_current_limit = read_optional_i64(path.join("input_current_limit"))?;
+    let online = read_optional_i64(path.join("online"))?;
+    let power_avg = read_optional_i64(path.join("power_avg"))?;
+    let power_now = read_optional_i64(path.join("power_now"))?;
+    let precharge_current = read_optional_i64(path.join("precharge_current"))?;
+    let present = read_optional_i64(path.join("present"))?;
+    let temp = read_optional_i64(path.join("temp"))?;
+    let temp_alert_max = read_optional_i64(path.join("temp_alert_max"))?;
+    let temp_alert_min = read_optional_i64(path.join("temp_alert_min"))?;
+    let temp_ambient = read_optional_i64(path.join("temp_ambient"))?;
+    let temp_ambient_max = read_optional_i64(path.join("temp_ambient_max"))?;
+    let temp_ambient_min = read_optional_i64(path.join("temp_ambient_min"))?;
+    let temp_max = read_optional_i64(path.join("temp_max"))?;
+    let temp_min = read_optional_i64(path.join("temp_min"))?;
+    let time_to_empty_avg = read_optional_i64(path.join("time_to_empty_avg"))?;
+    let time_to_empty_now = read_optional_i64(path.join("time_to_empty_now"))?;
+    let time_to_full_avg = read_optional_i64(path.join("time_to_full_avg"))?;
+    let time_to_full_now = read_optional_i64(path.join("time_to_full_now"))?;
+    let voltage_avg = read_optional_i64(path.join("voltage_avg"))?;
+    let voltage_boot = read_optional_i64(path.join("voltage_boot"))?;
+    let voltage_max = read_optional_i64(path.join("voltage_max"))?;
+    let voltage_max_design = read_optional_i64(path.join("voltage_max_design"))?;
+    let voltage_min = read_optional_i64(path.join("voltage_min"))?;
+    let voltage_min_design = read_optional_i64(path.join("voltage_min_design"))?;
+    let voltage_now = read_optional_i64(path.join("voltage_now"))?;
+    let voltage_ocv = read_optional_i64(path.join("voltage_ocv"))?;
+
+    Ok(PowerSupply {
+        authentic,
+        calibrate,
+        capacity,
+        capacity_alert_max,
+        capacity_alert_min,
+        capacity_level,
+        charge_avg,
+        charge_control_limit,
+        charge_control_limit_max,
+        charge_counter,
+        charge_empty,
+        charge_empty_design,
+        charge_full,
+        charge_full_design,
+        charge_now,
+        charge_term_current,
+        charge_type,
+        constant_charge_current,
+        constant_charge_current_max,
+        constant_charge_voltage,
+        constant_charge_voltage_max,
+        current_avg,
+        current_boot,
+        current_max,
+        current_now,
+        cycle_count,
+        energy_avg,
+        energy_empty,
+        energy_empty_design,
+        energy_full,
+        energy_full_design,
+        energy_now,
+        health,
+        input_current_limit,
+        manufacturer,
+        model_name,
+        online,
+        power_avg,
+        power_now,
+        precharge_current,
+        present,
+        scope,
+        serial_number,
+        status,
+        technology,
+        temp,
+        temp_alert_max,
+        temp_alert_min,
+        temp_ambient,
+        temp_ambient_max,
+        temp_ambient_min,
+        temp_max,
+        temp_min,
+        time_to_empty_avg,
+        time_to_empty_now,
+        time_to_full_avg,
+        time_to_full_now,
+        typ,
+        usb_type,
+        voltage_avg,
+        voltage_boot,
+        voltage_max,
+        voltage_max_design,
+        voltage_min,
+        voltage_min_design,
+        voltage_now,
+        voltage_ocv,
+    })
+}
+
+fn default_ignored() -> regex::Regex {
+    regex::Regex::new("^$").unwrap()
 }
 
 #[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
-    #[serde(with = "serde_regex")]
-    pub ignored: regex::Regex,
+    #[serde(with = "serde_regex", default = "default_ignored")]
+    ignored: regex::Regex,
 }
 
 impl Default for Config {
@@ -1005,269 +333,159 @@ impl Default for Config {
     }
 }
 
-macro_rules! power_supply_metric {
-    ($vec: expr, $power_supply: expr, $name: expr, $value: expr) => {
-        if let Some(v) = $value {
-            $vec.push(Metric::gauge_with_tags(
-                concat!("node_power_supply_", $name),
-                concat!($name, " value of /sys/class/power_supply/<power_supply>"),
-                v,
-                tags! {
-                    "power_supply" => $power_supply
-                },
-            ))
-        }
-    };
-}
-
-macro_rules! power_supply_metric_divide_e6 {
-    ($vec: expr, $power_supply: expr, $name: tt, $value: expr) => {
-        if let Some(v) = $value {
-            $vec.push(Metric::gauge_with_tags(
-                concat!("node_power_supply_", $name),
-                concat!($name, " value of /sys/class/power_supply/<power_supply>"),
-                v as f64 / 1e6,
-                tags! {
-                    "power_supply" => $power_supply
-                },
-            ))
-        }
-    };
-}
-
-macro_rules! power_supply_metric_divide_10 {
-    ($vec: expr, $power_supply: expr, $name: tt, $value: expr) => {
-        if let Some(v) = $value {
-            $vec.push(Metric::gauge_with_tags(
-                concat!("node_power_supply_", $name),
-                concat!($name, " value of /sys/class/power_supply/<power_supply>"),
-                v as f64 / 10.0,
-                tags! {
-                    "power_supply" => $power_supply
-                },
-            ))
-        }
-    };
-}
-
 pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
-    let psc = power_supply_class(paths.sys())?;
-    let mut metrics = vec![];
-    for ps in psc {
-        if conf.ignored.is_match(&ps.name) {
+    let dirs = std::fs::read_dir(paths.sys().join("class/power_supply"))?;
+
+    let mut metrics = Vec::new();
+    for entry in dirs.flatten() {
+        let path = entry.path();
+        let name = path.file_name().unwrap().to_str().unwrap();
+        if conf.ignored.is_match(name) {
             continue;
         }
 
-        power_supply_metric!(metrics, &ps.name, "authentic", ps.authentic);
-        power_supply_metric!(metrics, &ps.name, "calibrate", ps.calibrate);
-        power_supply_metric!(metrics, &ps.name, "capacity", ps.capacity);
-        power_supply_metric!(
-            metrics,
-            &ps.name,
-            "capacity_alert_max",
-            ps.capacity_alert_max
-        );
-        power_supply_metric!(
-            metrics,
-            &ps.name,
-            "capacity_alert_min",
-            ps.capacity_alert_min
-        );
-        power_supply_metric!(metrics, &ps.name, "cyclecount", ps.cycle_count);
-        power_supply_metric!(metrics, &ps.name, "online", ps.online);
-        power_supply_metric!(metrics, &ps.name, "present", ps.present);
-        power_supply_metric!(
-            metrics,
-            &ps.name,
-            "time_to_empty_seconds",
-            ps.time_to_empty_now
-        );
-        power_supply_metric!(
-            metrics,
-            &ps.name,
-            "time_to_full_seconds",
-            ps.time_to_full_now
-        );
+        let supply = parse_power_supply(&path)?;
 
-        power_supply_metric_divide_e6!(metrics, &ps.name, "current_boot", ps.current_boot);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "current_max", ps.current_max);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "current_ampere", ps.current_now);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "energy_empty", ps.energy_empty);
-        power_supply_metric_divide_e6!(
-            metrics,
-            &ps.name,
-            "energy_empty_design",
-            ps.energy_empty_design
-        );
-        power_supply_metric_divide_e6!(metrics, &ps.name, "energy_full", ps.energy_full);
-        power_supply_metric_divide_e6!(
-            metrics,
-            &ps.name,
-            "energy_full_design",
-            ps.energy_full_design
-        );
-        power_supply_metric_divide_e6!(metrics, &ps.name, "energy_watthour", ps.energy_now);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "voltage_boot", ps.voltage_boot);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "voltage_max", ps.voltage_max);
-        power_supply_metric_divide_e6!(
-            metrics,
-            &ps.name,
-            "voltage_max_design",
-            ps.voltage_max_design
-        );
-        power_supply_metric_divide_e6!(metrics, &ps.name, "voltage_min", ps.voltage_min);
-        power_supply_metric_divide_e6!(
-            metrics,
-            &ps.name,
-            "voltage_min_design",
-            ps.voltage_min_design
-        );
-        power_supply_metric_divide_e6!(metrics, &ps.name, "voltage_volt", ps.voltage_now);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "voltage_ocv", ps.voltage_ocv);
-        power_supply_metric_divide_e6!(
-            metrics,
-            &ps.name,
-            "charge_control_limit",
-            ps.charge_control_limit
-        );
-        power_supply_metric_divide_e6!(
-            metrics,
-            &ps.name,
-            "charge_control_limit_max",
-            ps.charge_control_limit_max
-        );
-        power_supply_metric_divide_e6!(metrics, &ps.name, "charge_counter", ps.charge_counter);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "charge_empty", ps.charge_empty);
-        power_supply_metric_divide_e6!(
-            metrics,
-            &ps.name,
-            "charge_empty_design",
-            ps.charge_empty_design
-        );
-        power_supply_metric_divide_e6!(metrics, &ps.name, "charge_full", ps.charge_full);
-        power_supply_metric_divide_e6!(
-            metrics,
-            &ps.name,
-            "charge_full_design",
-            ps.charge_full_design
-        );
-        power_supply_metric_divide_e6!(metrics, &ps.name, "charge_ampere", ps.charge_now);
-        power_supply_metric_divide_e6!(
-            metrics,
-            &ps.name,
-            "charge_term_current",
-            ps.charge_term_current
-        );
-        power_supply_metric_divide_e6!(
-            metrics,
-            &ps.name,
-            "constant_charge_current",
-            ps.constant_charge_current
-        );
-        power_supply_metric_divide_e6!(
-            metrics,
-            &ps.name,
-            "constant_charge_current_max",
-            ps.constant_charge_current_max
-        );
-        power_supply_metric_divide_e6!(
-            metrics,
-            &ps.name,
-            "constant_charge_voltage",
-            ps.constant_charge_voltage
-        );
-        power_supply_metric_divide_e6!(
-            metrics,
-            &ps.name,
-            "constant_charge_voltage_max",
-            ps.constant_charge_voltage_max
-        );
-        power_supply_metric_divide_e6!(
-            metrics,
-            &ps.name,
-            "precharge_current",
-            ps.precharge_current
-        );
-        power_supply_metric_divide_e6!(
-            metrics,
-            &ps.name,
-            "input_current_limit",
-            ps.input_current_limit
-        );
-        power_supply_metric_divide_e6!(metrics, &ps.name, "power_watt", ps.power_now);
+        for (stat, value) in [
+            ("authentic", supply.authentic),
+            ("calibrate", supply.calibrate),
+            ("capacity", supply.capacity),
+            ("capacity_alert_max", supply.capacity_alert_max),
+            ("capacity_alert_min", supply.capacity_alert_min),
+            ("cyclecount", supply.cycle_count),
+            ("online", supply.online),
+            ("present", supply.present),
+            ("time_to_empty_seconds", supply.time_to_empty_now),
+            ("time_to_full_seconds", supply.time_to_full_now),
+        ] {
+            let Some(value) = value else { continue };
 
-        power_supply_metric_divide_10!(metrics, &ps.name, "temp_celsius", ps.temp);
-        power_supply_metric_divide_10!(
-            metrics,
-            &ps.name,
-            "temp_alert_max_celsius",
-            ps.temp_alert_max
-        );
-        power_supply_metric_divide_10!(
-            metrics,
-            &ps.name,
-            "temp_alert_min_celsius",
-            ps.temp_alert_min
-        );
-        power_supply_metric_divide_10!(metrics, &ps.name, "temp_ambient_celsius", ps.temp_ambient);
-        power_supply_metric_divide_10!(
-            metrics,
-            &ps.name,
-            "temp_ambient_max_celsius",
-            ps.temp_ambient_max
-        );
-        power_supply_metric_divide_10!(
-            metrics,
-            &ps.name,
-            "temp_ambient_min_celsius",
-            ps.temp_ambient_min
-        );
-        power_supply_metric_divide_10!(metrics, &ps.name, "temp_max_celsius", ps.temp_max);
-        power_supply_metric_divide_10!(metrics, &ps.name, "temp_min_celsius", ps.temp_min);
-
-        let mut tags = tags!("power_supply" => ps.name);
-        if !ps.capacity_level.is_empty() {
-            tags.insert("capacity_level", ps.capacity_level);
+            metrics.push(Metric::gauge_with_tags(
+                format!("node_power_supply_{stat}"),
+                format!("{stat} value of /sys/class/power_supply/<power_supply>"),
+                value,
+                tags! {
+                    "power_supply" => name
+                },
+            ))
         }
 
-        if !ps.charge_type.is_empty() {
-            tags.insert("charge_type", ps.charge_type);
+        for (stat, value) in [
+            ("current_boot", supply.current_boot),
+            ("current_max", supply.current_max),
+            ("current_ampere", supply.current_now),
+            ("energy_empty", supply.energy_empty),
+            ("energy_empty_design", supply.energy_empty_design),
+            ("energy_full", supply.energy_full),
+            ("energy_full_design", supply.energy_full_design),
+            ("energy_watthour", supply.energy_now),
+            ("voltage_boot", supply.voltage_boot),
+            ("voltage_max", supply.voltage_max),
+            ("voltage_max_design", supply.voltage_max_design),
+            ("voltage_min", supply.voltage_min),
+            ("voltage_min_design", supply.voltage_min_design),
+            ("voltage_volt", supply.voltage_now),
+            ("voltage_ocv", supply.voltage_ocv),
+            ("charge_control_limit", supply.charge_control_limit),
+            ("charge_control_limit_max", supply.charge_control_limit_max),
+            ("charge_counter", supply.charge_counter),
+            ("charge_empty", supply.charge_empty),
+            ("charge_empty_design", supply.charge_empty_design),
+            ("charge_full", supply.charge_full),
+            ("charge_full_design", supply.charge_full_design),
+            ("charge_ampere", supply.charge_now),
+            ("charge_term_current", supply.charge_term_current),
+            ("constant_charge_current", supply.constant_charge_current),
+            (
+                "constant_charge_current_max",
+                supply.constant_charge_current_max,
+            ),
+            ("constant_charge_voltage", supply.constant_charge_voltage),
+            (
+                "constant_charge_voltage_max",
+                supply.constant_charge_voltage_max,
+            ),
+            ("precharge_current", supply.precharge_current),
+            ("input_current_limit", supply.input_current_limit),
+            ("power_watt", supply.power_now),
+        ] {
+            let Some(value) = value else { continue };
+
+            metrics.push(Metric::gauge_with_tags(
+                format!("node_power_supply_{stat}"),
+                format!("{stat} value of /sys/class/power_supply/<power_supply>"),
+                value as f64 / 1e6,
+                tags! {
+                    "power_supply" => name
+                },
+            ));
         }
 
-        if !ps.health.is_empty() {
-            tags.insert("health", ps.health);
+        for (stat, value) in [
+            ("temp_celsius", supply.temp),
+            ("temp_alert_max_celsius", supply.temp_alert_max),
+            ("temp_alert_min_celsius", supply.temp_alert_min),
+            ("temp_ambient_celsius", supply.temp_ambient),
+            ("temp_ambient_max_celsius", supply.temp_ambient_max),
+            ("temp_ambient_min_celsius", supply.temp_ambient_min),
+            ("temp_max_celsius", supply.temp_max),
+            ("temp_min_celsius", supply.temp_min),
+        ] {
+            let Some(value) = value else { continue };
+
+            metrics.push(Metric::gauge_with_tags(
+                format!("node_power_supply_{stat}"),
+                format!("{stat} value of /sys/class/power_supply/<power_supply>"),
+                value as f64 / 10.0,
+                tags! {
+                    "power_supply" => name
+                },
+            ))
         }
 
-        if !ps.manufacturer.is_empty() {
-            tags.insert("manufacturer", ps.manufacturer);
+        let mut tags = tags!("power_supply" => name);
+        if !supply.capacity_level.is_empty() {
+            tags.insert("capacity_level", supply.capacity_level);
         }
 
-        if !ps.model_name.is_empty() {
-            tags.insert("model_name", ps.model_name);
+        if !supply.charge_type.is_empty() {
+            tags.insert("charge_type", supply.charge_type);
         }
 
-        if !ps.serial_number.is_empty() {
-            tags.insert("serial_number", ps.serial_number);
+        if !supply.health.is_empty() {
+            tags.insert("health", supply.health);
         }
 
-        if !ps.status.is_empty() {
-            tags.insert("status", ps.status);
+        if !supply.manufacturer.is_empty() {
+            tags.insert("manufacturer", supply.manufacturer);
         }
 
-        if !ps.technology.is_empty() {
-            tags.insert("technology", ps.technology);
+        if !supply.model_name.is_empty() {
+            tags.insert("model_name", supply.model_name);
         }
 
-        if !ps.typ.is_empty() {
-            tags.insert("type", ps.typ);
+        if !supply.serial_number.is_empty() {
+            tags.insert("serial_number", supply.serial_number);
         }
 
-        if !ps.usb_type.is_empty() {
-            tags.insert("usb_type", ps.usb_type);
+        if !supply.status.is_empty() {
+            tags.insert("status", supply.status);
         }
 
-        if !ps.scope.is_empty() {
-            tags.insert("scope", ps.scope);
+        if !supply.technology.is_empty() {
+            tags.insert("technology", supply.technology);
+        }
+
+        if !supply.typ.is_empty() {
+            tags.insert("type", supply.typ);
+        }
+
+        if !supply.usb_type.is_empty() {
+            tags.insert("usb_type", supply.usb_type);
+        }
+
+        if !supply.scope.is_empty() {
+            tags.insert("scope", supply.scope);
         }
 
         metrics.push(Metric::gauge_with_tags(
@@ -1286,20 +504,12 @@ mod tests {
     use super::*;
 
     #[test]
-    fn power_supply_classes() {
-        let root = PathBuf::from("tests/node/fixtures/sys");
-        let mut pss = power_supply_class(&root).unwrap();
-
-        // The readdir_r is not guaranteed to return in any specific order.
-        // And the order of Github CI and Centos Stream is different, so it must be sorted
-        // See: https://utcc.utoronto.ca/~cks/space/blog/unix/ReaddirOrder
-        pss.sort_by(|a, b| a.name.cmp(&b.name));
-
-        assert_eq!(pss.len(), 2);
+    fn parse() {
+        let path = Path::new("tests/node/fixtures/sys/class/power_supply/AC");
+        let supply = parse_power_supply(path).unwrap();
         assert_eq!(
-            pss[0],
+            supply,
             PowerSupply {
-                name: "AC".to_string(),
                 authentic: None,
                 calibrate: None,
                 capacity: None,
@@ -1370,10 +580,11 @@ mod tests {
             }
         );
 
+        let path = Path::new("tests/node/fixtures/sys/class/power_supply/BAT0");
+        let supply = parse_power_supply(path).unwrap();
         assert_eq!(
-            pss[1],
+            supply,
             PowerSupply {
-                name: "BAT0".to_string(),
                 authentic: None,
                 calibrate: None,
                 capacity: Some(98),

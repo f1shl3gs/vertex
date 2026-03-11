@@ -1,56 +1,62 @@
 //! Exposes ZFS performance statistics
 
 use std::collections::BTreeMap;
-use std::path::PathBuf;
+use std::num::ParseIntError;
+use std::path::{Path, PathBuf};
 
 use event::{Metric, tags};
 
 use super::{Error, Paths, read_string};
 
-macro_rules! parse_subsystem_metrics {
-    ($metrics: expr, $root: expr, $subsystem: expr, $path: expr) => {
-        let path = $root.join("spl/kstat/zfs").join($path);
-        for (k, v) in parse_procfs_file(path)? {
-            $metrics.push(Metric::gauge(
-                format!("node_zfs_{}_{}", $subsystem, k.replace("-", "_")),
-                format!("kstat.zfs.misc.{}.{}", $path, k),
-                v,
-            ));
-        }
-    };
-}
-
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     let mut metrics = Vec::new();
 
-    parse_subsystem_metrics!(metrics, paths.proc(), "abd", "abdstats");
-    parse_subsystem_metrics!(metrics, paths.proc(), "arc", "arcstats");
-    parse_subsystem_metrics!(metrics, paths.proc(), "dbuf", "dbufstats");
-    parse_subsystem_metrics!(metrics, paths.proc(), "dmu_tx", "dmu_tx");
-    parse_subsystem_metrics!(metrics, paths.proc(), "dnode", "dnodestats");
-    parse_subsystem_metrics!(metrics, paths.proc(), "fm", "fm");
-    // vdev_cache is deprecated
-    parse_subsystem_metrics!(metrics, paths.proc(), "vdev_cache", "vdev_cache_stats");
-    parse_subsystem_metrics!(metrics, paths.proc(), "vdev_mirror", "vdev_mirror_stats");
-    // no known consumers of the XUIO interface on Linux exist
-    parse_subsystem_metrics!(metrics, paths.proc(), "xuio", "xuio_stats");
-    parse_subsystem_metrics!(metrics, paths.proc(), "zfetch", "zfetchstats");
-    parse_subsystem_metrics!(metrics, paths.proc(), "zil", "zil");
+    for (subsystem, filename) in [
+        ("abd", "abdstats"),
+        ("arc", "arcstats"),
+        ("dbuf", "dbufstats"),
+        ("dmu_tx", "dmu_tx"),
+        ("dnode", "dnodestats"),
+        ("fm", "fm"),
+        // vdev_cache is deprecated
+        ("vdev_cache", "vdev_cache_stats"),
+        ("vdev_mirror", "vdev_mirror_stats"),
+        // no known consumers of the XUIO interface on Linux exist
+        ("xuio", "xuio_stats"),
+        ("zfetch", "zfetchstats"),
+        ("zil", "zil"),
+    ] {
+        let path = paths.proc().join("spl/kstat/zfs").join(filename);
+        let content = std::fs::read_to_string(path)?;
+
+        for (key, value) in parse_stat_file(&content)? {
+            metrics.push(Metric::gauge(
+                format!("node_zfs_{}_{}", subsystem, key.replace("-", "_")),
+                format!("kstat.zfs.misc.{}.{}", filename, key),
+                value,
+            ));
+        }
+    }
 
     // pool stats
     let pattern = format!("{}/spl/kstat/zfs/*/io", paths.proc().to_string_lossy());
     let matched = glob::glob(&pattern)?;
     for path in matched.flatten() {
-        let path = path.to_str().unwrap();
-        let pool_name = parse_pool_name(path)?;
-        let kvs = parse_pool_procfs_file(path)?;
-        for (key, value) in kvs {
+        let pool_name = path
+            .parent()
+            .unwrap()
+            .file_name()
+            .unwrap()
+            .to_string_lossy();
+
+        let content = std::fs::read_to_string(&path)?;
+        for (key, value) in parse_pool_stats(&content)? {
             metrics.push(Metric::gauge_with_tags(
                 format!("node_zfs_zpool_{key}"),
                 format!("kstat.zfs.misc.io.{key}"),
                 value,
                 tags! {
-                    "zpool" => pool_name
+                    "zpool" => pool_name.as_ref()
                 },
             ))
         }
@@ -79,16 +85,20 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     let pattern = format!("{}/spl/kstat/zfs/*/state", paths.proc().to_string_lossy());
     let paths = glob::glob(&pattern)?;
     for path in paths.flatten() {
-        let path = path.to_string_lossy();
-        let pool_name = parse_pool_name(path.as_ref())?;
-        let kvs = parse_pool_state_file(path.as_ref())?;
+        let pool_name = path
+            .parent()
+            .unwrap()
+            .file_name()
+            .unwrap()
+            .to_string_lossy();
+        let kvs = parse_pool_state_file(&path)?;
         for (key, value) in kvs {
             metrics.push(Metric::gauge_with_tags(
                 "node_zfs_zpool_state",
                 "kstat.zfs.misc.state",
                 value,
                 tags!(
-                    "zpool" => pool_name,
+                    "zpool" => pool_name.as_ref(),
                     "state" => key
                 ),
             ))
@@ -98,12 +108,10 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
-fn parse_procfs_file(path: PathBuf) -> Result<BTreeMap<String, f64>, Error> {
-    let data = std::fs::read_to_string(path)?;
-
+fn parse_stat_file(content: &str) -> Result<BTreeMap<&str, f64>, ParseIntError> {
     let mut kvs = BTreeMap::new();
     let mut parse = false;
-    for line in data.lines() {
+    for line in content.lines() {
         let fields = line.split_ascii_whitespace().collect::<Vec<_>>();
 
         if !parse
@@ -125,33 +133,24 @@ fn parse_procfs_file(path: PathBuf) -> Result<BTreeMap<String, f64>, Error> {
             _ => continue,
         };
 
-        kvs.insert(fields[0].to_string(), value);
+        kvs.insert(fields[0], value);
     }
 
     Ok(kvs)
 }
 
-fn parse_pool_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Error> {
-    let length = path.split('/').count();
-    if length < 2 {
-        return Err(Error::from(
-            "zpool path did not return at least two elements",
-        ));
-    }
-
-    let data = std::fs::read_to_string(path)?;
-
+fn parse_pool_stats(content: &str) -> Result<BTreeMap<&str, u64>, Error> {
     let mut kvs = BTreeMap::new();
     let mut parse = false;
     let mut headers = vec![];
-    for line in data.lines() {
+    for line in content.lines() {
         let fields = line.trim().split_ascii_whitespace().collect::<Vec<_>>();
 
         if !parse && fields.len() >= 12 && fields[0] == "nread" {
             // start parsing from here
             parse = true;
             for field in fields {
-                headers.push(field.to_string());
+                headers.push(field);
             }
             continue;
         }
@@ -160,10 +159,9 @@ fn parse_pool_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Error> {
             continue;
         }
 
-        for (i, field) in headers.iter().enumerate() {
-            let key = field.clone();
-            let value = fields[i].parse().unwrap_or(0u64);
-            kvs.insert(key, value);
+        for (index, field) in headers.iter().enumerate() {
+            let value = fields[index].parse().unwrap_or(0u64);
+            kvs.insert(*field, value);
         }
     }
 
@@ -171,13 +169,13 @@ fn parse_pool_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Error> {
 }
 
 fn parse_pool_objset_file(path: PathBuf) -> Result<BTreeMap<(String, String, String), u64>, Error> {
-    let data = std::fs::read_to_string(&path)?;
+    let content = std::fs::read_to_string(&path)?;
 
     let mut kvs = BTreeMap::new();
     let mut parse = false;
     let mut pool = String::new();
     let mut dataset = String::new();
-    for line in data.lines() {
+    for line in content.lines() {
         let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
         if !parse && parts[0] == "name" && parts[1] == "type" && parts[2] == "data" {
             parse = true;
@@ -209,37 +207,25 @@ fn parse_pool_objset_file(path: PathBuf) -> Result<BTreeMap<(String, String, Str
     Ok(kvs)
 }
 
-const STATS: [&str; 7] = [
-    "online",
-    "degraded",
-    "faulted",
-    "offline",
-    "removed",
-    "unavail",
-    "suspended",
-];
+fn parse_pool_state_file(path: &Path) -> Result<BTreeMap<&'static str, bool>, Error> {
+    const STATS: [&str; 7] = [
+        "online",
+        "degraded",
+        "faulted",
+        "offline",
+        "removed",
+        "unavail",
+        "suspended",
+    ];
 
-fn parse_pool_state_file(path: &str) -> Result<BTreeMap<&'static str, bool>, Error> {
     let actual_state = read_string(path)?.to_lowercase();
 
     let mut kvs = BTreeMap::new();
     for stat in STATS {
-        let active = actual_state == stat;
-
-        kvs.insert(stat, active);
+        kvs.insert(stat, actual_state == stat);
     }
 
     Ok(kvs)
-}
-
-fn parse_pool_name(path: &str) -> Result<&str, Error> {
-    let elements = path.split('/').collect::<Vec<_>>();
-    let length = elements.len();
-    if length < 2 {
-        return Err("zpool path did not return at least two elements".into());
-    }
-
-    Ok(elements[length - 2])
 }
 
 #[cfg(test)]
@@ -252,9 +238,10 @@ mod tests {
         let paths = glob("tests/node/fixtures/proc/spl/kstat/zfs/*/io").unwrap();
         let mut parsed = 0;
         for path in paths.flatten() {
-            let path = path.to_str().unwrap();
             parsed += 1;
-            let kvs = parse_pool_procfs_file(path).unwrap();
+
+            let content = std::fs::read_to_string(path).unwrap();
+            let kvs = parse_pool_stats(&content).unwrap();
             assert_ne!(kvs.len(), 0);
 
             for (k, v) in kvs {
@@ -296,9 +283,13 @@ mod tests {
         let mut handled = 0;
         for path in paths.flatten() {
             handled += 1;
-            let path: &str = path.to_str().unwrap();
-            let pool_name = parse_pool_name(path).unwrap();
-            let kvs = parse_pool_state_file(path).unwrap();
+            let pool_name = path
+                .parent()
+                .unwrap()
+                .file_name()
+                .unwrap()
+                .to_string_lossy();
+            let kvs = parse_pool_state_file(&path).unwrap();
             assert_ne!(kvs.len(), 0);
 
             for (state, active) in kvs {

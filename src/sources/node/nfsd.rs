@@ -347,23 +347,9 @@ fn load_server_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ServerRPCStats, Erro
     Ok(stats)
 }
 
-macro_rules! rpc_metric {
-    ($proto: expr, $name: expr, $value: expr) => {
-        Metric::sum_with_tags(
-            "node_nfsd_requests_total",
-            "Total number NFSd Requests by method and protocol",
-            $value,
-            tags! {
-                "proto" => $proto,
-                "method" => $name
-            },
-        )
-    };
-}
-
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     let stats = load_server_rpc_stats(paths.proc().join("net/rpc/nfsd"))?;
-    let metrics = vec![
+    let mut metrics = vec![
         // collects statistics for the reply cache
         Metric::sum(
             "node_nfsd_reply_cache_hits_total",
@@ -467,88 +453,135 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
             "Total number of NFSd RPCs.",
             stats.server_rpc.rpc_count,
         ),
-        // collects statistics for NFSv2 requests
-        rpc_metric!("2", "GetAttr", stats.v2_stats.get_attr),
-        rpc_metric!("2", "SetAttr", stats.v2_stats.set_attr),
-        rpc_metric!("2", "Root", stats.v2_stats.root),
-        rpc_metric!("2", "Lookup", stats.v2_stats.lookup),
-        rpc_metric!("2", "ReadLink", stats.v2_stats.read_link),
-        rpc_metric!("2", "Read", stats.v2_stats.read),
-        rpc_metric!("2", "WrCache", stats.v2_stats.wr_cache),
-        rpc_metric!("2", "Write", stats.v2_stats.write),
-        rpc_metric!("2", "Create", stats.v2_stats.create),
-        rpc_metric!("2", "Remove", stats.v2_stats.remove),
-        rpc_metric!("2", "Rename", stats.v2_stats.rename),
-        rpc_metric!("2", "Link", stats.v2_stats.link),
-        rpc_metric!("2", "SymLink", stats.v2_stats.sym_link),
-        rpc_metric!("2", "MkDir", stats.v2_stats.mkdir),
-        rpc_metric!("2", "RmDir", stats.v2_stats.rmdir),
-        rpc_metric!("2", "ReadDir", stats.v2_stats.read_dir),
-        rpc_metric!("2", "FsStat", stats.v2_stats.fs_stat),
-        // collects statistics for NFSv3 requests
-        rpc_metric!("3", "GetAttr", stats.v3_stats.get_attr),
-        rpc_metric!("3", "SetAttr", stats.v3_stats.set_attr),
-        rpc_metric!("3", "Lookup", stats.v3_stats.lookup),
-        rpc_metric!("3", "Access", stats.v3_stats.access),
-        rpc_metric!("3", "ReadLink", stats.v3_stats.read_link),
-        rpc_metric!("3", "Read", stats.v3_stats.read),
-        rpc_metric!("3", "Write", stats.v3_stats.write),
-        rpc_metric!("3", "Create", stats.v3_stats.create),
-        rpc_metric!("3", "MkDir", stats.v3_stats.mkdir),
-        rpc_metric!("3", "SymLink", stats.v3_stats.sym_link),
-        rpc_metric!("3", "MkNod", stats.v3_stats.mknod),
-        rpc_metric!("3", "Remove", stats.v3_stats.remove),
-        rpc_metric!("3", "RmDir", stats.v3_stats.rmdir),
-        rpc_metric!("3", "Rename", stats.v3_stats.rename),
-        rpc_metric!("3", "Link", stats.v3_stats.link),
-        rpc_metric!("3", "ReadDir", stats.v3_stats.read_dir),
-        rpc_metric!("3", "ReadDirPlus", stats.v3_stats.read_dir_plus),
-        rpc_metric!("3", "FsStat", stats.v3_stats.fs_stat),
-        rpc_metric!("3", "FsInfo", stats.v3_stats.fs_info),
-        rpc_metric!("3", "PathConf", stats.v3_stats.path_conf),
-        rpc_metric!("3", "Commit", stats.v3_stats.commit),
-        // collects statistics for NFSv4 requests
-        rpc_metric!("4", "Access", stats.v4_ops.access),
-        rpc_metric!("4", "Close", stats.v4_ops.close),
-        rpc_metric!("4", "Commit", stats.v4_ops.commit),
-        rpc_metric!("4", "Create", stats.v4_ops.create),
-        rpc_metric!("4", "DelegPurge", stats.v4_ops.deleg_purge),
-        rpc_metric!("4", "DelegReturn", stats.v4_ops.deleg_return),
-        rpc_metric!("4", "GetAttr", stats.v4_ops.get_attr),
-        rpc_metric!("4", "GetFH", stats.v4_ops.get_fh),
-        rpc_metric!("4", "Link", stats.v4_ops.link),
-        rpc_metric!("4", "Lock", stats.v4_ops.lock),
-        rpc_metric!("4", "Lockt", stats.v4_ops.lockt),
-        rpc_metric!("4", "Locku", stats.v4_ops.locku),
-        rpc_metric!("4", "Lookup", stats.v4_ops.lookup),
-        rpc_metric!("4", "LookupRoot", stats.v4_ops.lookup_root),
-        rpc_metric!("4", "Nverify", stats.v4_ops.nverify),
-        rpc_metric!("4", "Open", stats.v4_ops.open),
-        rpc_metric!("4", "OpenAttr", stats.v4_ops.open_attr),
-        rpc_metric!("4", "OpenConfirm", stats.v4_ops.open_confirm),
-        rpc_metric!("4", "OpenDgrd", stats.v4_ops.open_dgrd),
-        rpc_metric!("4", "PutFH", stats.v4_ops.put_fh),
-        rpc_metric!("4", "Read", stats.v4_ops.read),
-        rpc_metric!("4", "ReadDir", stats.v4_ops.readdir),
-        rpc_metric!("4", "ReadLink", stats.v4_ops.read_link),
-        rpc_metric!("4", "Remove", stats.v4_ops.remove),
-        rpc_metric!("4", "Rename", stats.v4_ops.rename),
-        rpc_metric!("4", "Renew", stats.v4_ops.renew),
-        rpc_metric!("4", "RestoreFH", stats.v4_ops.restore_fh),
-        rpc_metric!("4", "SaveFH", stats.v4_ops.save_fh),
-        rpc_metric!("4", "SecInfo", stats.v4_ops.sec_info),
-        rpc_metric!("4", "SetAttr", stats.v4_ops.set_attr),
-        rpc_metric!("4", "SetClientID", stats.v4_ops.set_client_id),
-        rpc_metric!(
-            "4",
-            "SetClientIDConfirm",
-            stats.v4_ops.set_client_id_confirm
-        ),
-        rpc_metric!("4", "Verify", stats.v4_ops.verify),
-        rpc_metric!("4", "Write", stats.v4_ops.write),
-        rpc_metric!("4", "RelLockOwner", stats.v4_ops.rel_lock_owner),
-        rpc_metric!("4", "WdelegGetattr", stats.wdeleg_getattr),
     ];
+
+    // collects statistics for NFSv2 requests
+    metrics.extend(
+        [
+            ("GetAttr", stats.v2_stats.get_attr),
+            ("SetAttr", stats.v2_stats.set_attr),
+            ("Root", stats.v2_stats.root),
+            ("Lookup", stats.v2_stats.lookup),
+            ("ReadLink", stats.v2_stats.read_link),
+            ("Read", stats.v2_stats.read),
+            ("WrCache", stats.v2_stats.wr_cache),
+            ("Write", stats.v2_stats.write),
+            ("Create", stats.v2_stats.create),
+            ("Remove", stats.v2_stats.remove),
+            ("Rename", stats.v2_stats.rename),
+            ("Link", stats.v2_stats.link),
+            ("SymLink", stats.v2_stats.sym_link),
+            ("MkDir", stats.v2_stats.mkdir),
+            ("RmDir", stats.v2_stats.rmdir),
+            ("ReadDir", stats.v2_stats.read_dir),
+            ("FsStat", stats.v2_stats.fs_stat),
+        ]
+        .into_iter()
+        .map(|(method, value)| {
+            Metric::sum_with_tags(
+                "node_nfsd_requests_total",
+                "Total number NFSd Requests by method and protocol",
+                value,
+                tags! {
+                    "proto" => "2",
+                    "method" => method
+                },
+            )
+        }),
+    );
+
+    // collects statistics for NFSv3 requests
+    metrics.extend(
+        [
+            ("GetAttr", stats.v3_stats.get_attr),
+            ("SetAttr", stats.v3_stats.set_attr),
+            ("Lookup", stats.v3_stats.lookup),
+            ("Access", stats.v3_stats.access),
+            ("ReadLink", stats.v3_stats.read_link),
+            ("Read", stats.v3_stats.read),
+            ("Write", stats.v3_stats.write),
+            ("Create", stats.v3_stats.create),
+            ("MkDir", stats.v3_stats.mkdir),
+            ("SymLink", stats.v3_stats.sym_link),
+            ("MkNod", stats.v3_stats.mknod),
+            ("Remove", stats.v3_stats.remove),
+            ("RmDir", stats.v3_stats.rmdir),
+            ("Rename", stats.v3_stats.rename),
+            ("Link", stats.v3_stats.link),
+            ("ReadDir", stats.v3_stats.read_dir),
+            ("ReadDirPlus", stats.v3_stats.read_dir_plus),
+            ("FsStat", stats.v3_stats.fs_stat),
+            ("FsInfo", stats.v3_stats.fs_info),
+            ("PathConf", stats.v3_stats.path_conf),
+            ("Commit", stats.v3_stats.commit),
+        ]
+        .into_iter()
+        .map(|(method, value)| {
+            Metric::sum_with_tags(
+                "node_nfsd_requests_total",
+                "Total number NFSd Requests by method and protocol",
+                value,
+                tags! {
+                    "proto" => "3",
+                    "method" => method
+                },
+            )
+        }),
+    );
+
+    // collects statistics for NFSv4 requests
+    metrics.extend(
+        [
+            ("Access", stats.v4_ops.access),
+            ("Close", stats.v4_ops.close),
+            ("Commit", stats.v4_ops.commit),
+            ("Create", stats.v4_ops.create),
+            ("DelegPurge", stats.v4_ops.deleg_purge),
+            ("DelegReturn", stats.v4_ops.deleg_return),
+            ("GetAttr", stats.v4_ops.get_attr),
+            ("GetFH", stats.v4_ops.get_fh),
+            ("Link", stats.v4_ops.link),
+            ("Lock", stats.v4_ops.lock),
+            ("Lockt", stats.v4_ops.lockt),
+            ("Locku", stats.v4_ops.locku),
+            ("Lookup", stats.v4_ops.lookup),
+            ("LookupRoot", stats.v4_ops.lookup_root),
+            ("Nverify", stats.v4_ops.nverify),
+            ("Open", stats.v4_ops.open),
+            ("OpenAttr", stats.v4_ops.open_attr),
+            ("OpenConfirm", stats.v4_ops.open_confirm),
+            ("OpenDgrd", stats.v4_ops.open_dgrd),
+            ("PutFH", stats.v4_ops.put_fh),
+            ("Read", stats.v4_ops.read),
+            ("ReadDir", stats.v4_ops.readdir),
+            ("ReadLink", stats.v4_ops.read_link),
+            ("Remove", stats.v4_ops.remove),
+            ("Rename", stats.v4_ops.rename),
+            ("Renew", stats.v4_ops.renew),
+            ("RestoreFH", stats.v4_ops.restore_fh),
+            ("SaveFH", stats.v4_ops.save_fh),
+            ("SecInfo", stats.v4_ops.sec_info),
+            ("SetAttr", stats.v4_ops.set_attr),
+            ("SetClientID", stats.v4_ops.set_client_id),
+            ("SetClientIDConfirm", stats.v4_ops.set_client_id_confirm),
+            ("Verify", stats.v4_ops.verify),
+            ("Write", stats.v4_ops.write),
+            ("RelLockOwner", stats.v4_ops.rel_lock_owner),
+            ("WdelegGetattr", stats.wdeleg_getattr),
+        ]
+        .into_iter()
+        .map(|(method, value)| {
+            Metric::sum_with_tags(
+                "node_nfsd_requests_total",
+                "Total number NFSd Requests by method and protocol",
+                value,
+                tags! {
+                    "proto" => "4",
+                    "method" => method
+                },
+            )
+        }),
+    );
 
     Ok(metrics)
 }
