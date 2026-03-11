@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773244296926,
+  "lastUpdate": 1773244704149,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b86068b8e76c25b499a796d04ec30515cc799f3e",
-          "message": "Merge pull request #2656 from f1shl3gs/dependabot/cargo/console-subscriber-0.5.0\n\nchore(deps): bump console-subscriber from 0.4.1 to 0.5.0",
-          "timestamp": "2025-10-31T00:28:19+08:00",
-          "tree_id": "ae944072f2e1a86039e6a4605e9cc267697ed14f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b86068b8e76c25b499a796d04ec30515cc799f3e"
-        },
-        "date": 1761842270852,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 15637000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 658120,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.76,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b5c6776a200ff7319f7128ce540ab392d452cf82",
           "message": "Merge pull request #2657 from f1shl3gs/sources/multiplier/add_comments\n\nsources/multiplier: add comments for config",
           "timestamp": "2025-10-31T03:41:08+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.471,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ec32e3426a303b6747d59a9ba78f6110d553dcac",
+          "message": "Merge pull request #2847 from f1shl3gs/dependabot/cargo/quinn-proto-0.11.14\n\nchore(deps): bump quinn-proto from 0.11.13 to 0.11.14",
+          "timestamp": "2026-03-11T23:47:46+08:00",
+          "tree_id": "a80d42c05d4a62b50bff2a222fd09f78955920a9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ec32e3426a303b6747d59a9ba78f6110d553dcac"
+        },
+        "date": 1773244681367,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7534100,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 749120,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.97,
             "unit": "ns/op"
           }
         ]
