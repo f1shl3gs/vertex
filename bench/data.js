@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773244704149,
+  "lastUpdate": 1773244769362,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f102ce0d4a212a5330d0ac79198776607057d739",
-          "message": "Merge pull request #2745 from f1shl3gs/dep/switch_to_our_serde_yaml\n\ndeps: switch to our own serde_yaml",
-          "timestamp": "2026-01-08T05:36:11+08:00",
-          "tree_id": "f206880393542af8b074641e87a305ca0203a480",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f102ce0d4a212a5330d0ac79198776607057d739"
-        },
-        "date": 1767822426980,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 574,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41194.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ac795cf9cffc5b9ae0eee65e50d61e981e98fc24",
           "message": "Merge pull request #2746 from f1shl3gs/dependabot/cargo/indexmap-2.13.0\n\nchore(deps): bump indexmap from 2.12.1 to 2.13.0",
           "timestamp": "2026-01-08T05:46:22+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 635,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40663,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ec32e3426a303b6747d59a9ba78f6110d553dcac",
+          "message": "Merge pull request #2847 from f1shl3gs/dependabot/cargo/quinn-proto-0.11.14\n\nchore(deps): bump quinn-proto from 0.11.13 to 0.11.14",
+          "timestamp": "2026-03-11T23:47:46+08:00",
+          "tree_id": "a80d42c05d4a62b50bff2a222fd09f78955920a9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ec32e3426a303b6747d59a9ba78f6110d553dcac"
+        },
+        "date": 1773244746745,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 590,
             "unit": "s"
           },
           {
