@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773337837248,
+  "lastUpdate": 1773337876541,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b5c6776a200ff7319f7128ce540ab392d452cf82",
-          "message": "Merge pull request #2657 from f1shl3gs/sources/multiplier/add_comments\n\nsources/multiplier: add comments for config",
-          "timestamp": "2025-10-31T03:41:08+08:00",
-          "tree_id": "6fd1cf0e11dc167674f262e9d37e566be5065413",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b5c6776a200ff7319f7128ce540ab392d452cf82"
-        },
-        "date": 1761853422020,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.218,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 159.5,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 326.29,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 676.86,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2200d08262fb66632fd279ce1fe3dd486a64edde",
           "message": "Merge pull request #2658 from f1shl3gs/extensions/docker_observer\n\nextensions/docker_observer: init",
           "timestamp": "2025-10-31T07:56:18+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 699.16,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a39fcadd8bd2d02fec20e3d68897ce573bef2784",
+          "message": "Merge pull request #2849 from f1shl3gs/dependabot/github_actions/styfle/cancel-workflow-action-0.13.1\n\nchore(ci): bump styfle/cancel-workflow-action from 0.13.0 to 0.13.1",
+          "timestamp": "2026-03-13T01:48:03+08:00",
+          "tree_id": "59a30c3c5d6dfed00f337054f0ef1f6eaea8ba9b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a39fcadd8bd2d02fec20e3d68897ce573bef2784"
+        },
+        "date": 1773337853523,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.911,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 181.76,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 349.06,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 707.07,
             "unit": "ns/op"
           }
         ]
