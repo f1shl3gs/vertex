@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773337835889,
+  "lastUpdate": 1773337837248,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2200d08262fb66632fd279ce1fe3dd486a64edde",
-          "message": "Merge pull request #2658 from f1shl3gs/extensions/docker_observer\n\nextensions/docker_observer: init",
-          "timestamp": "2025-10-31T07:56:18+08:00",
-          "tree_id": "5703bbee246bfcebeaf94c3b1c082cb2bd3f0bda",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2200d08262fb66632fd279ce1fe3dd486a64edde"
-        },
-        "date": 1761868714379,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.522,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 94.288,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 173.53,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 173.02,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a39fcadd8bd2d02fec20e3d68897ce573bef2784",
+          "message": "Merge pull request #2849 from f1shl3gs/dependabot/github_actions/styfle/cancel-workflow-action-0.13.1\n\nchore(ci): bump styfle/cancel-workflow-action from 0.13.0 to 0.13.1",
+          "timestamp": "2026-03-13T01:48:03+08:00",
+          "tree_id": "59a30c3c5d6dfed00f337054f0ef1f6eaea8ba9b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a39fcadd8bd2d02fec20e3d68897ce573bef2784"
+        },
+        "date": 1773337814753,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.989,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 97.872,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 172.02,
             "unit": "ns/op"
           }
         ]
