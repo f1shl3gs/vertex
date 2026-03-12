@@ -3081,7 +3081,7 @@ arc_need_free                   4    0
 arc_sys_free                    4    261496832
 Mode: 644
 # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Path: fixtures/proc/spl/kstat/zfs/dbuf_stats
+Path: fixtures/proc/spl/kstat/zfs/dbufstats
 Lines: 65
 15 1 0x01 63 17136 73163812943503 309964267073187
 name                            type data
