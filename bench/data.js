@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773338383586,
+  "lastUpdate": 1773338400247,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "86c0c4e8fe4fff7e1ab7d99e212c95ea016afadc",
-          "message": "Merge pull request #2659 from f1shl3gs/extensions/docker_observer/fix_type_name\n\nextensions/docker_observer: fix type name",
-          "timestamp": "2025-10-31T08:25:08+08:00",
-          "tree_id": "335ab40cfc65ac2530ad584995ed08f3551610a5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/86c0c4e8fe4fff7e1ab7d99e212c95ea016afadc"
-        },
-        "date": 1761870441330,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 493170,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 536000,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bee79e851361bfb4786a3f77e94de945e006a7eb",
+          "message": "Merge pull request #2851 from f1shl3gs/sources/node/fix_zfs_test_data\n\nsources/node: fix filename of zfs' dbuf stats",
+          "timestamp": "2026-03-13T01:57:41+08:00",
+          "tree_id": "af9d53bb935f31e183f99b221219bad7204b802c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bee79e851361bfb4786a3f77e94de945e006a7eb"
+        },
+        "date": 1773338377590,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 525250,
             "unit": "ns/op"
           }
         ]
