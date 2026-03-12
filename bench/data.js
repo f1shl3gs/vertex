@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773339118983,
+  "lastUpdate": 1773339174677,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "835cbe9d16cba4b4f909859f7378aa9422dff430",
-          "message": "Merge pull request #2748 from f1shl3gs/dependabot/cargo/libc-0.2.180\n\nchore(deps): bump libc from 0.2.179 to 0.2.180",
-          "timestamp": "2026-01-09T05:31:10+08:00",
-          "tree_id": "18c1b38d648694b39351cb4f97d0a14d5954dcf9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/835cbe9d16cba4b4f909859f7378aa9422dff430"
-        },
-        "date": 1767908518917,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 572,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41192.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c4e06f8b768ad7d83d8f5d457ba1d301645b2dba",
           "message": "Merge pull request #2749 from f1shl3gs/lib/framework/re-order_http_provider_config\n\nlib/framework: re-order http provider config",
           "timestamp": "2026-01-10T20:42:04+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40663,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "28820eedf1e6767d2539e1e5fdd8673d3914c661",
+          "message": "Merge pull request #2850 from f1shl3gs/sinks/prometheus/wrap_const_labels_with_arc\n\nsinks/prometheus: wrap const_labels with Arc, which reduce some clones(allocation)",
+          "timestamp": "2026-03-13T02:01:12+08:00",
+          "tree_id": "d3ca7a8b8716bec79de29051bdd04f369494d9a4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/28820eedf1e6767d2539e1e5fdd8673d3914c661"
+        },
+        "date": 1773339150912,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 589,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40665.3,
             "unit": "KiB"
           }
         ]
