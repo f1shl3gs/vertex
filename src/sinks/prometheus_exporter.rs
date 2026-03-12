@@ -599,7 +599,6 @@ impl Write for RespWriter {
                 buf.reserve(src.len());
                 unsafe {
                     // SAFETY: safe by above reserve.
-                    // let len = buf.len();
                     std::ptr::copy_nonoverlapping(
                         src.as_ptr(),
                         buf.as_mut_ptr().add(buf.len()),
