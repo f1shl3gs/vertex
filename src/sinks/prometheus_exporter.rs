@@ -6,11 +6,12 @@ use std::net::SocketAddr;
 use std::sync::Arc;
 use std::time::Duration;
 
-use bytes::{BufMut, Bytes, BytesMut};
+use bytes::{Bytes, BytesMut};
 use chrono::Utc;
 use configurable::configurable_component;
 use event::tags::{Tags, Value};
 use event::{Bucket, EventStatus, Events, MetricValue, Quantile};
+use flate2::write::GzEncoder;
 use framework::config::{InputType, Resource, SinkConfig, SinkContext};
 use framework::http::{Auth, Authorizer};
 use framework::tls::{MaybeTlsListener, TlsConfig};
@@ -330,12 +331,12 @@ fn handle(
     }
 
     let mut buf = match req.headers().get(ACCEPT_ENCODING) {
-        None => RespWriter::plain(),
+        None => RespWriter::identity(),
         Some(value) => {
             if value.as_bytes().windows(4).any(|s| s == b"gzip") {
                 RespWriter::gzip()
             } else {
-                RespWriter::plain()
+                RespWriter::identity()
             }
         }
     };
@@ -526,64 +527,113 @@ impl StreamSink for PrometheusExporter {
 }
 
 enum RespWriter {
-    Plain(BytesMut),
-    Gzip(flate2::write::GzEncoder<bytes::buf::Writer<BytesMut>>),
+    Identity(BytesMut),
+    Gzip {
+        // A buffer to temporarily store the data write to GzEncoder,
+        //
+        // The write_sample, write_histogram and write_summary writes a lot
+        // small chunk (most of them less than 20 bytes), which will not
+        // take advantage of the SIMD optimization implemented in GzEncoder.
+        // Without this buffer, vertex almost double the CPU usage, when serve
+        // node_exporter's metrics.
+        buf: Vec<u8>,
+        encoder: GzEncoder<Vec<u8>>,
+    },
 }
-
-impl Write for RespWriter {
-    #[allow(clippy::disallowed_methods)]
-    fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
-        match self {
-            RespWriter::Plain(w) => w.writer().write(buf),
-            RespWriter::Gzip(w) => w.write(buf),
-        }
-    }
-
-    fn flush(&mut self) -> std::io::Result<()> {
-        match self {
-            RespWriter::Plain(w) => w.writer().flush(),
-            RespWriter::Gzip(w) => w.flush(),
-        }
-    }
-}
-
-const DEFAULT_CAPACITY: usize = 16 * 1024;
 
 impl RespWriter {
-    fn plain() -> Self {
-        Self::Plain(BytesMut::with_capacity(DEFAULT_CAPACITY))
+    const INITIAL_BUFFER_CAPACITY: usize = 4 * 1024;
+
+    fn identity() -> Self {
+        Self::Identity(BytesMut::with_capacity(Self::INITIAL_BUFFER_CAPACITY))
     }
 
     fn gzip() -> Self {
-        Self::Gzip(flate2::write::GzEncoder::new(
-            BytesMut::with_capacity(DEFAULT_CAPACITY).writer(),
-            flate2::Compression::default(),
-        ))
-    }
-
-    fn into_bytes(self) -> Bytes {
-        match self {
-            RespWriter::Plain(w) => w.freeze(),
-            RespWriter::Gzip(w) => w
-                .finish()
-                .expect("should be flushable")
-                .into_inner()
-                .freeze(),
+        Self::Gzip {
+            buf: Vec::with_capacity(Self::INITIAL_BUFFER_CAPACITY),
+            encoder: GzEncoder::new(Vec::new(), flate2::Compression::default()),
         }
     }
 
     fn content_encoding(&self) -> Option<&'static str> {
-        match self {
-            RespWriter::Plain(_) => None,
-            RespWriter::Gzip(_) => Some("gzip"),
+        match &self {
+            Self::Identity(_) => None,
+            Self::Gzip { .. } => Some("gzip"),
         }
+    }
+
+    fn into_bytes(self) -> Bytes {
+        match self {
+            Self::Identity(buf) => buf.freeze(),
+            Self::Gzip { buf, mut encoder } => {
+                if !buf.is_empty() {
+                    encoder
+                        .write_all(&buf)
+                        .expect("write last buffered data to GzEncoder");
+                    encoder.flush().expect("flush GzEncoder");
+                    // no need to clear `buf`, it is dropped here
+                }
+
+                encoder
+                    .finish()
+                    .expect("error encoding gzip content")
+                    .into()
+            }
+        }
+    }
+}
+
+impl Write for RespWriter {
+    fn write(&mut self, src: &[u8]) -> std::io::Result<usize> {
+        match self {
+            Self::Identity(writer) => {
+                writer.extend_from_slice(src);
+            }
+            Self::Gzip { buf, encoder } => {
+                if src.len() > buf.capacity() - buf.len() && !buf.is_empty() {
+                    // flush the current buffered data
+                    encoder.write_all(buf)?;
+                    buf.clear();
+                }
+
+                buf.reserve(src.len());
+                unsafe {
+                    // SAFETY: safe by above reserve.
+                    // let len = buf.len();
+                    std::ptr::copy_nonoverlapping(
+                        src.as_ptr(),
+                        buf.as_mut_ptr().add(buf.len()),
+                        src.len(),
+                    );
+                    buf.set_len(buf.len() + src.len());
+                }
+            }
+        }
+
+        Ok(src.len())
+    }
+
+    fn flush(&mut self) -> std::io::Result<()> {
+        match self {
+            Self::Gzip { buf, encoder } => {
+                encoder.write_all(buf)?;
+                encoder.flush()?;
+                buf.clear();
+            }
+            Self::Identity(_buf) => {}
+        }
+
+        Ok(())
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use std::io::Read;
+
     use event::tags;
+
+    use super::*;
 
     #[test]
     fn generate_config() {
@@ -646,7 +696,7 @@ mod tests {
         let count = 2693;
 
         // no tags
-        let mut buf = RespWriter::plain();
+        let mut buf = RespWriter::identity();
         write_summary(
             &mut buf,
             "rpc_duration_seconds",
@@ -719,7 +769,7 @@ rpc_duration_seconds_count{foo="bar"} 2693
         ];
 
         // no tags
-        let mut buf = RespWriter::plain();
+        let mut buf = RespWriter::identity();
         write_histogram(
             &mut buf,
             "http_request_duration_seconds",
@@ -763,5 +813,42 @@ http_request_duration_seconds_count{foo="bar"} 144320
 "#,
             std::str::from_utf8(buf.into_bytes().as_ref()).unwrap()
         );
+    }
+
+    #[test]
+    fn identity() {
+        let input = "dummy test content";
+        let want = input;
+
+        let mut writer = RespWriter::identity();
+        writer.write_all(b"dummy ").unwrap();
+        writer.write_all(b"test ").unwrap();
+        writer.write_all(b"content").unwrap();
+        let got = writer.into_bytes();
+
+        assert_eq!(want, got);
+    }
+
+    #[test]
+    fn gzip() {
+        let input = "dummy test content";
+
+        let mut writer = RespWriter::Gzip {
+            // 4 will trigger flush when write_all called
+            buf: Vec::with_capacity(4),
+            encoder: GzEncoder::new(Vec::new(), flate2::Compression::default()),
+        };
+        writer.write_all(b"dummy ").unwrap();
+        writer.write_all(b"test ").unwrap();
+        writer.write_all(b"content").unwrap();
+
+        let got = writer.into_bytes();
+
+        // assert_eq!(want, got.as_ref());
+        let mut decoder = flate2::read::GzDecoder::new(&got[..]);
+        let mut got = String::new();
+        decoder.read_to_string(&mut got).unwrap();
+
+        assert_eq!(input.as_bytes(), got.as_bytes());
     }
 }
