@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773353874786,
+  "lastUpdate": 1773353894909,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e3a580308a11832454842bfb79b1ad5ce706a531",
-          "message": "Merge pull request #2660 from f1shl3gs/toolchain/1.91.0\n\ntoolchain: 1.91.0",
-          "timestamp": "2025-10-31T08:29:54+08:00",
-          "tree_id": "182ec0c3483819eaef874b658f1d96e4980295d1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e3a580308a11832454842bfb79b1ad5ce706a531"
-        },
-        "date": 1761870749146,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.669,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 172.82,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 331.5,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 690.65,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0727fbc52e3acb226cc2d8d071fcbdbc1ff21914",
           "message": "Merge pull request #2661 from f1shl3gs/lib/docker/init\n\nlib/docker: init",
           "timestamp": "2025-11-01T02:14:16+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 706.67,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "90831cda7b1a75d1c229852d30c3316fbb57c172",
+          "message": "Merge pull request #2852 from f1shl3gs/sinks/prometheus/reimplement_resp_writer\n\nsinks/prometheus_exporter: re-implement RespWriter to reduce allocations and CPU usage",
+          "timestamp": "2026-03-13T06:15:22+08:00",
+          "tree_id": "65944b89fd45e2fd91e353e3e8148328568820ee",
+          "url": "https://github.com/f1shl3gs/vertex/commit/90831cda7b1a75d1c229852d30c3316fbb57c172"
+        },
+        "date": 1773353872447,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.796,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 169.25,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 324.54,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 708.24,
             "unit": "ns/op"
           }
         ]
