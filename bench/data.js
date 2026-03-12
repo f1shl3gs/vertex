@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773338864722,
+  "lastUpdate": 1773338959838,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d8ff3dfb21b16133bcdc6a9fe4446531b058df81",
-          "message": "Merge pull request #2747 from f1shl3gs/dependabot/cargo/syn-2.0.114\n\nchore(deps): bump syn from 2.0.113 to 2.0.114",
-          "timestamp": "2026-01-08T05:46:35+08:00",
-          "tree_id": "3ae8139f60634895ed8e49f6760a84f1d791f301",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d8ff3dfb21b16133bcdc6a9fe4446531b058df81"
-        },
-        "date": 1767823042934,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 570,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41191.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "835cbe9d16cba4b4f909859f7378aa9422dff430",
           "message": "Merge pull request #2748 from f1shl3gs/dependabot/cargo/libc-0.2.180\n\nchore(deps): bump libc from 0.2.179 to 0.2.180",
           "timestamp": "2026-01-09T05:31:10+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 594,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40663,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bee79e851361bfb4786a3f77e94de945e006a7eb",
+          "message": "Merge pull request #2851 from f1shl3gs/sources/node/fix_zfs_test_data\n\nsources/node: fix filename of zfs' dbuf stats",
+          "timestamp": "2026-03-13T01:57:41+08:00",
+          "tree_id": "af9d53bb935f31e183f99b221219bad7204b802c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bee79e851361bfb4786a3f77e94de945e006a7eb"
+        },
+        "date": 1773338937130,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 587,
             "unit": "s"
           },
           {
