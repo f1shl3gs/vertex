@@ -62,12 +62,18 @@ const fn default_ttl() -> Duration {
 #[typetag::serde(name = "prometheus_exporter")]
 impl SinkConfig for Config {
     async fn build(&self, _cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
+        let const_labels = self
+            .const_labels
+            .iter()
+            .map(|(k, v)| (k.clone(), v.clone()))
+            .collect::<Vec<_>>();
+
         let sink = PrometheusExporter::new(
             self.listen,
             self.auth.as_ref().map(|auth| auth.authorizer()),
             self.tls.clone(),
             self.ttl,
-            self.const_labels.clone(),
+            const_labels,
         );
         let health_check = futures::future::ok(()).boxed();
 
@@ -143,7 +149,7 @@ struct PrometheusExporter {
     auth: Option<Authorizer>,
     tls: Option<TlsConfig>,
     ttl: Duration,
-    const_labels: BTreeMap<String, String>,
+    const_labels: Arc<[(String, String)]>,
 }
 
 impl PrometheusExporter {
@@ -152,14 +158,14 @@ impl PrometheusExporter {
         auth: Option<Authorizer>,
         tls: Option<TlsConfig>,
         ttl: Duration,
-        const_labels: BTreeMap<String, String>,
+        const_labels: Vec<(String, String)>,
     ) -> Self {
         Self {
             listen,
             auth,
             tls,
             ttl,
-            const_labels,
+            const_labels: Arc::from(const_labels),
         }
     }
 }
@@ -170,7 +176,7 @@ fn write_sample<T: Write>(
     suffix: Option<&'static str>,
     tags: &Tags,
     value: f64,
-    const_labels: &BTreeMap<String, String>,
+    const_labels: &[(String, String)],
     additional: Option<(&'static str, f64)>,
 ) {
     buf.write_all(name.as_bytes()).unwrap();
@@ -253,7 +259,7 @@ fn write_histogram<T: Write>(
     buckets: &[Bucket],
     sum: f64,
     count: u64,
-    const_labels: &BTreeMap<String, String>,
+    const_labels: &[(String, String)],
 ) {
     for bucket in buckets {
         write_sample(
@@ -286,7 +292,7 @@ fn write_summary<T: Write>(
     quantiles: &[Quantile],
     sum: f64,
     count: u64,
-    const_labels: &BTreeMap<String, String>,
+    const_labels: &[(String, String)],
 ) {
     for quantile in quantiles {
         write_sample(
@@ -315,7 +321,7 @@ fn write_summary<T: Write>(
 fn handle(
     req: Request<Incoming>,
     metrics: Arc<RwLock<BTreeMap<Cow<'static, str>, Sets>>>,
-    const_labels: BTreeMap<String, String>,
+    const_labels: Arc<[(String, String)]>,
 ) -> http::Result<Response<Full<Bytes>>> {
     if req.method() != Method::GET || req.uri().path() != "/metrics" {
         return Response::builder()
@@ -419,12 +425,12 @@ impl StreamSink for PrometheusExporter {
         let auth = Arc::new(self.auth.clone());
         let http_states = Arc::clone(&states);
         let http_shutdown = shutdown.clone();
-        let const_labels = self.const_labels.clone();
+        let const_labels = Arc::clone(&self.const_labels);
 
         let service = service_fn(move |req: Request<Incoming>| {
             let auth = Arc::clone(&auth);
             let metrics = Arc::clone(&http_states);
-            let const_labels = const_labels.clone();
+            let const_labels = Arc::clone(&const_labels);
 
             async move {
                 if let Some(auth) = auth.as_ref()
@@ -648,7 +654,7 @@ mod tests {
             quantiles,
             sum,
             count,
-            &BTreeMap::new(),
+            &[],
         );
 
         write_summary(
@@ -658,7 +664,7 @@ mod tests {
             quantiles,
             sum,
             count,
-            &BTreeMap::new(),
+            &[],
         );
 
         assert_eq!(
@@ -721,7 +727,7 @@ rpc_duration_seconds_count{foo="bar"} 2693
             buckets,
             sum,
             count,
-            &BTreeMap::new(),
+            &[],
         );
 
         // with tags
@@ -734,7 +740,7 @@ rpc_duration_seconds_count{foo="bar"} 2693
             buckets,
             sum,
             count,
-            &BTreeMap::new(),
+            &[],
         );
 
         assert_eq!(
