@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773338635155,
+  "lastUpdate": 1773338636805,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e3a580308a11832454842bfb79b1ad5ce706a531",
-          "message": "Merge pull request #2660 from f1shl3gs/toolchain/1.91.0\n\ntoolchain: 1.91.0",
-          "timestamp": "2025-10-31T08:29:54+08:00",
-          "tree_id": "182ec0c3483819eaef874b658f1d96e4980295d1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e3a580308a11832454842bfb79b1ad5ce706a531"
-        },
-        "date": 1761870715909,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 489110,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 525250,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "28820eedf1e6767d2539e1e5fdd8673d3914c661",
+          "message": "Merge pull request #2850 from f1shl3gs/sinks/prometheus/wrap_const_labels_with_arc\n\nsinks/prometheus: wrap const_labels with Arc, which reduce some clones(allocation)",
+          "timestamp": "2026-03-13T02:01:12+08:00",
+          "tree_id": "d3ca7a8b8716bec79de29051bdd04f369494d9a4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/28820eedf1e6767d2539e1e5fdd8673d3914c661"
+        },
+        "date": 1773338604085,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 530810,
             "unit": "ns/op"
           }
         ]
