@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773414714999,
+  "lastUpdate": 1773415122141,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "609e85923234fc845feaf46c298a73bd90758ac4",
-          "message": "Merge pull request #2751 from f1shl3gs/dependabot/cargo/prost-c104a971f3\n\nchore(deps): bump the prost group with 3 updates",
-          "timestamp": "2026-01-11T10:34:14+08:00",
-          "tree_id": "180bdb99f6f7bbc06ffebec29682c49b62b71232",
-          "url": "https://github.com/f1shl3gs/vertex/commit/609e85923234fc845feaf46c298a73bd90758ac4"
-        },
-        "date": 1768099519937,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 590,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41196.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d36ea86b504f5a06d0339dc544dad395ea5e2a35",
           "message": "Merge pull request #2752 from f1shl3gs/dependabot/cargo/quick-xml-0.39.0\n\nchore(deps): bump quick-xml from 0.38.4 to 0.39.0",
           "timestamp": "2026-01-12T12:06:42+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40668.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3f2a0bfde692c569df3c9bda1db40883a8bde940",
+          "message": "Merge pull request #2854 from f1shl3gs/lib/event/remove_metric_kind\n\nlib/event: remove metric Kind",
+          "timestamp": "2026-03-13T23:08:10+08:00",
+          "tree_id": "f1f824165dd783e3f03c68221cd92982ae8952c8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3f2a0bfde692c569df3c9bda1db40883a8bde940"
+        },
+        "date": 1773415100950,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 532,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40668.3,
             "unit": "KiB"
           }
         ]
