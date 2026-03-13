@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773428485008,
+  "lastUpdate": 1773428489634,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "067de49249180b6b03bcfdbd2575f0d8e21656a6",
-          "message": "Merge pull request #2664 from f1shl3gs/sources/wireless\n\nsources/wireless: init",
-          "timestamp": "2025-11-04T08:52:24+08:00",
-          "tree_id": "6836fc2ef4ef1adb58d5f47665ac4084a47b6ff7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/067de49249180b6b03bcfdbd2575f0d8e21656a6"
-        },
-        "date": 1762217680957,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.554,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 99.63,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 172.12,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 160.04,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "45ef538145e74aca83158927704e73bc77536eca",
+          "message": "Merge pull request #2856 from f1shl3gs/dependabot/cargo/tracing-subscriber-0.3.23\n\nchore(deps): bump tracing-subscriber from 0.3.22 to 0.3.23",
+          "timestamp": "2026-03-14T02:58:53+08:00",
+          "tree_id": "6840f13ba592cc7e47179d5ab83c6013485ac5e4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/45ef538145e74aca83158927704e73bc77536eca"
+        },
+        "date": 1773428466359,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.989,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 99.732,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 173.44,
             "unit": "ns/op"
           }
         ]
