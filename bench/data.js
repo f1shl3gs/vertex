@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773428917475,
+  "lastUpdate": 1773428951236,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1fd82d9854cca86d0f871f5476aaaafa50bc2c99",
-          "message": "Merge pull request #2663 from f1shl3gs/dependabot/cargo/tokio-util-0.7.17\n\nchore(deps): bump tokio-util from 0.7.16 to 0.7.17",
-          "timestamp": "2025-11-03T18:53:10+08:00",
-          "tree_id": "ec90ee2f06dde3dab94cb7cd7a632cc5f2df4f57",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1fd82d9854cca86d0f871f5476aaaafa50bc2c99"
-        },
-        "date": 1762167739086,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14760000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 617550,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.382,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "067de49249180b6b03bcfdbd2575f0d8e21656a6",
           "message": "Merge pull request #2664 from f1shl3gs/sources/wireless\n\nsources/wireless: init",
           "timestamp": "2025-11-04T08:52:24+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.682,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "45ef538145e74aca83158927704e73bc77536eca",
+          "message": "Merge pull request #2856 from f1shl3gs/dependabot/cargo/tracing-subscriber-0.3.23\n\nchore(deps): bump tracing-subscriber from 0.3.22 to 0.3.23",
+          "timestamp": "2026-03-14T02:58:53+08:00",
+          "tree_id": "6840f13ba592cc7e47179d5ab83c6013485ac5e4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/45ef538145e74aca83158927704e73bc77536eca"
+        },
+        "date": 1773428925533,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7381400,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 701360,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.844,
             "unit": "ns/op"
           }
         ]
