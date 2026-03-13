@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773428593127,
+  "lastUpdate": 1773428917475,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5cec03c3450cf0d24a5cf686077eaf85f8fe15a6",
-          "message": "Merge pull request #2662 from f1shl3gs/extensions/docker_observer/fix_feature_name\n\nextensions/docker_observer: fix feature name",
-          "timestamp": "2025-11-01T05:28:19+08:00",
-          "tree_id": "9c188bf1f6a4604fc7b7337eef637c92a975a5fc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5cec03c3450cf0d24a5cf686077eaf85f8fe15a6"
-        },
-        "date": 1761946688879,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14845000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 647070,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.619,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1fd82d9854cca86d0f871f5476aaaafa50bc2c99",
           "message": "Merge pull request #2663 from f1shl3gs/dependabot/cargo/tokio-util-0.7.17\n\nchore(deps): bump tokio-util from 0.7.16 to 0.7.17",
           "timestamp": "2025-11-03T18:53:10+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.667,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "395e78477b3a3b5da318f095af20c14411f7beb1",
+          "message": "Merge pull request #2855 from f1shl3gs/dependabot/cargo/argh-0.1.18\n\nchore(deps): bump argh from 0.1.17 to 0.1.18",
+          "timestamp": "2026-03-14T02:58:34+08:00",
+          "tree_id": "a9a0799a4174183c6d353b7204312948005f3927",
+          "url": "https://github.com/f1shl3gs/vertex/commit/395e78477b3a3b5da318f095af20c14411f7beb1"
+        },
+        "date": 1773428893288,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7203700,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 678990,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.682,
             "unit": "ns/op"
           }
         ]
