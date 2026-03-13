@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773354448327,
+  "lastUpdate": 1773394207114,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "cfd735cdc2c7b45f9ac6190b0df8543639d9342d",
-          "message": "Merge pull request #2750 from f1shl3gs/extensions/host_observer/rename\n\nextension/host_observer: rename port_observer to host_observer",
-          "timestamp": "2026-01-10T21:58:20+08:00",
-          "tree_id": "791d496c3d1aedad9421b643709ecff241c923c9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cfd735cdc2c7b45f9ac6190b0df8543639d9342d"
-        },
-        "date": 1768054155597,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 577,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41191.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "609e85923234fc845feaf46c298a73bd90758ac4",
           "message": "Merge pull request #2751 from f1shl3gs/dependabot/cargo/prost-c104a971f3\n\nchore(deps): bump the prost group with 3 updates",
           "timestamp": "2026-01-11T10:34:14+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 600,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40668.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f0fb7da49c4282a1b1282c79404929cb50118454",
+          "message": "Merge pull request #2853 from f1shl3gs/dependabot/github_actions/dorny/paths-filter-4\n\nchore(ci): bump dorny/paths-filter from 3 to 4",
+          "timestamp": "2026-03-13T17:18:27+08:00",
+          "tree_id": "b947880f527e939bbd608885c8e5885c21124556",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f0fb7da49c4282a1b1282c79404929cb50118454"
+        },
+        "date": 1773394184272,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 589,
             "unit": "s"
           },
           {
