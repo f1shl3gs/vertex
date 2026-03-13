@@ -26,7 +26,7 @@ pub use finalize::{
 };
 pub use log::{LogRecord, event_path};
 pub use metadata::EventMetadata;
-pub use metric::{Bucket, Kind, Metric, MetricSeries, MetricValue, Quantile};
+pub use metric::{Bucket, Metric, MetricSeries, MetricValue, Quantile};
 pub use trace::Trace;
 
 use std::collections::BTreeMap;

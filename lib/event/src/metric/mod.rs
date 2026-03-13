@@ -9,14 +9,6 @@ use super::metadata::EventMetadata;
 use super::tags::{Key, Tags, Value};
 use super::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable};
 
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd, Serialize)]
-pub enum Kind {
-    Gauge,
-    Sum,
-    Histogram,
-    Summary,
-}
-
 #[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, PartialOrd)]
 pub struct Bucket {
     pub upper: f64,
