@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773414635522,
+  "lastUpdate": 1773414648307,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5cec03c3450cf0d24a5cf686077eaf85f8fe15a6",
-          "message": "Merge pull request #2662 from f1shl3gs/extensions/docker_observer/fix_feature_name\n\nextensions/docker_observer: fix feature name",
-          "timestamp": "2025-11-01T05:28:19+08:00",
-          "tree_id": "9c188bf1f6a4604fc7b7337eef637c92a975a5fc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5cec03c3450cf0d24a5cf686077eaf85f8fe15a6"
-        },
-        "date": 1761946245054,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.566,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 111.3,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 174.46,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 174.97,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3f2a0bfde692c569df3c9bda1db40883a8bde940",
+          "message": "Merge pull request #2854 from f1shl3gs/lib/event/remove_metric_kind\n\nlib/event: remove metric Kind",
+          "timestamp": "2026-03-13T23:08:10+08:00",
+          "tree_id": "f1f824165dd783e3f03c68221cd92982ae8952c8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3f2a0bfde692c569df3c9bda1db40883a8bde940"
+        },
+        "date": 1773414625548,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.16,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 99.92,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 171.72,
             "unit": "ns/op"
           }
         ]
