@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773394207114,
+  "lastUpdate": 1773414635522,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5cec03c3450cf0d24a5cf686077eaf85f8fe15a6",
-          "message": "Merge pull request #2662 from f1shl3gs/extensions/docker_observer/fix_feature_name\n\nextensions/docker_observer: fix feature name",
-          "timestamp": "2025-11-01T05:28:19+08:00",
-          "tree_id": "9c188bf1f6a4604fc7b7337eef637c92a975a5fc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5cec03c3450cf0d24a5cf686077eaf85f8fe15a6"
-        },
-        "date": 1761946235147,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 490370,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 531790,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3f2a0bfde692c569df3c9bda1db40883a8bde940",
+          "message": "Merge pull request #2854 from f1shl3gs/lib/event/remove_metric_kind\n\nlib/event: remove metric Kind",
+          "timestamp": "2026-03-13T23:08:10+08:00",
+          "tree_id": "f1f824165dd783e3f03c68221cd92982ae8952c8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3f2a0bfde692c569df3c9bda1db40883a8bde940"
+        },
+        "date": 1773414612925,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 533460,
             "unit": "ns/op"
           }
         ]
