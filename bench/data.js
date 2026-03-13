@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773429025799,
+  "lastUpdate": 1773429038535,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b06bf006f4b5f308b782a695254de420b1b3ee6d",
-          "message": "Merge pull request #2753 from f1shl3gs/sources/mysqld/reorder_use\n\nsources/mysqld: reorder `use`",
-          "timestamp": "2026-01-12T19:28:29+08:00",
-          "tree_id": "4642bc0af1fcee6e3bd71f3b63774016fde17cea",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b06bf006f4b5f308b782a695254de420b1b3ee6d"
-        },
-        "date": 1768217981964,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 595,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41198.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e080a4cf805edbe9925189ef60a5eee07a215914",
           "message": "Merge pull request #2754 from f1shl3gs/dependabot/cargo/tower-0.5.3\n\nchore(deps): bump tower from 0.5.2 to 0.5.3",
           "timestamp": "2026-01-13T13:10:51+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40668.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "45ef538145e74aca83158927704e73bc77536eca",
+          "message": "Merge pull request #2856 from f1shl3gs/dependabot/cargo/tracing-subscriber-0.3.23\n\nchore(deps): bump tracing-subscriber from 0.3.22 to 0.3.23",
+          "timestamp": "2026-03-14T02:58:53+08:00",
+          "tree_id": "6840f13ba592cc7e47179d5ab83c6013485ac5e4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/45ef538145e74aca83158927704e73bc77536eca"
+        },
+        "date": 1773429014663,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 596,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40659.2,
             "unit": "KiB"
           }
         ]
