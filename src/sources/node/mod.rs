@@ -2,6 +2,7 @@
 
 mod arp;
 mod bcache;
+mod bcachefs;
 mod bonding;
 #[cfg(target_os = "macos")]
 mod boot_time;
@@ -133,6 +134,9 @@ struct Collectors {
 
     #[serde(default = "default_bcache_config")]
     bcache: Option<bcache::Config>,
+
+    #[serde(default = "default_true")]
+    bcachefs: bool,
 
     #[serde(default = "default_true")]
     bonding: bool,
@@ -328,6 +332,7 @@ impl Default for Collectors {
         Self {
             arp: true,
             bcache: default_bcache_config(),
+            bcachefs: true,
             bonding: true,
             #[cfg(target_os = "macos")]
             boot_time: true,
@@ -614,6 +619,11 @@ async fn run(
             let conf = conf.clone();
             let paths = paths.clone();
             tasks.spawn(collect!(bcache, conf, paths));
+        }
+
+        if collectors.bcachefs {
+            let paths = paths.clone();
+            tasks.spawn(collect!(bcachefs, paths));
         }
 
         if collectors.bonding {
