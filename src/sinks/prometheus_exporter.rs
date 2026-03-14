@@ -1,12 +1,13 @@
 use std::borrow::Cow;
 use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet};
-use std::io::Write;
+use std::fmt::Write;
+use std::io::Write as _;
 use std::net::SocketAddr;
 use std::sync::Arc;
 use std::time::Duration;
 
-use bytes::{Bytes, BytesMut};
+use bytes::{BufMut, Bytes, BytesMut};
 use chrono::Utc;
 use configurable::configurable_component;
 use event::tags::{Tags, Value};
@@ -180,42 +181,42 @@ fn write_sample<T: Write>(
     const_labels: &[(String, String)],
     additional: Option<(&'static str, f64)>,
 ) {
-    buf.write_all(name.as_bytes()).unwrap();
+    buf.write_str(name).unwrap();
     if let Some(suffix) = suffix {
-        buf.write_all(suffix.as_bytes()).unwrap();
+        buf.write_str(suffix).unwrap();
     }
 
     let mut tag_count = tags.len() + const_labels.len() + additional.is_some() as usize;
     if tag_count != 0 {
-        buf.write_all(b"{").unwrap();
+        buf.write_char('{').unwrap();
 
         for (key, value) in tags {
             buf.write_fmt(format_args!("{}=\"", key.as_str())).unwrap();
             match value {
                 Value::String(s) => {
-                    buf.write_all(s.as_bytes()).unwrap();
+                    buf.write_str(s.as_str()).unwrap();
                 }
                 Value::I64(i) => {
-                    buf.write_all(i.to_string().as_bytes()).unwrap();
+                    buf.write_fmt(format_args!("{}", *i)).unwrap();
                 }
                 Value::F64(f) => {
-                    buf.write_all(f.to_string().as_bytes()).unwrap();
+                    buf.write_fmt(format_args!("{}", *f)).unwrap();
                 }
                 Value::Bool(b) => {
                     let s = if *b { "true" } else { "false" };
-                    buf.write_all(s.as_bytes()).unwrap();
+                    buf.write_str(s).unwrap();
                 }
                 Value::Array(arr) => {
                     let value = serde_json::to_string(arr).unwrap();
-                    buf.write_all(value.as_bytes()).unwrap();
+                    buf.write_str(value.as_str()).unwrap();
                 }
             }
 
             tag_count -= 1;
             if tag_count != 0 {
-                buf.write_all(b"\",").unwrap();
+                buf.write_str("\",").unwrap();
             } else {
-                buf.write_all(b"\"").unwrap();
+                buf.write_str("\"").unwrap();
             }
         }
 
@@ -225,32 +226,31 @@ fn write_sample<T: Write>(
 
             tag_count -= 1;
             if tag_count != 0 {
-                buf.write_all(b",").unwrap();
+                buf.write_char(',').unwrap();
             }
         }
 
         if let Some((key, value)) = additional {
             if value.is_nan() {
-                buf.write_fmt(format_args!("{}=\"NaN\"", key)).unwrap();
+                buf.write_fmt(format_args!("{key}=\"NaN\"")).unwrap();
             } else if value == f64::NEG_INFINITY {
-                buf.write_fmt(format_args!("{}=\"-Inf\"", key)).unwrap();
+                buf.write_fmt(format_args!("{key}=\"-Inf\"")).unwrap();
             } else if value == f64::INFINITY {
-                buf.write_fmt(format_args!("{}=\"+Inf\"", key)).unwrap();
+                buf.write_fmt(format_args!("{key}=\"+Inf\"")).unwrap();
             } else {
-                buf.write_fmt(format_args!("{}=\"{}\"", key, value))
-                    .unwrap();
+                buf.write_fmt(format_args!("{key}=\"{value}\"")).unwrap();
             }
 
             tag_count -= 1;
             if tag_count != 0 {
-                buf.write_all(b",").unwrap();
+                buf.write_char(',').unwrap();
             }
         }
 
-        buf.write_all(b"}").unwrap();
+        buf.write_char('}').unwrap();
     }
 
-    buf.write_fmt(format_args!(" {}\n", value)).unwrap();
+    buf.write_fmt(format_args!(" {value}\n")).unwrap();
 }
 
 fn write_histogram<T: Write>(
@@ -349,7 +349,6 @@ fn handle(
                 tags,
                 value,
                 expired_at,
-                ..
             } = entry;
 
             if *expired_at < now {
@@ -369,11 +368,10 @@ fn handle(
                     MetricValue::Summary { .. } => "summary",
                 };
 
-                writeln!(
-                    &mut buf,
-                    "# HELP {} {}\n# TYPE {} {}",
+                buf.write_fmt(format_args!(
+                    "# HELP {} {}\n# TYPE {} {}\n",
                     name, sets.description, name, kind
-                )
+                ))
                 .unwrap();
             }
 
@@ -424,13 +422,12 @@ impl StreamSink for PrometheusExporter {
             .await
             .map_err(|err| error!(message = "Server TLS error", %err))?;
         let auth = Arc::new(self.auth.clone());
-        let http_states = Arc::clone(&states);
-        let http_shutdown = shutdown.clone();
+        let metrics = Arc::clone(&states);
         let const_labels = Arc::clone(&self.const_labels);
 
         let service = service_fn(move |req: Request<Incoming>| {
             let auth = Arc::clone(&auth);
-            let metrics = Arc::clone(&http_states);
+            let metrics = Arc::clone(&metrics);
             let const_labels = Arc::clone(&const_labels);
 
             async move {
@@ -445,82 +442,83 @@ impl StreamSink for PrometheusExporter {
                 handle(req, metrics, const_labels)
             }
         });
-        tokio::spawn(async move {
-            let _ = framework::http::serve(listener, service)
-                .with_graceful_shutdown(http_shutdown)
+        let http_task = tokio::spawn(async move {
+            let result = framework::http::serve(listener, service)
+                .with_graceful_shutdown(shutdown)
                 .await;
 
-            debug!(message = "http server shutdown successful");
-        });
-
-        // GC routine
-        let mut ticker = tokio::time::interval(self.ttl);
-        let mut gc_shutdown = shutdown.clone();
-        let gc_states = Arc::clone(&states);
-        tokio::spawn(async move {
-            loop {
-                tokio::select! {
-                    biased;
-
-                    _ = &mut gc_shutdown => break,
-                    _ = ticker.tick() => {}
-                }
-
-                let mut cleaned = 0;
-                let now = Utc::now().timestamp_millis();
-                let mut state = gc_states.write();
-                for (_name, set) in state.iter_mut() {
-                    set.metrics.retain(|entry| {
-                        let keep = entry.expired_at > now;
-                        if !keep {
-                            cleaned += 1;
-                        }
-
-                        keep
-                    });
-                }
-
-                state.retain(|_name, set| !set.metrics.is_empty());
-
-                debug!(message = "GC finished", cleaned);
+            match result {
+                Ok(_) => debug!(message = "HTTP server shutdown success"),
+                Err(err) => warn!(message = "HTTP server shutdown failed", ?err),
             }
-
-            debug!(message = "gc routine shutdown success");
         });
 
         // Handle input metrics
-        while let Some(events) = input.next().await {
-            if let Events::Metrics(metrics) = events {
-                let now = Utc::now();
-                let ttl = self.ttl.as_millis() as i64;
-                let mut state = states.write();
+        let mut ticker = tokio::time::interval(self.ttl);
+        loop {
+            let events = tokio::select! {
+                result = input.next() => match result {
+                    Some(events) => events,
+                    None => break,
+                },
+                _ = ticker.tick() => {
+                    // start gc, clean up expired metrics
+                    let mut cleaned = 0;
+                    let now = Utc::now().timestamp_millis();
+                    let mut states = states.write();
+                    for (_name, set) in states.iter_mut() {
+                        set.metrics.retain(|entry| {
+                            let keep = entry.expired_at > now;
+                            if !keep {
+                                cleaned += 1;
+                            }
 
-                metrics.into_iter().for_each(|metric| {
-                    let (name, tags, description, value, timestamp, mut metadata) =
-                        metric.into_parts();
-                    let finalizers = metadata.take_finalizers();
-                    let timestamp = timestamp.unwrap_or(now).timestamp_millis();
+                            keep
+                        });
+                    }
 
-                    let sets = state.entry(name).or_insert(Sets {
-                        description: description.unwrap_or_default(),
-                        metrics: Default::default(),
-                    });
+                    states.retain(|_name, set| !set.metrics.is_empty());
+                    debug!(message = "GC finished", cleaned);
+                    continue
+                },
+            };
 
-                    sets.metrics.replace(ExpiringEntry {
-                        tags,
-                        value,
-                        expired_at: timestamp + ttl,
-                    });
+            let Events::Metrics(metrics) = events else {
+                continue;
+            };
 
-                    finalizers.update_status(EventStatus::Delivered)
-                })
-            }
+            let now = Utc::now();
+            let ttl = self.ttl.as_millis() as i64;
+            let mut state = states.write();
+
+            metrics.into_iter().for_each(|metric| {
+                let (name, tags, description, value, timestamp, mut metadata) = metric.into_parts();
+                let finalizers = metadata.take_finalizers();
+                let timestamp = timestamp.unwrap_or(now).timestamp_millis();
+
+                let sets = state.entry(name).or_insert(Sets {
+                    description: description.unwrap_or_default(),
+                    metrics: Default::default(),
+                });
+
+                sets.metrics.replace(ExpiringEntry {
+                    tags,
+                    value,
+                    expired_at: timestamp + ttl,
+                });
+
+                finalizers.update_status(EventStatus::Delivered)
+            })
         }
 
-        // shutdown background routines
-        //
-        // TODO: maybe we should wait for the background routines to exit
+        // shutdown http server with a timeout
         trigger_shutdown.cancel();
+        if tokio::time::timeout(Duration::from_secs(10), http_task)
+            .await
+            .is_err()
+        {
+            error!(message = "shutdown HTTP server timeout");
+        }
 
         Ok(())
     }
@@ -584,15 +582,17 @@ impl RespWriter {
 }
 
 impl Write for RespWriter {
-    fn write(&mut self, src: &[u8]) -> std::io::Result<usize> {
+    fn write_str(&mut self, src: &str) -> std::fmt::Result {
         match self {
-            Self::Identity(writer) => {
-                writer.extend_from_slice(src);
+            RespWriter::Identity(buf) => {
+                buf.put_slice(src.as_ref());
             }
-            Self::Gzip { buf, encoder } => {
+            RespWriter::Gzip { buf, encoder } => {
                 if src.len() > buf.capacity() - buf.len() && !buf.is_empty() {
                     // flush the current buffered data
-                    encoder.write_all(buf)?;
+                    if let Err(_err) = encoder.write_all(buf.as_ref()) {
+                        return Err(std::fmt::Error);
+                    }
                     buf.clear();
                 }
 
@@ -607,19 +607,6 @@ impl Write for RespWriter {
                     buf.set_len(buf.len() + src.len());
                 }
             }
-        }
-
-        Ok(src.len())
-    }
-
-    fn flush(&mut self) -> std::io::Result<()> {
-        match self {
-            Self::Gzip { buf, encoder } => {
-                encoder.write_all(buf)?;
-                encoder.flush()?;
-                buf.clear();
-            }
-            Self::Identity(_buf) => {}
         }
 
         Ok(())
@@ -820,9 +807,9 @@ http_request_duration_seconds_count{foo="bar"} 144320
         let want = input;
 
         let mut writer = RespWriter::identity();
-        writer.write_all(b"dummy ").unwrap();
-        writer.write_all(b"test ").unwrap();
-        writer.write_all(b"content").unwrap();
+        writer.write_str("dummy ").unwrap();
+        writer.write_str("test ").unwrap();
+        writer.write_str("content").unwrap();
         let got = writer.into_bytes();
 
         assert_eq!(want, got);
@@ -837,9 +824,9 @@ http_request_duration_seconds_count{foo="bar"} 144320
             buf: Vec::with_capacity(4),
             encoder: GzEncoder::new(Vec::new(), flate2::Compression::default()),
         };
-        writer.write_all(b"dummy ").unwrap();
-        writer.write_all(b"test ").unwrap();
-        writer.write_all(b"content").unwrap();
+        writer.write_str("dummy ").unwrap();
+        writer.write_str("test ").unwrap();
+        writer.write_str("content").unwrap();
 
         let got = writer.into_bytes();
 
