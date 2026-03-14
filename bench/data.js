@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773504361793,
+  "lastUpdate": 1773504398169,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e080a4cf805edbe9925189ef60a5eee07a215914",
-          "message": "Merge pull request #2754 from f1shl3gs/dependabot/cargo/tower-0.5.3\n\nchore(deps): bump tower from 0.5.2 to 0.5.3",
-          "timestamp": "2026-01-13T13:10:51+08:00",
-          "tree_id": "5d83eb12130dc0e6968748ebe9a28fe488765824",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e080a4cf805edbe9925189ef60a5eee07a215914"
-        },
-        "date": 1768281726932,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 591,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41188.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "cf2733f70723cdce06aa917f38357c2769c2e69b",
           "message": "Merge pull request #2755 from f1shl3gs/dependabot/cargo/flate2-1.1.8\n\nchore(deps): bump flate2 from 1.1.5 to 1.1.8",
           "timestamp": "2026-01-13T13:11:22+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40659.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c4315b87c42b4748625d0113280d4301c176f70f",
+          "message": "Merge pull request #2857 from f1shl3gs/sinks/prometheus_exporter/remove_gc_task\n\nsinks/prometheus_exporter: move gc task to consume loop",
+          "timestamp": "2026-03-14T23:55:30+08:00",
+          "tree_id": "9d3b120beed77590546870cead9a6a42027ca2fd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c4315b87c42b4748625d0113280d4301c176f70f"
+        },
+        "date": 1773504375828,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 572,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40643.5,
             "unit": "KiB"
           }
         ]
