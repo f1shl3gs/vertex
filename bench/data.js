@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773503879989,
+  "lastUpdate": 1773503898385,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "18d8f86ba3ed4779c7efedf68060af3cb761c290",
-          "message": "Merge pull request #2665 from f1shl3gs/dependabot/cargo/rustls-0.23.35\n\nchore(deps): bump rustls from 0.23.34 to 0.23.35",
-          "timestamp": "2025-11-05T11:58:08+08:00",
-          "tree_id": "09b267b2216b7802ccae71c09583bc909e4b8022",
-          "url": "https://github.com/f1shl3gs/vertex/commit/18d8f86ba3ed4779c7efedf68060af3cb761c290"
-        },
-        "date": 1762315228306,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.539,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 100.84,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 175.21,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 173.44,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c4315b87c42b4748625d0113280d4301c176f70f",
+          "message": "Merge pull request #2857 from f1shl3gs/sinks/prometheus_exporter/remove_gc_task\n\nsinks/prometheus_exporter: move gc task to consume loop",
+          "timestamp": "2026-03-14T23:55:30+08:00",
+          "tree_id": "9d3b120beed77590546870cead9a6a42027ca2fd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c4315b87c42b4748625d0113280d4301c176f70f"
+        },
+        "date": 1773503870444,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 36.525,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 110.77,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 159.64,
             "unit": "ns/op"
           }
         ]
