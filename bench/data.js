@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773511634665,
+  "lastUpdate": 1773512013935,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2b12e3be9e6ad123d4829090375218dd50205f9d",
-          "message": "Merge pull request #2666 from f1shl3gs/sources/http_check/add_tls_timing\n\nsources/http_check: add tls timing",
-          "timestamp": "2025-11-05T12:15:21+08:00",
-          "tree_id": "dd2b0923bacc7a80c236d7aac44502896db746da",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2b12e3be9e6ad123d4829090375218dd50205f9d"
-        },
-        "date": 1762316254769,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 496780,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 534490,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "be360c6d85034e3bd0666c1d10a480b803da0c42",
+          "message": "Merge pull request #2858 from f1shl3gs/sources/node/cleanup\n\nsources/node: cleanup",
+          "timestamp": "2026-03-15T02:11:05+08:00",
+          "tree_id": "683ce62285c8be9ea5fec2e4ce983b77223de3d6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/be360c6d85034e3bd0666c1d10a480b803da0c42"
+        },
+        "date": 1773511991358,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 528210,
             "unit": "ns/op"
           }
         ]
