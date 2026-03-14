@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773511113497,
+  "lastUpdate": 1773511122220,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3d090d3fe0bfbb85df88a68b5a9b7bf73c1602d0",
-          "message": "Merge pull request #2667 from f1shl3gs/lib/prometheus/fix_metric_and_label_name_parsing\n\nlib/prometheus: fix metric & label name parsing",
-          "timestamp": "2025-11-05T12:14:23+08:00",
-          "tree_id": "a0044e70e59866a4e9ec1feba8ba2c4ee4cba6f9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3d090d3fe0bfbb85df88a68b5a9b7bf73c1602d0"
-        },
-        "date": 1762316193588,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 514180,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 539330,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4567ad594d7669a55f9cb40fad237461c6b150b7",
+          "message": "Merge pull request #2859 from f1shl3gs/tracked_allocator/impl_all_methods_of_allocator\n\ntracked_allocator: impl all methods of GlobalAlloc for TrackedAllocator",
+          "timestamp": "2026-03-15T01:55:51+08:00",
+          "tree_id": "462b12b5046a52a48ad1fa19709679202edd67ab",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4567ad594d7669a55f9cb40fad237461c6b150b7"
+        },
+        "date": 1773511099498,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 534490,
             "unit": "ns/op"
           }
         ]
