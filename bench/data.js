@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773518297421,
+  "lastUpdate": 1773518399269,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e8a47496b86a99d0356128cdd241ef7c10950e87",
-          "message": "Merge pull request #2758 from f1shl3gs/dependabot/cargo/thiserror-2.0.18\n\nchore(deps): bump thiserror from 2.0.17 to 2.0.18",
-          "timestamp": "2026-01-19T16:16:23+08:00",
-          "tree_id": "3cc5db55844bd73cee4468148e571a110c963c4c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e8a47496b86a99d0356128cdd241ef7c10950e87"
-        },
-        "date": 1768811230327,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 569,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41186.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a8a97b4e848a0d4c5dfb2107897b2d59460e395d",
           "message": "Merge pull request #2759 from f1shl3gs/cargo/update\n\ncargo: update",
           "timestamp": "2026-01-20T02:24:05+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40682,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "99e1ea00156b09f4f93d0fd5ea6b823d37582792",
+          "message": "Merge pull request #2861 from f1shl3gs/sources/node/zfs/simplify_and_remove_glob\n\nsources/node: remove glob operations in zfs collector",
+          "timestamp": "2026-03-15T03:48:08+08:00",
+          "tree_id": "b39f8476db196296f5a47ccb6476c8a699a915e5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/99e1ea00156b09f4f93d0fd5ea6b823d37582792"
+        },
+        "date": 1773518371630,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 596,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40647.3,
             "unit": "KiB"
           }
         ]
