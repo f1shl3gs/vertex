@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773511567027,
+  "lastUpdate": 1773511634665,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "cf2733f70723cdce06aa917f38357c2769c2e69b",
-          "message": "Merge pull request #2755 from f1shl3gs/dependabot/cargo/flate2-1.1.8\n\nchore(deps): bump flate2 from 1.1.5 to 1.1.8",
-          "timestamp": "2026-01-13T13:11:22+08:00",
-          "tree_id": "d60b73d6a7ac23590faf30f906ccf93540cebdf9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cf2733f70723cdce06aa917f38357c2769c2e69b"
-        },
-        "date": 1768281739581,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 573,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41197.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2f60cf6806a4c1a171781cefcf2661eaede26a46",
           "message": "Merge pull request #2756 from f1shl3gs/dependabot/cargo/chrono-0.4.43\n\nchore(deps): bump chrono from 0.4.42 to 0.4.43",
           "timestamp": "2026-01-15T12:40:47+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 572,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40643.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4567ad594d7669a55f9cb40fad237461c6b150b7",
+          "message": "Merge pull request #2859 from f1shl3gs/tracked_allocator/impl_all_methods_of_allocator\n\ntracked_allocator: impl all methods of GlobalAlloc for TrackedAllocator",
+          "timestamp": "2026-03-15T01:55:51+08:00",
+          "tree_id": "462b12b5046a52a48ad1fa19709679202edd67ab",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4567ad594d7669a55f9cb40fad237461c6b150b7"
+        },
+        "date": 1773511612088,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 580,
             "unit": "s"
           },
           {
