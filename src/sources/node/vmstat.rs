@@ -15,8 +15,7 @@ fn default_fields() -> Regex {
 
 #[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
-    #[serde(default = "default_fields")]
-    #[serde(with = "serde_regex")]
+    #[serde(default = "default_fields", with = "serde_regex")]
     pub fields: Regex,
 }
 

@@ -198,7 +198,7 @@ fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64,
     let caps = match STATUS_LINE_RE.captures(status_line) {
         Some(caps) => caps
             .iter()
-            .map(|m| m.unwrap().as_str())
+            .filter_map(|m| m.map(|m| m.as_str()))
             .collect::<Vec<&str>>(),
         None => vec![],
     };
