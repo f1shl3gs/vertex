@@ -108,7 +108,7 @@ async fn gather(root: &Path) -> Result<Vec<Metric>, std::io::Error> {
 
     #[cfg(feature = "tracked_allocator")]
     {
-        let (alloc, allocated, dealloc, deallocated) =
+        let (alloc, allocated, dealloc, deallocated, alloc_zeroed, realloc) =
             crate::common::tracked_allocator::statistics();
 
         metrics.extend([
@@ -116,6 +116,8 @@ async fn gather(root: &Path) -> Result<Vec<Metric>, std::io::Error> {
             Metric::sum("process_allocated_bytes", "", allocated),
             Metric::sum("process_dealloc_total", "", dealloc),
             Metric::sum("process_deallocated_bytes", "", deallocated),
+            Metric::sum("process_alloc_zeroed_total", "", alloc_zeroed),
+            Metric::sum("process_realloc_total", "", realloc),
         ])
     }
 
