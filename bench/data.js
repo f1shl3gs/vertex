@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773517842266,
+  "lastUpdate": 1773517858334,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e6f1d9773617d2c568cc19b1e86e9a62c4f9bdf6",
-          "message": "Merge pull request #2669 from f1shl3gs/lib/configurable-derive/remove_unnecessary_codes\n\nlib/configurable-derive: remove unnecessary code",
-          "timestamp": "2025-11-05T20:30:21+08:00",
-          "tree_id": "b47387cdfe066255cd77d0f4406a40fac30eece3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e6f1d9773617d2c568cc19b1e86e9a62c4f9bdf6"
-        },
-        "date": 1762345962865,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.553,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 99.846,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 171.97,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 172.25,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "99e1ea00156b09f4f93d0fd5ea6b823d37582792",
+          "message": "Merge pull request #2861 from f1shl3gs/sources/node/zfs/simplify_and_remove_glob\n\nsources/node: remove glob operations in zfs collector",
+          "timestamp": "2026-03-15T03:48:08+08:00",
+          "tree_id": "b39f8476db196296f5a47ccb6476c8a699a915e5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/99e1ea00156b09f4f93d0fd5ea6b823d37582792"
+        },
+        "date": 1773517830434,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 36.399,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 110.89,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 160.32,
             "unit": "ns/op"
           }
         ]
