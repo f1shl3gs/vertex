@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773512477318,
+  "lastUpdate": 1773512557806,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2f60cf6806a4c1a171781cefcf2661eaede26a46",
-          "message": "Merge pull request #2756 from f1shl3gs/dependabot/cargo/chrono-0.4.43\n\nchore(deps): bump chrono from 0.4.42 to 0.4.43",
-          "timestamp": "2026-01-15T12:40:47+08:00",
-          "tree_id": "4d63a86ee0eba6a93b053d518a259707bbd94a9f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2f60cf6806a4c1a171781cefcf2661eaede26a46"
-        },
-        "date": 1768452707174,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 578,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41196.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0d29a497cd28fc762b5f2c6b6513b0c5f549b090",
           "message": "Merge pull request #2757 from f1shl3gs/dependabot/github_actions/styfle/cancel-workflow-action-0.13.0\n\nchore(ci): bump styfle/cancel-workflow-action from 0.12.1 to 0.13.0",
           "timestamp": "2026-01-19T16:06:29+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40643.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "be360c6d85034e3bd0666c1d10a480b803da0c42",
+          "message": "Merge pull request #2858 from f1shl3gs/sources/node/cleanup\n\nsources/node: cleanup",
+          "timestamp": "2026-03-15T02:11:05+08:00",
+          "tree_id": "683ce62285c8be9ea5fec2e4ce983b77223de3d6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/be360c6d85034e3bd0666c1d10a480b803da0c42"
+        },
+        "date": 1773512535305,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 588,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40643.7,
             "unit": "KiB"
           }
         ]
