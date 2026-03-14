@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773517920912,
+  "lastUpdate": 1773517995917,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0d29a497cd28fc762b5f2c6b6513b0c5f549b090",
-          "message": "Merge pull request #2757 from f1shl3gs/dependabot/github_actions/styfle/cancel-workflow-action-0.13.0\n\nchore(ci): bump styfle/cancel-workflow-action from 0.12.1 to 0.13.0",
-          "timestamp": "2026-01-19T16:06:29+08:00",
-          "tree_id": "4d6beafdcdffc999ef5729c0b92848ce88d1636e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0d29a497cd28fc762b5f2c6b6513b0c5f549b090"
-        },
-        "date": 1768810655063,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 589,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41196.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e8a47496b86a99d0356128cdd241ef7c10950e87",
           "message": "Merge pull request #2758 from f1shl3gs/dependabot/cargo/thiserror-2.0.18\n\nchore(deps): bump thiserror from 2.0.17 to 2.0.18",
           "timestamp": "2026-01-19T16:16:23+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40643.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2c7dd9b3743375c67d48e0387fb9d67942748ad8",
+          "message": "Merge pull request #2860 from f1shl3gs/sources/node/add_bcachefs_collector\n\nsources/node: add bcachefs collector",
+          "timestamp": "2026-03-15T03:41:57+08:00",
+          "tree_id": "4ce60f5827120cbf7b6be181135ff29c0a55cd37",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2c7dd9b3743375c67d48e0387fb9d67942748ad8"
+        },
+        "date": 1773517973622,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 583,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40682,
             "unit": "KiB"
           }
         ]
