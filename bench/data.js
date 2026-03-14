@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773517915525,
+  "lastUpdate": 1773517920912,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2b12e3be9e6ad123d4829090375218dd50205f9d",
-          "message": "Merge pull request #2666 from f1shl3gs/sources/http_check/add_tls_timing\n\nsources/http_check: add tls timing",
-          "timestamp": "2025-11-05T12:15:21+08:00",
-          "tree_id": "dd2b0923bacc7a80c236d7aac44502896db746da",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2b12e3be9e6ad123d4829090375218dd50205f9d"
-        },
-        "date": 1762316690638,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14596000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 634040,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.164,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "003fe0f648145d532014676baa0edb2b75cf74c0",
           "message": "Merge pull request #2668 from f1shl3gs/sources/http_check/remove_unused_code\n\nsources/http_check: remove unused code",
           "timestamp": "2025-11-05T20:29:59+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.88,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2c7dd9b3743375c67d48e0387fb9d67942748ad8",
+          "message": "Merge pull request #2860 from f1shl3gs/sources/node/add_bcachefs_collector\n\nsources/node: add bcachefs collector",
+          "timestamp": "2026-03-15T03:41:57+08:00",
+          "tree_id": "4ce60f5827120cbf7b6be181135ff29c0a55cd37",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2c7dd9b3743375c67d48e0387fb9d67942748ad8"
+        },
+        "date": 1773517897680,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7337600,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 773370,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.526,
             "unit": "ns/op"
           }
         ]
