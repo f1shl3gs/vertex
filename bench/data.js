@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773573303579,
+  "lastUpdate": 1773573752070,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e6f1d9773617d2c568cc19b1e86e9a62c4f9bdf6",
-          "message": "Merge pull request #2669 from f1shl3gs/lib/configurable-derive/remove_unnecessary_codes\n\nlib/configurable-derive: remove unnecessary code",
-          "timestamp": "2025-11-05T20:30:21+08:00",
-          "tree_id": "b47387cdfe066255cd77d0f4406a40fac30eece3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e6f1d9773617d2c568cc19b1e86e9a62c4f9bdf6"
-        },
-        "date": 1762346410529,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14968000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 611960,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.905,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "67040ca6c031d9b5b62eb1176cf32d2d5d0bbc07",
           "message": "Merge pull request #2670 from f1shl3gs/dependabot/cargo/syn-2.0.109\n\nchore(deps): bump syn from 2.0.108 to 2.0.109",
           "timestamp": "2025-11-07T00:07:38+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.546,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6b601a17ae2ed3b0069356c902e91f6dce371574",
+          "message": "Merge pull request #2862 from f1shl3gs/sources/node/simplify\n\nsources/node: simplify",
+          "timestamp": "2026-03-15T19:11:24+08:00",
+          "tree_id": "372f6278ae299c3122e08f24cc2e900ae334e3c3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6b601a17ae2ed3b0069356c902e91f6dce371574"
+        },
+        "date": 1773573728957,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 8185300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 754130,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.489,
             "unit": "ns/op"
           }
         ]
