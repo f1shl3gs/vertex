@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773573752070,
+  "lastUpdate": 1773573792273,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a8a97b4e848a0d4c5dfb2107897b2d59460e395d",
-          "message": "Merge pull request #2759 from f1shl3gs/cargo/update\n\ncargo: update",
-          "timestamp": "2026-01-20T02:24:05+08:00",
-          "tree_id": "9ba00f71b353076b0306b0bb433400d899be50e1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a8a97b4e848a0d4c5dfb2107897b2d59460e395d"
-        },
-        "date": 1768847697933,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 574,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41147.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "cc00d308464c25afd7a58b40db73027d8815601f",
           "message": "Merge pull request #2760 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.106\n\nchore(deps): bump proc-macro2 from 1.0.105 to 1.0.106",
           "timestamp": "2026-01-23T01:34:11+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40647.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6b601a17ae2ed3b0069356c902e91f6dce371574",
+          "message": "Merge pull request #2862 from f1shl3gs/sources/node/simplify\n\nsources/node: simplify",
+          "timestamp": "2026-03-15T19:11:24+08:00",
+          "tree_id": "372f6278ae299c3122e08f24cc2e900ae334e3c3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6b601a17ae2ed3b0069356c902e91f6dce371574"
+        },
+        "date": 1773573769574,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 599,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40550.1,
             "unit": "KiB"
           }
         ]
