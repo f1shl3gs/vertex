@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773598122089,
+  "lastUpdate": 1773598182139,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "cc00d308464c25afd7a58b40db73027d8815601f",
-          "message": "Merge pull request #2760 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.106\n\nchore(deps): bump proc-macro2 from 1.0.105 to 1.0.106",
-          "timestamp": "2026-01-23T01:34:11+08:00",
-          "tree_id": "e93b44d8fa3f93919e406c3e6beb4d9db701b75b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cc00d308464c25afd7a58b40db73027d8815601f"
-        },
-        "date": 1769103908924,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 568,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41141.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "153d9adc29c38428953ba6fbb3b264a2ca28d285",
           "message": "Merge pull request #2761 from f1shl3gs/toolchain/1.93\n\ntoolchain: bump to 1.93",
           "timestamp": "2026-01-23T01:43:43+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40550.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8242b53843797e30a43e3e9facfc4590ce671a09",
+          "message": "Merge pull request #2863 from f1shl3gs/sources/node/refactor_errors\n\nsources/node: refactor Error",
+          "timestamp": "2026-03-16T01:58:08+08:00",
+          "tree_id": "c6a2b695dfa467c63c7eb08df94e6ec25385eda9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8242b53843797e30a43e3e9facfc4590ce671a09"
+        },
+        "date": 1773598159728,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 585,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40537.1,
             "unit": "KiB"
           }
         ]
