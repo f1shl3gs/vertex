@@ -3432,6 +3432,11 @@ Mode: 644
 Directory: fixtures/proc/sys/kernel
 Mode: 755
 # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/proc/sys/kernel/pid_max
+Lines: 1
+123
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Directory: fixtures/proc/sys/kernel/random
 Mode: 755
 # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3453,6 +3458,11 @@ Mode: 644
 Path: fixtures/proc/sys/kernel/random/write_wakeup_threshold
 Lines: 1
 3072
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/proc/sys/kernel/threads-max
+Lines: 1
+7801EOF
 Mode: 644
 # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Directory: fixtures/proc/sys/vm
