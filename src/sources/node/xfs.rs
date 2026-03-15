@@ -2,252 +2,267 @@
 //!
 //! Linux (kernel 4.4+)
 
-use std::path::Path;
+use std::io::ErrorKind;
 
 use event::{Metric, tags};
 
 use super::{Error, Paths};
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
-    let stats = load_xfs_sys_stats(paths.sys())?;
+    let dirs = std::fs::read_dir(paths.sys().join("fs/xfs"))?;
 
-    let mut metrics = Vec::with_capacity(stats.len() * 39);
-    for (device, stat) in stats {
+    // xfs_sys_stats retrieves XFS filesystem runtime statistics for each mounted
+    // XFS filesystem. Only available on kernel 4.4+. On older kernels, an empty
+    // vector will be returned.
+    let mut metrics = Vec::new();
+    for entry in dirs.flatten() {
+        let stats = match std::fs::read_to_string(entry.path().join("stats/stats")) {
+            Ok(content) => parse_stat(&content)?,
+            Err(err) => {
+                if err.kind() == ErrorKind::NotFound {
+                    continue;
+                }
+
+                return Err(err.into());
+            }
+        };
+
+        let device = entry.file_name().to_string_lossy().to_string();
         let tags = tags!("device" => device);
 
         metrics.extend([
             Metric::sum_with_tags(
                 "node_xfs_extent_allocation_extents_allocated_total",
                 "Number of extents allocated for a filesystem.",
-                stat.extent_allocation.extents_allocated,
+                stats.extent_allocation.extents_allocated,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_extent_allocation_blocks_allocated_total",
                 "Number of blocks allocated for a filesystem.",
-                stat.extent_allocation.blocks_allocated,
+                stats.extent_allocation.blocks_allocated,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_extent_allocation_extents_freed_total",
                 "Number of extents freed for a filesystem.",
-                stat.extent_allocation.extents_freed,
+                stats.extent_allocation.extents_freed,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_extent_allocation_blocks_freed_total",
                 "Number of blocks freed for a filesystem.",
-                stat.extent_allocation.blocks_freed,
+                stats.extent_allocation.blocks_freed,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_allocation_btree_lookups_total",
                 "Number of allocation B-tree lookups for a filesystem.",
-                stat.allocation_btree.lookups,
+                stats.allocation_btree.lookups,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_allocation_btree_compares_total",
                 "Number of allocation B-tree compares for a filesystem.",
-                stat.allocation_btree.compares,
+                stats.allocation_btree.compares,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_allocation_btree_records_inserted_total",
                 "Number of allocation B-tree records inserted for a filesystem.",
-                stat.allocation_btree.records_inserted,
+                stats.allocation_btree.records_inserted,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_allocation_btree_records_deleted_total",
                 "Number of allocation B-tree records deleted for a filesystem.",
-                stat.allocation_btree.records_deleted,
+                stats.allocation_btree.records_deleted,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_mapping_reads_total",
                 "Number of block map for read operations for a filesystem.",
-                stat.block_mapping.reads,
+                stats.block_mapping.reads,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_mapping_writes_total",
                 "Number of block map for write operations for a filesystem.",
-                stat.block_mapping.writes,
+                stats.block_mapping.writes,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_mapping_unmaps_total",
                 "Number of block unmaps (deletes) for a filesystem.",
-                stat.block_mapping.unmaps,
+                stats.block_mapping.unmaps,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_mapping_extent_list_insertions_total",
                 "Number of extent list insertions for a filesystem.",
-                stat.block_mapping.extent_list_insertions,
+                stats.block_mapping.extent_list_insertions,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_mapping_extent_list_deletions_total",
                 "Number of extent list deletions for a filesystem.",
-                stat.block_mapping.extent_list_deletions,
+                stats.block_mapping.extent_list_deletions,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_mapping_extent_list_lookups_total",
                 "Number of extent list lookups for a filesystem.",
-                stat.block_mapping.extent_list_lookups,
+                stats.block_mapping.extent_list_lookups,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_mapping_extent_list_compares_total",
                 "Number of extent list compares for a filesystem.",
-                stat.block_mapping.extent_list_compares,
+                stats.block_mapping.extent_list_compares,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_map_btree_lookups_total",
                 "Number of block map B-tree lookups for a filesystem.",
-                stat.block_map_btree.lookups,
+                stats.block_map_btree.lookups,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_map_btree_compares_total",
                 "Number of block map B-tree compares for a filesystem.",
-                stat.block_map_btree.compares,
+                stats.block_map_btree.compares,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_map_btree_records_inserted_total",
                 "Number of block map B-tree records inserted for a filesystem.",
-                stat.block_map_btree.records_inserted,
+                stats.block_map_btree.records_inserted,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_block_map_btree_records_deleted_total",
                 "Number of block map B-tree records deleted for a filesystem.",
-                stat.block_map_btree.records_deleted,
+                stats.block_map_btree.records_deleted,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_directory_operation_lookup_total",
                 "Number of file name directory lookups which miss the operating systems directory name lookup cache.",
-                stat.directory_operation.lookups,
+                stats.directory_operation.lookups,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_directory_operation_create_total",
                 "Number of times a new directory entry was created for a filesystem.",
-                stat.directory_operation.creates,
+                stats.directory_operation.creates,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_directory_operation_remove_total",
                 "Number of times an existing directory entry was created for a filesystem.",
-                stat.directory_operation.removes,
+                stats.directory_operation.removes,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_directory_operation_getdents_total",
                 "Number of times the directory getdents operation was performed for a filesystem.",
-                stat.directory_operation.getdents,
+                stats.directory_operation.getdents,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_inode_operation_attempts_total",
                 "Number of times the OS looked for an XFS inode in the inode cache.",
-                stat.inode_operation.attempts,
+                stats.inode_operation.attempts,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_inode_operation_found_total",
                 "Number of times the OS looked for and found an XFS inode in the inode cache.",
-                stat.inode_operation.found,
+                stats.inode_operation.found,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_inode_operation_recycled_total",
                 "Number of times the OS found an XFS inode in the cache, but could not use it as it was being recycled.",
-                stat.inode_operation.recycle,
+                stats.inode_operation.recycle,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_inode_operation_missed_total",
                 "Number of times the OS looked for an XFS inode in the cache, but did not find it.",
-                stat.inode_operation.missed,
+                stats.inode_operation.missed,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_inode_operation_duplicates_total",
                 "Number of times the OS tried to add a missing XFS inode to the inode cache, but found it had already been added by another process.",
-                stat.inode_operation.duplicate,
+                stats.inode_operation.duplicate,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_inode_operation_reclaims_total",
                 "Number of times the OS reclaimed an XFS inode from the inode cache to free memory for another purpose.",
-                stat.inode_operation.reclaims,
+                stats.inode_operation.reclaims,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_inode_operation_attribute_changes_total",
                 "Number of times the OS explicitly changed the attributes of an XFS inode.",
-                stat.inode_operation.attribute_change,
+                stats.inode_operation.attribute_change,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_read_calls_total",
                 "Number of read(2) system calls made to files in a filesystem.",
-                stat.read_write.read,
+                stats.read_write.read,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_write_calls_total",
                 "Number of write(2) system calls made to files in a filesystem.",
-                stat.read_write.write,
+                stats.read_write.write,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_vnode_active_total",
                 "Number of vnodes not on free lists for a filesystem.",
-                stat.vnode.active,
+                stats.vnode.active,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_vnode_allocate_total",
                 "Number of times vn_alloc called for a filesystem.",
-                stat.vnode.allocate,
+                stats.vnode.allocate,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_vnode_get_total",
                 "Number of times vn_get called for a filesystem.",
-                stat.vnode.get,
+                stats.vnode.get,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_vnode_hold_total",
                 "Number of times vn_hold called for a filesystem.",
-                stat.vnode.hold,
+                stats.vnode.hold,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_vnode_release_total",
                 "Number of times vn_rele called for a filesystem.",
-                stat.vnode.release,
+                stats.vnode.release,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_vnode_reclaim_total",
                 "Number of times vn_reclaim called for a filesystem.",
-                stat.vnode.reclaim,
+                stats.vnode.reclaim,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_xfs_vnode_remove_total",
                 "Number of times vn_remove called for a filesystem.",
-                stat.vnode.remove,
+                stats.vnode.remove,
                 tags,
             )
         ]);
@@ -390,44 +405,9 @@ struct Stats {
     // not all statistics list
 }
 
-/// xfs_sys_stats retrieves XFS filesystem runtime statistics for each mounted
-/// XFS filesystem. Only available on kernel 4.4+. On older kernels, an empty
-/// vector will be returned.
-fn load_xfs_sys_stats(root: &Path) -> Result<Vec<(String, Stats)>, Error> {
-    let paths = glob::glob(&format!("{}/fs/xfs/*/stats/stats", root.to_string_lossy()))?;
-
-    let mut stats = Vec::new();
-    for path in paths.flatten() {
-        match parse_stat(&path) {
-            Ok(stat) => {
-                let name = path
-                    .parent()
-                    .unwrap()
-                    .parent()
-                    .unwrap()
-                    .file_name()
-                    .unwrap()
-                    .to_string_lossy()
-                    .to_string();
-
-                stats.push((name, stat))
-            }
-            Err(err) => {
-                warn!(
-                    message = "parse xfs stat failed",
-                    %err
-                );
-            }
-        }
-    }
-
-    Ok(stats)
-}
-
-fn parse_stat(path: &Path) -> Result<Stats, Error> {
-    let content = std::fs::read_to_string(path)?;
-
+fn parse_stat(content: &str) -> Result<Stats, Error> {
     let mut stat = Stats::default();
+
     for line in content.lines() {
         let mut parts = line.split_ascii_whitespace();
         let Some(label) = parts.next() else {
@@ -604,27 +584,26 @@ fn parse_stat(path: &Path) -> Result<Stats, Error> {
 
 #[cfg(test)]
 mod tests {
+    use std::path::Path;
+
     use super::*;
 
     #[test]
     fn proc_stat() {
-        let path = Path::new("tests/node/fixtures/proc/fs/xfs/stat");
-        let stat = parse_stat(path).unwrap();
+        let content = std::fs::read_to_string("tests/node/fixtures/proc/fs/xfs/stat").unwrap();
+        let stat = parse_stat(&content).unwrap();
         assert_eq!(stat.extent_allocation.extents_allocated, 92447);
     }
 
     #[test]
     fn sys_stats() {
         let sys_path = Path::new("tests/node/fixtures/sys");
-        let array = load_xfs_sys_stats(sys_path).unwrap();
-        assert_eq!(array.len(), 2);
-
-        let (name, stats) = &array[0];
-        assert_eq!(name, "sda1");
+        let content = std::fs::read_to_string(sys_path.join("fs/xfs/sda1/stats/stats")).unwrap();
+        let stats = parse_stat(&content).unwrap();
         assert_eq!(stats.extent_allocation.extents_allocated, 1);
 
-        let (name, stats) = &array[1];
-        assert_eq!(name, "sdb1");
+        let content = std::fs::read_to_string(sys_path.join("fs/xfs/sdb1/stats/stats")).unwrap();
+        let stats = parse_stat(&content).unwrap();
         assert_eq!(stats.extent_allocation.extents_allocated, 2);
     }
 
@@ -823,8 +802,8 @@ mod tests {
             // },
         };
 
-        let path = Path::new("tests/node/fixtures/proc/fs/xfs/stat");
-        let got = parse_stat(path).unwrap();
+        let content = std::fs::read_to_string("tests/node/fixtures/proc/fs/xfs/stat").unwrap();
+        let got = parse_stat(&content).unwrap();
 
         assert_eq!(want, got)
     }

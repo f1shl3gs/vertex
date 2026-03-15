@@ -359,20 +359,6 @@ pub fn load_client_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ClientRPCStats, 
     Ok(stats)
 }
 
-macro_rules! procedure_metric {
-    ($proto: expr, $name: expr, $value: expr) => {
-        Metric::sum_with_tags(
-            "node_nfs_requests_total",
-            "Number of NFS procedures invoked.",
-            $value,
-            tags! {
-                "proto" => event::tags::Key::from_static($proto),
-                "method" => event::tags::Key::from_static($name)
-            },
-        )
-    };
-}
-
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     let stats = load_client_rpc_stats(paths.proc().join("net/rpc/nfs"))?;
 
@@ -421,135 +407,163 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     ]);
 
     // collects statistics for NFSv2 requests
-    metrics.extend([
-        procedure_metric!("2", "Null", stats.v2_stats.null),
-        procedure_metric!("2", "GetAttr", stats.v2_stats.get_attr),
-        procedure_metric!("2", "SetAttr", stats.v2_stats.set_attr),
-        procedure_metric!("2", "Root", stats.v2_stats.root),
-        procedure_metric!("2", "Lookup", stats.v2_stats.lookup),
-        procedure_metric!("2", "ReadLink", stats.v2_stats.read_link),
-        procedure_metric!("2", "Read", stats.v2_stats.read),
-        procedure_metric!("2", "WrCache", stats.v2_stats.wr_cache),
-        procedure_metric!("2", "Write", stats.v2_stats.write),
-        procedure_metric!("2", "Create", stats.v2_stats.create),
-        procedure_metric!("2", "Remove", stats.v2_stats.remove),
-        procedure_metric!("2", "Rename", stats.v2_stats.rename),
-        procedure_metric!("2", "Link", stats.v2_stats.link),
-        procedure_metric!("2", "SymLink", stats.v2_stats.sym_link),
-        procedure_metric!("2", "MkDir", stats.v2_stats.mkdir),
-        procedure_metric!("2", "RmDir", stats.v2_stats.rmdir),
-        procedure_metric!("2", "ReadDir", stats.v2_stats.read_dir),
-        procedure_metric!("2", "FsStat", stats.v2_stats.fs_stat),
-    ]);
+    metrics.extend(
+        [
+            ("Null", stats.v2_stats.null),
+            ("GetAttr", stats.v2_stats.get_attr),
+            ("SetAttr", stats.v2_stats.set_attr),
+            ("Root", stats.v2_stats.root),
+            ("Lookup", stats.v2_stats.lookup),
+            ("ReadLink", stats.v2_stats.read_link),
+            ("Read", stats.v2_stats.read),
+            ("WrCache", stats.v2_stats.wr_cache),
+            ("Write", stats.v2_stats.write),
+            ("Create", stats.v2_stats.create),
+            ("Remove", stats.v2_stats.remove),
+            ("Rename", stats.v2_stats.rename),
+            ("Link", stats.v2_stats.link),
+            ("SymLink", stats.v2_stats.sym_link),
+            ("MkDir", stats.v2_stats.mkdir),
+            ("RmDir", stats.v2_stats.rmdir),
+            ("ReadDir", stats.v2_stats.read_dir),
+            ("FsStat", stats.v2_stats.fs_stat),
+        ]
+        .into_iter()
+        .map(|(method, value)| {
+            Metric::sum_with_tags(
+                "node_nfs_requests_total",
+                "Number of NFS procedures invoked.",
+                value,
+                tags! {
+                    "proto" => "2",
+                    "method" => method
+                },
+            )
+        }),
+    );
 
     // collects statistics for NFSv3 requests
-    metrics.extend([
-        procedure_metric!("3", "Null", stats.v3_stats.null),
-        procedure_metric!("3", "GetAttr", stats.v3_stats.get_attr),
-        procedure_metric!("3", "SetAttr", stats.v3_stats.set_attr),
-        procedure_metric!("3", "Lookup", stats.v3_stats.lookup),
-        procedure_metric!("3", "Access", stats.v3_stats.access),
-        procedure_metric!("3", "ReadLink", stats.v3_stats.read_link),
-        procedure_metric!("3", "Read", stats.v3_stats.read),
-        procedure_metric!("3", "Write", stats.v3_stats.write),
-        procedure_metric!("3", "Create", stats.v3_stats.create),
-        procedure_metric!("3", "MkDir", stats.v3_stats.mkdir),
-        procedure_metric!("3", "SymLink", stats.v3_stats.sym_link),
-        procedure_metric!("3", "MkNod", stats.v3_stats.mknod),
-        procedure_metric!("3", "Remove", stats.v3_stats.remove),
-        procedure_metric!("3", "RmDir", stats.v3_stats.rmdir),
-        procedure_metric!("3", "Rename", stats.v3_stats.rename),
-        procedure_metric!("3", "Link", stats.v3_stats.link),
-        procedure_metric!("3", "ReadDir", stats.v3_stats.read_dir),
-        procedure_metric!("3", "ReadDirPlus", stats.v3_stats.read_dir_plus),
-        procedure_metric!("3", "FsStat", stats.v3_stats.fs_stat),
-        procedure_metric!("3", "FsInfo", stats.v3_stats.fs_info),
-        procedure_metric!("3", "PathConf", stats.v3_stats.path_conf),
-        procedure_metric!("3", "Commit", stats.v3_stats.commit),
-    ]);
+    metrics.extend(
+        [
+            ("Null", stats.v3_stats.null),
+            ("GetAttr", stats.v3_stats.get_attr),
+            ("SetAttr", stats.v3_stats.set_attr),
+            ("Lookup", stats.v3_stats.lookup),
+            ("Access", stats.v3_stats.access),
+            ("ReadLink", stats.v3_stats.read_link),
+            ("Read", stats.v3_stats.read),
+            ("Write", stats.v3_stats.write),
+            ("Create", stats.v3_stats.create),
+            ("MkDir", stats.v3_stats.mkdir),
+            ("SymLink", stats.v3_stats.sym_link),
+            ("MkNod", stats.v3_stats.mknod),
+            ("Remove", stats.v3_stats.remove),
+            ("RmDir", stats.v3_stats.rmdir),
+            ("Rename", stats.v3_stats.rename),
+            ("Link", stats.v3_stats.link),
+            ("ReadDir", stats.v3_stats.read_dir),
+            ("ReadDirPlus", stats.v3_stats.read_dir_plus),
+            ("FsStat", stats.v3_stats.fs_stat),
+            ("FsInfo", stats.v3_stats.fs_info),
+            ("PathConf", stats.v3_stats.path_conf),
+            ("Commit", stats.v3_stats.commit),
+        ]
+        .into_iter()
+        .map(|(method, value)| {
+            Metric::sum_with_tags(
+                "node_nfs_requests_total",
+                "Number of NFS procedures invoked.",
+                value,
+                tags! {
+                    "proto" => "3",
+                    "method" => method
+                },
+            )
+        }),
+    );
 
     // collects statistics for NFSv4 requests
-    metrics.extend([
-        procedure_metric!("4", "Null", stats.client_v4_stats.null),
-        procedure_metric!("4", "Read", stats.client_v4_stats.read),
-        procedure_metric!("4", "Write", stats.client_v4_stats.write),
-        procedure_metric!("4", "Commit", stats.client_v4_stats.commit),
-        procedure_metric!("4", "Open", stats.client_v4_stats.open),
-        procedure_metric!("4", "OpenConfirm", stats.client_v4_stats.open_confirm),
-        procedure_metric!("4", "OpenNoattr", stats.client_v4_stats.open_noattr),
-        procedure_metric!("4", "OpenDowngrade", stats.client_v4_stats.open_downgrade),
-        procedure_metric!("4", "Close", stats.client_v4_stats.close),
-        procedure_metric!("4", "Setattr", stats.client_v4_stats.setattr),
-        procedure_metric!("4", "FsInfo", stats.client_v4_stats.fs_info),
-        procedure_metric!("4", "Renew", stats.client_v4_stats.renew),
-        procedure_metric!("4", "SetClientID", stats.client_v4_stats.set_client_id),
-        procedure_metric!(
-            "4",
-            "SetClientIDConfirm",
-            stats.client_v4_stats.set_client_id_confirm
-        ),
-        procedure_metric!("4", "Lock", stats.client_v4_stats.lock),
-        procedure_metric!("4", "Lockt", stats.client_v4_stats.lockt),
-        procedure_metric!("4", "Locku", stats.client_v4_stats.locku),
-        procedure_metric!("4", "Access", stats.client_v4_stats.access),
-        procedure_metric!("4", "Getattr", stats.client_v4_stats.getattr),
-        procedure_metric!("4", "Lookup", stats.client_v4_stats.lookup),
-        procedure_metric!("4", "LookupRoot", stats.client_v4_stats.lookup_root),
-        procedure_metric!("4", "Remove", stats.client_v4_stats.remove),
-        procedure_metric!("4", "Rename", stats.client_v4_stats.rename),
-        procedure_metric!("4", "Link", stats.client_v4_stats.link),
-        procedure_metric!("4", "Symlink", stats.client_v4_stats.symlink),
-        procedure_metric!("4", "Create", stats.client_v4_stats.create),
-        procedure_metric!("4", "Pathconf", stats.client_v4_stats.pathconf),
-        procedure_metric!("4", "StatFs", stats.client_v4_stats.stat_fs),
-        procedure_metric!("4", "ReadLink", stats.client_v4_stats.read_link),
-        procedure_metric!("4", "ReadDir", stats.client_v4_stats.read_dir),
-        procedure_metric!("4", "ServerCaps", stats.client_v4_stats.server_caps),
-        procedure_metric!("4", "DelegReturn", stats.client_v4_stats.deleg_return),
-        procedure_metric!("4", "GetACL", stats.client_v4_stats.get_acl),
-        procedure_metric!("4", "SetACL", stats.client_v4_stats.set_acl),
-        procedure_metric!("4", "FsLocations", stats.client_v4_stats.fs_locations),
-        procedure_metric!(
-            "4",
-            "ReleaseLockowner",
-            stats.client_v4_stats.release_lockowner
-        ),
-        procedure_metric!("4", "Secinfo", stats.client_v4_stats.secinfo),
-        procedure_metric!("4", "FsidPresent", stats.client_v4_stats.fsid_present),
-        procedure_metric!("4", "ExchangeID", stats.client_v4_stats.exchange_id),
-        procedure_metric!("4", "CreateSession", stats.client_v4_stats.create_session),
-        procedure_metric!("4", "DestroySession", stats.client_v4_stats.destroy_session),
-        procedure_metric!("4", "Sequence", stats.client_v4_stats.sequence),
-        procedure_metric!("4", "GetLeaseTime", stats.client_v4_stats.get_lease_time),
-        procedure_metric!(
-            "4",
-            "ReclaimComplete",
-            stats.client_v4_stats.reclaim_complete
-        ),
-        procedure_metric!("4", "LayoutGet", stats.client_v4_stats.layout_get),
-        procedure_metric!("4", "GetDeviceInfo", stats.client_v4_stats.get_device_info),
-        procedure_metric!("4", "LayoutCommit", stats.client_v4_stats.layout_commit),
-        procedure_metric!("4", "LayoutReturn", stats.client_v4_stats.layout_return),
-        procedure_metric!("4", "SecinfoNoName", stats.client_v4_stats.secinfo_no_name),
-        procedure_metric!("4", "TestStateID", stats.client_v4_stats.test_state_id),
-        procedure_metric!("4", "FreeStateID", stats.client_v4_stats.free_state_id),
-        procedure_metric!("4", "GetDeviceList", stats.client_v4_stats.get_device_list),
-        procedure_metric!(
-            "4",
-            "BindConnToSession",
-            stats.client_v4_stats.bind_conn_to_session
-        ),
-        procedure_metric!(
-            "4",
-            "DestroyClientID",
-            stats.client_v4_stats.destroy_client_id
-        ),
-        procedure_metric!("4", "Seek", stats.client_v4_stats.seek),
-        procedure_metric!("4", "Allocate", stats.client_v4_stats.allocate),
-        procedure_metric!("4", "DeAllocate", stats.client_v4_stats.deallocate),
-        procedure_metric!("4", "LayoutStats", stats.client_v4_stats.layout_stats),
-        procedure_metric!("4", "Clone", stats.client_v4_stats.clone),
-    ]);
+    metrics.extend(
+        [
+            ("Null", stats.client_v4_stats.null),
+            ("Read", stats.client_v4_stats.read),
+            ("Write", stats.client_v4_stats.write),
+            ("Commit", stats.client_v4_stats.commit),
+            ("Open", stats.client_v4_stats.open),
+            ("OpenConfirm", stats.client_v4_stats.open_confirm),
+            ("OpenNoattr", stats.client_v4_stats.open_noattr),
+            ("OpenDowngrade", stats.client_v4_stats.open_downgrade),
+            ("Close", stats.client_v4_stats.close),
+            ("Setattr", stats.client_v4_stats.setattr),
+            ("FsInfo", stats.client_v4_stats.fs_info),
+            ("Renew", stats.client_v4_stats.renew),
+            ("SetClientID", stats.client_v4_stats.set_client_id),
+            (
+                "SetClientIDConfirm",
+                stats.client_v4_stats.set_client_id_confirm,
+            ),
+            ("Lock", stats.client_v4_stats.lock),
+            ("Lockt", stats.client_v4_stats.lockt),
+            ("Locku", stats.client_v4_stats.locku),
+            ("Access", stats.client_v4_stats.access),
+            ("Getattr", stats.client_v4_stats.getattr),
+            ("Lookup", stats.client_v4_stats.lookup),
+            ("LookupRoot", stats.client_v4_stats.lookup_root),
+            ("Remove", stats.client_v4_stats.remove),
+            ("Rename", stats.client_v4_stats.rename),
+            ("Link", stats.client_v4_stats.link),
+            ("Symlink", stats.client_v4_stats.symlink),
+            ("Create", stats.client_v4_stats.create),
+            ("Pathconf", stats.client_v4_stats.pathconf),
+            ("StatFs", stats.client_v4_stats.stat_fs),
+            ("ReadLink", stats.client_v4_stats.read_link),
+            ("ReadDir", stats.client_v4_stats.read_dir),
+            ("ServerCaps", stats.client_v4_stats.server_caps),
+            ("DelegReturn", stats.client_v4_stats.deleg_return),
+            ("GetACL", stats.client_v4_stats.get_acl),
+            ("SetACL", stats.client_v4_stats.set_acl),
+            ("FsLocations", stats.client_v4_stats.fs_locations),
+            ("ReleaseLockowner", stats.client_v4_stats.release_lockowner),
+            ("Secinfo", stats.client_v4_stats.secinfo),
+            ("FsidPresent", stats.client_v4_stats.fsid_present),
+            ("ExchangeID", stats.client_v4_stats.exchange_id),
+            ("CreateSession", stats.client_v4_stats.create_session),
+            ("DestroySession", stats.client_v4_stats.destroy_session),
+            ("Sequence", stats.client_v4_stats.sequence),
+            ("GetLeaseTime", stats.client_v4_stats.get_lease_time),
+            ("ReclaimComplete", stats.client_v4_stats.reclaim_complete),
+            ("LayoutGet", stats.client_v4_stats.layout_get),
+            ("GetDeviceInfo", stats.client_v4_stats.get_device_info),
+            ("LayoutCommit", stats.client_v4_stats.layout_commit),
+            ("LayoutReturn", stats.client_v4_stats.layout_return),
+            ("SecinfoNoName", stats.client_v4_stats.secinfo_no_name),
+            ("TestStateID", stats.client_v4_stats.test_state_id),
+            ("FreeStateID", stats.client_v4_stats.free_state_id),
+            ("GetDeviceList", stats.client_v4_stats.get_device_list),
+            (
+                "BindConnToSession",
+                stats.client_v4_stats.bind_conn_to_session,
+            ),
+            ("DestroyClientID", stats.client_v4_stats.destroy_client_id),
+            ("Seek", stats.client_v4_stats.seek),
+            ("Allocate", stats.client_v4_stats.allocate),
+            ("DeAllocate", stats.client_v4_stats.deallocate),
+            ("LayoutStats", stats.client_v4_stats.layout_stats),
+            ("Clone", stats.client_v4_stats.clone),
+        ]
+        .into_iter()
+        .map(|(method, value)| {
+            Metric::sum_with_tags(
+                "node_nfs_requests_total",
+                "Number of NFS procedures invoked.",
+                value,
+                tags! {
+                    "proto" => "4",
+                    "method" => method
+                },
+            )
+        }),
+    );
 
     Ok(metrics)
 }
