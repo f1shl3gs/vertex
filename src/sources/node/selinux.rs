@@ -56,7 +56,7 @@ fn default_enforce_mode() -> Result<bool, Error> {
             } else if value == "permissive" {
                 Ok(false)
             } else {
-                Err(format!("unknown enforce mode \"{value}\"").into())
+                Err(Error::Malformed("enforce mode"))
             };
         }
     }

@@ -146,7 +146,7 @@ struct ClassDRMCardAMDGPUStats {
 fn parse_class_drm_amdgpu_card(card: &str) -> Result<ClassDRMCardAMDGPUStats, Error> {
     let uevent = read_string(format!("{card}/device/uevent"))?;
     if !uevent.contains("DRIVER=amdgpu") {
-        return Err(Error::from("the device is not an amdgpu"));
+        return Err(Error::Malformed("the device is not an amdgpu"));
     }
 
     let name = &card[card.len() - 5..];

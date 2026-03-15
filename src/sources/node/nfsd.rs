@@ -19,7 +19,7 @@ impl TryFrom<Vec<u64>> for ReplyCache {
 
     fn try_from(v: Vec<u64>) -> Result<Self, Self::Error> {
         if v.len() != 3 {
-            return Err(format!("invalid ReplyCache line {v:?}").into());
+            return Err(Error::Malformed("ReplyCache"));
         }
 
         Ok(Self {
@@ -45,7 +45,7 @@ impl TryFrom<Vec<u64>> for FileHandles {
 
     fn try_from(v: Vec<u64>) -> Result<Self, Self::Error> {
         if v.len() != 5 {
-            return Err(format!("invalid FileHandles line {v:?}").into());
+            return Err(Error::Malformed("FileHandles"));
         }
 
         Ok(Self {
@@ -70,7 +70,7 @@ impl TryFrom<Vec<u64>> for InputOutput {
 
     fn try_from(v: Vec<u64>) -> Result<Self, Self::Error> {
         if v.len() != 2 {
-            return Err(format!("invalid InputOutput line {v:?}").into());
+            return Err(Error::Malformed("InputOutput"));
         }
 
         Ok(Self {
@@ -92,7 +92,7 @@ impl TryFrom<Vec<u64>> for Threads {
 
     fn try_from(v: Vec<u64>) -> Result<Self, Self::Error> {
         if v.len() != 2 {
-            return Err(format!("invalid Threads line {v:?}").into());
+            return Err(Error::Malformed("Threads"));
         }
 
         Ok(Self {
@@ -115,7 +115,7 @@ impl TryFrom<Vec<u64>> for ReadAheadCache {
 
     fn try_from(v: Vec<u64>) -> Result<Self, Self::Error> {
         if v.len() != 12 {
-            return Err(format!("invalid ReadAheadCache line {v:?}").into());
+            return Err(Error::Malformed("ReadAheadCache"));
         }
 
         Ok(Self {
@@ -167,7 +167,7 @@ impl TryFrom<Vec<u64>> for ServerV4Stats {
     fn try_from(v: Vec<u64>) -> Result<Self, Self::Error> {
         let vs = v[0] as usize;
         if v.len() - 1 != vs || vs != 2 {
-            return Err(format!("invalid V4Stats line {v:?}").into());
+            return Err(Error::Malformed("ServerV4Stats"));
         }
 
         Ok(Self {
@@ -233,7 +233,7 @@ impl TryFrom<Vec<u64>> for V4Ops {
     fn try_from(v: Vec<u64>) -> Result<Self, Self::Error> {
         let vs = v[0] as usize;
         if v.len() - 1 != vs || vs < 39 {
-            return Err(format!("invalid V4Ops line {v:?}").into());
+            return Err(Error::Malformed("V4Ops"));
         }
 
         Ok(Self {
@@ -304,14 +304,14 @@ fn load_server_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ServerRPCStats, Erro
     for line in data.lines() {
         let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
         if parts.len() < 2 {
-            return Err(format!("invalid NFSd metric line {line}").into());
+            return Err(Error::Malformed("server rpc stats line"));
         }
 
         let label = parts[0];
         let values = match label {
             "th" => {
                 if parts.len() < 3 {
-                    return Err(format!("invalid NFSd th metric line {line}").into());
+                    return Err(Error::Malformed("server rpc stats th line"));
                 }
 
                 // TODO: handle the parse error
@@ -340,7 +340,7 @@ fn load_server_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ServerRPCStats, Erro
             "proc4" => stats.server_v4_stats = values.try_into()?,
             "proc4ops" => stats.v4_ops = values.try_into()?,
             "wdeleg_getattr" => stats.wdeleg_getattr = values[0],
-            _ => return Err(format!("errors parsing NFSd metric line {line}").into()),
+            _ => return Err(Error::Malformed("NFSd metric line")),
         }
     }
 

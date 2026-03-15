@@ -106,7 +106,7 @@ impl ConntrackStatEntry {
     fn new(line: &str) -> Result<Self, Error> {
         let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
         if parts.len() != 17 {
-            return Err(Error::from("No processor were found"));
+            return Err(Error::Malformed("conntrack stat entry"));
         }
 
         let entries = u64::from_str_radix(parts[0], 16)?;

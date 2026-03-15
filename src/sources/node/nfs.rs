@@ -20,7 +20,7 @@ impl TryFrom<Vec<u64>> for Network {
 
     fn try_from(values: Vec<u64>) -> Result<Self, Self::Error> {
         if values.len() != 4 {
-            return Err(format!("invalid Network {values:?}").into());
+            return Err(Error::Malformed("Network"));
         }
 
         Ok(Network {
@@ -61,7 +61,7 @@ impl TryFrom<Vec<u64>> for V2Stats {
     fn try_from(values: Vec<u64>) -> Result<Self, Self::Error> {
         let vs = values[0] as usize;
         if values.len() - 1 != vs || vs < 18 {
-            return Err(Error::from("invalid V2Stats line"));
+            return Err(Error::Malformed("V2Stats"));
         }
 
         Ok(Self {
@@ -120,7 +120,7 @@ impl TryFrom<Vec<u64>> for V3Stats {
     fn try_from(values: Vec<u64>) -> Result<Self, Self::Error> {
         let vs = values[0] as usize;
         if values.len() - 1 != vs || vs < 22 {
-            return Err(Error::from("invalid V3Stats line"));
+            return Err(Error::Malformed("V3Stats"));
         }
 
         Ok(V3Stats {
@@ -220,7 +220,7 @@ impl TryFrom<Vec<u64>> for ClientV4Stats {
     fn try_from(mut v: Vec<u64>) -> Result<Self, Self::Error> {
         let vs = v[0] as usize;
         if v.len() - 1 != vs {
-            return Err(format!("invalid ClientV4Stats line {v:?}").into());
+            return Err(Error::Malformed("ClientV4Stats"));
         }
 
         // This function currently supports mapping 59 NFS v4 client stats. Older
@@ -305,7 +305,7 @@ pub struct ClientRPC {
 impl ClientRPC {
     fn new(values: Vec<u64>) -> Result<Self, Error> {
         if values.len() != 3 {
-            return Err(Error::from("invalid RPC line"));
+            return Err(Error::Malformed("ClientRPC"));
         }
 
         Ok(ClientRPC {
@@ -334,7 +334,7 @@ pub fn load_client_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ClientRPCStats, 
     for line in data.lines() {
         let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
         if parts.len() < 2 {
-            return Err(format!("invalid NFS metric line, {line}").into());
+            return Err(Error::Malformed("client rpc stats line"));
         }
 
         // TODO: the error is not handled
@@ -351,7 +351,7 @@ pub fn load_client_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ClientRPCStats, 
             "proc3" => stats.v3_stats = values.try_into()?,
             "proc4" => stats.client_v4_stats = values.try_into()?,
             _ => {
-                return Err(Error::from("errors parsing NFS metric line"));
+                return Err(Error::Malformed("client rpc stats"));
             }
         }
     }

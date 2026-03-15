@@ -1,5 +1,6 @@
 //! Exposes thermal zone & cooling device statistics from /sys/class/thermal
 
+use std::io::ErrorKind;
 use std::path::{Path, PathBuf};
 
 use event::{Metric, tags};
@@ -70,15 +71,14 @@ fn parse_thermal_zone(root: &Path) -> Result<ThermalZoneStats, Error> {
         Err(_) => None,
     };
 
-    let path = root.join("passive");
-    let passive = match read_into(path) {
-        Ok(v) => Some(v),
+    let passive = match read_string(root.join("passive")) {
+        Ok(content) => Some(content.parse::<u64>()?),
         Err(err) => {
-            if err.is_not_found() {
-                None
-            } else {
-                return Err(err);
+            if err.kind() != ErrorKind::NotFound {
+                return Err(err.into());
             }
+
+            None
         }
     };
 

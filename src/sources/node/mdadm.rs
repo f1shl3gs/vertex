@@ -68,16 +68,14 @@ fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
 
         let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
         if parts.len() < 3 {
-            let msg = format!("not enough fields in mdline(expect at least 3), line: {line}");
-            return Err(Error::from(msg));
+            return Err(Error::Malformed("mdstat line"));
         }
 
         let name = parts[0];
         let mut state = parts[2]; // active or inactive
 
         if line_count <= i + 3 {
-            let msg = format!("error parsing: {name}, too few lines for md device");
-            return Err(Error::from(msg));
+            return Err(Error::Malformed("mdstat stat line"));
         }
 
         // failed disks have the suffix(F) & Spare disks have the suffix (S)
@@ -116,10 +114,8 @@ fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
             if sync_line.contains("PENDING") || sync_line.contains("DELAYED") {
                 synced_blocks = 0;
             } else {
-                (pct, synced_blocks, finish, speed) = recovery_line(sync_line).map_err(|err| {
-                    let msg = format!("parse recovery line failed, {err}");
-                    Error::from(msg)
-                })?;
+                (pct, synced_blocks, finish, speed) =
+                    recovery_line(sync_line).map_err(|_err| Error::Malformed("recovery line"))?;
             }
         }
 
@@ -182,8 +178,10 @@ static STATUS_LINE_RE: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"(\d+) blocks .*\[(\d+)/(\d+)\] \[([U_]+)\]").unwrap());
 
 fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64, i64), Error> {
-    let size_str = status_line.split_ascii_whitespace().next().unwrap();
-    let size = size_str.parse()?;
+    let size = match status_line.split_ascii_whitespace().next() {
+        Some(field) => field.parse()?,
+        None => return Err(Error::Malformed("eval status line")),
+    };
 
     if dev_line.contains("raid0") || dev_line.contains("linear") {
         // In the device deviceLine, only disks have a number associated with them in []
@@ -204,8 +202,7 @@ fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64,
     };
 
     if caps.len() != 5 {
-        let msg = format!("couldn't find all the substring matches {status_line}");
-        return Err(Error::from(msg));
+        return Err(Error::Malformed("eval status line"));
     }
 
     let total = caps[2].parse()?;
