@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773573792273,
+  "lastUpdate": 1773597639934,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "21bd8bf7a0c19917ba415bcd06acc3a862b3b016",
-          "message": "Merge pull request #2671 from f1shl3gs/dependabot/cargo/quote-1.0.42\n\nchore(deps): bump quote from 1.0.41 to 1.0.42",
-          "timestamp": "2025-11-07T07:36:16+08:00",
-          "tree_id": "7b00059b95754c4c8379e1d01cb94112f31f8ab6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/21bd8bf7a0c19917ba415bcd06acc3a862b3b016"
-        },
-        "date": 1762472304993,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 523520,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 533100,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8242b53843797e30a43e3e9facfc4590ce671a09",
+          "message": "Merge pull request #2863 from f1shl3gs/sources/node/refactor_errors\n\nsources/node: refactor Error",
+          "timestamp": "2026-03-16T01:58:08+08:00",
+          "tree_id": "c6a2b695dfa467c63c7eb08df94e6ec25385eda9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8242b53843797e30a43e3e9facfc4590ce671a09"
+        },
+        "date": 1773597617210,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 536660,
             "unit": "ns/op"
           }
         ]
