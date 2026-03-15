@@ -17,7 +17,6 @@ mod dmi;
 mod drm;
 mod edac;
 mod entropy;
-mod error;
 mod fibrechannel;
 mod filefd;
 mod filesystem;
@@ -70,6 +69,7 @@ mod zfs;
 mod zoneinfo;
 
 use std::io::Read;
+use std::num::{ParseFloatError, ParseIntError};
 use std::path::Path;
 use std::path::PathBuf;
 use std::str::FromStr;
@@ -77,14 +77,53 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use configurable::{Configurable, configurable_component};
-use error::Error;
 use event::{Metric, tags};
 use framework::Source;
 use framework::config::{OutputType, SourceConfig, SourceContext, default_interval, default_true};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use serde::{Deserialize, Serialize};
+use thiserror::Error;
 use tokio::task::JoinSet;
+
+#[derive(Debug, Error)]
+pub enum ParseError {
+    #[error(transparent)]
+    Integer(ParseIntError),
+    #[error(transparent)]
+    Float(ParseFloatError),
+    #[error("{0}")]
+    Other(String),
+}
+
+#[derive(Debug, Error)]
+pub enum Error {
+    #[error(transparent)]
+    Glob(#[from] glob::PatternError),
+    #[error(transparent)]
+    Io(#[from] std::io::Error),
+    #[error(transparent)]
+    Parse(ParseError),
+    #[error("{0}")]
+    Other(String),
+
+    #[error("no data")]
+    NoData,
+    #[error("malformed {0}")]
+    Malformed(&'static str),
+}
+
+impl From<ParseIntError> for Error {
+    fn from(value: ParseIntError) -> Self {
+        Error::Parse(ParseError::Integer(value))
+    }
+}
+
+impl From<ParseFloatError> for Error {
+    fn from(value: ParseFloatError) -> Self {
+        Error::Parse(ParseError::Float(value))
+    }
+}
 
 fn default_cpu_config() -> Option<cpu::Config> {
     Some(cpu::Config::default())
@@ -398,20 +437,20 @@ impl Default for Collectors {
     }
 }
 
+fn default_root_path() -> PathBuf {
+    PathBuf::from("/")
+}
+
 fn default_proc_path() -> PathBuf {
-    "/proc".into()
+    PathBuf::from("/proc")
 }
 
 fn default_sys_path() -> PathBuf {
-    "/sys".into()
+    PathBuf::from("/sys")
 }
 
 fn default_udev_path() -> PathBuf {
     PathBuf::from("/run/udev")
-}
-
-fn default_root_path() -> PathBuf {
-    PathBuf::from("/")
 }
 
 /// The Node source generates metrics about the host system scraped

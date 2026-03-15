@@ -491,7 +491,7 @@ fn parse_infiniband_device(root: PathBuf) -> Result<InfiniBandDevice, Error> {
                     continue;
                 }
 
-                return Err(format!("failed to read file {name}, {err}").into());
+                return Err(err.into());
             }
         };
 
@@ -550,7 +550,7 @@ fn parse_infiniband_port(name: &str, root: PathBuf) -> Result<InfiniBandPort, Er
 fn parse_state(s: &str) -> Result<(u32, &str), Error> {
     let parts = s.split(':').map(|p| p.trim()).collect::<Vec<_>>();
     if parts.len() != 2 {
-        return Err(format!("failed to split {s} into 'ID: Name'").into());
+        return Err(Error::Malformed("infiniband state"));
     }
 
     let name = parts[1];
@@ -563,7 +563,7 @@ fn parse_state(s: &str) -> Result<(u32, &str), Error> {
 fn parse_rate(s: &str) -> Result<u64, Error> {
     let parts = s.splitn(2, ' ').collect::<Vec<_>>();
     if parts.len() != 2 {
-        return Err(format!("failed to split {s}").into());
+        return Err(Error::Malformed("rate"));
     }
 
     let v = parts[0].parse::<f64>()?;
@@ -578,29 +578,27 @@ fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, Error>
 
     let mut counters = InfiniBandCounters::default();
     for entry in dirs.flatten() {
-        let path = entry.path();
-        let name = entry.file_name();
-        let name = name.to_str().unwrap();
+        let content = match read_string(entry.path()) {
+            Ok(content) => {
+                // Ugly workaround for handling https://github.com/prometheus/node_exporter/issues/966
+                // when counters are `N/A (not available)`.
+                // This was already patched and submitted, see
+                // https://www.spinics.net/lists/linux-rdma/msg68596.html
+                // Remove this as soon as the fix lands in the enterprise distros.
+                if content.contains("N/A (no PMA)") {
+                    continue;
+                }
 
-        let content = match read_string(path) {
-            Ok(c) => c,
+                content
+            }
             Err(err) => {
                 if err.kind() == ErrorKind::NotFound {
                     continue;
                 }
 
-                return Err(format!("failed to read file {name}, {err}").into());
+                return Err(err.into());
             }
         };
-
-        // Ugly workaround for handling https://github.com/prometheus/node_exporter/issues/966
-        // when counters are `N/A (not available)`.
-        // This was already patched and submitted, see
-        // https://www.spinics.net/lists/linux-rdma/msg68596.html
-        // Remove this as soon as the fix lands in the enterprise distros.
-        if content.contains("N/A (no PMA)") {
-            continue;
-        }
 
         // According to Mellanox, the metrics port_rcv_ata, port_xmit_data,
         // port_rcv_data_64, and port_xmit_data_64 "are devided by 4 unconditionally"
@@ -608,7 +606,7 @@ fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, Error>
         // Mellanox cards have 4 lanes per port, so all values must be multiplied by 4
         // to get the expected value.
         let value = content.parse::<u64>().ok();
-        match name {
+        match entry.file_name().to_string_lossy().as_ref() {
             "excessive_buffer_overrun_errors" => counters.excessive_buffer_overrun_errors = value,
             "link_downed" => counters.link_downed = value,
             "link_error_recovery" => counters.link_error_recovery = value,
@@ -648,12 +646,7 @@ fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, Error>
                             continue;
                         }
 
-                        return Err(format!(
-                            "failed to read file {}, err: {}",
-                            name.to_string_lossy(),
-                            err
-                        )
-                        .into());
+                        return Err(err.into());
                     }
                 };
 

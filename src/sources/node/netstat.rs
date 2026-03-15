@@ -79,7 +79,7 @@ fn get_net_stats(path: PathBuf) -> Result<BTreeMap<String, BTreeMap<String, Stri
         };
 
         if names.len() != values.len() {
-            return Err(Error::from("mismatch field count"));
+            return Err(Error::Malformed("netstat content"));
         }
 
         // remove trailing :

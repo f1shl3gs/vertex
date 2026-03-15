@@ -158,12 +158,12 @@ fn parse_ipvs_stats(root: &Path) -> Result<IPVSStats, Error> {
     let data = std::fs::read_to_string(root.join("net/ip_vs_stats"))?;
     let lines = data.lines().collect::<Vec<_>>();
     if lines.len() < 4 {
-        return Err("ip_vs_stats corrupt: too short".into());
+        return Err(Error::Malformed("ip_vs_stats corrupted"));
     }
 
     let fields = lines[2].split_ascii_whitespace().collect::<Vec<_>>();
     if fields.len() != 5 {
-        return Err("ip_vs_stats corrupt: unexpected number of fields".into());
+        return Err(Error::Malformed("ip_vs_stats corrupted"));
     }
 
     let connections = u64::from_str_radix(fields[0], 16)?;
@@ -310,7 +310,7 @@ fn parse_ip_port(s: &str) -> Result<(String, u16), Error> {
 
                 std::net::Ipv6Addr::new(p1, p2, p3, p4, p5, p6, p7, p8).to_string()
             }
-            _ => return Err(Error::from("unexpected IP:Port")),
+            _ => return Err(Error::Malformed("IP:Port")),
         }
     };
 

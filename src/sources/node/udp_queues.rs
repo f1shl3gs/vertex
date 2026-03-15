@@ -106,7 +106,7 @@ fn parse_net_ip_socket_queues(line: &str) -> Result<(u64, u64), Error> {
     let fields = line
         .split_ascii_whitespace()
         .nth(4)
-        .ok_or_else(|| Error::from("invalid field"))?;
+        .ok_or(Error::Malformed("udp_queues line"))?;
 
     let txq = u64::from_str_radix(&fields[..8], 16)?;
     let rxq = u64::from_str_radix(&fields[9..], 16)?;

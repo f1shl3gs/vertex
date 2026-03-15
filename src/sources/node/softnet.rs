@@ -95,13 +95,8 @@ fn parse_softnet(line: &str, index: u32) -> Result<SoftnetStat, Error> {
     const MIN_COLUMNS: usize = 9;
 
     let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
-
     if parts.len() < MIN_COLUMNS {
-        return Err(Error::from(format!(
-            "{} columns were detected, but at least {} were expected",
-            parts.len(),
-            MIN_COLUMNS,
-        )));
+        return Err(Error::Malformed("softnet stat line"));
     }
 
     let mut stat = SoftnetStat::default();

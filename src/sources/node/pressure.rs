@@ -118,9 +118,8 @@ fn psi_stats(path: PathBuf) -> Result<PSIStats, Error> {
 fn parse_psi_stat(line: &str) -> Result<PSIStat, Error> {
     // some of full
     let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
-
     if parts.len() != 5 {
-        return Err(Error::from("malformed psi stat line"));
+        return Err(Error::Malformed("psi stat line"));
     }
 
     let avg10 = parts[1].strip_prefix("avg10=").unwrap().parse()?;

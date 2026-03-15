@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+use std::io::ErrorKind;
 use std::path::{Path, PathBuf};
 
 use event::{Metric, tags};
@@ -54,6 +55,7 @@ struct Device {
 
 /// Number of commits and various time related statistics.
 /// See Linux fs/btrfs/sysfs.c with 6.x version
+#[derive(Default)]
 struct CommitStats {
     commits: u64,
 
@@ -275,20 +277,15 @@ fn get_stats(root: PathBuf) -> Result<Stats, Error> {
     let quota_override = read_into(root.join("quota_override"))?;
     let sector_size = read_into(root.join("sectorsize"))?;
 
-    let commit_stats = match read_commit_stats(root.join("commit_stats")) {
-        Ok(stats) => stats,
+    let commit_stats = match std::fs::read_to_string(root.join("commit_stats")) {
+        Ok(content) => parse_commit_stats(&content)?,
         Err(err) => {
             // if commit_stats not found. btrfs version < 6.0
-            if err.is_not_found() {
-                CommitStats {
-                    commits: 0,
-                    last_commit_ms: 0,
-                    max_commit_ms: 0,
-                    total_commit_ms: 0,
-                }
-            } else {
-                return Err(err);
+            if err.kind() != ErrorKind::NotFound {
+                return Err(err.into());
             }
+
+            CommitStats::default()
         }
     };
 
@@ -318,15 +315,13 @@ fn get_stats(root: PathBuf) -> Result<Stats, Error> {
     })
 }
 
-fn read_commit_stats(path: PathBuf) -> Result<CommitStats, Error> {
-    let data = std::fs::read_to_string(path)?;
-
+fn parse_commit_stats(content: &str) -> Result<CommitStats, Error> {
     let mut commits = 0;
     let mut last_commit_ms = 0;
     let mut max_commit_ms = 0;
     let mut total_commit_ms = 0;
 
-    for line in data.lines() {
+    for line in content.lines() {
         if let Some((key, value)) = line.split_once(" ") {
             let value = value.parse::<u64>()?;
 
