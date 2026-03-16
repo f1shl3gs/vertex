@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773699488422,
+  "lastUpdate": 1773699550099,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "70b8a25c17773e4e56cf5ebae01fa840ea5870ae",
-          "message": "Merge pull request #2762 from f1shl3gs/dependabot/cargo/quote-1.0.44\n\nchore(deps): bump quote from 1.0.43 to 1.0.44",
-          "timestamp": "2026-01-23T18:22:52+08:00",
-          "tree_id": "b1185f504866f5db5b5f1335bd44c417f1ff6cf7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/70b8a25c17773e4e56cf5ebae01fa840ea5870ae"
-        },
-        "date": 1769164434559,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 577,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40911,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "fd51301ec12114887202ec45995a714d17960016",
           "message": "Merge pull request #2763 from f1shl3gs/dependabot/cargo/socket2-0.6.2\n\nchore(deps): bump socket2 from 0.6.1 to 0.6.2",
           "timestamp": "2026-01-24T17:34:19+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40523.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e9bcad852267e3434859c9796a914c41addf560b",
+          "message": "Merge pull request #2865 from f1shl3gs/sources/node/add_meminfo_numa\n\nsources/node: add meminfo_numa collector",
+          "timestamp": "2026-03-17T06:07:41+08:00",
+          "tree_id": "10c22a9e32804d9b446270ccbe9b6d5846fd68a2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e9bcad852267e3434859c9796a914c41addf560b"
+        },
+        "date": 1773699527331,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 590,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40540.8,
             "unit": "KiB"
           }
         ]
