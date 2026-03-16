@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773699069805,
+  "lastUpdate": 1773699488422,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "171a9d95316d0a28d1e2e815140d1c25f918bc5e",
-          "message": "Merge pull request #2672 from f1shl3gs/secrets/keyring/init\n\nsecrets/keyring: init",
-          "timestamp": "2025-11-07T08:04:48+08:00",
-          "tree_id": "88384d019f6d6da50ac23d9695558b1bfe34177e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/171a9d95316d0a28d1e2e815140d1c25f918bc5e"
-        },
-        "date": 1762474481056,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 15067000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 602520,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.555,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "90b5c5950fe62f6faf876f83f1b6d943d9d1de4e",
           "message": "Merge pull request #2673 from f1shl3gs/providers/http/simplify_decoder\n\nproviders/http: simplify decoder",
           "timestamp": "2025-11-09T21:11:50+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.864,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e9bcad852267e3434859c9796a914c41addf560b",
+          "message": "Merge pull request #2865 from f1shl3gs/sources/node/add_meminfo_numa\n\nsources/node: add meminfo_numa collector",
+          "timestamp": "2026-03-17T06:07:41+08:00",
+          "tree_id": "10c22a9e32804d9b446270ccbe9b6d5846fd68a2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e9bcad852267e3434859c9796a914c41addf560b"
+        },
+        "date": 1773699464692,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7831600,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 767960,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.618,
             "unit": "ns/op"
           }
         ]
