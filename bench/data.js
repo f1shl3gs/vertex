@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773696981102,
+  "lastUpdate": 1773697044016,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "153d9adc29c38428953ba6fbb3b264a2ca28d285",
-          "message": "Merge pull request #2761 from f1shl3gs/toolchain/1.93\n\ntoolchain: bump to 1.93",
-          "timestamp": "2026-01-23T01:43:43+08:00",
-          "tree_id": "b32aeb7ff12bb666490c2636589ef9209b34a8b7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/153d9adc29c38428953ba6fbb3b264a2ca28d285"
-        },
-        "date": 1769104512351,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 574,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40909.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "70b8a25c17773e4e56cf5ebae01fa840ea5870ae",
           "message": "Merge pull request #2762 from f1shl3gs/dependabot/cargo/quote-1.0.44\n\nchore(deps): bump quote from 1.0.43 to 1.0.44",
           "timestamp": "2026-01-23T18:22:52+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40537.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "45fac12e923bcd1af3b0eea83c78b85c38d64faa",
+          "message": "Merge pull request #2864 from f1shl3gs/sources/node/refactor_some_error_handling\n\nsources/node: refactor some error handling",
+          "timestamp": "2026-03-17T05:25:52+08:00",
+          "tree_id": "efa83deb712a86fa600d0e56e2b590dc7d617f07",
+          "url": "https://github.com/f1shl3gs/vertex/commit/45fac12e923bcd1af3b0eea83c78b85c38d64faa"
+        },
+        "date": 1773697021204,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 589,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40523.2,
             "unit": "KiB"
           }
         ]
