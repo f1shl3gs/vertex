@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773696510981,
+  "lastUpdate": 1773696524409,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "21bd8bf7a0c19917ba415bcd06acc3a862b3b016",
-          "message": "Merge pull request #2671 from f1shl3gs/dependabot/cargo/quote-1.0.42\n\nchore(deps): bump quote from 1.0.41 to 1.0.42",
-          "timestamp": "2025-11-07T07:36:16+08:00",
-          "tree_id": "7b00059b95754c4c8379e1d01cb94112f31f8ab6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/21bd8bf7a0c19917ba415bcd06acc3a862b3b016"
-        },
-        "date": 1762472339015,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.636,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 169.09,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 319.31,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 705.76,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "171a9d95316d0a28d1e2e815140d1c25f918bc5e",
           "message": "Merge pull request #2672 from f1shl3gs/secrets/keyring/init\n\nsecrets/keyring: init",
           "timestamp": "2025-11-07T08:04:48+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 676.02,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "45fac12e923bcd1af3b0eea83c78b85c38d64faa",
+          "message": "Merge pull request #2864 from f1shl3gs/sources/node/refactor_some_error_handling\n\nsources/node: refactor some error handling",
+          "timestamp": "2026-03-17T05:25:52+08:00",
+          "tree_id": "efa83deb712a86fa600d0e56e2b590dc7d617f07",
+          "url": "https://github.com/f1shl3gs/vertex/commit/45fac12e923bcd1af3b0eea83c78b85c38d64faa"
+        },
+        "date": 1773696500676,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.614,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 169.9,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 334.89,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 695.61,
             "unit": "ns/op"
           }
         ]
