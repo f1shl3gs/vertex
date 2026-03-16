@@ -31,6 +31,7 @@ mod lnstat;
 mod loadavg;
 mod mdadm;
 mod meminfo;
+mod meminfo_numa;
 mod mountstats;
 mod netclass;
 mod netdev;
@@ -252,7 +253,10 @@ struct Collectors {
     mdadm: bool,
 
     #[serde(default = "default_true")]
-    memory: bool,
+    meminfo: bool,
+
+    #[serde(default)]
+    meminfo_numa: bool,
 
     #[serde(default)]
     mountstats: bool,
@@ -394,7 +398,8 @@ impl Default for Collectors {
             lnstat: false,
             loadavg: true,
             mdadm: true,
-            memory: true,
+            meminfo: true,
+            meminfo_numa: false,
             mountstats: false,
             netclass: default_netclass_config(),
             netdev: default_netdev_config(),
@@ -790,9 +795,14 @@ async fn run(
             tasks.spawn(collect!(mdadm, paths));
         }
 
-        if collectors.memory {
+        if collectors.meminfo {
             let paths = paths.clone();
             tasks.spawn(collect!(meminfo, paths));
+        }
+
+        if collectors.meminfo_numa {
+            let paths = paths.clone();
+            tasks.spawn(collect!(meminfo_numa, paths));
         }
 
         if collectors.mountstats {
