@@ -36,8 +36,9 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
                 continue;
             }
 
-            let filename = entry.file_name().to_string_lossy().to_string();
-            let Some(captures) = NAMESPACE_PATTERN.captures(&filename) else {
+            let filename = entry.file_name();
+            let filename = filename.to_string_lossy();
+            let Some(captures) = NAMESPACE_PATTERN.captures(filename.as_ref()) else {
                 continue;
             };
 

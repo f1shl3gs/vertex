@@ -1,5 +1,6 @@
 //! Exposes ZFS performance statistics
 
+use std::io::ErrorKind;
 use std::num::ParseIntError;
 use std::path::Path;
 
@@ -37,14 +38,30 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
         ("zil", "zil"),
     ] {
         let path = root.join(filename);
-        let content = std::fs::read_to_string(path)?;
+        match std::fs::read_to_string(&path) {
+            Ok(content) => {
+                for (key, value) in parse_stat_file(&content)? {
+                    metrics.push(Metric::gauge(
+                        format!("node_zfs_{}_{}", subsystem, key.replace("-", "_")),
+                        format!("kstat.zfs.misc.{}.{}", filename, key),
+                        value,
+                    ));
+                }
+            }
+            Err(err) => {
+                // file not found error can occur if
+                // 1. zfs module is not loaded
+                // 2. zfs version does not have the feature with metrics -- ok to ignore
+                if err.kind() == ErrorKind::NotFound {
+                    // ZFS /proc files are added as new features to ZFS arrive,
+                    // it is ok to continue
+                    continue;
+                }
 
-        for (key, value) in parse_stat_file(&content)? {
-            metrics.push(Metric::gauge(
-                format!("node_zfs_{}_{}", subsystem, key.replace("-", "_")),
-                format!("kstat.zfs.misc.{}.{}", filename, key),
-                value,
-            ));
+                debug!(message = "reading zfs subsystem stats failed", ?path, %err);
+
+                return Err(err.into());
+            }
         }
     }
 

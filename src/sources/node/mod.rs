@@ -92,8 +92,6 @@ pub enum ParseError {
     Integer(ParseIntError),
     #[error(transparent)]
     Float(ParseFloatError),
-    #[error("{0}")]
-    Other(String),
 }
 
 #[derive(Debug, Error)]
@@ -104,8 +102,6 @@ pub enum Error {
     Io(#[from] std::io::Error),
     #[error(transparent)]
     Parse(ParseError),
-    #[error("{0}")]
-    Other(String),
 
     #[error("no data")]
     NoData,
