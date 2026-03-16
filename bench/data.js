@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773699915375,
+  "lastUpdate": 1773699926772,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "90b5c5950fe62f6faf876f83f1b6d943d9d1de4e",
-          "message": "Merge pull request #2673 from f1shl3gs/providers/http/simplify_decoder\n\nproviders/http: simplify decoder",
-          "timestamp": "2025-11-09T21:11:50+08:00",
-          "tree_id": "4269761bdb96a8075d7ad9c518d85c90fcdf0ce2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/90b5c5950fe62f6faf876f83f1b6d943d9d1de4e"
-        },
-        "date": 1762694069663,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.703,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 176.12,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 335.72,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 699.06,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "07fc4d7b6b440378302f4e19d927aed0367cb24a",
           "message": "Merge pull request #2674 from f1shl3gs/dependabot/cargo/syn-2.0.110\n\nchore(deps): bump syn from 2.0.109 to 2.0.110",
           "timestamp": "2025-11-10T14:04:09+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 649.67,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7133e4bf49139e86e9add16c233f4306e7b5c183",
+          "message": "Merge pull request #2866 from f1shl3gs/dependabot/cargo/argh-0.1.19\n\nchore(deps): bump argh from 0.1.18 to 0.1.19",
+          "timestamp": "2026-03-17T06:22:34+08:00",
+          "tree_id": "4c6ddfc7b21599095ea98509bd8a8454ba3c0f80",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7133e4bf49139e86e9add16c233f4306e7b5c183"
+        },
+        "date": 1773699903990,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.603,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 166.22,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 328.04,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 708.69,
             "unit": "ns/op"
           }
         ]
