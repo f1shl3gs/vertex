@@ -173,9 +173,7 @@ fn get_stats(config: &Config, root: PathBuf) -> Result<Vec<Stat>, Error> {
     for line in data.lines() {
         let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
         if parts.len() < 10 {
-            return Err(Error::Other(format!(
-                "malformed mount point information: {line}"
-            )));
+            return Err(Error::Malformed("mountinfo"));
         }
 
         let mut m = 5;

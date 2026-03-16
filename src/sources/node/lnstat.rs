@@ -11,12 +11,13 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
 
     let mut metrics = Vec::new();
     for entry in dirs.flatten() {
-        if !entry.file_type()?.is_file() {
+        let Ok(typ) = entry.file_type() else { continue };
+        if !typ.is_file() {
             continue;
         }
 
-        let path = entry.path();
-        let filename = path.file_name().unwrap().to_string_lossy();
+        let filename = entry.file_name();
+        let subsystem = filename.to_string_lossy();
 
         let content = read_string(entry.path())?;
         let stats = parse_net_stat(&content)?;
@@ -29,7 +30,7 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
                     value,
                     tags!(
                         "cpu" => cpu,
-                        "subsystem" => filename.as_ref(),
+                        "subsystem" => subsystem.as_ref(),
                     ),
                 ))
             }

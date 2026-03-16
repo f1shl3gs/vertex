@@ -383,13 +383,12 @@ fn hwmon_metrics(dir: &Path) -> Result<Vec<Metric>, Error> {
 fn collect_sensor_data(
     dir: impl AsRef<Path>,
 ) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
-    let dirs = std::fs::read_dir(dir)?;
     let mut stats = BTreeMap::<String, BTreeMap<String, String>>::new();
 
-    for entry in dirs.flatten() {
+    for entry in std::fs::read_dir(dir)?.flatten() {
         let filename = entry.file_name();
-        let Ok((sensor, num, property)) = explode_sensor_filename(filename.to_str().unwrap())
-        else {
+        let filename = filename.to_string_lossy();
+        let Ok((sensor, num, property)) = explode_sensor_filename(filename.as_ref()) else {
             continue;
         };
 
@@ -398,7 +397,7 @@ fn collect_sensor_data(
         }
 
         if let Ok(value) = read_string(entry.path()) {
-            let sensor = format!("{}{}", sensor, if num.is_empty() { "0" } else { num });
+            let sensor = format!("{sensor}{}", if num.is_empty() { "0" } else { num });
             stats
                 .entry(sensor)
                 .or_default()

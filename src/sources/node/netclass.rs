@@ -1,4 +1,4 @@
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 use configurable::Configurable;
 use event::{Metric, tags};
@@ -7,11 +7,14 @@ use serde::{Deserialize, Serialize};
 
 use super::{Error, Paths, read_string};
 
+fn default_ignores() -> regex::Regex {
+    regex::Regex::new("^$").unwrap()
+}
+
 #[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
     // Regexp of net devices to ignore for netclass collector
-    #[serde(default = "default_ignores")]
-    #[serde(with = "serde_regex")]
+    #[serde(default = "default_ignores", with = "serde_regex")]
     pub ignores: regex::Regex,
 }
 
@@ -23,26 +26,22 @@ impl Default for Config {
     }
 }
 
-fn default_ignores() -> regex::Regex {
-    regex::Regex::new("^$").unwrap()
-}
-
 pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
-    let devices = net_class_devices(paths.sys())?;
+    let dirs = std::fs::read_dir(paths.sys().join("class/net"))?;
 
     let mut metrics = Vec::new();
-    for device in devices {
+    for entry in dirs.flatten() {
+        let filename = entry.file_name();
+        let device = filename.to_string_lossy();
         if conf.ignores.is_match(&device) {
             continue;
         }
 
-        let path = paths.sys().join("class/net").join(&device);
-        let nci = match NetClassInterface::parse(path) {
-            Ok(nci) => nci,
-            _ => continue,
+        let Ok(nci) = load_netclass_interface(entry.path()) else {
+            continue;
         };
 
-        let tags = tags!("device" => &device);
+        let tags = tags!("device" => device.as_ref());
         metrics.extend([
             Metric::gauge_with_tags(
                 "node_network_up",
@@ -239,21 +238,8 @@ fn admin_state(flags: Option<i64>) -> &'static str {
     }
 }
 
-fn net_class_devices(root: &Path) -> Result<Vec<String>, Error> {
-    let dirs = std::fs::read_dir(root.join("class/net"))?;
-
-    let mut devices = Vec::new();
-    for entry in dirs.flatten() {
-        devices.push(entry.file_name().into_string().unwrap());
-    }
-
-    Ok(devices)
-}
-
 #[derive(Default, Debug)]
 struct NetClassInterface {
-    _name: String,
-
     // /sys/class/net/<iface>/addr_assign_type
     addr_assign_type: Option<i64>,
 
@@ -333,55 +319,48 @@ struct NetClassInterface {
     typ: Option<i64>,
 }
 
-impl NetClassInterface {
-    fn parse(path: PathBuf) -> Result<NetClassInterface, Error> {
-        let dirs = std::fs::read_dir(path)?;
+fn load_netclass_interface(path: PathBuf) -> Result<NetClassInterface, Error> {
+    let mut nci = NetClassInterface::default();
+    for entry in std::fs::read_dir(path)?.flatten() {
+        let Ok(value) = read_string(entry.path()) else {
+            continue;
+        };
 
-        let mut nci = NetClassInterface::default();
-        for entry in dirs.flatten() {
-            let file = entry.file_name();
-            let value = match read_string(entry.path()) {
-                Ok(v) => v,
-                _ => continue,
-            };
-
-            match file.to_string_lossy().as_ref() {
-                "addr_assign_type" => nci.addr_assign_type = value.parse().ok(),
-                "addr_len" => nci.addr_len = value.parse().ok(),
-                "address" => nci.address = value,
-                "broadcast" => nci.broadcast = value,
-                "carrier" => nci.carrier = value.parse().ok(),
-                "carrier_changes" => nci.carrier_changes = value.parse().ok(),
-                "carrier_up_count" => nci.carrier_up_count = value.parse().ok(),
-                "carrier_down_count" => nci.carrier_down_count = value.parse().ok(),
-                "dev_id" => {
-                    nci.dev_id = i64::from_str_radix(value.strip_prefix("0x").unwrap(), 16).ok()
-                }
-                "dormant" => nci.dormant = value.parse().ok(),
-                "duplex" => nci.duplex = value,
-                "flags" => {
-                    nci.flags = i64::from_str_radix(value.strip_prefix("0x").unwrap(), 16).ok()
-                }
-                "ifalias" => nci.ifalias = value,
-                "ifindex" => nci.ifindex = value.parse().ok(),
-                "iflink" => nci.iflink = value.parse().ok(),
-                "link_mode" => nci.link_mode = value.parse().ok(),
-                "mtu" => nci.mtu = value.parse().ok(),
-                "name_assign_type" => nci.name_assign_type = value.parse().ok(),
-                "netdev_group" => nci.netdev_group = value.parse().ok(),
-                "operstate" => nci.operstate = value,
-                "phys_port_id" => nci.phys_port_id = value,
-                "phys_port_name" => nci.phys_port_name = value,
-                "phys_switch_id" => nci.phys_switch_id = value,
-                "speed" => nci.speed = value.parse().ok(),
-                "tx_queue_len" => nci.tx_queue_len = value.parse().ok(),
-                "type" => nci.typ = value.parse().ok(),
-                _ => {}
+        let filename = entry.file_name();
+        match filename.to_string_lossy().as_ref() {
+            "addr_assign_type" => nci.addr_assign_type = value.parse().ok(),
+            "addr_len" => nci.addr_len = value.parse().ok(),
+            "address" => nci.address = value,
+            "broadcast" => nci.broadcast = value,
+            "carrier" => nci.carrier = value.parse().ok(),
+            "carrier_changes" => nci.carrier_changes = value.parse().ok(),
+            "carrier_up_count" => nci.carrier_up_count = value.parse().ok(),
+            "carrier_down_count" => nci.carrier_down_count = value.parse().ok(),
+            "dev_id" => {
+                nci.dev_id = i64::from_str_radix(value.strip_prefix("0x").unwrap(), 16).ok()
             }
+            "dormant" => nci.dormant = value.parse().ok(),
+            "duplex" => nci.duplex = value,
+            "flags" => nci.flags = i64::from_str_radix(value.strip_prefix("0x").unwrap(), 16).ok(),
+            "ifalias" => nci.ifalias = value,
+            "ifindex" => nci.ifindex = value.parse().ok(),
+            "iflink" => nci.iflink = value.parse().ok(),
+            "link_mode" => nci.link_mode = value.parse().ok(),
+            "mtu" => nci.mtu = value.parse().ok(),
+            "name_assign_type" => nci.name_assign_type = value.parse().ok(),
+            "netdev_group" => nci.netdev_group = value.parse().ok(),
+            "operstate" => nci.operstate = value,
+            "phys_port_id" => nci.phys_port_id = value,
+            "phys_port_name" => nci.phys_port_name = value,
+            "phys_switch_id" => nci.phys_switch_id = value,
+            "speed" => nci.speed = value.parse().ok(),
+            "tx_queue_len" => nci.tx_queue_len = value.parse().ok(),
+            "type" => nci.typ = value.parse().ok(),
+            _ => {}
         }
-
-        Ok(nci)
     }
+
+    Ok(nci)
 }
 
 #[cfg(test)]
@@ -391,7 +370,7 @@ mod tests {
     #[test]
     fn parse() {
         let path = "tests/node/fixtures/sys/class/net/eth0";
-        let nci = NetClassInterface::parse(path.into()).unwrap();
+        let nci = load_netclass_interface(path.into()).unwrap();
 
         assert_eq!(nci.addr_assign_type, Some(3));
         assert_eq!(nci.address, "01:01:01:01:01:01");
