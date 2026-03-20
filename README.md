@@ -183,6 +183,14 @@ There are some keywords
 - `type` is used to represent component type
 - `inputs` is an array used to build the Topology(DAG)
 
+### Node Exporter
+Compare to node_exporter, Vertex use less CPU and memory
+![cpu -- less is better](docs/node/cpu.png)
+![memory -- less is better](docs/node/memory.png)
+
+But, still high performance
+![scrape -- less is better](docs/node/scrape.png)
+
 ### Hot Reload
 - Hot reload from files or HTTP endpoint
   - File watch needs `inotify`, so only Linux supported.
