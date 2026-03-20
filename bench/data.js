@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773700452137,
+  "lastUpdate": 1774008419820,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9834289168e7937e85cfbe9cee8ec84824f3848d",
-          "message": "Merge pull request #2764 from f1shl3gs/misc/optimize_tokio_select\n\nmisc: optimize tokio::select!",
-          "timestamp": "2026-01-25T03:43:28+08:00",
-          "tree_id": "a02f98522a2373ef5640155ed856b652af79df62",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9834289168e7937e85cfbe9cee8ec84824f3848d"
-        },
-        "date": 1769284472173,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 577,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40908.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c68fd55dce9fbd6c9541d4ef0d08f0ef3fc7ed12",
           "message": "Merge pull request #2765 from f1shl3gs/examples/cleanup_filestats\n\nexamples: cleanup filestats.yml",
           "timestamp": "2026-01-25T21:58:56+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 588,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40540.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c1ec141ec03e1962f484783292484690884fe518",
+          "message": "Merge pull request #2867 from f1shl3gs/docs/add_vertex_resource_usage\n\ndocs: add resource usage  of node_exporter and vertex",
+          "timestamp": "2026-03-20T19:55:13+08:00",
+          "tree_id": "0ac38dc124eac3bffc2b1c01c88a6bad8d355015",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c1ec141ec03e1962f484783292484690884fe518"
+        },
+        "date": 1774008395912,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 603,
             "unit": "s"
           },
           {
