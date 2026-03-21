@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1774117715525,
+  "lastUpdate": 1774117795636,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c68fd55dce9fbd6c9541d4ef0d08f0ef3fc7ed12",
-          "message": "Merge pull request #2765 from f1shl3gs/examples/cleanup_filestats\n\nexamples: cleanup filestats.yml",
-          "timestamp": "2026-01-25T21:58:56+08:00",
-          "tree_id": "90114bdb0f4ab1a7fcf4a25149a7af1e654762dc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c68fd55dce9fbd6c9541d4ef0d08f0ef3fc7ed12"
-        },
-        "date": 1769350210793,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 591,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40908.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3f4884e37b94dc293223d06b30bfc1ff27c28e37",
           "message": "Merge pull request #2766 from f1shl3gs/dependabot/cargo/tonic-d6c1aa6b55\n\nchore(deps): bump the tonic group with 4 updates",
           "timestamp": "2026-01-29T02:28:42+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40540.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "66224e54623a52850e7153ee480e5d6752080557",
+          "message": "Merge pull request #2868 from f1shl3gs/dependabot/cargo/rustls-webpki-0.103.10\n\nchore(deps): bump rustls-webpki from 0.103.9 to 0.103.10",
+          "timestamp": "2026-03-22T02:18:04+08:00",
+          "tree_id": "077d31ca09474327bd5d34e213698871315d7e6a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/66224e54623a52850e7153ee480e5d6752080557"
+        },
+        "date": 1774117773031,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 611,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40550,
             "unit": "KiB"
           }
         ]
