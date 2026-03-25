@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1774403715827,
+  "lastUpdate": 1774403726012,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "da4b01d4bd87745ed0afdad576531fa80f1f5396",
-          "message": "Merge pull request #2675 from f1shl3gs/dependabot/cargo/hyper-1.8.0\n\nchore(deps): bump hyper from 1.7.0 to 1.8.0",
-          "timestamp": "2025-11-12T18:49:22+08:00",
-          "tree_id": "8320a75fefa9bf34eeaa13c152b215f6e0d04e79",
-          "url": "https://github.com/f1shl3gs/vertex/commit/da4b01d4bd87745ed0afdad576531fa80f1f5396"
-        },
-        "date": 1762944727724,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.968,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 103.37,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 178.6,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 172.92,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "994024b194d462eafd0c656ba796195cd436acf9",
+          "message": "Merge pull request #2869 from f1shl3gs/dependabot/cargo/proptest-1.11.0\n\nchore(deps): bump proptest from 1.10.0 to 1.11.0",
+          "timestamp": "2026-03-25T09:52:56+08:00",
+          "tree_id": "04fa3c1e8a784f4763d90c9df7848e48a6e5b8aa",
+          "url": "https://github.com/f1shl3gs/vertex/commit/994024b194d462eafd0c656ba796195cd436acf9"
+        },
+        "date": 1774403703477,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.041,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 98.315,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 172.48,
             "unit": "ns/op"
           }
         ]
