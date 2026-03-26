@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1774490441122,
+  "lastUpdate": 1774490518871,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2a79934e37fe41b365d7f833dc4fc51406bdb255",
-          "message": "Merge pull request #2767 from f1shl3gs/dependabot/cargo/hyper-util-0.1.20\n\nchore(deps): bump hyper-util from 0.1.19 to 0.1.20",
-          "timestamp": "2026-02-03T10:22:25+08:00",
-          "tree_id": "a7c23d65e7b9f6bd75792899a860ed3fc7e260dd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2a79934e37fe41b365d7f833dc4fc51406bdb255"
-        },
-        "date": 1770086017189,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 587,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40916.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b1c961686da5c7b257299c3cdcff73b362dc1f55",
           "message": "Merge pull request #2768 from f1shl3gs/misc/use_std_task_ready\n\nmisc: use std::task::ready",
           "timestamp": "2026-02-04T13:48:18+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 586,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40550,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8d2c24e1e6138a7c442224e5dc1f8a26122ff8fd",
+          "message": "Merge pull request #2870 from f1shl3gs/dependabot/cargo/snmalloc-rs-0.7.4\n\nchore(deps): bump snmalloc-rs from 0.3.8 to 0.7.4",
+          "timestamp": "2026-03-26T09:50:28+08:00",
+          "tree_id": "7acc26a88a442760741e8388c490667ea598b405",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8d2c24e1e6138a7c442224e5dc1f8a26122ff8fd"
+        },
+        "date": 1774490495562,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 590,
             "unit": "s"
           },
           {
