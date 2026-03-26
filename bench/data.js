@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1774489986700,
+  "lastUpdate": 1774489998162,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "da4b01d4bd87745ed0afdad576531fa80f1f5396",
-          "message": "Merge pull request #2675 from f1shl3gs/dependabot/cargo/hyper-1.8.0\n\nchore(deps): bump hyper from 1.7.0 to 1.8.0",
-          "timestamp": "2025-11-12T18:49:22+08:00",
-          "tree_id": "8320a75fefa9bf34eeaa13c152b215f6e0d04e79",
-          "url": "https://github.com/f1shl3gs/vertex/commit/da4b01d4bd87745ed0afdad576531fa80f1f5396"
-        },
-        "date": 1762944766650,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.651,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 176.21,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 338.74,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 713.85,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bb176bce3fe7ff8f4361346dac5f2eabed28e459",
           "message": "Merge pull request #2677 from f1shl3gs/lib/configurable-derive/remove_unused\n\nlib/configurable-derive: remove unused",
           "timestamp": "2025-11-13T15:48:10+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 717.7,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8d2c24e1e6138a7c442224e5dc1f8a26122ff8fd",
+          "message": "Merge pull request #2870 from f1shl3gs/dependabot/cargo/snmalloc-rs-0.7.4\n\nchore(deps): bump snmalloc-rs from 0.3.8 to 0.7.4",
+          "timestamp": "2026-03-26T09:50:28+08:00",
+          "tree_id": "7acc26a88a442760741e8388c490667ea598b405",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8d2c24e1e6138a7c442224e5dc1f8a26122ff8fd"
+        },
+        "date": 1774489974598,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.565,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 183.69,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 331.76,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 696.2,
             "unit": "ns/op"
           }
         ]
