@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1774404264436,
+  "lastUpdate": 1774489976920,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "bb176bce3fe7ff8f4361346dac5f2eabed28e459",
-          "message": "Merge pull request #2677 from f1shl3gs/lib/configurable-derive/remove_unused\n\nlib/configurable-derive: remove unused",
-          "timestamp": "2025-11-13T15:48:10+08:00",
-          "tree_id": "724cf3d29e58920c7581ce4bd7e03471ca76e348",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bb176bce3fe7ff8f4361346dac5f2eabed28e459"
-        },
-        "date": 1763020235605,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.943,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 100.02,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 173.63,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 172.48,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8d2c24e1e6138a7c442224e5dc1f8a26122ff8fd",
+          "message": "Merge pull request #2870 from f1shl3gs/dependabot/cargo/snmalloc-rs-0.7.4\n\nchore(deps): bump snmalloc-rs from 0.3.8 to 0.7.4",
+          "timestamp": "2026-03-26T09:50:28+08:00",
+          "tree_id": "7acc26a88a442760741e8388c490667ea598b405",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8d2c24e1e6138a7c442224e5dc1f8a26122ff8fd"
+        },
+        "date": 1774489954241,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.984,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 97.674,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 172.61,
             "unit": "ns/op"
           }
         ]
