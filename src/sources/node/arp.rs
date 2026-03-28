@@ -4,18 +4,20 @@ use std::collections::HashMap;
 
 use event::{Metric, tags};
 
-use super::{Error, Paths};
+use super::{Error, Paths, read_file_no_stat};
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
-    let data = std::fs::read_to_string(paths.proc().join("net/arp"))?;
+    let content = read_file_no_stat(paths.proc().join("net/arp"))?;
 
     let mut devices = HashMap::new();
     // the first line is title, so we don't need it
-    for line in data.lines().skip(1) {
-        let dev = line.split_ascii_whitespace().nth(5).expect("must exists");
+    for line in content.lines().skip(1) {
+        let Some(device) = line.split_ascii_whitespace().nth(5) else {
+            continue;
+        };
 
         devices
-            .entry(dev)
+            .entry(device)
             .and_modify(|count| *count += 1)
             .or_insert(1);
     }
@@ -31,4 +33,16 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     }
 
     Ok(metrics)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn smoke() {
+        let paths = Paths::test();
+        let metrics = collect(paths).await.unwrap();
+        assert_eq!(metrics.len(), 3);
+    }
 }

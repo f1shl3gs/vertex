@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 
 use event::{Metric, tags};
 
-use super::{Error, Paths, read_into, read_string};
+use super::{Error, Paths, read_into, read_sys_file};
 
 /// ThermalStats contains info from files in /sys/class/thermal_zone<zone>
 /// for a single <zone>
@@ -57,12 +57,12 @@ fn parse_thermal_zone(root: &Path) -> Result<ThermalZoneStats, Error> {
         .to_string();
 
     // required attributes
-    let typ = read_string(root.join("type"))?;
-    let policy = read_string(root.join("policy"))?;
+    let typ = read_sys_file(root.join("type"))?;
+    let policy = read_sys_file(root.join("policy"))?;
     let temp = read_into(root.join("temp"))?;
 
     // optional attributes
-    let mode = match read_string(root.join("mode")) {
+    let mode = match read_sys_file(root.join("mode")) {
         Ok(content) => match content.as_str() {
             "enabled" => Some(true),
             "disabled" => Some(false),
@@ -71,7 +71,7 @@ fn parse_thermal_zone(root: &Path) -> Result<ThermalZoneStats, Error> {
         Err(_) => None,
     };
 
-    let passive = match read_string(root.join("passive")) {
+    let passive = match read_sys_file(root.join("passive")) {
         Ok(content) => Some(content.parse::<u64>()?),
         Err(err) => {
             if err.kind() != ErrorKind::NotFound {
@@ -131,7 +131,7 @@ fn parse_cooling_device_stats(root: PathBuf) -> Result<CoolingDeviceStats, Error
         .unwrap()
         .to_string();
 
-    let typ = read_string(root.join("type"))?;
+    let typ = read_sys_file(root.join("type"))?;
     let max_state = read_into(root.join("max_state"))?;
     // cur_state can be -1, eg intel powerclamp
     // https://www.kernel.org/doc/Documentation/thermal/intel_powerclamp.txt

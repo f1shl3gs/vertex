@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 //! The PSI / pressure interface is described at
 //!   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/accounting/psi.txt
 //! Each resource (cpu, io, memory, ...) is exposed as a single file.
@@ -14,7 +12,7 @@ use std::path::PathBuf;
 
 use event::Metric;
 
-use super::{Error, Paths};
+use super::{Error, Paths, read_file_no_stat};
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     let cpu = psi_stats(paths.proc().join("pressure/cpu"))?;
@@ -77,6 +75,7 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
 /// PSIStat is a single line of values as returned by /proc/pressure/*
 /// The avg entries are averages over n seconds, as a percentage
 /// The total line is in microseconds
+#[allow(dead_code)]
 struct PSIStat {
     avg10: f64,
     avg60: f64,
@@ -93,22 +92,20 @@ struct PSIStats {
 }
 
 fn psi_stats(path: PathBuf) -> Result<PSIStats, Error> {
-    let data = std::fs::read_to_string(path)?;
+    let content = read_file_no_stat(path)?;
     let mut stats = PSIStats {
         some: None,
         full: None,
     };
 
-    for line in data.lines() {
-        let stat = parse_psi_stat(line)?;
-
+    for line in content.lines() {
         if line.starts_with("some") {
-            stats.some = Some(stat);
+            stats.some = Some(parse_psi_stat(line)?);
             continue;
         }
 
         if line.starts_with("full") {
-            stats.full = Some(stat);
+            stats.full = Some(parse_psi_stat(line)?);
         }
     }
 
@@ -116,16 +113,20 @@ fn psi_stats(path: PathBuf) -> Result<PSIStats, Error> {
 }
 
 fn parse_psi_stat(line: &str) -> Result<PSIStat, Error> {
-    // some of full
-    let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
-    if parts.len() != 5 {
-        return Err(Error::Malformed("psi stat line"));
+    // first element is `some` of `full`, which is useless
+    let fields = line
+        .split_ascii_whitespace()
+        .skip(1)
+        .take(4)
+        .collect::<Vec<_>>();
+    if fields.len() != 4 {
+        return Err(Error::Malformed("psi stat"));
     }
 
-    let avg10 = parts[1].strip_prefix("avg10=").unwrap().parse()?;
-    let avg60 = parts[2].strip_prefix("avg60=").unwrap().parse()?;
-    let avg300 = parts[3].strip_prefix("avg300=").unwrap().parse()?;
-    let total = parts[4].strip_prefix("total=").unwrap().parse()?;
+    let avg10 = fields[0].strip_prefix("avg10=").unwrap().parse()?;
+    let avg60 = fields[1].strip_prefix("avg60=").unwrap().parse()?;
+    let avg300 = fields[2].strip_prefix("avg300=").unwrap().parse()?;
+    let total = fields[3].strip_prefix("total=").unwrap().parse()?;
 
     Ok(PSIStat {
         avg10,
@@ -139,8 +140,15 @@ fn parse_psi_stat(line: &str) -> Result<PSIStat, Error> {
 mod tests {
     use super::*;
 
+    #[tokio::test]
+    async fn smoke() {
+        let paths = Paths::test();
+        let metrics = collect(paths).await.unwrap();
+        assert_ne!(metrics.len(), 0);
+    }
+
     #[test]
-    fn test_parse_psi_stat() {
+    fn parse_line() {
         let line = "full avg10=0.20 avg60=3.00 avg300=4.95 total=25";
         let stat = parse_psi_stat(line).unwrap();
         assert_eq!(stat.avg10, 0.20);

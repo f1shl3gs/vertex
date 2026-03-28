@@ -12,91 +12,85 @@ static VALID_DEVICE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"^st\d+$"#)
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     let root = paths.sys().join("class/scsi_tape");
-    let dirs = root.read_dir()?;
-
     let mut metrics = Vec::with_capacity(10);
-    for entry in dirs.flatten() {
-        let path = entry.path();
-        if !path.is_dir() {
-            continue;
-        }
-
-        let name = path.file_name().map(|name| name.to_string_lossy()).unwrap();
+    for entry in root.read_dir()?.flatten() {
+        let filename = entry.file_name();
+        let name = filename.to_string_lossy();
         if !VALID_DEVICE.is_match(name.as_ref()) {
             continue;
         }
 
-        let stats = match read_stats(&path) {
-            Ok(stats) => stats,
+        let path = entry.path();
+        match read_stats(&path) {
+            Ok(stats) => {
+                metrics.extend([
+                    Metric::gauge_with_tags(
+                        "node_tape_io_now",
+                        "The number of I/Os currently outstanding to this device.",
+                        stats.in_flight,
+                        tags!("device" => name.as_ref()),
+                    ),
+                    Metric::sum_with_tags(
+                        "node_tape_io_time_seconds_total",
+                        "The amount of time spent waiting for all I/O to complete (including read and write). This includes tape movement commands such as seeking between file or set marks and implicit tape movement such as when rewind on close tape devices are used.",
+                        stats.io_ns as f64 * 0.000000001,
+                        tags!("device" => name.as_ref()),
+                    ),
+                    Metric::sum_with_tags(
+                        "node_tape_io_others_total",
+                        "The number of I/Os issued to the tape drive other than read or write commands. The time taken to complete these commands uses the following calculation io_time_seconds_total-read_time_seconds_total-write_time_seconds_total",
+                        stats.other_cnt,
+                        tags!("device" => name.as_ref()),
+                    ),
+                    Metric::sum_with_tags(
+                        "node_tape_read_bytes_total",
+                        "The number of bytes read from the tape drive.",
+                        stats.read_byte_cnt,
+                        tags!("device" => name.as_ref()),
+                    ),
+                    Metric::sum_with_tags(
+                        "node_tape_reads_completed_total",
+                        "The number of read requests issued to the tape drive.",
+                        stats.read_cnt,
+                        tags!("device" => name.as_ref()),
+                    ),
+                    Metric::sum_with_tags(
+                        "node_tape_read_time_seconds_total",
+                        "The amount of time spent waiting for read requests to complete.",
+                        stats.read_ns as f64 * 0.000000001,
+                        tags!("device" => name.as_ref()),
+                    ),
+                    Metric::sum_with_tags(
+                        "node_tape_residual_total",
+                        "The number of times during a read or write we found the residual amount to be non-zero. This should mean that a program is issuing a read larger thean the block size on tape. For write not all data made it to tape.",
+                        stats.resid_cnt,
+                        tags!("device" => name.as_ref()),
+                    ),
+                    Metric::sum_with_tags(
+                        "node_tape_written_bytes_total",
+                        "The number of bytes written to the tape drive.",
+                        stats.write_byte_cnt,
+                        tags!("device" => name.as_ref()),
+                    ),
+                    Metric::sum_with_tags(
+                        "node_tape_writes_completed_total",
+                        "The number of write requests issued to the tape drive.",
+                        stats.write_cnt,
+                        tags!("device" => name.as_ref()),
+                    ),
+                    Metric::sum_with_tags(
+                        "node_tape_write_time_seconds_total",
+                        "The amount of time spent waiting for write requests to complete.",
+                        stats.write_ns as f64 * 0.000000001,
+                        tags!("device" => name.as_ref()),
+                    )
+                ]);
+            }
             Err(err) => {
-                warn!(message = "failed to read tape stats", ?path, ?err,);
-
+                warn!(message = "failed to read tape stats", ?path, ?err);
                 continue;
             }
-        };
-
-        metrics.extend([
-            Metric::gauge_with_tags(
-                "node_tape_io_now",
-                "The number of I/Os currently outstanding to this device.",
-                stats.in_flight,
-                tags!("device" => name.as_ref()),
-            ),
-            Metric::sum_with_tags(
-                "node_tape_io_time_seconds_total",
-                "The amount of time spent waiting for all I/O to complete (including read and write). This includes tape movement commands such as seeking between file or set marks and implicit tape movement such as when rewind on close tape devices are used.",
-                stats.io_ns as f64 * 0.000000001,
-                tags!("device" => name.as_ref()),
-            ),
-            Metric::sum_with_tags(
-                "node_tape_io_others_total",
-                "The number of I/Os issued to the tape drive other than read or write commands. The time taken to complete these commands uses the following calculation io_time_seconds_total-read_time_seconds_total-write_time_seconds_total",
-                stats.other_cnt,
-                tags!("device" => name.as_ref()),
-            ),
-            Metric::sum_with_tags(
-                "node_tape_read_bytes_total",
-                "The number of bytes read from the tape drive.",
-                stats.read_byte_cnt,
-                tags!("device" => name.as_ref()),
-            ),
-            Metric::sum_with_tags(
-                "node_tape_reads_completed_total",
-                "The number of read requests issued to the tape drive.",
-                stats.read_cnt,
-                tags!("device" => name.as_ref()),
-            ),
-            Metric::sum_with_tags(
-                "node_tape_read_time_seconds_total",
-                "The amount of time spent waiting for read requests to complete.",
-                stats.read_ns as f64 * 0.000000001,
-                tags!("device" => name.as_ref()),
-            ),
-            Metric::sum_with_tags(
-                "node_tape_residual_total",
-                "The number of times during a read or write we found the residual amount to be non-zero. This should mean that a program is issuing a read larger thean the block size on tape. For write not all data made it to tape.",
-                stats.resid_cnt,
-                tags!("device" => name.as_ref()),
-            ),
-            Metric::sum_with_tags(
-                "node_tape_written_bytes_total",
-                "The number of bytes written to the tape drive.",
-                stats.write_byte_cnt,
-                tags!("device" => name.as_ref()),
-            ),
-            Metric::sum_with_tags(
-                "node_tape_writes_completed_total",
-                "The number of write requests issued to the tape drive.",
-                stats.write_cnt,
-                tags!("device" => name.as_ref()),
-            ),
-            Metric::sum_with_tags(
-                "node_tape_write_time_seconds_total",
-                "The amount of time spent waiting for write requests to complete.",
-                stats.write_ns as f64 * 0.000000001,
-                tags!("device" => name.as_ref()),
-            )
-        ]);
+        }
     }
 
     Ok(metrics)
@@ -144,6 +138,13 @@ fn read_stats(path: &Path) -> Result<Stats, Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn smoke() {
+        let path = Paths::test();
+        let metrics = collect(path).await.unwrap();
+        assert_ne!(metrics.len(), 0);
+    }
 
     #[test]
     fn read() {

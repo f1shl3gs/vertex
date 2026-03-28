@@ -32,13 +32,13 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_schedstat_running_seconds_total",
                 "Number of seconds CPU spent running a process.",
-                stat.running_nanoseconds,
+                stat.running_nanoseconds as f64 / 1e9,
                 tags.clone(),
             ),
             Metric::sum_with_tags(
                 "node_schedstat_waiting_seconds_total",
                 "Number of seconds spent by processing waiting for this CPU.",
-                stat.waiting_nanoseconds,
+                stat.waiting_nanoseconds as f64 / 1e9,
                 tags.clone(),
             ),
             Metric::sum_with_tags(

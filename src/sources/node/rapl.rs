@@ -14,7 +14,7 @@ use std::path::{Path, PathBuf};
 
 use event::{Metric, tags};
 
-use super::{Error, Paths, read_into, read_string};
+use super::{Error, Paths, read_into, read_sys_file};
 
 /// RaplZone stores the information for one RAPL power zone
 #[derive(Debug)]
@@ -44,7 +44,7 @@ fn get_rapl_zones(root: &Path) -> Result<Vec<RaplZone>, Error> {
     // loop through directory files searching for file "name" from subdirs
     for entry in dirs.flatten() {
         let path = entry.path();
-        let Ok(name) = read_string(path.join("name")) else {
+        let Ok(name) = read_sys_file(path.join("name")) else {
             continue;
         };
 

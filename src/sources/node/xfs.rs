@@ -6,17 +6,17 @@ use std::io::ErrorKind;
 
 use event::{Metric, tags};
 
-use super::{Error, Paths};
+use super::{Error, Paths, read_file_no_stat};
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
-    let dirs = std::fs::read_dir(paths.sys().join("fs/xfs"))?;
+    let root = paths.sys().join("fs/xfs");
 
     // xfs_sys_stats retrieves XFS filesystem runtime statistics for each mounted
     // XFS filesystem. Only available on kernel 4.4+. On older kernels, an empty
     // vector will be returned.
     let mut metrics = Vec::new();
-    for entry in dirs.flatten() {
-        let stats = match std::fs::read_to_string(entry.path().join("stats/stats")) {
+    for entry in root.read_dir()?.flatten() {
+        let stats = match read_file_no_stat(entry.path().join("stats/stats")) {
             Ok(content) => parse_stat(&content)?,
             Err(err) => {
                 if err.kind() == ErrorKind::NotFound {
@@ -27,8 +27,9 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
             }
         };
 
-        let device = entry.file_name().to_string_lossy().to_string();
-        let tags = tags!("device" => device);
+        let filename = entry.file_name();
+        let device = filename.to_string_lossy();
+        let tags = tags!("device" => device.as_ref());
 
         metrics.extend([
             Metric::sum_with_tags(

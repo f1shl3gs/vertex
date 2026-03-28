@@ -11,12 +11,12 @@ use super::{Error, Paths};
 
 #[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
-    #[serde(default = "default_mount_points_exclude")]
-    #[serde(with = "serde_regex")]
+    /// Regex of mount points to exclude for filesystem collector.
+    #[serde(default = "default_mount_points_exclude", with = "serde_regex")]
     mount_points_exclude: regex::Regex,
 
-    #[serde(default = "default_fs_type_exclude")]
-    #[serde(with = "serde_regex")]
+    /// Regex of filesystem types to exclude for filesystem collector.
+    #[serde(default = "default_fs_type_exclude", with = "serde_regex")]
     fs_type_exclude: regex::Regex,
 }
 

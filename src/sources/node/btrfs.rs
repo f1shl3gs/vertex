@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 
 use event::{Metric, tags};
 
-use super::{Error, Paths, read_into, read_string};
+use super::{Error, Paths, read_into, read_sys_file};
 
 const SECTOR_SIZE: u64 = 512;
 
@@ -269,8 +269,8 @@ fn stats(root: &Path) -> Result<Vec<Stats>, Error> {
 fn get_stats(root: PathBuf) -> Result<Stats, Error> {
     let devices = read_device_info(&root)?;
 
-    let label = read_string(root.join("label"))?;
-    let uuid = read_string(root.join("metadata_uuid"))?;
+    let label = read_sys_file(root.join("label"))?;
+    let uuid = read_sys_file(root.join("metadata_uuid"))?;
     let features = list_files(root.join("features"))?;
     let clone_alignment = read_into(root.join("clone_alignment"))?;
     let node_size = read_into(root.join("nodesize"))?;

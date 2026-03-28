@@ -8,8 +8,20 @@ use serde::{Deserialize, Serialize};
 
 use super::{Error, Paths};
 
+fn default_labels() -> Vec<String> {
+    vec![
+        "local_address".to_string(),
+        "local_port".to_string(),
+        "remote_address".to_string(),
+        "remote_port".to_string(),
+        "proto".to_string(),
+        "local_mark".to_string(),
+    ]
+}
+
 #[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
+    /// List for IPVS backend stats labels
     #[serde(default = "default_labels")]
     labels: Vec<String>,
 }
@@ -20,17 +32,6 @@ impl Default for Config {
             labels: default_labels(),
         }
     }
-}
-
-fn default_labels() -> Vec<String> {
-    vec![
-        "local_address".to_string(),
-        "local_port".to_string(),
-        "remote_address".to_string(),
-        "remote_port".to_string(),
-        "proto".to_string(),
-        "local_mark".to_string(),
-    ]
 }
 
 pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {

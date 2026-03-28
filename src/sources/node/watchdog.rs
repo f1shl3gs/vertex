@@ -2,78 +2,79 @@ use std::path::PathBuf;
 
 use event::{Metric, tags};
 
-use super::{Paths, read_into, read_string};
+use super::{Paths, read_sys_file};
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, crate::Error> {
-    let dirs = paths.sys().join("class/watchdog").read_dir()?;
-
+    let root = paths.sys().join("class/watchdog");
     let mut metrics = Vec::new();
-    for entry in dirs.flatten() {
-        let name = entry.file_name().to_string_lossy().to_string();
+
+    for entry in root.read_dir()?.flatten() {
+        let filename = entry.file_name();
+        let name = filename.to_string_lossy();
         let stat = parse_watchdog(entry.path())?;
 
-        if let Some(bootstatus) = stat.bootstatus {
+        if let Some(value) = stat.bootstatus {
             metrics.push(Metric::gauge_with_tags(
                 "node_watchdog_bootstatus",
                 "Value of /sys/class/watchdog/<watchdog>/bootstatus",
-                bootstatus,
+                value,
                 tags!(
-                    "name" => &name,
+                    "name" => name.as_ref(),
                 ),
             ));
         }
 
-        if let Some(fw_version) = stat.fw_version {
+        if let Some(value) = stat.fw_version {
             metrics.push(Metric::gauge_with_tags(
                 "node_watchdog_fw_version",
                 "Value of /sys/class/watchdog/<watchdog>/fw_version",
-                fw_version,
-                tags!("name" => &name ),
+                value,
+                tags!("name" => name.as_ref()),
             ));
         }
 
-        if let Some(nowayout) = stat.nowayout {
+        if let Some(value) = stat.nowayout {
             metrics.push(Metric::gauge_with_tags(
                 "node_watchdog_nowayout",
                 "Value of /sys/class/watchdog/<watchdog>/nowayout",
-                nowayout,
-                tags!("name" => &name ),
+                value,
+                tags!("name" => name.as_ref()),
             ));
         }
 
-        if let Some(timeleft) = stat.timeleft {
+        if let Some(value) = stat.timeleft {
             metrics.push(Metric::gauge_with_tags(
                 "node_watchdog_timeleft_seconds",
                 "Value of /sys/class/watchdog/<watchdog>/timeleft",
-                timeleft,
-                tags!("name" => &name ),
+                value,
+                tags!("name" => name.as_ref()),
             ));
         }
 
-        if let Some(timeout) = stat.timeout {
+        if let Some(value) = stat.timeout {
             metrics.push(Metric::gauge_with_tags(
                 "node_watchdog_timeout_seconds",
                 "Value of /sys/class/watchdog/<watchdog>/timeout",
-                timeout,
-                tags!("name" => &name ),
+                value,
+                tags!("name" => name.as_ref()),
             ));
         }
 
-        if let Some(pretimeout) = stat.pretimeout {
+        if let Some(value) = stat.pretimeout {
             metrics.push(Metric::gauge_with_tags(
                 "node_watchdog_pretimeout_seconds",
                 "Value of /sys/class/watchdog/<watchdog>/pretimeout",
-                pretimeout,
-                tags!("name" => &name ),
+                value,
+                tags!("name" => name.as_ref()),
             ));
         }
 
-        if let Some(access_cs0) = stat.access_cs0 {
+        if let Some(value) = stat.access_cs0 {
             metrics.push(Metric::gauge_with_tags(
                 "node_watchdog_access_cs0",
                 "Value of /sys/class/watchdog/<watchdog>/access_cs0",
-                access_cs0,
-                tags!("name" => &name ),
+                value,
+                tags!("name" => name.as_ref()),
             ));
         }
 
@@ -82,7 +83,7 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, crate::Error> {
             "Info of /sys/class/watchdog/<watchdog>",
             1,
             tags!(
-                "name" => name,
+                "name" => name.as_ref(),
                 "options" => stat.options.unwrap_or_default(),
                 "identity" => stat.identity.unwrap_or_default(),
                 "state" => stat.state.unwrap_or_default(),
@@ -95,6 +96,7 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, crate::Error> {
     Ok(metrics)
 }
 
+#[cfg_attr(test, derive(PartialEq))]
 #[derive(Debug, Default)]
 struct Stat {
     bootstatus: Option<i64>,             // /sys/class/watchdog/<Name>/bootstatus
@@ -111,31 +113,76 @@ struct Stat {
     access_cs0: Option<i64>,             // /sys/class/watchdog/<Name>/access_cs0
 }
 
-fn parse_watchdog(path: PathBuf) -> Result<Stat, crate::Error> {
-    let dirs = path.read_dir()?;
-
+fn parse_watchdog(root: PathBuf) -> Result<Stat, crate::Error> {
     let mut stat = Stat::default();
-    for entry in dirs {
-        let Ok(entry) = entry else {
+
+    let mut path = root.join("bootstatus");
+    for (filename, dst) in [
+        ("bootstatus", &mut stat.bootstatus),
+        ("fw_version", &mut stat.fw_version),
+        ("nowayout", &mut stat.nowayout),
+        ("timeleft", &mut stat.timeleft),
+        ("timeout", &mut stat.timeout),
+        ("pretimeout", &mut stat.pretimeout),
+        ("access_cs0", &mut stat.access_cs0),
+    ] {
+        path.set_file_name(filename);
+        let Ok(content) = read_sys_file(&path) else {
             continue;
         };
+        *dst = content.parse::<i64>().ok();
+    }
 
-        match entry.file_name().to_string_lossy().as_ref() {
-            "bootstatus" => stat.bootstatus = read_into(entry.path()).ok(),
-            "options" => stat.options = read_string(entry.path()).ok(),
-            "fw_version" => stat.fw_version = read_into(entry.path()).ok(),
-            "identity" => stat.identity = read_string(entry.path()).ok(),
-            "nowayout" => stat.nowayout = read_into(entry.path()).ok(),
-            "state" => stat.state = read_string(entry.path()).ok(),
-            "status" => stat.status = read_string(entry.path()).ok(),
-            "timeleft" => stat.timeleft = read_into(entry.path()).ok(),
-            "timeout" => stat.timeout = read_into(entry.path()).ok(),
-            "pretimeout" => stat.pretimeout = read_into(entry.path()).ok(),
-            "pretimeout_governor" => stat.pretimeout_governor = read_string(entry.path()).ok(),
-            "access_cs0" => stat.access_cs0 = read_into(entry.path()).ok(),
-            _ => continue,
+    for (filename, dst) in [
+        ("options", &mut stat.options),
+        ("identity", &mut stat.identity),
+        ("state", &mut stat.state),
+        ("status", &mut stat.status),
+        ("pretimeout_governor", &mut stat.pretimeout_governor),
+    ] {
+        path.set_file_name(filename);
+        if let Ok(content) = read_sys_file(&path) {
+            *dst = Some(content);
         }
     }
 
     Ok(stat)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn smoke() {
+        let paths = Paths::test();
+        let metrics = collect(paths).await.unwrap();
+        assert_ne!(metrics.len(), 0);
+    }
+
+    #[test]
+    fn parse() {
+        let root = PathBuf::from("tests/node/fixtures/sys/class/watchdog/watchdog0");
+        let got = parse_watchdog(root).unwrap();
+        let want = Stat {
+            bootstatus: Some(1),
+            options: Some("0x8380".to_string()),
+            fw_version: Some(2),
+            identity: Some("Software Watchdog".to_string()),
+            nowayout: Some(0),
+            state: Some("active".to_string()),
+            status: Some("0x8000".to_string()),
+            timeleft: Some(300),
+            timeout: Some(60),
+            pretimeout: Some(120),
+            pretimeout_governor: Some("noop".to_string()),
+            access_cs0: Some(0),
+        };
+        assert_eq!(got, want);
+
+        let root = PathBuf::from("tests/node/fixtures/sys/class/watchdog/watchdog1");
+        let got = parse_watchdog(root).unwrap();
+        let want = Stat::default();
+        assert_eq!(got, want);
+    }
 }

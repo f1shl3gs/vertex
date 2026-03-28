@@ -10,7 +10,7 @@ use event::{Metric, tags};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 
-use super::{Error, Paths, read_into};
+use super::{Error, Paths, read_file_no_stat, read_into};
 
 const DISK_SECTOR_SIZE: f64 = 512.0;
 
@@ -20,6 +20,7 @@ fn default_ignored() -> regex::Regex {
 
 #[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
+    /// Regex of diskstats devices to exclude
     #[serde(default = "default_ignored", with = "serde_regex")]
     ignored: regex::Regex,
 }
@@ -33,7 +34,7 @@ impl Default for Config {
 }
 
 pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
-    let data = std::fs::read_to_string(paths.proc().join("diskstats"))?;
+    let content = read_file_no_stat(paths.proc().join("diskstats"))?;
 
     // https://www.kernel.org/doc/Documentation/ABI/testing/procfs-diskstats
     //
@@ -77,7 +78,7 @@ pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
     //
     //     For more details refer to Documentation/admin-guide/iostats.rst
     let mut metrics = Vec::new();
-    for line in data.lines() {
+    for line in content.lines() {
         // the content looks like this
         // 259       0 nvme0n1 366 0 23480 41 3 0 0 0 0 41 41 0 0 0 0
         let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
@@ -97,6 +98,7 @@ pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
             Err(err) => {
                 debug!(
                     message = "read udev properties failed",
+                    device,
                     major,
                     minor,
                     %err,
@@ -150,7 +152,7 @@ pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
         ));
 
         for (index, part) in parts.iter().skip(3).enumerate() {
-            let Ok(v) = part.parse::<f64>() else {
+            let Ok(value) = part.parse::<f64>() else {
                 debug!(message = "invalid value part", part);
                 continue;
             };
@@ -158,104 +160,104 @@ pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
             match index {
                 0 => metrics.push(Metric::sum_with_tags(
                     "node_disk_reads_completed_total",
-                    "The total number of reads completed successfully",
-                    v,
+                    "The total number of reads completed successfully.",
+                    value,
                     tags!("device" => device),
                 )),
                 1 => metrics.push(Metric::sum_with_tags(
                     "node_disk_reads_merged_total",
-                    "The total number of reads merged",
-                    v,
+                    "The total number of reads merged.",
+                    value,
                     tags!("device" => device),
                 )),
                 2 => metrics.push(Metric::sum_with_tags(
                     "node_disk_read_bytes_total",
-                    "The total number of bytes read successfully",
-                    v * DISK_SECTOR_SIZE,
+                    "The total number of bytes read successfully.",
+                    value * DISK_SECTOR_SIZE,
                     tags!("device" => device),
                 )),
                 3 => metrics.push(Metric::sum_with_tags(
                     "node_disk_read_time_seconds_total",
                     "The total number of seconds spent by all reads",
-                    v * 0.001,
+                    value * 0.001,
                     tags!("device" => device),
                 )),
                 4 => metrics.push(Metric::sum_with_tags(
                     "node_disk_writes_completed_total",
-                    "The total number of writes completed successfully",
-                    v,
+                    "The total number of writes completed successfully.",
+                    value,
                     tags!("device" => device),
                 )),
                 5 => metrics.push(Metric::sum_with_tags(
                     "node_disk_writes_merged_total",
                     "The number of writes merged.",
-                    v,
+                    value,
                     tags!("device" => device),
                 )),
                 6 => metrics.push(Metric::sum_with_tags(
                     "node_disk_written_bytes_total",
                     "The total number of bytes written successfully.",
-                    v * DISK_SECTOR_SIZE,
+                    value * DISK_SECTOR_SIZE,
                     tags!("device" => device),
                 )),
                 7 => metrics.push(Metric::sum_with_tags(
                     "node_disk_write_time_seconds_total",
                     "This is the total number of seconds spent by all writes.",
-                    v * 0.001,
+                    value * 0.001,
                     tags!("device" => device),
                 )),
                 8 => metrics.push(Metric::gauge_with_tags(
                     "node_disk_io_now",
                     "The number of I/Os currently in progress",
-                    v,
+                    value,
                     tags!("device" => device),
                 )),
                 9 => metrics.push(Metric::sum_with_tags(
                     "node_disk_io_time_seconds_total",
                     "Total seconds spent doing I/Os.",
-                    v * 0.001,
+                    value * 0.001,
                     tags!("device" => device),
                 )),
                 10 => metrics.push(Metric::sum_with_tags(
                     "node_disk_io_time_weighted_seconds_total",
                     "The weighted # of seconds spent doing I/Os.",
-                    v * 0.001,
+                    value * 0.001,
                     tags!("device" => device),
                 )),
                 11 => metrics.push(Metric::sum_with_tags(
                     "node_disk_discards_completed_total",
                     "The total number of discards completed successfully.",
-                    v,
+                    value,
                     tags!("device" => device),
                 )),
                 12 => metrics.push(Metric::sum_with_tags(
                     "node_disk_discards_merged_total",
                     "The total number of discards merged.",
-                    v,
+                    value,
                     tags!("device" => device),
                 )),
                 13 => metrics.push(Metric::sum_with_tags(
                     "node_disk_discarded_sectors_total",
                     "The total number of sectors discarded successfully.",
-                    v,
+                    value,
                     tags!("device" => device),
                 )),
                 14 => metrics.push(Metric::sum_with_tags(
                     "node_disk_discard_time_seconds_total",
                     "This is the total number of seconds spent by all discards.",
-                    v * 0.001,
+                    value * 0.001,
                     tags!("device" => device),
                 )),
                 15 => metrics.push(Metric::sum_with_tags(
                     "node_disk_flush_requests_total",
                     "The total number of flush requests completed successfully",
-                    v,
+                    value,
                     tags!("device" => device),
                 )),
                 16 => metrics.push(Metric::sum_with_tags(
                     "node_disk_flush_requests_time_seconds_total",
                     "This is the total number of seconds spent by all flush requests.",
-                    v * 0.001,
+                    value * 0.001,
                     tags!("device" => device),
                 )),
                 _ => {}
@@ -267,7 +269,7 @@ pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
         {
             metrics.push(Metric::gauge_with_tags(
                 "node_disk_filesystem_info",
-                "Info about disk filesystem",
+                "Info about disk filesystem.",
                 1,
                 tags!(
                     "device" => device,
@@ -284,7 +286,7 @@ pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
         {
             metrics.push(Metric::gauge_with_tags(
                 "node_disk_device_mapper_info",
-                "Info about disk device mapper",
+                "Info about disk device mapper.",
                 1,
                 tags!(
                     "device" => device,
@@ -304,12 +306,12 @@ pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
                 (
                     "ID_ATA_WRITE_CACHE",
                     "node_disk_ata_write_cache",
-                    "ATA disk has a write cache",
+                    "ATA disk has a write cache.",
                 ),
                 (
                     "ID_ATA_WRITE_CACHE_ENABLED",
                     "node_disk_ata_write_cache_enabled",
-                    "ATA disk has its write cache enabled",
+                    "ATA disk has its write cache enabled.",
                 ),
                 (
                     "ID_ATA_ROTATION_RATE_RPM",
@@ -365,4 +367,17 @@ fn udev_device_properties(
     }
 
     Ok(properties)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn smoke() {
+        let conf = Config::default();
+        let paths = Paths::test();
+        let metrics = collect(conf, paths).await.unwrap();
+        assert_ne!(metrics.len(), 0);
+    }
 }

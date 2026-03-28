@@ -2,10 +2,10 @@ use std::borrow::Cow;
 
 use event::{Metric, tags};
 
-use super::{Error, Paths};
+use super::{Error, Paths, read_file_no_stat};
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
-    let root = paths.sys().join("devices/system/node/");
+    let root = paths.sys().join("devices/system/node");
 
     let mut metrics = Vec::new();
     for entry in root.read_dir()?.flatten() {
@@ -18,11 +18,11 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
             continue;
         };
 
-        let content = std::fs::read_to_string(entry.path().join("meminfo"))?;
+        let content = read_file_no_stat(entry.path().join("meminfo"))?;
         for info in parse_meminfo_numa(&content)? {
             metrics.push(Metric::gauge_with_tags(
                 format!("node_memory_numa_{}", info.name),
-                format!("Memory information field {}", info.name),
+                format!("Memory information field {}.", info.name),
                 info.value,
                 tags!("node" => numa),
             ));

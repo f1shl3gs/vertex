@@ -3,7 +3,7 @@ use std::path::Path;
 
 use event::{Metric, tags};
 
-use super::{Error, Paths, read_into, read_string};
+use super::{Error, Paths, read_file_no_stat, read_into};
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     let (procs, threads) = get_procs_and_threads(paths.proc())?;
@@ -98,7 +98,7 @@ fn get_procs_and_threads(root: &Path) -> Result<(Stats, Stats), Error> {
         }
 
         let path = entry.path();
-        if let Ok(content) = read_string(path.join("stat"))
+        if let Ok(content) = read_file_no_stat(path.join("stat"))
             && let Some(state) = parse_state(&content)
         {
             procs.append(state);
@@ -106,7 +106,7 @@ fn get_procs_and_threads(root: &Path) -> Result<(Stats, Stats), Error> {
 
         if let Ok(dirs) = std::fs::read_dir(path.join("task")) {
             for entry in dirs.flatten() {
-                match read_string(entry.path().join("stat")) {
+                match read_file_no_stat(entry.path().join("stat")) {
                     Ok(content) => match parse_state(&content) {
                         Some(state) => threads.append(state),
                         None => continue,

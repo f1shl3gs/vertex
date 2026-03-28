@@ -11,8 +11,8 @@ use super::{Error, Paths};
 
 #[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
-    #[serde(default = "default_fields")]
-    #[serde(with = "serde_regex")]
+    /// Regex of fields to return for netstat collector
+    #[serde(default = "default_fields", with = "serde_regex")]
     fields: Regex,
 }
 

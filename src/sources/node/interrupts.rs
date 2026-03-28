@@ -1,10 +1,10 @@
 use event::{Metric, tags};
 
-use super::{Error, Paths, read_string};
+use super::{Error, Paths, read_file_no_stat};
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     let path = paths.proc().join("interrupts");
-    let content = read_string(path)?;
+    let content = read_file_no_stat(path)?;
 
     let mut metrics = Vec::new();
     for interrupt in parse_interrupts(&content)? {

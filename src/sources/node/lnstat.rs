@@ -4,13 +4,12 @@
 
 use event::{Metric, tags};
 
-use super::{Error, Paths, read_string};
+use super::{Error, Paths, read_file_no_stat};
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
-    let dirs = std::fs::read_dir(paths.proc().join("net/stat"))?;
-
     let mut metrics = Vec::new();
-    for entry in dirs.flatten() {
+
+    for entry in paths.proc().join("net/stat").read_dir()?.flatten() {
         let Ok(typ) = entry.file_type() else { continue };
         if !typ.is_file() {
             continue;
@@ -19,7 +18,7 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
         let filename = entry.file_name();
         let subsystem = filename.to_string_lossy();
 
-        let content = read_string(entry.path())?;
+        let content = read_file_no_stat(entry.path())?;
         let stats = parse_net_stat(&content)?;
 
         for (key, stats) in stats {

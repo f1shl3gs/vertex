@@ -2,11 +2,10 @@
 
 use std::io::ErrorKind;
 use std::num::ParseIntError;
-use std::path::Path;
 
 use event::{Metric, tags};
 
-use super::{Error, Paths, read_string};
+use super::{Error, Paths, read_file_no_stat};
 
 const POOL_STATS: [&str; 7] = [
     "online",
@@ -38,7 +37,7 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
         ("zil", "zil"),
     ] {
         let path = root.join(filename);
-        match std::fs::read_to_string(&path) {
+        match read_file_no_stat(&path) {
             Ok(content) => {
                 for (key, value) in parse_stat_file(&content)? {
                     metrics.push(Metric::gauge(
@@ -65,50 +64,44 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
         }
     }
 
-    let dirs = std::fs::read_dir(root)?;
-    for entry in dirs.flatten() {
-        let Ok(typ) = entry.file_type() else {
-            continue;
-        };
-
+    for entry in root.read_dir()?.flatten() {
+        let Ok(typ) = entry.file_type() else { continue };
         if !typ.is_dir() {
             continue;
         }
 
-        let pool = entry.file_name().to_string_lossy().to_string();
-        let dirs = std::fs::read_dir(entry.path())?;
-        for entry in dirs.flatten() {
-            let Ok(typ) = entry.file_type() else {
-                continue;
-            };
-
+        let filename = entry.file_name();
+        let pool = filename.to_string_lossy();
+        for entry in entry.path().read_dir()?.flatten() {
+            let Ok(typ) = entry.file_type() else { continue };
             if !typ.is_file() {
                 continue;
             }
 
             match entry.file_name().to_string_lossy().as_ref() {
                 "io" => {
-                    let content = std::fs::read_to_string(entry.path())?;
+                    let content = read_file_no_stat(entry.path())?;
                     for (key, value) in parse_pool_stats(&content)? {
                         metrics.push(Metric::gauge_with_tags(
                             format!("node_zfs_zpool_{key}"),
                             format!("kstat.zfs.misc.io.{key}"),
                             value,
                             tags! {
-                                "zpool" => &pool
+                                "zpool" => pool.as_ref()
                             },
                         ));
                     }
                 }
                 "state" => {
-                    let actual_state = read_string(entry.path())?.to_lowercase();
+                    let content = read_file_no_stat(entry.path())?;
+                    let actual_state = content.trim();
                     for state in POOL_STATS {
                         metrics.push(Metric::gauge_with_tags(
                             "node_zfs_zpool_state",
                             "kstat.zfs.misc.state",
-                            state == actual_state,
+                            actual_state.eq_ignore_ascii_case(state),
                             tags!(
-                                "zpool" => &pool,
+                                "zpool" => pool.as_ref(),
                                 "state" => state
                             ),
                         ));
@@ -116,7 +109,7 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
                 }
                 filename => {
                     if filename.starts_with("objset-") {
-                        let content = std::fs::read_to_string(entry.path())?;
+                        let content = read_file_no_stat(entry.path())?;
                         let (dataset, kvs) = parse_pool_objset(&content)?;
                         for (key, value) in kvs {
                             metrics.push(Metric::gauge_with_tags(
@@ -124,7 +117,7 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
                                 format!("kstat.zfs.misc.objset.{key}"),
                                 value,
                                 tags!(
-                                    "zpool" => &pool,
+                                    "zpool" => pool.as_ref(),
                                     "dataset" => dataset
                                 ),
                             ));
@@ -232,17 +225,6 @@ fn parse_pool_objset(content: &str) -> Result<(&str, Vec<(&str, u64)>), Error> {
     Ok((dataset, kvs))
 }
 
-fn parse_pool_state_file(path: &Path) -> Result<Vec<(&'static str, bool)>, Error> {
-    let actual_state = read_string(path)?.to_lowercase();
-
-    let mut kvs = Vec::with_capacity(POOL_STATS.len());
-    for stat in POOL_STATS {
-        kvs.push((stat, actual_state == stat));
-    }
-
-    Ok(kvs)
-}
-
 #[cfg(test)]
 mod tests {
     use glob::glob;
@@ -299,46 +281,5 @@ mod tests {
                 }
             }
         }
-    }
-
-    #[test]
-    fn pool_state_file() {
-        let paths = glob("tests/node/fixtures/proc/spl/kstat/zfs/*/state").unwrap();
-        let mut handled = 0;
-        for path in paths.flatten() {
-            handled += 1;
-            let pool_name = path
-                .parent()
-                .unwrap()
-                .file_name()
-                .unwrap()
-                .to_string_lossy();
-            let kvs = parse_pool_state_file(&path).unwrap();
-            assert_ne!(kvs.len(), 0);
-
-            for (state, active) in kvs {
-                if pool_name == "pool1" {
-                    if !active && state == "online" {
-                        panic!("incorrect parsed value for online state")
-                    }
-
-                    if active && state != "online" {
-                        panic!("incorrect parsed value for online state")
-                    }
-                }
-
-                if pool_name == "poolz1" {
-                    if !active && state == "degraded" {
-                        panic!("incorrect parsed value for degraded state")
-                    }
-
-                    if active && state != "degraded" {
-                        panic!("incorrect parsed value for degraded state")
-                    }
-                }
-            }
-        }
-
-        assert_eq!(handled, 2);
     }
 }

@@ -15,18 +15,20 @@ const USER_HZ: f64 = 100.0;
 #[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct Config {
+    /// Enables metric node_cpu_guest_seconds_total
     #[serde(default = "default_true")]
     guest: bool,
 
+    /// Enables metric node_cpu_info
     #[serde(default)]
     info: bool,
 
-    #[serde(default = "default_flags_include")]
-    #[serde(with = "serde_regex")]
+    /// Filter the `flags` field in cpuInfo with a value that must be a regular expression
+    #[serde(default = "default_flags_include", with = "serde_regex")]
     flags_include: regex::Regex,
 
-    #[serde(default = "default_bugs_include")]
-    #[serde(with = "serde_regex")]
+    /// Filter the `bugs` field in cpuInfo with a value that must be a regular expression
+    #[serde(default = "default_bugs_include", with = "serde_regex")]
     bugs_include: regex::Regex,
 }
 
@@ -47,20 +49,6 @@ fn default_flags_include() -> regex::Regex {
 
 fn default_bugs_include() -> regex::Regex {
     regex::Regex::new(".*").unwrap()
-}
-
-macro_rules! state_metric {
-    ($cpu: expr, $mode: expr, $value: expr) => {
-        Metric::sum_with_tags(
-            "node_cpu_seconds_total",
-            "Seconds the CPUs spent in each mode",
-            $value,
-            tags! (
-                "mode" => $mode,
-                "cpu" => $cpu
-            )
-        )
-    };
 }
 
 pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
@@ -93,16 +81,30 @@ pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
 
     let stats = get_cpu_stat(paths.proc())?;
     for (cpu, stat) in stats.iter().enumerate() {
-        metrics.extend([
-            state_metric!(cpu, "user", stat.user),
-            state_metric!(cpu, "nice", stat.nice),
-            state_metric!(cpu, "system", stat.system),
-            state_metric!(cpu, "idle", stat.idle),
-            state_metric!(cpu, "iowait", stat.iowait),
-            state_metric!(cpu, "irq", stat.irq),
-            state_metric!(cpu, "softirq", stat.softirq),
-            state_metric!(cpu, "steal", stat.steal),
-        ]);
+        metrics.extend(
+            [
+                ("user", stat.user),
+                ("nice", stat.nice),
+                ("system", stat.system),
+                ("idle", stat.idle),
+                ("iowait", stat.iowait),
+                ("irq", stat.irq),
+                ("softirq", stat.softirq),
+                ("steal", stat.steal),
+            ]
+            .into_iter()
+            .map(|(mode, value)| {
+                Metric::sum_with_tags(
+                    "node_cpu_seconds_total",
+                    "Seconds the CPUs spent in each mode.",
+                    value,
+                    tags! (
+                        "mode" => mode,
+                        "cpu" => cpu
+                    ),
+                )
+            }),
+        );
 
         // Guest CPU is also accounted for in cpuStat.User and cpuStat.Nice,
         // expose these as separate metrics.
@@ -177,7 +179,7 @@ pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
         for (core_id, count) in counts {
             metrics.push(Metric::sum_with_tags(
                 "node_cpu_core_throttles_total",
-                "Number of times this CPU core has been throttled",
+                "Number of times this CPU core has been throttled.",
                 count,
                 tags!(
                     "package" => physical_package_id,
@@ -194,7 +196,7 @@ pub async fn collect(conf: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
             for cpu in cpus {
                 metrics.push(Metric::gauge_with_tags(
                     "node_cpu_isolated",
-                    "Whether each core is isolated, information from /sys/devices/system/cpu/isolated",
+                    "Whether each core is isolated, information from /sys/devices/system/cpu/isolated.",
                     1,
                     tags!(
                         "cpu" => cpu,
