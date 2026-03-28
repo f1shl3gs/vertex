@@ -4,7 +4,7 @@ use std::time::Duration;
 
 use event::{Metric, tags};
 
-use super::{Error, Paths};
+use super::{Error, Paths, read_file_no_stat};
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     let content = match std::fs::read_to_string(paths.proc().join("self/mountstats")) {
@@ -19,7 +19,7 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     };
     let mounts = parse_mount_stats(&content)?;
 
-    let content = std::fs::read_to_string(paths.proc().join("self/mountinfo"))?;
+    let content = read_file_no_stat(paths.proc().join("self/mountinfo"))?;
     let infos = parse_mount_info(&content)?;
 
     let mut seen = BTreeSet::new();

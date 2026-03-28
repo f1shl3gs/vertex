@@ -4,16 +4,15 @@ use std::sync::LazyLock;
 use event::{Metric, tags};
 use regex::Regex;
 
-use super::{Error, Paths, read_into, read_string};
+use super::{Error, Paths, read_into, read_sys_file};
 
 static NAMESPACE_PATTERN: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"nvme\d+c\d+n(\d+)"#).unwrap());
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
-    let dirs = std::fs::read_dir(paths.sys().join("class/nvme"))?;
-
     let mut metrics = Vec::new();
-    for entry in dirs.flatten() {
+
+    for entry in paths.sys().join("class/nvme").read_dir()?.flatten() {
         let [device, serial, model, state, firmware_rev, cntlid] = read_nvme_device(entry.path())?;
 
         metrics.push(Metric::gauge_with_tags(
@@ -47,7 +46,7 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
             };
 
             let ana_state =
-                read_string(entry.path().join("ana_state")).unwrap_or_else(|_| "unknown".into());
+                read_sys_file(entry.path().join("ana_state")).unwrap_or_else(|_| "unknown".into());
             let size: f64 = read_into(entry.path().join("size"))?;
             let logical_block_size: f64 = read_into(entry.path().join("queue/logical_block_size"))?;
             let nuse: f64 = read_into(entry.path().join("nuse"))?;
@@ -112,11 +111,11 @@ fn read_nvme_device(root: PathBuf) -> Result<[String; 6], std::io::Error> {
         .map(|p| p.to_string_lossy().to_string())
         .unwrap_or_default();
 
-    let serial = read_string(root.join("serial"))?;
-    let model = read_string(root.join("model"))?;
-    let state = read_string(root.join("state"))?;
-    let firmware = read_string(root.join("firmware_rev"))?;
-    let cntlid = read_string(root.join("cntlid"))?;
+    let serial = read_sys_file(root.join("serial"))?;
+    let model = read_sys_file(root.join("model"))?;
+    let state = read_sys_file(root.join("state"))?;
+    let firmware = read_sys_file(root.join("firmware_rev"))?;
+    let cntlid = read_sys_file(root.join("cntlid"))?;
 
     Ok([device, serial, model, state, firmware, cntlid])
 }

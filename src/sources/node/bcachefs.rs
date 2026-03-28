@@ -1,17 +1,8 @@
 use std::io::ErrorKind;
-use std::path::Path;
 
 use event::{Metric, tags};
 
-use super::{Error, Paths};
-
-/// Read contents of entire file. This is similar to [`std::fs::read_to_string`]
-/// but without the call to [`stat()`], because many files in /proc or /sys
-/// report incorrect file sizes (either 0 or 4096).
-fn read_file_no_stat<P: AsRef<Path>>(path: P) -> std::io::Result<String> {
-    let file = std::fs::File::open(path)?;
-    std::io::read_to_string(file)
-}
+use super::{Error, Paths, read_file_no_stat};
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     let dirs = std::fs::read_dir(paths.sys().join("fs/bcachefs")).map_err(|err| {

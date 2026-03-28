@@ -6,7 +6,7 @@ use std::sync::LazyLock;
 use event::{Metric, tags};
 use regex::Regex;
 
-use super::{Error, Paths, read_into};
+use super::{Error, Paths, read_file_no_stat, read_into};
 
 /// MDStat holds info parsed from /proc/mdstat
 #[derive(Debug, PartialEq)]
@@ -52,8 +52,8 @@ struct MDStat {
 }
 
 fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
-    let content = std::fs::read_to_string(path)?;
-    let lines = content.split('\n').collect::<Vec<_>>();
+    let content = read_file_no_stat(path)?;
+    let lines = content.lines().collect::<Vec<_>>();
 
     let mut stats = vec![];
     let line_count = lines.len();
@@ -75,6 +75,7 @@ fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
         let mut state = parts[2]; // active or inactive
 
         if line_count <= i + 3 {
+            // too few lines for md device
             return Err(Error::Malformed("mdstat stat line"));
         }
 
@@ -424,8 +425,15 @@ fn md_raids(root: &Path) -> Result<Vec<MdRaid>, Error> {
 mod tests {
     use super::*;
 
+    #[tokio::test]
+    async fn smoke() {
+        let paths = Paths::test();
+        let metrics = collect(paths).await.unwrap();
+        assert_ne!(metrics.len(), 0);
+    }
+
     #[test]
-    fn test_parse_recovering_line() {
+    fn recovering_line() {
         let line = r#"[=>...................]  recovery =  8.5% (16775552/195310144) finish=17.0min speed=259783K/sec"#;
 
         let (pct, synced_blocks, finish, speed) = recovery_line(line).unwrap();
@@ -738,7 +746,7 @@ mod tests {
     }
 
     #[test]
-    fn test_eval_component_devices() {
+    fn component_devices() {
         let devices = eval_component_devices(vec![
             "md3",
             ":",
@@ -774,7 +782,7 @@ mod tests {
     }
 
     #[test]
-    fn test_eval_devices_invalid_name() {
+    fn devices_invalid_name() {
         // md6 : active raid1 sdb2[2](F) sdc[1](S) sda2[0]
         let devices = eval_component_devices(vec![
             "md6",

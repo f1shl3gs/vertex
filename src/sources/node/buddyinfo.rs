@@ -1,9 +1,9 @@
 use event::{Metric, tags};
 
-use super::{Error, Paths, read_string};
+use super::{Error, Paths, read_file_no_stat};
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
-    let content = read_string(paths.proc().join("buddyinfo"))?;
+    let content = read_file_no_stat(paths.proc().join("buddyinfo"))?;
 
     let mut metrics = Vec::new();
     for info in parse_buddy_info(&content)? {
@@ -71,6 +71,13 @@ fn parse_buddy_info(content: &str) -> Result<Vec<BuddyInfo<'_>>, Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn smoke() {
+        let paths = Paths::test();
+        let metrics = collect(paths).await.unwrap();
+        assert_ne!(metrics.len(), 0);
+    }
 
     #[test]
     fn ok() {

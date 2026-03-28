@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 
 use event::{Metric, tags};
 
-use super::{Error, Paths, read_string};
+use super::{Error, Paths, read_sys_file};
 
 #[derive(Debug, Default)]
 pub struct FibreChannelCounters {
@@ -53,7 +53,7 @@ pub struct FibreChannelCounters {
 #[derive(Debug, Default)]
 pub struct FibreChannelHost {
     // /sys/class/fc_host/<Name>
-    name: String,
+    // name: String,
 
     // /sys/class/fc_host/<Name>/speed
     speed: String,
@@ -93,23 +93,20 @@ pub struct FibreChannelHost {
 }
 
 /// fibre_channel_class parse everything in /sys/class/fc_host
-fn fibre_channel_class(root: &Path) -> Result<Vec<FibreChannelHost>, Error> {
-    let dirs = std::fs::read_dir(root.join("class/fc_host"))?;
-
+fn fibre_channel_class(root: &Path) -> Result<Vec<(String, FibreChannelHost)>, Error> {
     let mut fcc = Vec::new();
-    for entry in dirs.flatten() {
+
+    for entry in root.join("class/fc_host").read_dir()?.flatten() {
         let host = parse_fibre_channel_host(entry.path())?;
-        fcc.push(host);
+        let name = entry.file_name().to_string_lossy().to_string();
+        fcc.push((name, host));
     }
 
     Ok(fcc)
 }
 
 fn parse_fibre_channel_host(root: PathBuf) -> Result<FibreChannelHost, Error> {
-    let mut host = FibreChannelHost {
-        name: root.file_name().unwrap().to_string_lossy().to_string(),
-        ..Default::default()
-    };
+    let mut host = FibreChannelHost::default();
 
     for sub in [
         "speed",
@@ -124,7 +121,7 @@ fn parse_fibre_channel_host(root: PathBuf) -> Result<FibreChannelHost, Error> {
         "supported_classes",
         "supported_speeds",
     ] {
-        let value = match read_string(root.join(sub)) {
+        let value = match read_sys_file(root.join(sub)) {
             Ok(value) => value,
             Err(err) => {
                 if err.kind() == ErrorKind::NotFound {
@@ -177,13 +174,10 @@ fn parse_fibre_channel_host(root: PathBuf) -> Result<FibreChannelHost, Error> {
 }
 
 fn read_hex(path: PathBuf) -> Result<u64, Error> {
-    let content = read_string(path)?
-        .trim_end()
-        .strip_prefix("0x")
-        .unwrap()
-        .to_string();
+    let content = read_sys_file(path)?;
+    let content = content.strip_prefix("0x").unwrap_or(&content);
 
-    u64::from_str_radix(&content, 16).map_err(Into::into)
+    u64::from_str_radix(content, 16).map_err(Into::into)
 }
 
 /// parse_fibre_channel_statistics parses metrics from a single FC host
@@ -221,9 +215,7 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     let hosts = fibre_channel_class(paths.sys())?;
 
     let mut metrics = vec![];
-    for host in hosts {
-        let name = host.name;
-
+    for (name, host) in hosts {
         metrics.push(Metric::gauge_with_tags(
             "node_fibrechannel_info",
             "Non-numeric data from /sys/class/fc_host/<host>, value is always 1.",
@@ -397,9 +389,9 @@ mod tests {
         let path = Path::new("tests/node/fixtures/sys");
         let fcc = fibre_channel_class(path).unwrap();
         assert_eq!(fcc.len(), 1);
-        let host = &fcc[0];
+        let (name, host) = &fcc[0];
 
-        assert_eq!(host.name, "host0");
+        assert_eq!(name, "host0");
         assert_eq!(host.speed, "16 Gbit");
         assert_eq!(host.port_state, "Online");
         assert_eq!(host.port_type, "Point-To-Point (direct nport connection)");

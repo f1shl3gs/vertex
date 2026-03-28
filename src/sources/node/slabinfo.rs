@@ -3,7 +3,7 @@ use event::{Metric, tags};
 use framework::config::{serde_regex, serde_regex_option};
 use serde::{Deserialize, Serialize};
 
-use super::{Error, Paths, read_string};
+use super::{Error, Paths, read_file_no_stat};
 
 fn default_include() -> regex::Regex {
     regex::Regex::new(".*").unwrap()
@@ -43,7 +43,7 @@ impl Config {
 }
 
 pub async fn collect(config: Config, paths: Paths) -> Result<Vec<Metric>, Error> {
-    let content = read_string(paths.proc().join("slabinfo"))?;
+    let content = read_file_no_stat(paths.proc().join("slabinfo"))?;
 
     let slabs = parse_slab_info(&content)?;
     let mut metrics = Vec::with_capacity(slabs.len() * 5);

@@ -7,40 +7,54 @@ use event::{Metric, tags};
 use tokio::io::unix::AsyncFd;
 use tokio::io::{AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt, ReadBuf};
 
-use super::Error;
+use super::{Error, Paths};
 
 #[derive(Default, Debug)]
-struct Statistics {
-    pub established: usize,
-    pub syn_sent: usize,
-    pub syn_recv: usize,
-    pub fin_wait1: usize,
-    pub fin_wait2: usize,
-    pub time_wait: usize,
-    pub close: usize,
-    pub close_wait: usize,
-    pub last_ack: usize,
-    pub listen: usize,
-    pub closing: usize,
+struct Stats {
+    established: usize,
+    syn_sent: usize,
+    syn_recv: usize,
+    fin_wait1: usize,
+    fin_wait2: usize,
+    time_wait: usize,
+    close: usize,
+    close_wait: usize,
+    last_ack: usize,
+    listen: usize,
+    closing: usize,
+
+    rx_queued: usize,
+    tx_queued: usize,
 }
 
-macro_rules! state_metric {
-    ($name: expr, $value: expr) => {
-        Metric::gauge_with_tags(
-            "node_tcp_connection_states",
-            "Number of connection states.",
-            $value,
-            tags!(
-                "state" => $name
-            )
-        )
-    };
+#[repr(C)]
+#[derive(Debug)]
+pub struct Header {
+    pub length: u32,
+    pub typ: u16,
+    pub flags: u16,
+    sequence: u32,
+    pid: u32,
+}
+
+#[repr(C)]
+struct InetDiagMsg {
+    family: u8,
+    state: u8,
+    timer: u8,
+    retrans: u8,
+    id: [u8; 48],
+    expires: u32,
+    rx_queue: u32,
+    tx_queue: u32,
+    uid: u32,
+    inode: u32,
 }
 
 async fn add_tcp_stats(
-    sock: &mut NetlinkSocket,
+    sock: &mut NetlinkConnection,
     family: u8,
-    stats: &mut Statistics,
+    stats: &mut Stats,
 ) -> io::Result<()> {
     #[rustfmt::skip]
     let msg = [
@@ -55,8 +69,10 @@ async fn add_tcp_stats(
         // u32, port number
         0, 0, 0, 0,
 
-        // payload
-        family, 6, 0, 0, 254, 15, 0, 0,
+        // InetDiagReqV2 (inet_diag_req_v2) is used to request diagnostic data.
+        // https://github.com/torvalds/linux/blob/v4.0/include/uapi/linux/inet_diag.h#L37
+        family, 6, 2, 0,  // family, protocol, ext, pad
+        255, 15, 0, 0,    // states TCPFAll
         0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0,
@@ -67,63 +83,63 @@ async fn add_tcp_stats(
 
     sock.write_all(&msg).await?;
 
-    let mut buf = [0u8; 16 * 1024];
-    let mut read_offset = 0;
-    'RECV: loop {
-        let cnt = sock.read(&mut buf[read_offset..]).await? + read_offset;
-        read_offset = 0;
+    let mut buf = [0u8; 4096];
+    loop {
+        let count = sock.read(&mut buf).await?;
 
-        if cnt < 4 {
-            read_offset = cnt;
-            continue;
-        }
+        // If this message is multi-part, we will need to continue looping
+        // to drain all the messages from the socket
+        let mut multi = false;
 
+        // parse each message
         let mut offset = 0;
-        while offset < cnt {
-            let len = u32::from_ne_bytes((&buf[offset..offset + 4]).try_into().unwrap()) as usize;
-            if cnt - offset < len {
-                // not enough
-                read_offset = cnt - offset;
-                buf.copy_within(offset..cnt, 0);
-                break;
+        while offset + NETLINK_HEADER_LEN < count {
+            let header = unsafe { &*(buf.as_ptr().add(offset) as *const Header) };
+            if header.length as usize + offset > count {
+                return Err(io::Error::other("buf too short"));
             }
 
-            // full packet
-            let msg_typ = u16::from_ne_bytes((&buf[offset + 4..offset + 6]).try_into().unwrap());
-            match msg_typ {
-                SOCK_DIAG_BY_FAMILY => {
-                    let state = match buf[offset + NETLINK_HEADER_LEN] {
-                        AF_INET | AF_INET6 => buf[offset + NETLINK_HEADER_LEN + 1],
-                        _family => continue,
-                    };
+            let msg =
+                unsafe { &*(buf.as_ptr().add(offset + NETLINK_HEADER_LEN) as *const InetDiagMsg) };
+            stats.tx_queued += msg.tx_queue as usize;
+            stats.rx_queued += msg.rx_queue as usize;
 
-                    match state {
-                        TCP_ESTABLISHED => stats.established += 1,
-                        TCP_SYN_SENT => stats.syn_sent += 1,
-                        TCP_SYN_RECV => stats.syn_recv += 1,
-                        TCP_FIN_WAIT1 => stats.fin_wait1 += 1,
-                        TCP_FIN_WAIT2 => stats.fin_wait2 += 1,
-                        TCP_TIME_WAIT => stats.time_wait += 1,
-                        TCP_CLOSE => stats.close += 1,
-                        TCP_CLOSE_WAIT => stats.close_wait += 1,
-                        TCP_LAST_ACK => stats.last_ack += 1,
-                        TCP_LISTEN => stats.listen += 1,
-                        TCP_CLOSING => stats.closing += 1,
-                        _ => {
-                            error!(message = "unknown tcp state", ?state);
-                        }
-                    }
+            if header.typ == SOCK_DIAG_BY_FAMILY {
+                match msg.state {
+                    TCP_ESTABLISHED => stats.established += 1,
+                    TCP_SYN_SENT => stats.syn_sent += 1,
+                    TCP_SYN_RECV => stats.syn_recv += 1,
+                    TCP_FIN_WAIT1 => stats.fin_wait1 += 1,
+                    TCP_FIN_WAIT2 => stats.fin_wait2 += 1,
+                    TCP_TIME_WAIT => stats.time_wait += 1,
+                    TCP_CLOSE => stats.close += 1,
+                    TCP_CLOSE_WAIT => stats.close_wait += 1,
+                    TCP_LAST_ACK => stats.last_ack += 1,
+                    TCP_LISTEN => stats.listen += 1,
+                    TCP_CLOSING => stats.closing += 1,
+                    state => warn!(
+                        message = "unknown tcp state",
+                        ?state,
+                        internal_log_rate_limit = true
+                    ),
                 }
-                NLMSG_NOOP => continue,
-                NLMSG_DONE => break 'RECV,
-                NLMSG_ERROR => return Err(io::Error::other("overrun packet")),
-                _typ => return Err(io::Error::other("invalid packet type")),
             }
 
-            offset += len;
+            // Does this message indicate a multi-part messages?
+            if header.flags & NLMSG_MULTI == 0 {
+                // no, check the next messages
+                continue;
+            }
+
+            // Does this message indicate the last message in a series of
+            // multi-part messages from a single read?
+            multi = header.typ != NLMSG_DONE;
+
+            offset += header.length as usize;
         }
 
-        if cnt < buf.len() {
+        if !multi {
+            // no more messages coming
             break;
         }
     }
@@ -131,92 +147,126 @@ async fn add_tcp_stats(
     Ok(())
 }
 
-pub async fn collect() -> Result<Vec<Metric>, Error> {
-    let mut sock = NetlinkSocket::connect()?;
-    let mut stats = Statistics::default();
+pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
+    let mut sock = NetlinkConnection::connect()?;
 
-    add_tcp_stats(&mut sock, AF_INET, &mut stats).await?;
-    add_tcp_stats(&mut sock, AF_INET6, &mut stats).await?;
+    let mut stats = Stats::default();
+    add_tcp_stats(&mut sock, libc::AF_INET as u8, &mut stats).await?;
 
-    Ok(vec![
-        state_metric!("established", stats.established),
-        state_metric!("syn_sent", stats.syn_sent),
-        state_metric!("syn_recv", stats.syn_recv),
-        state_metric!("fin_wait1", stats.fin_wait1),
-        state_metric!("fin_wait2", stats.fin_wait2),
-        state_metric!("time_wait", stats.time_wait),
-        state_metric!("close", stats.close),
-        state_metric!("close_wait", stats.close_wait),
-        state_metric!("last_ack", stats.last_ack),
-        state_metric!("listen", stats.listen),
-        state_metric!("closing", stats.closing),
-    ])
+    // if ipv6 system enabled
+    if paths.proc().join("net/tcp6").exists() {
+        add_tcp_stats(&mut sock, libc::AF_INET6 as u8, &mut stats).await?;
+    }
+
+    let mut metrics = Vec::with_capacity(15);
+    for (state, value) in [
+        ("established", stats.established),
+        ("syn_sent", stats.syn_sent),
+        ("syn_recv", stats.syn_recv),
+        ("fin_wait1", stats.fin_wait1),
+        ("fin_wait2", stats.fin_wait2),
+        ("time_wait", stats.time_wait),
+        ("close", stats.close),
+        ("close_wait", stats.close_wait),
+        ("last_ack", stats.last_ack),
+        ("listen", stats.listen),
+        ("closing", stats.closing),
+        ("rx_queued_bytes", stats.rx_queued),
+        ("tx_queued_bytes", stats.tx_queued),
+    ] {
+        if value == 0 {
+            continue;
+        }
+
+        metrics.push(Metric::gauge_with_tags(
+            "node_tcp_connection_states",
+            "Number of connection states.",
+            value,
+            tags!("state" => state),
+        ));
+    }
+
+    Ok(metrics)
 }
 
 /// Netlink Protocol type
 const NETLINK_SOCK_DIAG: u16 = 4;
 const SOCK_DIAG_BY_FAMILY: u16 = 20;
 
-/// The message is ignored.
-pub const NLMSG_NOOP: u16 = 1;
-/// The message signals an error and the payload contains a nlmsgerr structure.
-/// This can be looked at as a NACK and typically it is from FEC to CPC.
-pub const NLMSG_ERROR: u16 = 2;
 /// The message terminates a multipart message.
 /// Data lost
-pub const NLMSG_DONE: u16 = 3;
-pub const NLMSG_OVERRUN: u16 = 4;
-
-const AF_INET: u8 = 2;
-const AF_INET6: u8 = 10;
+const NLMSG_DONE: u16 = 3;
+/// This type indicates a multi-part message, terminated by Done
+/// on the last message.
+const NLMSG_MULTI: u16 = 2;
 
 /// (both server and client) represents an open connection, data
 /// received can be delivered to the user. The normal state for the
 /// data transfer phase of the connection.
-pub const TCP_ESTABLISHED: u8 = 1;
+const TCP_ESTABLISHED: u8 = 1;
 /// (client) represents waiting for a matching connection request
 /// after having sent a connection request.
-pub const TCP_SYN_SENT: u8 = 2;
+const TCP_SYN_SENT: u8 = 2;
 /// (server) represents waiting for a confirming connection request
 /// acknowledgment after having both received and sent a connection
 /// request.
-pub const TCP_SYN_RECV: u8 = 3;
+const TCP_SYN_RECV: u8 = 3;
 /// (both server and client) represents waiting for a connection
 /// termination request from the remote TCP, or an acknowledgment of
 /// the connection termination request previously sent.
-pub const TCP_FIN_WAIT1: u8 = 4;
+const TCP_FIN_WAIT1: u8 = 4;
 /// (both server and client) represents waiting for a connection
 /// termination request from the remote TCP.
-pub const TCP_FIN_WAIT2: u8 = 5;
+const TCP_FIN_WAIT2: u8 = 5;
 /// (either server or client) represents waiting for enough time to
 /// pass to be sure the remote TCP received the acknowledgment of its
 /// connection termination request.
-pub const TCP_TIME_WAIT: u8 = 6;
+const TCP_TIME_WAIT: u8 = 6;
 /// (both server and client) represents no connection state at all.
-pub const TCP_CLOSE: u8 = 7;
+const TCP_CLOSE: u8 = 7;
 /// (both server and client) represents waiting for a connection
 /// termination request from the local user.
-pub const TCP_CLOSE_WAIT: u8 = 8;
+const TCP_CLOSE_WAIT: u8 = 8;
 /// (both server and client) represents waiting for an acknowledgment
 /// of the connection termination request previously sent to the
 /// remote TCP (which includes an acknowledgment of its connection
 /// termination request).
-pub const TCP_LAST_ACK: u8 = 9;
+const TCP_LAST_ACK: u8 = 9;
 /// (server) represents waiting for a connection request from any
 /// remote TCP and port.
-pub const TCP_LISTEN: u8 = 10;
+const TCP_LISTEN: u8 = 10;
 /// (both server and client) represents waiting for a connection termination
 /// request acknowledgment from the remote TCP.
-pub const TCP_CLOSING: u8 = 11;
+const TCP_CLOSING: u8 = 11;
 
 /// Length of a Netlink packet header.
 const NETLINK_HEADER_LEN: usize = 16;
 
-struct NetlinkSocket {
+pub struct NetlinkConnection {
     inner: AsyncFd<OwnedFd>,
 }
 
-impl NetlinkSocket {
+impl NetlinkConnection {
+    pub fn _conn(family: u8) -> io::Result<Self> {
+        let fd = unsafe {
+            let ret = libc::socket(
+                libc::AF_NETLINK,
+                libc::SOCK_DGRAM | libc::SOCK_CLOEXEC | libc::SOCK_NONBLOCK,
+                family as libc::c_int,
+            );
+
+            if ret < 0 {
+                return Err(io::Error::last_os_error());
+            }
+
+            OwnedFd::from_raw_fd(ret)
+        };
+
+        Ok(NetlinkConnection {
+            inner: AsyncFd::new(fd)?,
+        })
+    }
+
     fn connect() -> io::Result<Self> {
         let fd = unsafe {
             let ret = libc::socket(
@@ -232,13 +282,13 @@ impl NetlinkSocket {
             OwnedFd::from_raw_fd(ret)
         };
 
-        Ok(NetlinkSocket {
+        Ok(NetlinkConnection {
             inner: AsyncFd::new(fd)?,
         })
     }
 }
 
-impl AsyncRead for NetlinkSocket {
+impl AsyncRead for NetlinkConnection {
     fn poll_read(
         self: Pin<&mut Self>,
         cx: &mut Context<'_>,
@@ -275,7 +325,7 @@ impl AsyncRead for NetlinkSocket {
     }
 }
 
-impl AsyncWrite for NetlinkSocket {
+impl AsyncWrite for NetlinkConnection {
     fn poll_write(
         self: Pin<&mut Self>,
         cx: &mut Context<'_>,
@@ -321,95 +371,20 @@ impl AsyncWrite for NetlinkSocket {
     }
 }
 
-async fn fetch_tcp_stats(family: u8) -> io::Result<Statistics> {
-    #[rustfmt::skip]
-    let msg = [
-        // u32, length of the netlink packet, including the header and the payload
-        72u8, 0, 0, 0,
-        // u16, message type, SOCK_DIAG_BY_FAMILY
-        20, 0,
-        // u16, flags NLM_F_REQUEST | NLM_F_DUMP
-        1, 3,
-        // u32, sequence number
-        1, 0, 0, 0,
-        // u32, port number
-        0, 0, 0, 0,
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-        // payload
-        family, 6, 0, 0, 254, 15, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0
-    ];
-
-    let mut sock = NetlinkSocket::connect()?;
-    sock.write_all(&msg).await?;
-
-    let mut stats = Statistics::default();
-
-    let mut buf = [0u8; 16 * 1024];
-    let mut read_offset = 0;
-    'RECV: loop {
-        let cnt = sock.read(&mut buf[read_offset..]).await? + read_offset;
-        read_offset = 0;
-
-        if cnt < 4 {
-            read_offset = cnt;
-            continue;
-        }
-
-        let mut offset = 0;
-        while offset < cnt {
-            let len = u32::from_ne_bytes((&buf[offset..offset + 4]).try_into().unwrap()) as usize;
-            if cnt - offset < len {
-                // not enough
-                read_offset = cnt - offset;
-                buf.copy_within(offset..cnt, 0);
-                break;
-            }
-
-            // full packet
-            let msg_typ = u16::from_ne_bytes((&buf[offset + 4..offset + 6]).try_into().unwrap());
-            match msg_typ {
-                SOCK_DIAG_BY_FAMILY => {
-                    let state = match buf[offset + NETLINK_HEADER_LEN] {
-                        AF_INET | AF_INET6 => buf[offset + NETLINK_HEADER_LEN + 1],
-                        _family => continue,
-                    };
-
-                    match state {
-                        TCP_ESTABLISHED => stats.established += 1,
-                        TCP_SYN_SENT => stats.syn_sent += 1,
-                        TCP_SYN_RECV => stats.syn_recv += 1,
-                        TCP_FIN_WAIT1 => stats.fin_wait1 += 1,
-                        TCP_FIN_WAIT2 => stats.fin_wait2 += 1,
-                        TCP_TIME_WAIT => stats.time_wait += 1,
-                        TCP_CLOSE => stats.close += 1,
-                        TCP_CLOSE_WAIT => stats.close_wait += 1,
-                        TCP_LAST_ACK => stats.last_ack += 1,
-                        TCP_LISTEN => stats.listen += 1,
-                        TCP_CLOSING => stats.closing += 1,
-                        _ => {
-                            error!(message = "unknown tcp state", ?state);
-                        }
-                    }
-                }
-                NLMSG_NOOP => continue,
-                NLMSG_DONE => break 'RECV,
-                NLMSG_ERROR => return Err(io::Error::other("overrun packet")),
-                _typ => return Err(io::Error::other("invalid packet type")),
-            }
-
-            offset += len;
-        }
-
-        if cnt < buf.len() {
-            return Ok(stats);
-        }
+    #[tokio::test]
+    async fn smoke() {
+        let paths = Paths::test();
+        let metrics = collect(paths).await.unwrap();
+        assert!(!metrics.is_empty());
     }
 
-    Ok(stats)
+    #[test]
+    fn sizes() {
+        assert_eq!(size_of::<Header>(), NETLINK_HEADER_LEN);
+        assert_eq!(size_of::<InetDiagMsg>(), 72);
+    }
 }

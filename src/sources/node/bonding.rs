@@ -1,28 +1,30 @@
-use std::collections::HashMap;
+use std::io::ErrorKind;
 use std::path::Path;
 
 use event::{Metric, tags};
 
-use super::{Error, Paths, read_string};
+use super::{Error, Paths, read_file_no_stat};
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
-    let stats = read_bonding_stats(paths.sys())?;
+    let root = paths.sys().join("class/net");
+    let content = read_file_no_stat(root.join("bonding_masters"))?;
 
-    let mut metrics = Vec::with_capacity(stats.len() * 2);
-    for (master, status) in stats {
+    let mut metrics = Vec::new();
+    for master in content.split_ascii_whitespace() {
+        let (slaves, active) = read_bonding_stats(&root, master)?;
+
         let tags = tags!("master" => master);
-
         metrics.extend([
             Metric::gauge_with_tags(
                 "node_bonding_slaves",
                 "Number of configured slaves per bonding interface.",
-                status[0],
+                slaves,
                 tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "node_bonding_active",
                 "Number of active slaves per bonding interface.",
-                status[1],
+                active,
                 tags,
             ),
         ]);
@@ -31,59 +33,60 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
-fn read_bonding_stats(root: &Path) -> Result<HashMap<String, Vec<f64>>, Error> {
-    let masters = read_string(root.join("class/net/bonding_masters"))?;
+fn read_bonding_stats(root: &Path, master: &str) -> Result<(u32, u32), Error> {
+    let path = root.join(format!("{master}/bonding/slaves"));
+    let content = read_file_no_stat(path)?;
 
-    let mut status = HashMap::new();
-    let parts = masters.split_ascii_whitespace();
-    for master in parts {
-        let path = root.join(format!("class/net/{master}/bonding/slaves"));
-        let Ok(slaves) = read_string(path) else {
-            continue;
+    let mut slaves = 0;
+    let mut active = 0;
+    for slave in content.split_ascii_whitespace() {
+        let state = match read_file_no_stat(
+            root.join(format!("{master}/lower_{slave}/bonding_slave/mii_status")),
+        ) {
+            Ok(state) => state,
+            Err(err) => {
+                // some older? kernels use slave_ prefix
+                if err.kind() != ErrorKind::NotFound {
+                    return Err(err.into());
+                }
+
+                read_file_no_stat(
+                    root.join(format!("{master}/slave_{slave}/bonding_slave/mii_status")),
+                )?
+            }
         };
 
-        let mut sstat = vec![0f64, 0f64];
-        for slave in slaves.split_ascii_whitespace() {
-            let path = root.join(format!(
-                "class/net/{master}/lower_{slave}/bonding_slave/mii_status",
-            ));
-            if let Ok(state) = read_string(path) {
-                sstat[0] += 1f64;
-                if state == "up" {
-                    sstat[1] += 1f64;
-                }
-            }
-
-            // some older? kernels use slave_ prefix
-            let path = root.join(format!(
-                "class/net/{master}/slave_{slave}/bonding_slave/mii_status",
-            ));
-            if let Ok(state) = read_string(path) {
-                sstat[0] += 1f64;
-                if state == "up" {
-                    sstat[1] += 1f64;
-                }
-            }
-        }
-
-        status.insert(master.to_string(), sstat);
+        slaves += 1;
+        active += if state.trim() == "up" { 1 } else { 0 };
     }
 
-    Ok(status)
+    Ok((slaves, active))
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
+    #[tokio::test]
+    async fn smoke() {
+        let paths = Paths::test();
+        let metrics = collect(paths).await.unwrap();
+        assert_ne!(metrics.len(), 0);
+    }
+
     #[test]
     fn bonding_stats() {
-        let path = Path::new("tests/bonding/sys");
-        let stats = read_bonding_stats(path).unwrap();
+        let path = Path::new("tests/bonding/sys/class/net");
+        let (slaves, active) = read_bonding_stats(path, "bond0").unwrap();
+        assert_eq!(slaves, 0);
+        assert_eq!(active, 0);
 
-        assert_ne!(stats.len(), 0);
-        assert_eq!(stats.get("bond0").unwrap(), &vec![0f64, 0f64]);
-        assert_eq!(stats.get("int").unwrap(), &vec![2f64, 1f64]);
-        assert_eq!(stats.get("dmz").unwrap(), &vec![2f64, 2f64]);
+        let (slaves, active) = read_bonding_stats(path, "int").unwrap();
+        assert_eq!(slaves, 2);
+        assert_eq!(active, 1);
+
+        let (slaves, active) = read_bonding_stats(path, "dmz").unwrap();
+        assert_eq!(slaves, 2);
+        assert_eq!(active, 2);
     }
 }

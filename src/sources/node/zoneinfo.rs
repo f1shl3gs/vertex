@@ -1,9 +1,9 @@
 use event::{Metric, tags};
 
-use super::{Error, Paths, read_string};
+use super::{Error, Paths, read_file_no_stat};
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
-    let content = read_string(paths.proc().join("zoneinfo"))?;
+    let content = read_file_no_stat(paths.proc().join("zoneinfo"))?;
     let infos = parse_zoneinfo(&content)?;
 
     let mut metrics = Vec::with_capacity(infos.len() * 20);

@@ -1,19 +1,18 @@
 //! Collect metrics from /proc/meminfo
 
-use std::io::{BufRead, BufReader};
-use std::path::Path;
+use std::path::PathBuf;
 
 use event::Metric;
 
-use super::{Error, Paths};
+use super::{Error, Paths, read_file_no_stat};
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
-    let infos = load_meminfo(paths.proc())?;
+    let infos = load_meminfo(paths.proc().join("meminfo"))?;
 
     let mut metrics = Vec::with_capacity(infos.len());
     for (key, value) in infos {
         let name = format!("node_memory_{key}");
-        let desc = format!("Memory information field {key}");
+        let desc = format!("Memory information field {key}.");
 
         if key.ends_with("_total") {
             metrics.push(Metric::sum(name, desc, value));
@@ -25,18 +24,11 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
-fn load_meminfo(root: &Path) -> std::io::Result<Vec<(&'static str, u64)>> {
-    let file = std::fs::File::open(root.join("meminfo"))?;
-    let mut reader = BufReader::new(file);
+fn load_meminfo(path: PathBuf) -> std::io::Result<Vec<(&'static str, u64)>> {
+    let content = read_file_no_stat(path)?;
 
-    let mut infos = Vec::new();
-    let mut line = String::new();
-    loop {
-        line.clear();
-        if reader.read_line(&mut line)? == 0 {
-            break;
-        }
-
+    let mut infos = Vec::with_capacity(50);
+    for line in content.lines() {
         let mut parts = line.split_ascii_whitespace();
         let Some(key) = parts.next() else {
             break;
@@ -119,10 +111,17 @@ fn load_meminfo(root: &Path) -> std::io::Result<Vec<(&'static str, u64)>> {
 mod tests {
     use super::*;
 
+    #[tokio::test]
+    async fn smoke() {
+        let paths = Paths::test();
+        let metrics = collect(paths).await.unwrap();
+        assert_ne!(metrics.len(), 0);
+    }
+
     #[test]
     fn get_mem() {
-        let root = Path::new("tests/node/fixtures/proc");
-        let infos = load_meminfo(root).unwrap();
+        let path = PathBuf::from("tests/node/fixtures/proc/meminfo");
+        let infos = load_meminfo(path).unwrap();
 
         fn find(infos: &[(&str, u64)], key: &str) -> u64 {
             infos

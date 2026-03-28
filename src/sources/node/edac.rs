@@ -1,28 +1,38 @@
 //! Exposes error detection and correction statistics
 
-use std::path::Path;
+use std::path::PathBuf;
 
 use event::{Metric, tags};
 
 use super::{Error, Paths, read_into};
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
-    let paths = glob::glob(&format!(
-        "{}/devices/system/edac/mc/mc[0-9]*",
-        paths.sys().to_string_lossy()
-    ))?;
+    let root = paths.sys().join("devices/system/edac/mc");
 
     let mut metrics = Vec::new();
-    for path in paths.flatten() {
-        let name = path.file_name().unwrap().to_string_lossy();
-        let controller = name.strip_prefix("mc").unwrap();
+    for entry in root.read_dir()?.flatten() {
+        // 1. it must be a directory
+        let Ok(typ) = entry.file_type() else { continue };
+        if !typ.is_dir() {
+            continue;
+        }
 
-        let (ce_count, ce_noinfo_count, ue_count, ue_noinfo_count) = read_edac_stats(&path)?;
+        // 2. the directory's filename must be `mc[0-9]+`
+        let filename = entry.file_name();
+        let filename = filename.to_string_lossy();
+        let Some(stripped) = filename.strip_prefix("mc") else {
+            continue;
+        };
+        let Ok(controller) = stripped.parse::<u32>() else {
+            continue;
+        };
+
+        let (ce, ce_noinfo, ue, ue_noinfo) = read_edac_stats(entry.path())?;
         metrics.extend([
             Metric::sum_with_tags(
                 "node_edac_correctable_errors_total",
                 "Total correctable memory errors.",
-                ce_count,
+                ce,
                 tags!(
                     "controller" => controller
                 ),
@@ -30,7 +40,7 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_edac_uncorrectable_errors_total",
                 "Total uncorrectable memory errors.",
-                ue_count,
+                ue,
                 tags!(
                     "controller" => controller
                 ),
@@ -38,7 +48,7 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_edac_csrow_correctable_errors_total",
                 "Total correctable memory errors for this csrow.",
-                ce_noinfo_count,
+                ce_noinfo,
                 tags!(
                     "controller" => controller,
                     "csrow" => "unknown",
@@ -47,7 +57,7 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "node_edac_csrow_uncorrectable_errors_total",
                 "Total uncorrectable memory errors for this csrow.",
-                ue_noinfo_count,
+                ue_noinfo,
                 tags!(
                     "controller" => controller,
                     "csrow" => "unknown",
@@ -56,32 +66,50 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
         ]);
 
         // for each controller, walk the csrow directories
-        let csrows = glob::glob(&format!("{}/csrow[0-9]*", path.to_string_lossy()))?;
-        for path in csrows.flatten() {
-            let name = path.file_name().unwrap().to_string_lossy();
-            let num = name.strip_prefix("csrow").unwrap();
+        for entry in entry.path().read_dir()?.flatten() {
+            // 1. it must be a directory
+            let Ok(typ) = entry.file_type() else { continue };
+            if !typ.is_dir() {
+                continue;
+            }
 
-            if let Ok((ce_count, ue_count)) = read_edac_csrow_stats(&path) {
-                metrics.extend([
-                    Metric::sum_with_tags(
-                        "node_edac_csrow_correctable_errors_total",
-                        "Total correctable memory errors for this csrow.",
-                        ce_count,
-                        tags!(
-                            "controller" => controller,
-                            "csrow" => num,
+            // 2. the directory's filename must be `csrow[0-9]+`
+            let filename = entry.file_name();
+            let filename = filename.to_string_lossy();
+            let Some(stripped) = filename.strip_prefix("csrow") else {
+                continue;
+            };
+            let Ok(num) = stripped.parse::<u32>() else {
+                continue;
+            };
+
+            match read_edac_csrow_stats(entry.path()) {
+                Ok((ce, ue)) => {
+                    metrics.extend([
+                        Metric::sum_with_tags(
+                            "node_edac_csrow_correctable_errors_total",
+                            "Total correctable memory errors for this csrow.",
+                            ce,
+                            tags!(
+                                "controller" => controller,
+                                "csrow" => num,
+                            ),
                         ),
-                    ),
-                    Metric::sum_with_tags(
-                        "node_edac_csrow_uncorrectable_errors_total",
-                        "Total uncorrectable memory errors for this csrow.",
-                        ue_count,
-                        tags!(
-                            "controller" => controller,
-                            "csrow" => num,
+                        Metric::sum_with_tags(
+                            "node_edac_csrow_uncorrectable_errors_total",
+                            "Total uncorrectable memory errors for this csrow.",
+                            ue,
+                            tags!(
+                                "controller" => controller,
+                                "csrow" => num,
+                            ),
                         ),
-                    ),
-                ]);
+                    ]);
+                }
+                Err(err) => {
+                    debug!(message = "failed to read edac csrow stats", path = ?entry.path(), ?err);
+                    return Err(err);
+                }
             }
         }
     }
@@ -89,43 +117,50 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
-fn read_edac_stats(path: &Path) -> Result<(u64, u64, u64, u64), Error> {
-    let ce_count = read_into(path.join("ce_count"))?;
-    let ce_noinfo_count = read_into(path.join("ce_noinfo_count"))?;
-    let ue_count = read_into(path.join("ue_count"))?;
-    let ue_noinfo_count = read_into(path.join("ue_noinfo_count"))?;
+fn read_edac_stats(root: PathBuf) -> Result<(u64, u64, u64, u64), Error> {
+    let ce = read_into(root.join("ce_count"))?;
+    let ce_noinfo = read_into(root.join("ce_noinfo_count"))?;
+    let ue = read_into(root.join("ue_count"))?;
+    let ue_noinfo = read_into(root.join("ue_noinfo_count"))?;
 
-    Ok((ce_count, ce_noinfo_count, ue_count, ue_noinfo_count))
+    Ok((ce, ce_noinfo, ue, ue_noinfo))
 }
 
-fn read_edac_csrow_stats(path: &Path) -> Result<(u64, u64), Error> {
-    let ce_count = read_into(path.join("ce_count"))?;
-    let ue_count = read_into(path.join("ue_count"))?;
+fn read_edac_csrow_stats(path: PathBuf) -> Result<(u64, u64), Error> {
+    let ce = read_into(path.join("ce_count"))?;
+    let ue = read_into(path.join("ue_count"))?;
 
-    Ok((ce_count, ue_count))
+    Ok((ce, ue))
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
+    #[tokio::test]
+    async fn smoke() {
+        let paths = Paths::test();
+        let metrics = collect(paths).await.unwrap();
+        assert_ne!(metrics.len(), 0);
+    }
+
     #[test]
     fn edac_stats() {
-        let path = Path::new("tests/node/fixtures/sys/devices/system/edac/mc/mc0");
-        let (ce_count, ce_noinfo_count, ue_count, ue_noinfo_count) = read_edac_stats(path).unwrap();
+        let path = PathBuf::from("tests/node/fixtures/sys/devices/system/edac/mc/mc0");
+        let (ce, ce_noinfo, ue, ue_noinfo) = read_edac_stats(path).unwrap();
 
-        assert_eq!(ce_count, 1);
-        assert_eq!(ce_noinfo_count, 2);
-        assert_eq!(ue_count, 5);
-        assert_eq!(ue_noinfo_count, 6);
+        assert_eq!(ce, 1);
+        assert_eq!(ce_noinfo, 2);
+        assert_eq!(ue, 5);
+        assert_eq!(ue_noinfo, 6);
     }
 
     #[test]
     fn edac_csrow_stats() {
-        let path = Path::new("tests/node/fixtures/sys/devices/system/edac/mc/mc0/csrow0");
-        let (ce_count, ue_count) = read_edac_csrow_stats(path).unwrap();
+        let path = PathBuf::from("tests/node/fixtures/sys/devices/system/edac/mc/mc0/csrow0");
+        let (ce, ue) = read_edac_csrow_stats(path).unwrap();
 
-        assert_eq!(ce_count, 3);
-        assert_eq!(ue_count, 4);
+        assert_eq!(ce, 3);
+        assert_eq!(ue, 4);
     }
 }

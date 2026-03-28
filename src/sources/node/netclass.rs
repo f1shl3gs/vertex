@@ -5,7 +5,7 @@ use event::{Metric, tags};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 
-use super::{Error, Paths, read_string};
+use super::{Error, Paths, read_sys_file};
 
 fn default_ignores() -> regex::Regex {
     regex::Regex::new("^$").unwrap()
@@ -13,7 +13,7 @@ fn default_ignores() -> regex::Regex {
 
 #[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
-    // Regexp of net devices to ignore for netclass collector
+    /// Regexp of net devices to ignore for netclass collector
     #[serde(default = "default_ignores", with = "serde_regex")]
     pub ignores: regex::Regex,
 }
@@ -322,7 +322,7 @@ struct NetClassInterface {
 fn load_netclass_interface(path: PathBuf) -> Result<NetClassInterface, Error> {
     let mut nci = NetClassInterface::default();
     for entry in std::fs::read_dir(path)?.flatten() {
-        let Ok(value) = read_string(entry.path()) else {
+        let Ok(value) = read_sys_file(entry.path()) else {
             continue;
         };
 

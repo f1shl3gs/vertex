@@ -1,9 +1,9 @@
 use event::{Metric, tags};
 
-use super::{Error, Paths, read_string};
+use super::{Error, Paths, read_file_no_stat};
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
-    let content = read_string(paths.proc().join("cgroups"))?;
+    let content = read_file_no_stat(paths.proc().join("cgroups"))?;
 
     let mut metrics = Vec::new();
     for summary in parse_cgroup_summaries(&content)? {
@@ -87,6 +87,13 @@ fn parse_cgroup_summaries(content: &str) -> Result<Vec<CgroupSummary<'_>>, Error
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn smoke() {
+        let paths = Paths::test();
+        let metrics = collect(paths).await.unwrap();
+        assert_ne!(metrics.len(), 0);
+    }
 
     #[test]
     fn parse() {

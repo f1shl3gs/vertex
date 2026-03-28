@@ -5,7 +5,7 @@ use configurable::Configurable;
 use event::{Metric, tags};
 use serde::{Deserialize, Serialize};
 
-use super::{Error, Paths, read_string};
+use super::{Error, Paths, read_sys_file};
 
 #[derive(Clone, Configurable, Debug, Default, Deserialize, Serialize)]
 pub struct Config {
@@ -555,11 +555,8 @@ struct Stat {
 }
 
 fn read_value(path: PathBuf) -> Result<u64, Error> {
-    match read_string(path) {
-        Ok(content) => {
-            let value = content.parse()?;
-            Ok(value)
-        }
+    match read_sys_file(path) {
+        Ok(content) => Ok(content.parse()?),
         Err(err) => {
             if err.kind() == ErrorKind::NotFound {
                 return Ok(0);

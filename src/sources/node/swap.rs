@@ -1,6 +1,6 @@
 use event::{Metric, tags};
 
-use super::{Error, Paths};
+use super::{Error, Paths, read_file_no_stat};
 
 // Swap represents an entry in /proc/swaps
 #[cfg_attr(test, derive(Debug, PartialEq))]
@@ -13,10 +13,9 @@ struct Swap<'a> {
 }
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
-    let content = std::fs::read_to_string(paths.proc().join("swaps"))?;
-    let mut metrics = Vec::new();
+    let content = read_file_no_stat(paths.proc().join("swaps"))?;
 
-    // skip header line
+    let mut metrics = Vec::new();
     for line in content.lines().skip(1) {
         let swap = parse_swap_line(line)?;
         let tags = tags!(
@@ -44,10 +43,6 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
                 tags,
             ),
         ]);
-    }
-
-    if metrics.is_empty() {
-        return Err(Error::NoData);
     }
 
     Ok(metrics)

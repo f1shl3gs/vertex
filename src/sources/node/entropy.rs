@@ -34,6 +34,13 @@ fn read_random(root: &Path) -> Result<(u64, u64), Error> {
 mod tests {
     use super::*;
 
+    #[tokio::test]
+    async fn smoke() {
+        let paths = Paths::test();
+        let metrics = collect(paths).await.unwrap();
+        assert_eq!(metrics.len(), 2);
+    }
+
     #[test]
     fn read() {
         let path = Path::new("tests/node/fixtures/proc");

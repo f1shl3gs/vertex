@@ -3,7 +3,7 @@ use std::path::Path;
 
 use event::{Metric, tags};
 
-use super::{Error, Paths, read_string};
+use super::{Error, Paths, read_sys_file};
 
 /// Exposes the current system time
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
@@ -102,13 +102,13 @@ fn parse_clock_sources(root: &Path) -> Result<Vec<ClockSource>, Error> {
         };
 
         let path = entry.path();
-        let data = read_string(path.join("available_clocksource"))?;
+        let data = read_sys_file(path.join("available_clocksource"))?;
         let available = data
             .split_ascii_whitespace()
             .map(String::from)
             .collect::<Vec<_>>();
 
-        let current = read_string(path.join("current_clocksource"))?;
+        let current = read_sys_file(path.join("current_clocksource"))?;
 
         sources.push(ClockSource {
             name,

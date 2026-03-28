@@ -4,7 +4,7 @@ use std::path::PathBuf;
 use event::Metric;
 use event::tags::Tags;
 
-use super::{Error, Paths, read_string};
+use super::{Error, Paths, read_sys_file};
 
 /// `DesktopManagementInterface` contains info from files in /sys/class/dmi/id
 #[derive(Default)]
@@ -29,325 +29,55 @@ struct DesktopManagementInterface {
     product_sku: Option<String>,       // /sys/class/dmi/id/product_sku
     product_uuid: Option<String>,      // /sys/class/dmi/id/product_uuid
     product_version: Option<String>,   // /sys/class/dmi/id/product_version
-    system_vendor: Option<String>,     // /sys/class/dmi/id/sys_vendor
+    sys_vendor: Option<String>,        // /sys/class/dmi/id/sys_vendor
 }
 
-impl DesktopManagementInterface {
-    fn parse(root: PathBuf) -> Result<Self, Error> {
-        let dirs = std::fs::read_dir(root)?;
+fn load_dmi(root: PathBuf) -> Result<DesktopManagementInterface, Error> {
+    let mut dmi = DesktopManagementInterface::default();
 
-        let mut dmi = DesktopManagementInterface::default();
-        for entry in dirs.flatten() {
-            if !entry.metadata()?.is_file() {
-                continue;
+    for (filename, dst) in [
+        ("bios_date", &mut dmi.bios_date),
+        ("bios_release", &mut dmi.bios_release),
+        ("bios_vendor", &mut dmi.bios_vendor),
+        ("bios_version", &mut dmi.bios_version),
+        ("board_asset_tag", &mut dmi.board_asset_tag),
+        ("board_name", &mut dmi.board_name),
+        ("board_serial", &mut dmi.board_serial),
+        ("board_vendor", &mut dmi.board_vendor),
+        ("board_version", &mut dmi.board_version),
+        ("chassis_asset_tag", &mut dmi.chassis_asset_tag),
+        ("chassis_serial", &mut dmi.chassis_serial),
+        ("chassis_type", &mut dmi.chassis_type),
+        ("chassis_vendor", &mut dmi.chassis_vendor),
+        ("chassis_version", &mut dmi.chassis_version),
+        ("product_family", &mut dmi.product_family),
+        ("product_name", &mut dmi.product_name),
+        ("product_serial", &mut dmi.product_serial),
+        ("product_sku", &mut dmi.product_sku),
+        ("product_uuid", &mut dmi.product_uuid),
+        ("product_version", &mut dmi.product_version),
+        ("sys_vendor", &mut dmi.sys_vendor),
+    ] {
+        match read_sys_file(root.join(filename)) {
+            Ok(content) => {
+                *dst = Some(content);
             }
-
-            match entry.file_name().to_string_lossy().as_ref() {
-                "bios_date" => {
-                    dmi.bios_date = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
-
-                                return Err(err.into());
-                            }
-                        }
-                    }
+            Err(err) => {
+                if err.kind() == ErrorKind::NotFound || err.kind() == ErrorKind::PermissionDenied {
+                    // Only root is allowed to read the serial and product_uuid files
+                    continue;
                 }
-                "bios_release" => {
-                    dmi.bios_release = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
 
-                                return Err(err.into());
-                            }
-                        }
-                    }
-                }
-                "bios_vendor" => {
-                    dmi.bios_vendor = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
-
-                                return Err(err.into());
-                            }
-                        }
-                    }
-                }
-                "bios_version" => {
-                    dmi.bios_version = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
-
-                                return Err(err.into());
-                            }
-                        }
-                    }
-                }
-                "board_asset_tag" => {
-                    dmi.board_asset_tag = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
-
-                                return Err(err.into());
-                            }
-                        }
-                    }
-                }
-                "board_name" => {
-                    dmi.board_name = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
-
-                                return Err(err.into());
-                            }
-                        }
-                    }
-                }
-                "board_serial" => {
-                    dmi.board_serial = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
-
-                                return Err(err.into());
-                            }
-                        }
-                    }
-                }
-                "board_vendor" => {
-                    dmi.board_vendor = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
-
-                                return Err(err.into());
-                            }
-                        }
-                    }
-                }
-                "board_version" => {
-                    dmi.board_version = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
-
-                                return Err(err.into());
-                            }
-                        }
-                    }
-                }
-                "chassis_asset_tag" => {
-                    dmi.chassis_asset_tag = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
-
-                                return Err(err.into());
-                            }
-                        }
-                    }
-                }
-                "chassis_serial" => {
-                    dmi.chassis_serial = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
-
-                                return Err(err.into());
-                            }
-                        }
-                    }
-                }
-                "chassis_type" => {
-                    dmi.chassis_type = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
-
-                                return Err(err.into());
-                            }
-                        }
-                    }
-                }
-                "chassis_vendor" => {
-                    dmi.chassis_vendor = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
-
-                                return Err(err.into());
-                            }
-                        }
-                    }
-                }
-                "chassis_version" => {
-                    dmi.chassis_version = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
-
-                                return Err(err.into());
-                            }
-                        }
-                    }
-                }
-                "product_family" => {
-                    dmi.product_family = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
-
-                                return Err(err.into());
-                            }
-                        }
-                    }
-                }
-                "product_name" => {
-                    dmi.product_name = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
-
-                                return Err(err.into());
-                            }
-                        }
-                    }
-                }
-                "product_serial" => {
-                    dmi.product_serial = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
-
-                                return Err(err.into());
-                            }
-                        }
-                    }
-                }
-                "product_sku" => {
-                    dmi.product_sku = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
-
-                                return Err(err.into());
-                            }
-                        }
-                    }
-                }
-                "product_uuid" => {
-                    dmi.product_uuid = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
-
-                                return Err(err.into());
-                            }
-                        }
-                    }
-                }
-                "product_version" => {
-                    dmi.product_version = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
-
-                                return Err(err.into());
-                            }
-                        }
-                    }
-                }
-                "sys_vendor" => {
-                    dmi.system_vendor = {
-                        match read_string(entry.path()) {
-                            Ok(value) => Some(value),
-                            Err(err) => {
-                                if err.kind() == ErrorKind::PermissionDenied {
-                                    continue;
-                                }
-
-                                return Err(err.into());
-                            }
-                        }
-                    }
-                }
-                _ => continue,
+                return Err(err.into());
             }
         }
-
-        Ok(dmi)
     }
+
+    Ok(dmi)
 }
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
-    let path = paths.sys().join("class/dmi/id");
-    let dmi = DesktopManagementInterface::parse(path)?;
+    let dmi = load_dmi(paths.sys().join("class/dmi/id"))?;
 
     let mut tags = Tags::with_capacity(20);
     if let Some(value) = dmi.bios_date {
@@ -407,17 +137,17 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     if let Some(value) = dmi.product_version {
         tags.insert("product_version", value);
     }
-    if let Some(value) = dmi.system_vendor {
+    if let Some(value) = dmi.sys_vendor {
         tags.insert("system_vendor", value);
     }
 
     Ok(vec![Metric::gauge_with_tags(
         "node_dmi_info",
-        "A metric with a constant '1' value labeled by bios_date, bios_release, bios_vendor,\
-         bios_version, board_asset_tag, board_name, board_serial, board_vendor, board_version, \
-         chassis_asset_tag, chassis_serial, chassis_vendor, chassis_version, product_family, \
-         product_name, product_serial, product_sku, product_uuid, product_version, system_vendor \
-         if provided by DMI.",
+        "A metric with a constant '1' value labeled by bios_date, bios_release, bios_vendor, \
+            bios_version, board_asset_tag, board_name, board_serial, board_vendor, board_version, \
+            chassis_asset_tag, chassis_serial, chassis_vendor, chassis_version, product_family, \
+            product_name, product_serial, product_sku, product_uuid, product_version, system_vendor \
+            if provided by DMI.",
         1,
         tags,
     )])
@@ -427,10 +157,16 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
 mod tests {
     use super::*;
 
+    #[tokio::test]
+    async fn smoke() {
+        let paths = Paths::test();
+        let metrics = collect(paths).await.unwrap();
+        assert!(!metrics.is_empty());
+    }
+
     #[test]
     fn parse() {
-        let dmi = DesktopManagementInterface::parse("tests/node/fixtures/sys/class/dmi/id".into())
-            .unwrap();
+        let dmi = load_dmi("tests/node/fixtures/sys/class/dmi/id".into()).unwrap();
 
         assert_eq!(dmi.bios_date.unwrap(), "04/12/2021");
         assert_eq!(dmi.bios_release.unwrap(), "2.2");
@@ -454,6 +190,6 @@ mod tests {
             dmi.product_uuid.unwrap(),
             "83340ca8-cb49-4474-8c29-d2088ca84dd9"
         );
-        assert_eq!(dmi.system_vendor.unwrap(), "Dell Inc.");
+        assert_eq!(dmi.sys_vendor.unwrap(), "Dell Inc.");
     }
 }

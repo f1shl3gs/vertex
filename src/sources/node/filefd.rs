@@ -2,7 +2,7 @@ use std::path::Path;
 
 use event::Metric;
 
-use super::{Error, Paths, read_string};
+use super::{Error, Paths, read_file_no_stat};
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     let (allocated, maximum) = read_file_nr(paths.proc())?;
@@ -22,7 +22,7 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
 }
 
 fn read_file_nr(root: &Path) -> Result<(u64, u64), Error> {
-    let content = read_string(root.join("sys/fs/file-nr"))?;
+    let content = read_file_no_stat(root.join("sys/fs/file-nr"))?;
 
     // the file-nr proc is only 1 line with 3 values
     let parts = content.split_ascii_whitespace().collect::<Vec<_>>();

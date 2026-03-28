@@ -1,11 +1,10 @@
-use std::path::Path;
-
 use event::Metric;
 
-use super::{Error, Paths, read_string};
+use super::{Error, Paths, read_file_no_stat};
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
-    let loads = get_load(paths.proc())?;
+    let content = read_file_no_stat(paths.proc().join("loadavg"))?;
+    let loads = parse_loadavg(&content)?;
 
     Ok(vec![
         Metric::gauge("node_load1", "1m load average", loads[0]),
@@ -14,9 +13,7 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     ])
 }
 
-fn get_load(path: &Path) -> Result<Vec<f64>, Error> {
-    let content = read_string(path.join("loadavg"))?;
-
+fn parse_loadavg(content: &str) -> Result<Vec<f64>, Error> {
     let loads = content
         .split_ascii_whitespace()
         .take(3)
@@ -34,10 +31,17 @@ fn get_load(path: &Path) -> Result<Vec<f64>, Error> {
 mod tests {
     use super::*;
 
+    #[tokio::test]
+    async fn smoke() {
+        let paths = Paths::test();
+        let metrics = collect(paths).await.unwrap();
+        assert_eq!(metrics.len(), 3);
+    }
+
     #[test]
     fn parse() {
-        let root = Path::new("tests/node/fixtures/proc");
-        let loads = get_load(root).unwrap();
+        let content = std::fs::read_to_string("tests/node/fixtures/proc/loadavg").unwrap();
+        let loads = parse_loadavg(&content).unwrap();
 
         assert_eq!(loads[0], 0.02);
         assert_eq!(loads[1], 0.04);

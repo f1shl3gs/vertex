@@ -6,7 +6,7 @@ use event::{Metric, tags};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 
-use super::{Error, Paths, read_string};
+use super::{Error, Paths, read_sys_file};
 
 /// PowerSupply contains info from files in /sys/class/power_supply for
 /// a single power supply
@@ -149,7 +149,7 @@ struct PowerSupply {
 }
 
 fn read_optional(path: PathBuf) -> Result<Option<String>, Error> {
-    match read_string(path) {
+    match read_sys_file(path) {
         Ok(content) => Ok(Some(content)),
         Err(err) => {
             if err.kind() == ErrorKind::NotFound {
@@ -162,7 +162,7 @@ fn read_optional(path: PathBuf) -> Result<Option<String>, Error> {
 }
 
 fn read_optional_i64(path: PathBuf) -> Result<Option<i64>, Error> {
-    match read_string(path) {
+    match read_sys_file(path) {
         Ok(content) => Ok(content.parse().ok()),
         Err(err) => {
             if err.kind() == ErrorKind::NotFound {
@@ -321,7 +321,8 @@ fn default_ignored() -> regex::Regex {
 
 #[derive(Clone, Configurable, Debug, Deserialize, Serialize)]
 pub struct Config {
-    #[serde(with = "serde_regex", default = "default_ignored")]
+    /// Regex of power supplies to ignore for powersupplyclass collector.
+    #[serde(default = "default_ignored", with = "serde_regex")]
     ignored: regex::Regex,
 }
 

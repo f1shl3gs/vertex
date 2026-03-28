@@ -9,9 +9,9 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     for line in content.lines() {
         let mut fields = line.split_ascii_whitespace();
         let Some(key) = fields.next() else { continue };
-        let Some(value) = fields.next() else { continue };
-        let Ok(value) = value.parse::<f64>() else {
-            continue;
+        let value = match fields.next() {
+            Some(value) => value.parse::<f64>()?,
+            None => return Err(Error::Malformed("xfrm_stat")),
         };
 
         let (name, desc) = match key {

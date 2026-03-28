@@ -1,30 +1,38 @@
 use std::collections::BTreeMap;
-use std::fs::{canonicalize, read_link};
+use std::io::ErrorKind;
 use std::path::Path;
 
 use event::{Metric, tags};
 use tokio::task::JoinSet;
 
-use super::{Error, Paths, read_string};
+use super::{Error, Paths, read_sys_file};
 
 pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
-    let dirs = std::fs::read_dir(paths.sys().join("class/hwmon"))?;
+    let dirs = match paths.sys().join("class/hwmon").read_dir() {
+        Ok(dirs) => dirs,
+        Err(err) => {
+            if err.kind() == ErrorKind::NotFound {
+                return Err(Error::NoData);
+            }
+
+            return Err(err.into());
+        }
+    };
 
     let mut tasks = JoinSet::new();
     for entry in dirs.flatten() {
-        let meta = entry.metadata()?;
-        let meta = match meta.file_type().is_symlink() {
-            true => canonicalize(entry.path())?.metadata()?,
-            false => meta,
+        let Ok(typ) = entry.file_type() else { continue };
+        let path = if typ.is_symlink() {
+            entry.path().canonicalize()?
+        } else {
+            entry.path()
         };
 
-        if !meta.is_dir() {
+        if !path.is_dir() {
             continue;
         }
 
         tasks.spawn(async move {
-            let path = entry.path();
-
             match hwmon_metrics(&path) {
                 Ok(metrics) => metrics,
                 Err(err) => {
@@ -381,11 +389,11 @@ fn hwmon_metrics(dir: &Path) -> Result<Vec<Metric>, Error> {
 
 // This function can be optimized by parallelling sensors
 fn collect_sensor_data(
-    dir: impl AsRef<Path>,
+    root: impl AsRef<Path>,
 ) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
     let mut stats = BTreeMap::<String, BTreeMap<String, String>>::new();
 
-    for entry in std::fs::read_dir(dir)?.flatten() {
+    for entry in root.as_ref().read_dir()?.flatten() {
         let filename = entry.file_name();
         let filename = filename.to_string_lossy();
         let Ok((sensor, num, property)) = explode_sensor_filename(filename.as_ref()) else {
@@ -396,7 +404,7 @@ fn collect_sensor_data(
             continue;
         }
 
-        if let Ok(value) = read_string(entry.path()) {
+        if let Ok(value) = read_sys_file(entry.path()) {
             let sensor = format!("{sensor}{}", if num.is_empty() { "0" } else { num });
             stats
                 .entry(sensor)
@@ -449,7 +457,7 @@ fn explode_sensor_filename(name: &str) -> Result<(&str, &str, &str), ()> {
 
 // human_readable_name is similar to the methods in
 fn human_readable_chip_name(dir: &Path) -> Result<String, Error> {
-    let content = read_string(dir.join("name"))?;
+    let content = read_sys_file(dir.join("name"))?;
     Ok(content)
 }
 
@@ -468,11 +476,9 @@ fn read_hwmon_name(path: &Path) -> Result<String, Error> {
 
     // preference 1: construct a name based on device name, always unique
 
-    let dev_path = path.join("device");
-    if read_link(&dev_path).is_ok() {
-        let dev_path = canonicalize(dev_path)?;
-        let dev_name = dev_path.file_name().unwrap().to_str().unwrap();
-        let dev_prefix = dev_path.parent().unwrap();
+    if let Ok(path) = path.join("device").canonicalize() {
+        let dev_name = path.file_name().unwrap().to_str().unwrap();
+        let dev_prefix = path.parent().unwrap();
         let dev_type = dev_prefix.file_name().unwrap().to_str().unwrap();
 
         let clean_dev_name = sanitized(dev_name);
@@ -488,7 +494,7 @@ fn read_hwmon_name(path: &Path) -> Result<String, Error> {
     }
 
     // preference 2: is there a name file
-    match read_string(path.join("name")) {
+    match read_sys_file(path.join("name")) {
         Ok(content) => return Ok(content),
         Err(err) => debug!(
             message = "read device name failed",

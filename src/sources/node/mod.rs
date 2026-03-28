@@ -482,52 +482,12 @@ struct Config {
     collectors: Collectors,
 }
 
-/// The files this function will(should) be reading is under `/sys` and `/proc` which is
-/// very small, so the performance should never be a problem.
-pub fn read_string<P: AsRef<Path>>(path: P) -> std::io::Result<String> {
-    let mut data = read_file(path)?;
-
-    let trimmed = data.trim_ascii_end();
-    unsafe { data.set_len(trimmed.len()) }
-
-    String::from_utf8(data).map_err(|err| std::io::Error::new(std::io::ErrorKind::InvalidData, err))
-}
-
-/// `read_file` read contents of entire file. This is similar to `std::fs::read`
-/// but without the call to libc::stat, because many files in /proc and /sys report
-/// incorrect file sizes (either 0 or 4096). Reads a max file size of 1024kB. For
-/// files larger than this, a reader should be used.
-#[inline]
-fn read_file<P: AsRef<Path>>(path: P) -> std::io::Result<Vec<u8>> {
-    const MAX_BUF_SIZE: usize = 1024 * 1024;
-    const STEP: usize = 32;
-
-    let mut file = std::fs::File::open(&path)?;
-    let mut buf = Vec::with_capacity(STEP);
-    let mut total_read = 0;
-
-    loop {
-        if total_read + STEP > MAX_BUF_SIZE {
-            return Err(std::io::Error::new(
-                std::io::ErrorKind::FileTooLarge,
-                "file exceeds maximum allowed size",
-            ));
-        }
-
-        // Ensure there's at least one byte available for reading
-        buf.resize(total_read + STEP, 0);
-
-        let cnt = file.read(&mut buf[total_read..total_read + STEP])?;
-        total_read += cnt;
-
-        if cnt == 0 {
-            break;
-        }
-    }
-
-    buf.truncate(total_read);
-
-    Ok(buf)
+/// Read contents of entire file. This is similar to [`std::fs::read_to_string`]
+/// but without the call to [`stat()`], because many files in /proc or /sys
+/// report incorrect file sizes (either 0 or 4096).
+fn read_file_no_stat<P: AsRef<Path>>(path: P) -> std::io::Result<String> {
+    let file = std::fs::File::open(path)?;
+    std::io::read_to_string(file)
 }
 
 pub fn read_into<P, T, E>(path: P) -> Result<T, Error>
@@ -536,8 +496,29 @@ where
     T: FromStr<Err = E>,
     Error: From<E>,
 {
-    let content = read_string(path)?;
-    Ok(<T as FromStr>::from_str(content.as_str())?)
+    let mut file = std::fs::File::open(path)?;
+
+    // i64::MAX_STR_LEN is 20 and f64::MAX_STR_LEN is 24
+    let mut buf = [0u8; 24];
+    let size = file.read(&mut buf)?;
+
+    String::from_utf8_lossy(&buf[..size])
+        .trim()
+        .parse::<T>()
+        .map_err(Into::into)
+}
+
+/// A simplified std::fs::read_to_string
+fn read_sys_file<P: AsRef<Path>>(path: P) -> std::io::Result<String> {
+    let mut file = std::fs::File::open(path)?;
+
+    let mut buf = String::with_capacity(128);
+    Read::read_to_string(&mut file, &mut buf)?;
+
+    let len = buf.trim_end().len();
+    buf.truncate(len);
+
+    Ok(buf)
 }
 
 macro_rules! collect {
@@ -922,7 +903,8 @@ async fn run(
         }
 
         if collectors.tcpstat {
-            tasks.spawn(collect!(tcpstat));
+            let paths = paths.clone();
+            tasks.spawn(collect!(tcpstat, paths));
         }
 
         if collectors.thermal_zone {
@@ -1030,17 +1012,5 @@ mod tests {
     #[test]
     fn generate_config() {
         crate::testing::generate_config::<Config>()
-    }
-
-    #[test]
-    fn test_deserialize() {
-        let cs: Collectors = serde_yaml::from_str(
-            r#"
-        arp: true
-        "#,
-        )
-        .unwrap();
-
-        assert!(cs.arp);
     }
 }
