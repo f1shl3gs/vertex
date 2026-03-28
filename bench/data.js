@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1774727015431,
+  "lastUpdate": 1774727052766,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a925fc2eb40e6421203cffa8216b427887263aa0",
-          "message": "Merge pull request #2769 from f1shl3gs/dependabot/cargo/bytes-1.11.1\n\nchore(deps): bump bytes from 1.11.0 to 1.11.1",
-          "timestamp": "2026-02-04T13:54:21+08:00",
-          "tree_id": "126789388259a41ea5b9a1d7a8afe8642cbd5463",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a925fc2eb40e6421203cffa8216b427887263aa0"
-        },
-        "date": 1770185124484,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 578,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40915.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "fd13242a0c9a73f328d2fe52e44f9faa7b3a779a",
           "message": "Merge pull request #2771 from f1shl3gs/dependabot/cargo/regex-1.12.3\n\nchore(deps): bump regex from 1.12.2 to 1.12.3",
           "timestamp": "2026-02-04T13:55:06+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40547.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d184c05a84b0a00524f06364e4c493dd8fe63a88",
+          "message": "Merge pull request #2872 from f1shl3gs/sources/node/refactor_and_reduce_reallocs\n\nsources/node: refactor and reduce some allocations",
+          "timestamp": "2026-03-29T03:32:54+08:00",
+          "tree_id": "1dcb2968ad5975ea16b73d0ec1faace679aa4f29",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d184c05a84b0a00524f06364e4c493dd8fe63a88"
+        },
+        "date": 1774727030429,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 572,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40564.7,
             "unit": "KiB"
           }
         ]
