@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1774726603616,
+  "lastUpdate": 1774727015431,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e45efba2a8a231d42da750b7ab4981f9fa4dee2f",
-          "message": "Merge pull request #2678 from f1shl3gs/dependabot/cargo/hyper-util-0.1.18\n\nchore(deps): bump hyper-util from 0.1.17 to 0.1.18",
-          "timestamp": "2025-11-14T08:21:29+08:00",
-          "tree_id": "280a6a53fc5bf5eaccbc07fbcbe8106f35e3bc64",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e45efba2a8a231d42da750b7ab4981f9fa4dee2f"
-        },
-        "date": 1763080282329,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 15019000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 607010,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.94,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "74a5b4a366faa6792e1f9055458472437d698fca",
           "message": "Merge pull request #2679 from f1shl3gs/dependabot/cargo/hyper-1.8.1\n\nchore(deps): bump hyper from 1.8.0 to 1.8.1",
           "timestamp": "2025-11-14T09:01:27+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.836,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d184c05a84b0a00524f06364e4c493dd8fe63a88",
+          "message": "Merge pull request #2872 from f1shl3gs/sources/node/refactor_and_reduce_reallocs\n\nsources/node: refactor and reduce some allocations",
+          "timestamp": "2026-03-29T03:32:54+08:00",
+          "tree_id": "1dcb2968ad5975ea16b73d0ec1faace679aa4f29",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d184c05a84b0a00524f06364e4c493dd8fe63a88"
+        },
+        "date": 1774726987183,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 10346000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 506850,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 59.125,
             "unit": "ns/op"
           }
         ]
