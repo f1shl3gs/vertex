@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1774670308129,
+  "lastUpdate": 1774670327292,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bb176bce3fe7ff8f4361346dac5f2eabed28e459",
-          "message": "Merge pull request #2677 from f1shl3gs/lib/configurable-derive/remove_unused\n\nlib/configurable-derive: remove unused",
-          "timestamp": "2025-11-13T15:48:10+08:00",
-          "tree_id": "724cf3d29e58920c7581ce4bd7e03471ca76e348",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bb176bce3fe7ff8f4361346dac5f2eabed28e459"
-        },
-        "date": 1763020249657,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.772,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 161.07,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 313,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 668.37,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e45efba2a8a231d42da750b7ab4981f9fa4dee2f",
           "message": "Merge pull request #2678 from f1shl3gs/dependabot/cargo/hyper-util-0.1.18\n\nchore(deps): bump hyper-util from 0.1.17 to 0.1.18",
           "timestamp": "2025-11-14T08:21:29+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 696.2,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5bcbe580811f1c9669498a3d63b6564d61c3c8af",
+          "message": "Merge pull request #2871 from f1shl3gs/dependabot/cargo/md-5-0.11.0\n\nchore(deps): bump md-5 from 0.10.6 to 0.11.0",
+          "timestamp": "2026-03-28T11:55:43+08:00",
+          "tree_id": "bd0e2663eec7dc108ae30602a7aa4d3c7032882d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5bcbe580811f1c9669498a3d63b6564d61c3c8af"
+        },
+        "date": 1774670303988,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.894,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 176.99,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 333.79,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 703.19,
             "unit": "ns/op"
           }
         ]
