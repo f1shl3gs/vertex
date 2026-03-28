@@ -4,9 +4,8 @@ use std::time::Duration;
 use bytes::Buf;
 use configurable::configurable_component;
 use event::{Metric, tags};
-use framework::config::default_interval;
-use framework::config::{OutputType, SourceConfig, SourceContext};
-use framework::http::HttpClient;
+use framework::config::{OutputType, SourceConfig, SourceContext, default_interval};
+use framework::http::{Auth, HttpClient};
 use framework::tls::TlsConfig;
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures::StreamExt;
@@ -24,6 +23,8 @@ struct Config {
     /// targets to scrape
     targets: Vec<Url>,
 
+    auth: Option<Auth>,
+
     tls: Option<TlsConfig>,
 
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
@@ -35,10 +36,12 @@ struct Config {
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let client = HttpClient::new(self.tls.as_ref(), &cx.proxy)?;
+        let auth = self.auth.clone();
 
         Ok(Box::pin(run(
             client,
             self.targets.clone(),
+            auth,
             self.interval,
             cx.output,
             cx.shutdown,
@@ -53,6 +56,7 @@ impl SourceConfig for Config {
 async fn run(
     client: HttpClient,
     targets: Vec<Url>,
+    auth: Option<Auth>,
     interval: Duration,
     mut output: Pipeline,
     mut shutdown: ShutdownSignal,
@@ -65,8 +69,11 @@ async fn run(
             _ = &mut shutdown => break,
         }
 
-        let mut tasks =
-            FuturesUnordered::from_iter(targets.iter().map(|target| collect(&client, target)));
+        let mut tasks = FuturesUnordered::from_iter(
+            targets
+                .iter()
+                .map(|target| collect(&client, target, auth.as_ref())),
+        );
 
         loop {
             let metrics = tokio::select! {
@@ -139,10 +146,18 @@ const METRIC_INFOS: [(&str, &str); 28] = [
     ),
 ];
 
-async fn collect(client: &HttpClient, target: &Url) -> Result<Vec<Metric>, Error> {
-    let req = Request::builder()
+async fn collect(
+    client: &HttpClient,
+    target: &Url,
+    auth: Option<&Auth>,
+) -> Result<Vec<Metric>, Error> {
+    let mut req = Request::builder()
         .uri(target.as_str())
         .body(Full::default())?;
+
+    if let Some(auth) = auth {
+        auth.apply(&mut req);
+    }
 
     let resp = client.send(req).await?;
     let (parts, incoming) = resp.into_parts();
@@ -240,7 +255,7 @@ mod tests {
         let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
         let target = Url::parse(&format!("http://{addr}")).unwrap();
 
-        let metrics = collect(&client, &target).await.unwrap();
+        let metrics = collect(&client, &target, None).await.unwrap();
         assert_eq!(metrics.len(), 2 * 28);
     }
 }
