@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1774728283179,
+  "lastUpdate": 1774754506626,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "45f23fbcd98d38c6fab69eb60d40aa44cafe8de2",
-          "message": "Merge pull request #2681 from f1shl3gs/lib/codecs/encoding/logfmt/fix_downflow\n\nlib/codecs: fix downflow panic if log have no fields in logfmt encoder",
-          "timestamp": "2025-11-14T12:51:20+08:00",
-          "tree_id": "d77e3b3d22badaec4b1aac353b47d788d9cf79f6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/45f23fbcd98d38c6fab69eb60d40aa44cafe8de2"
-        },
-        "date": 1763096003951,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 523850,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 533600,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0686b59a7c9938df323ec2e846ce411fbfb6804d",
+          "message": "Merge pull request #2874 from f1shl3gs/sources/tengine/init\n\nsources/tengine: init",
+          "timestamp": "2026-03-29T11:19:18+08:00",
+          "tree_id": "355c20bb62b687d5b25557593250304079bbdab3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0686b59a7c9938df323ec2e846ce411fbfb6804d"
+        },
+        "date": 1774754484146,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 530170,
             "unit": "ns/op"
           }
         ]
