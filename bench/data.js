@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1774754506626,
+  "lastUpdate": 1774754514502,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "45f23fbcd98d38c6fab69eb60d40aa44cafe8de2",
-          "message": "Merge pull request #2681 from f1shl3gs/lib/codecs/encoding/logfmt/fix_downflow\n\nlib/codecs: fix downflow panic if log have no fields in logfmt encoder",
-          "timestamp": "2025-11-14T12:51:20+08:00",
-          "tree_id": "d77e3b3d22badaec4b1aac353b47d788d9cf79f6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/45f23fbcd98d38c6fab69eb60d40aa44cafe8de2"
-        },
-        "date": 1763096020896,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 36.664,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 111.87,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 173.3,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 159.73,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0686b59a7c9938df323ec2e846ce411fbfb6804d",
+          "message": "Merge pull request #2874 from f1shl3gs/sources/tengine/init\n\nsources/tengine: init",
+          "timestamp": "2026-03-29T11:19:18+08:00",
+          "tree_id": "355c20bb62b687d5b25557593250304079bbdab3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0686b59a7c9938df323ec2e846ce411fbfb6804d"
+        },
+        "date": 1774754492016,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.951,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 97.768,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 172.28,
             "unit": "ns/op"
           }
         ]
