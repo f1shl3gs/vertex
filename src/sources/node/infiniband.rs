@@ -1051,28 +1051,21 @@ mod tests {
     }
 
     #[test]
-    fn id() {
-        let root = PathBuf::from(
-            "/home/f1shl3gs/Workspaces/goland/node_exporter/collector/fixtures/sys/class/infiniband",
-        );
+    fn device() {
+        let root = PathBuf::from("tests/node/fixtures/sys/class/infiniband");
         let got = parse_infiniband_device(root.join("i40iw0")).unwrap();
 
-        println!("{:#?}", got);
-
-        /*
-
-        root: "/home/f1shl3gs/Workspaces/goland/node_exporter/collector/fixtures/sys/class/infiniband/i40iw0"
-        path: "/home/f1shl3gs/Workspaces/goland/node_exporter/collector/fixtures/sys/class/infiniband/i40iw0/ports"
-        InfiniBandDevice {
-            board_id: "I40IW Board ID",
-            fw_ver: "0.2",
-            hca_type: "I40IW",
-            ports: [
-                InfiniBandPort {
+        assert_eq!(
+            got,
+            InfiniBandDevice {
+                board_id: "I40IW Board ID".to_string(),
+                fw_ver: "0.2".to_string(),
+                hca_type: "I40IW".to_string(),
+                ports: vec![InfiniBandPort {
                     port: 1,
-                    state: "ACTIVE",
+                    state: "ACTIVE".to_string(),
                     state_id: 4,
-                    phys_state: "LinkUp",
+                    phys_state: "LinkUp".to_string(),
                     phys_state_id: 5,
                     rate: 1250000000,
                     counters: InfiniBandCounters {
@@ -1108,11 +1101,9 @@ mod tests {
                         vl15_dropped: None,
                     },
                     hw_counters: None,
-                },
-            ],
-        }
-
-                */
+                },],
+            }
+        );
     }
 
     #[test]
