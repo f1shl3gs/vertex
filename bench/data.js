@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1775051035142,
+  "lastUpdate": 1775051112062,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "6c88cb5db2a30114e8113ec58c87713b4937ba7e",
-          "message": "Merge pull request #2772 from f1shl3gs/cargo/update\n\ncargo update",
-          "timestamp": "2026-02-04T16:56:00+08:00",
-          "tree_id": "a63eb2d9030a6e33d26784a46709e17927bd5872",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6c88cb5db2a30114e8113ec58c87713b4937ba7e"
-        },
-        "date": 1770196038760,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 594,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40914.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "95944152fe208e5265a7b0cb5658560a98a79ac5",
           "message": "Merge pull request #2773 from f1shl3gs/dependabot/cargo/criterion-0.8.2\n\nchore(deps): bump criterion from 0.8.1 to 0.8.2",
           "timestamp": "2026-02-04T20:42:29+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 571,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40613.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cc5ad00474685146c03546a803022233108cc22e",
+          "message": "Merge pull request #2877 from f1shl3gs/tests/add_node_infiband_testdata\n\nnode/infiniband: add missing testdata",
+          "timestamp": "2026-04-01T21:33:43+08:00",
+          "tree_id": "767f4abac7199ab504d99f00a6f61da5bfe1030c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cc5ad00474685146c03546a803022233108cc22e"
+        },
+        "date": 1775051089564,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 580,
             "unit": "s"
           },
           {
