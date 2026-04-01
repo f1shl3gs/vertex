@@ -1052,15 +1052,16 @@ mod tests {
 
     #[test]
     fn device() {
-        let root = PathBuf::from("tests/node/fixtures/sys/class/infiniband", );
+        let root = PathBuf::from("tests/node/fixtures/sys/class/infiniband");
         let got = parse_infiniband_device(root.join("i40iw0")).unwrap();
 
-        assert_eq!(got, InfiniBandDevice {
-            board_id: "I40IW Board ID".to_string(),
-            fw_ver: "0.2".to_string(),
-            hca_type: "I40IW".to_string(),
-            ports: vec![
-                InfiniBandPort {
+        assert_eq!(
+            got,
+            InfiniBandDevice {
+                board_id: "I40IW Board ID".to_string(),
+                fw_ver: "0.2".to_string(),
+                hca_type: "I40IW".to_string(),
+                ports: vec![InfiniBandPort {
                     port: 1,
                     state: "ACTIVE".to_string(),
                     state_id: 4,
@@ -1100,9 +1101,9 @@ mod tests {
                         vl15_dropped: None,
                     },
                     hw_counters: None,
-                },
-            ],
-        });
+                },],
+            }
+        );
     }
 
     #[test]
