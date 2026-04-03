@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1775230506769,
+  "lastUpdate": 1775230519071,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "6e4cbdec4810a00a534c44b166e8ba0d35459fd8",
-          "message": "Merge pull request #2688 from f1shl3gs/dependabot/cargo/indexmap-2.12.1\n\nchore(deps): bump indexmap from 2.12.0 to 2.12.1",
-          "timestamp": "2025-11-21T19:45:16+08:00",
-          "tree_id": "31163fd0071f8478e5aa6f24b89f1f0ffe3d6d2c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6e4cbdec4810a00a534c44b166e8ba0d35459fd8"
-        },
-        "date": 1763725636327,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 500280,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 533870,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "40899a0aa1494b7be6be80a7032c570968467e43",
+          "message": "Merge pull request #2881 from f1shl3gs/dependabot/cargo/indexmap-2.13.1\n\nchore(deps): bump indexmap from 2.13.0 to 2.13.1",
+          "timestamp": "2026-04-03T23:32:49+08:00",
+          "tree_id": "70d2e027bf97dac99845d0645a6a1833a91ea325",
+          "url": "https://github.com/f1shl3gs/vertex/commit/40899a0aa1494b7be6be80a7032c570968467e43"
+        },
+        "date": 1775230496004,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 531150,
             "unit": "ns/op"
           }
         ]
