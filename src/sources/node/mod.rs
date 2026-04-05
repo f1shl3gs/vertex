@@ -236,7 +236,7 @@ struct Collectors {
     #[serde(default = "default_ipvs_config")]
     ipvs: Option<ipvs::Config>,
 
-    #[serde(default)]
+    #[serde(default = "default_true")]
     kernel_hung: bool,
 
     #[serde(default)]
