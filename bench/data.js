@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1775391776736,
+  "lastUpdate": 1775391790597,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "49397a542fdeaee71be5438e0894fbf839f7c503",
-          "message": "Merge pull request #2690 from f1shl3gs/dependabot/cargo/syn-2.0.111\n\nchore(deps): bump syn from 2.0.110 to 2.0.111",
-          "timestamp": "2025-11-23T19:32:04+08:00",
-          "tree_id": "19ca2bf084076b7e56cb14e489922dc696acbc79",
-          "url": "https://github.com/f1shl3gs/vertex/commit/49397a542fdeaee71be5438e0894fbf839f7c503"
-        },
-        "date": 1763897648412,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.157,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 100.85,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 184.07,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 179.4,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "83fe81167a6731058bc5f2790dc2530cb3f60617",
+          "message": "Merge pull request #2882 from f1shl3gs/sources/node/default_enable_kernel_hung\n\nsources/node: enable kernel_hung by default",
+          "timestamp": "2026-04-05T20:20:37+08:00",
+          "tree_id": "4fd52bc0479b619a4195dcbc1de34e12d1f4949f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/83fe81167a6731058bc5f2790dc2530cb3f60617"
+        },
+        "date": 1775391766706,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.175,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 101.09,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 178.33,
             "unit": "ns/op"
           }
         ]
