@@ -7,7 +7,7 @@ pub async fn collect(paths: Paths) -> Result<Vec<Metric>, Error> {
     let count = read_into::<_, u64, _>(path)?;
 
     Ok(vec![Metric::sum(
-        "node_kernel_hung_task_detect_count",
+        "node_kernel_hung_tasks_total",
         "Total number of tasks that have been detected as hung since the system booted",
         count,
     )])
