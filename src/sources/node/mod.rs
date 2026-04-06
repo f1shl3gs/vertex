@@ -165,80 +165,103 @@ fn default_vmstat_config() -> Option<vmstat::Config> {
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct Collectors {
+    /// Exposes ARP statistics from /proc/net/arp.
     #[serde(default = "default_true")]
     arp: bool,
 
+    /// Exposes bcache statistics from /sys/fs/bcache/.
     #[serde(default = "default_bcache_config")]
     bcache: Option<bcache::Config>,
 
     #[serde(default = "default_true")]
     bcachefs: bool,
 
+    /// Exposes the number of configured and active slaves of Linux bonding interfaces.
     #[serde(default = "default_true")]
     bonding: bool,
 
-    // MacOS
+    /// Exposes system boot time derived from the kern.boottime sysctl.
     #[cfg(target_os = "macos")]
     #[serde(default = "default_true")]
     boot_time: bool,
 
+    /// Exposes btrfs statistics
     #[serde(default = "default_true")]
     btrfs: bool,
 
+    /// Exposes statistics of memory fragments as reported by /proc/buddyinfo.
     #[serde(default)]
     buddyinfo: bool,
 
+    /// A summary of the number of active and enabled cgroups
     #[serde(default)]
     cgroups: bool,
 
+    /// Shows conntrack statistics (does nothing if no /proc/sys/net/netfilter/ present).
     #[serde(default = "default_true")]
     conntrack: bool,
 
+    /// Exposes CPU statistics
     #[serde(default = "default_cpu_config")]
     cpu: Option<cpu::Config>,
 
+    /// Exposes CPU frequency statistics
     #[serde(default = "default_true")]
     cpufreq: bool,
 
+    /// Exposes disk I/O statistics.
     #[serde(default = "default_diskstats_config")]
     diskstats: Option<diskstats::Config>,
 
+    /// Expose Desktop Management Interface (DMI) info from /sys/class/dmi/id/
     #[serde(default = "default_true")]
     dmi: bool,
 
+    /// Expose GPU metrics using sysfs / DRM, amdgpu is the only driver which exposes this information through DRM
     #[serde(default)]
     drm: bool,
 
+    /// Exposes error detection and correction statistics.
     #[serde(default = "default_true")]
     edac: bool,
 
+    /// Exposes available entropy.
     #[serde(default = "default_true")]
     entropy: bool,
 
+    /// Exposes fibre channel information and statistics from /sys/class/fc_host/.
     #[serde(default = "default_true")]
     fibrechannel: bool,
 
+    /// Exposes file descriptor statistics from /proc/sys/fs/file-nr.
     #[serde(default = "default_true")]
     filefd: bool,
 
+    /// Exposes filesystem statistics, such as disk space used.
     #[serde(default = "default_filesystem_config")]
     filesystem: Option<filesystem::Config>,
 
+    /// Expose hardware monitoring and sensor data from /sys/class/hwmon/.
     #[serde(default = "default_true")]
     hwmon: bool,
 
+    /// Exposes network statistics specific to InfiniBand and Intel OmniPath configurations.
     #[serde(default = "default_true")]
     infiniband: bool,
 
+    /// Exposes detailed interrupts statistics.
     #[serde(default)]
     interrupts: bool,
 
+    /// Exposes IPVS status from /proc/net/ip_vs and stats from /proc/net/ip_vs_stats.
     #[serde(default = "default_ipvs_config")]
     ipvs: Option<ipvs::Config>,
 
+    /// Exposes number of tasks that have been detected as hung from `/proc/sys/kernel/hung_task_detect_count`.
     #[serde(default = "default_true")]
     kernel_hung: bool,
 
+    /// Exposes kernel and system statistics from /sys/kernel/mm/ksm.
     #[serde(default)]
     ksmd: bool,
 
@@ -246,121 +269,159 @@ struct Collectors {
     #[serde(default)]
     lnstat: bool,
 
+    /// Exposes load average.
     #[serde(default = "default_true")]
     loadavg: bool,
 
+    /// Exposes statistics about devices in /proc/mdstat (does nothing if no /proc/mdstat present).
     #[serde(default = "default_true")]
     mdadm: bool,
 
+    /// Exposes memory statistics.
     #[serde(default = "default_true")]
     meminfo: bool,
 
+    /// Exposes memory statistics from /sys/devices/system/node/node[0-9]*/meminfo, /sys/devices/system/node/node[0-9]*/numastat.
     #[serde(default)]
     meminfo_numa: bool,
 
+    /// Exposes filesystem statistics from /proc/self/mountstats. Exposes detailed NFS client statistics.
     #[serde(default)]
     mountstats: bool,
 
+    /// Exposes network interface info from /sys/class/net/
     #[serde(default = "default_netclass_config")]
     netclass: Option<netclass::Config>,
 
+    /// Exposes network interface statistics such as bytes transferred.
     #[serde(
         default = "default_netdev_config",
         with = "serde_yaml::with::singleton_map"
     )]
     netdev: Option<netdev::Config>,
 
+    /// Exposes network statistics from /proc/net/netstat. This is the same information as netstat -s.
     #[serde(default = "default_netstat_config")]
     netstat: Option<netstat::Config>,
 
+    /// Exposes NFS client statistics from /proc/net/rpc/nfs. This is the same information as nfsstat -c.
     #[serde(default = "default_true")]
     nfs: bool,
 
+    /// Exposes NFS kernel server statistics from /proc/net/rpc/nfsd. This is the same information as nfsstat -s.
     #[serde(default = "default_true")]
     nfsd: bool,
 
+    /// Exposes NVMe info from /sys/class/nvme/
     #[serde(default = "default_true")]
     nvme: bool,
 
+    /// Expose OS release info from /etc/os-release or /usr/lib/os-release
     #[serde(default = "default_true")]
     os: bool,
 
+    /// Exposes pci devices' information including their link status and parent devices.
     #[serde(default)]
     pcidevice: bool,
 
+    /// Exposes Power Supply statistics from `/sys/class/power_supply`
     #[serde(default = "default_powersupply_config")]
-    power_supply: Option<powersupplyclass::Config>,
+    power_supply_class: Option<powersupplyclass::Config>,
 
+    /// Exposes pressure stall statistics from `/proc/pressure/`
     #[serde(default = "default_true")]
     pressure: bool,
 
+    /// Exposes aggregate process statistics from `/proc`.
     #[serde(default)]
     processes: bool,
 
+    /// Exposes various statistics from `/sys/class/powercap`.
     #[serde(default = "default_true")]
     rapl: bool,
 
+    /// Exposes task scheduler statistics from `/proc/schedstat`.
     #[serde(default = "default_true")]
     schedstat: bool,
 
+    /// Exposes SELinux statistics.
     #[serde(default = "default_true")]
     selinux: bool,
 
+    /// Exposes slab statistics from `/proc/slabinfo`. Note that permission of `/proc/slabinfo` is usually 0400, so set it appropriately.
     #[serde(default)]
     slabinfo: Option<slabinfo::Config>,
 
+    /// Exposes various statistics from `/proc/net/sockstat`.
     #[serde(default = "default_true")]
     sockstat: bool,
 
+    /// Exposes statistics from `/proc/net/softnet_stat`.
     #[serde(default = "default_true")]
     softnet: bool,
 
+    /// Exposes detailed softirq statistics from `/proc/softirqs`.
     #[serde(default)]
     softirqs: bool,
 
+    /// Exposes various statistics from `/proc/stat`. This includes boot time, forks and interrupts.
     #[serde(default = "default_true")]
     stat: bool,
 
+    /// Expose swap information from `/proc/swaps`.
     #[serde(default)]
     swap: bool,
 
+    /// Exposes statistics from `/sys/class/scsi_tape`.
     #[serde(default = "default_true")]
     tapestats: bool,
 
+    /// Exposes TCP connection status information from `/proc/net/tcp` and `/proc/net/tcp6`. (Warning: the current version has potential performance issues in high load situations.)
     #[serde(default = "default_true")]
     tcpstat: bool,
 
+    /// Exposes thermal zone & cooling device statistics from `/sys/class/thermal`.
     #[serde(default = "default_true")]
     thermal_zone: bool,
 
+    /// Exposes the current system time.
     #[serde(default = "default_true")]
     time: bool,
 
+    /// Exposes selected adjtimex(2) system call stats.
     #[serde(default = "default_true")]
     timex: bool,
 
+    /// Exposes UDP total lengths of the rx_queue and tx_queue from `/proc/net/udp` and `/proc/net/udp6`.
     #[serde(default = "default_true")]
     udp_queues: bool,
 
+    /// Exposes system information as provided by the uname system call.
     #[serde(default = "default_true")]
     uname: bool,
 
+    /// Exposes statistics from `/proc/vmstat`.
     #[serde(default = "default_vmstat_config")]
     vmstat: Option<vmstat::Config>,
 
+    /// Exposes statistics from `/sys/class/watchdog`
     #[serde(default = "default_true")]
     watchdog: bool,
 
+    /// Exposes statistics from `/proc/net/xfrm_stat`
     #[serde(default)]
     xfrm: bool,
 
+    /// Exposes XFS runtime statistics.
     #[cfg(target_os = "linux")]
     #[serde(default = "default_true")]
     xfs: bool,
 
+    /// Exposes ZFS performance statistics.
     #[serde(default = "default_true")]
     zfs: bool,
 
+    /// Exposes NUMA memory zone metrics.
     #[cfg(target_os = "linux")]
     #[serde(default)]
     zoneinfo: bool,
@@ -393,7 +454,7 @@ impl Default for Collectors {
             infiniband: true,
             interrupts: false,
             ipvs: default_ipvs_config(),
-            kernel_hung: false,
+            kernel_hung: true,
             ksmd: false,
             lnstat: false,
             loadavg: true,
@@ -409,7 +470,7 @@ impl Default for Collectors {
             nvme: true,
             os: true,
             pcidevice: false,
-            power_supply: default_powersupply_config(),
+            power_supply_class: default_powersupply_config(),
             pressure: true,
             processes: false,
             rapl: true,
@@ -835,7 +896,7 @@ async fn run(
             tasks.spawn(collect!(pcidevice, paths));
         }
 
-        if let Some(conf) = &collectors.power_supply {
+        if let Some(conf) = &collectors.power_supply_class {
             let conf = conf.clone();
             let paths = paths.clone();
             tasks.spawn(collect!(powersupplyclass, conf, paths));
