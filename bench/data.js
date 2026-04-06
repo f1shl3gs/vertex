@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1775455898000,
+  "lastUpdate": 1775455963270,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "466b8fde3dabda79918417dff294d9295b396922",
-          "message": "Merge pull request #2781 from f1shl3gs/dependabot/cargo/temp-dir-0.2.0\n\nchore(deps): bump temp-dir from 0.1.16 to 0.2.0",
-          "timestamp": "2026-02-11T00:31:32+08:00",
-          "tree_id": "cd64b2280f8c71aeb60bd486b07ee990d1814b9e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/466b8fde3dabda79918417dff294d9295b396922"
-        },
-        "date": 1770741741926,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 565,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40902.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8babab5de2b248902f912f86a0173ba9d9279c3e",
           "message": "Merge pull request #2779 from f1shl3gs/dependabot/cargo/rand-0.10.0\n\nchore(deps): bump rand from 0.9.2 to 0.10.0",
           "timestamp": "2026-02-11T00:53:30+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40629.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ff6cd7870a1fbb880143b8dff7658f40892b5ee3",
+          "message": "Merge pull request #2883 from f1shl3gs/sources/node/fix_kernel_hung\n\nsources/node: fix kernel_hung",
+          "timestamp": "2026-04-06T14:01:15+08:00",
+          "tree_id": "d9ad242e7dc7bc6c2a2a0b235497d11f04ce8067",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ff6cd7870a1fbb880143b8dff7658f40892b5ee3"
+        },
+        "date": 1775455939867,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 586,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40634,
             "unit": "KiB"
           }
         ]
