@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1775455427692,
+  "lastUpdate": 1775455451931,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "49397a542fdeaee71be5438e0894fbf839f7c503",
-          "message": "Merge pull request #2690 from f1shl3gs/dependabot/cargo/syn-2.0.111\n\nchore(deps): bump syn from 2.0.110 to 2.0.111",
-          "timestamp": "2025-11-23T19:32:04+08:00",
-          "tree_id": "19ca2bf084076b7e56cb14e489922dc696acbc79",
-          "url": "https://github.com/f1shl3gs/vertex/commit/49397a542fdeaee71be5438e0894fbf839f7c503"
-        },
-        "date": 1763897672215,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.814,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 168.91,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 338.21,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 692.19,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b74ce119323993723d868b9153d749d42e7280b7",
           "message": "Merge pull request #2691 from f1shl3gs/dependabot/cargo/http-1.4.0\n\nchore(deps): bump http from 1.3.1 to 1.4.0",
           "timestamp": "2025-11-25T16:00:39+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 708.51,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ff6cd7870a1fbb880143b8dff7658f40892b5ee3",
+          "message": "Merge pull request #2883 from f1shl3gs/sources/node/fix_kernel_hung\n\nsources/node: fix kernel_hung",
+          "timestamp": "2026-04-06T14:01:15+08:00",
+          "tree_id": "d9ad242e7dc7bc6c2a2a0b235497d11f04ce8067",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ff6cd7870a1fbb880143b8dff7658f40892b5ee3"
+        },
+        "date": 1775455428517,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.859,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 177.72,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 329.37,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 694.93,
             "unit": "ns/op"
           }
         ]
