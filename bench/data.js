@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1775455417272,
+  "lastUpdate": 1775455427692,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b74ce119323993723d868b9153d749d42e7280b7",
-          "message": "Merge pull request #2691 from f1shl3gs/dependabot/cargo/http-1.4.0\n\nchore(deps): bump http from 1.3.1 to 1.4.0",
-          "timestamp": "2025-11-25T16:00:39+08:00",
-          "tree_id": "edc06350a8a89b877581ecd0e9dd1daa6390ad1b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b74ce119323993723d868b9153d749d42e7280b7"
-        },
-        "date": 1764057765006,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.932,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 98.542,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 181.7,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 178.33,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ff6cd7870a1fbb880143b8dff7658f40892b5ee3",
+          "message": "Merge pull request #2883 from f1shl3gs/sources/node/fix_kernel_hung\n\nsources/node: fix kernel_hung",
+          "timestamp": "2026-04-06T14:01:15+08:00",
+          "tree_id": "d9ad242e7dc7bc6c2a2a0b235497d11f04ce8067",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ff6cd7870a1fbb880143b8dff7658f40892b5ee3"
+        },
+        "date": 1775455404654,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.105,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 101.12,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 180.68,
             "unit": "ns/op"
           }
         ]
