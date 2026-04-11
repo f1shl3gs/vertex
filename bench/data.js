@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1775700563383,
+  "lastUpdate": 1775872850217,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "83a052122ccc47a24e9708f07fb97d601d7f73f3",
-          "message": "Merge pull request #2693 from f1shl3gs/dependabot/cargo/tracing-core-0.1.35\n\nchore(deps): bump tracing-core from 0.1.34 to 0.1.35",
-          "timestamp": "2025-11-27T20:00:19+08:00",
-          "tree_id": "e9abfd28458b42704234dc0930cdb2feda35e873",
-          "url": "https://github.com/f1shl3gs/vertex/commit/83a052122ccc47a24e9708f07fb97d601d7f73f3"
-        },
-        "date": 1764244940279,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 521700,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 531140,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0920a04d58fe5894e3929abbb8c2e9d0511213c3",
+          "message": "Merge pull request #2885 from f1shl3gs/dependabot/cargo/indexmap-2.14.0\n\nchore(deps): bump indexmap from 2.13.1 to 2.14.0",
+          "timestamp": "2026-04-11T09:58:26+08:00",
+          "tree_id": "6d3920238c1df82b7975dbc58e3c85a8b4efd962",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0920a04d58fe5894e3929abbb8c2e9d0511213c3"
+        },
+        "date": 1775872827119,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 531750,
             "unit": "ns/op"
           }
         ]
