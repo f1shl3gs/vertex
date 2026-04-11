@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1775872858653,
+  "lastUpdate": 1775872871673,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2fedf1a478c282d717378042c9d0703155799459",
-          "message": "Merge pull request #2692 from f1shl3gs/sources/netflow/simplify\n\nsources/netflow: simplify log building process",
-          "timestamp": "2025-11-26T05:43:10+08:00",
-          "tree_id": "79d03fa85d152ab3f7d395a9198ecd9b4307e19a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2fedf1a478c282d717378042c9d0703155799459"
-        },
-        "date": 1764107139910,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.658,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 174.23,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 334.08,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 690.54,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "83a052122ccc47a24e9708f07fb97d601d7f73f3",
           "message": "Merge pull request #2693 from f1shl3gs/dependabot/cargo/tracing-core-0.1.35\n\nchore(deps): bump tracing-core from 0.1.34 to 0.1.35",
           "timestamp": "2025-11-27T20:00:19+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 687.99,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0920a04d58fe5894e3929abbb8c2e9d0511213c3",
+          "message": "Merge pull request #2885 from f1shl3gs/dependabot/cargo/indexmap-2.14.0\n\nchore(deps): bump indexmap from 2.13.1 to 2.14.0",
+          "timestamp": "2026-04-11T09:58:26+08:00",
+          "tree_id": "6d3920238c1df82b7975dbc58e3c85a8b4efd962",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0920a04d58fe5894e3929abbb8c2e9d0511213c3"
+        },
+        "date": 1775872849171,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.855,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 186.39,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 333.12,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 687.24,
             "unit": "ns/op"
           }
         ]
