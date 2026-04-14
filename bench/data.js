@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776137624110,
+  "lastUpdate": 1776137701911,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "777f31e85d7a5d557bedd6a2990f60f063bc0162",
-          "message": "Merge pull request #2784 from f1shl3gs/dependabot/cargo/libc-0.2.182\n\nchore(deps): bump libc from 0.2.181 to 0.2.182",
-          "timestamp": "2026-02-13T17:21:37+08:00",
-          "tree_id": "6c96f316fe8af8090c368757540b3f435d404c94",
-          "url": "https://github.com/f1shl3gs/vertex/commit/777f31e85d7a5d557bedd6a2990f60f063bc0162"
-        },
-        "date": 1770975193827,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 601,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40921.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d11040dcf9b8bed26f4212805d4f9a0e1af3ef52",
           "message": "Merge pull request #2786 from f1shl3gs/misc/fix_container_based_integration_tests\n\nmisc: fix container based integration tests",
           "timestamp": "2026-02-13T23:54:24+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40631.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "800c32edb66febaf6f36909e737e8596e9fa02f6",
+          "message": "Merge pull request #2888 from f1shl3gs/dependabot/cargo/rustls-0.23.38\n\nchore(deps): bump rustls from 0.23.37 to 0.23.38",
+          "timestamp": "2026-04-14T11:23:46+08:00",
+          "tree_id": "8e1c7b2d2d05ce3267e6df7796e11d16e1eb175b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/800c32edb66febaf6f36909e737e8596e9fa02f6"
+        },
+        "date": 1776137679160,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 578,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40626.5,
             "unit": "KiB"
           }
         ]
