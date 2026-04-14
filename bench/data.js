@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776139346411,
+  "lastUpdate": 1776139369118,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "406190a50c4dd0e2a8572d724cf099a355d945d6",
-          "message": "Merge pull request #2698 from f1shl3gs/dependabot/cargo/criterion-0.8.0\n\nchore(deps): bump criterion from 0.7.0 to 0.8.0",
-          "timestamp": "2025-12-02T14:19:10+08:00",
-          "tree_id": "a49b84db2b95bcb95b91ffe409890b69dd452f3f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/406190a50c4dd0e2a8572d724cf099a355d945d6"
-        },
-        "date": 1764656504490,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.539,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 163.43,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 305.53,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 660.88,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f05cee1ece5307f08de2a08ee8624348e5265ae9",
           "message": "Merge pull request #2699 from f1shl3gs/extensions/healthcheck/switch_to_framework_authorizer\n\nextensions/healthcheck: switch to framework::http::Authorizer",
           "timestamp": "2025-12-02T15:15:48+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 711.28,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "05a545187047a2058673b4b4ea30f4fcb27b4479",
+          "message": "Merge pull request #2891 from f1shl3gs/dependabot/cargo/lru-0.16.4\n\nchore(deps): bump lru from 0.16.3 to 0.16.4",
+          "timestamp": "2026-04-14T11:59:59+08:00",
+          "tree_id": "3ff38473cd8c850a3adb89c4b937be1bd23f6c82",
+          "url": "https://github.com/f1shl3gs/vertex/commit/05a545187047a2058673b4b4ea30f4fcb27b4479"
+        },
+        "date": 1776139346081,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 25.295,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 181.93,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 354.38,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 762.31,
             "unit": "ns/op"
           }
         ]
