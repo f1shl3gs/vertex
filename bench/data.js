@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776137948440,
+  "lastUpdate": 1776137949606,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "406190a50c4dd0e2a8572d724cf099a355d945d6",
-          "message": "Merge pull request #2698 from f1shl3gs/dependabot/cargo/criterion-0.8.0\n\nchore(deps): bump criterion from 0.7.0 to 0.8.0",
-          "timestamp": "2025-12-02T14:19:10+08:00",
-          "tree_id": "a49b84db2b95bcb95b91ffe409890b69dd452f3f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/406190a50c4dd0e2a8572d724cf099a355d945d6"
-        },
-        "date": 1764656481557,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.346,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 100.31,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 179.44,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 134.21,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e41de5c3be50df5ff3915508399fe8896b608143",
+          "message": "Merge pull request #2887 from f1shl3gs/dependabot/cargo/rand-0.10.1\n\nchore(deps): bump rand from 0.10.0 to 0.10.1",
+          "timestamp": "2026-04-14T11:36:33+08:00",
+          "tree_id": "929cdc2d7e9848e8054865e98439101e0f1939d1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e41de5c3be50df5ff3915508399fe8896b608143"
+        },
+        "date": 1776137925914,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.973,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 100.41,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 175.54,
             "unit": "ns/op"
           }
         ]
