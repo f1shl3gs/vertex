@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776179952531,
+  "lastUpdate": 1776184333029,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "864320e2b3c9c258ba498831fe75d02e3af334db",
-          "message": "Merge pull request #2701 from f1shl3gs/dependabot/cargo/hyper-util-0.1.19\n\nchore(deps): bump hyper-util from 0.1.18 to 0.1.19",
-          "timestamp": "2025-12-04T02:56:15+08:00",
-          "tree_id": "3752866ee4b3f02039cbb13f9cdc567046057f69",
-          "url": "https://github.com/f1shl3gs/vertex/commit/864320e2b3c9c258ba498831fe75d02e3af334db"
-        },
-        "date": 1764788297846,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 522050,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 534580,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3d2cf63f06a9816ed07578cfd7da3ab9df93ac87",
+          "message": "Merge pull request #2893 from f1shl3gs/dependabot/cargo/hyper-rustls-0.27.9\n\nchore(deps): bump hyper-rustls from 0.27.8 to 0.27.9",
+          "timestamp": "2026-04-15T00:29:37+08:00",
+          "tree_id": "0d127bc334a21845f1e163bba7e8e45f1fec0c94",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3d2cf63f06a9816ed07578cfd7da3ab9df93ac87"
+        },
+        "date": 1776184304497,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 506010,
             "unit": "ns/op"
           }
         ]
