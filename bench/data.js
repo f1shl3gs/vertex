@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776137706479,
+  "lastUpdate": 1776137920020,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2a4545f3e716d92dbb5f81c4e08407f34b0de853",
-          "message": "Merge pull request #2697 from f1shl3gs/sinks/blackhole/enhance_acknowledgement\n\nsinks/blackhole: enhance acknowledgements",
-          "timestamp": "2025-11-29T21:13:42+08:00",
-          "tree_id": "a5c3db98d5fd8730172e1e8961f37622f1830ec3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2a4545f3e716d92dbb5f81c4e08407f34b0de853"
-        },
-        "date": 1764422138367,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 523260,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 540730,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4cd88878193d43720dc2e475a11989a539ae96df",
+          "message": "Merge pull request #2886 from f1shl3gs/dependabot/cargo/hyper-rustls-0.27.8\n\nchore(deps): bump hyper-rustls from 0.27.7 to 0.27.8",
+          "timestamp": "2026-04-14T11:36:14+08:00",
+          "tree_id": "61480ef32b9301f125e4c6e8237ee8a570dc488b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4cd88878193d43720dc2e475a11989a539ae96df"
+        },
+        "date": 1776137892890,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 506200,
             "unit": "ns/op"
           }
         ]
