@@ -99,10 +99,10 @@ impl Semaphore {
     }
 
     pub fn release(&self, amount: usize) {
-        let available = self
+        let old_state = self
             .state
-            .fetch_add(amount << PERMIT_SHIFT, Ordering::Release)
-            + amount;
+            .fetch_add(amount << PERMIT_SHIFT, Ordering::Release);
+        let available = (old_state >> PERMIT_SHIFT) + amount;
 
         loop {
             match self.pending.pop_if(|(acquire, _)| available >= *acquire) {
@@ -148,6 +148,14 @@ impl<'a> Future for AcquireFuture<'a> {
                 self.semaphore
                     .pending
                     .push((self.amount, cx.waker().clone()));
+
+                // Re-check state after pushing to prevent missed wakeup:
+                // a release() could have run between our failed check above
+                // and the push, leaving no one to wake us.
+                let state = self.semaphore.state.load(Ordering::Acquire);
+                if state & CLOSED == CLOSED || state >= needed {
+                    cx.waker().wake_by_ref();
+                }
 
                 return Poll::Pending;
             };
