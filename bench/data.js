@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776179885364,
+  "lastUpdate": 1776179952531,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f2c0a94fdfa895b903249f247a4a580b1898d59e",
-          "message": "Merge pull request #2790 from f1shl3gs/sources/node/add_erofs_in_default_exclude_fs_type\n\nsources/node: add erofs to default exclude fs type",
-          "timestamp": "2026-02-14T17:20:38+08:00",
-          "tree_id": "2eb5cba3efe47c69b3e5dc86d9c75d84d735e242",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f2c0a94fdfa895b903249f247a4a580b1898d59e"
-        },
-        "date": 1771061495815,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 579,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40922.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3f631cabb0c8f3bb0b9fed42d36cfb8b745d2c13",
           "message": "Merge pull request #2791 from f1shl3gs/sources/systemd/add_virtualization_type\n\nsources/systemd: add systemd virtualization type",
           "timestamp": "2026-02-14T18:30:53+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40627.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a7e255b23eb833c5ea48b06ea0ae1c40c9e9e460",
+          "message": "Merge pull request #2892 from f1shl3gs/lib/buffer/fix_race_condition_to_prevent_hanging_forever\n\nlib/buffer: fix race condition to prevent receiver hanging forever",
+          "timestamp": "2026-04-14T23:07:51+08:00",
+          "tree_id": "fc612bdc266edf43527861578de6a9ac908730a1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a7e255b23eb833c5ea48b06ea0ae1c40c9e9e460"
+        },
+        "date": 1776179930144,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 579,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40627.6,
             "unit": "KiB"
           }
         ]
