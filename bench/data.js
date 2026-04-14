@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776184401057,
+  "lastUpdate": 1776184765481,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3f631cabb0c8f3bb0b9fed42d36cfb8b745d2c13",
-          "message": "Merge pull request #2791 from f1shl3gs/sources/systemd/add_virtualization_type\n\nsources/systemd: add systemd virtualization type",
-          "timestamp": "2026-02-14T18:30:53+08:00",
-          "tree_id": "e3edae464ac6466c80680d140a61a441d63e5c15",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3f631cabb0c8f3bb0b9fed42d36cfb8b745d2c13"
-        },
-        "date": 1771065709355,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 574,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40928.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8b17df7559adf6a94efe700be6961573fa4fb7c6",
           "message": "Merge pull request #2794 from f1shl3gs/dependabot/cargo/syn-2.0.116\n\nchore(deps): bump syn from 2.0.115 to 2.0.116",
           "timestamp": "2026-02-16T03:00:59+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 579,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40627.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8556576d01857db5e761929d19b730b4e5cfc3d5",
+          "message": "Merge pull request #2894 from f1shl3gs/ci/add_timeout_for_cargo_test\n\nci: add 20m timeout for 'Cargo test'",
+          "timestamp": "2026-04-15T00:27:44+08:00",
+          "tree_id": "7d5a415d8570fbd5a3b11580723e3cbcc592b5b6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8556576d01857db5e761929d19b730b4e5cfc3d5"
+        },
+        "date": 1776184742268,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 593,
             "unit": "s"
           },
           {
