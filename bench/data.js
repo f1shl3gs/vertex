@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776179436433,
+  "lastUpdate": 1776179445650,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f05cee1ece5307f08de2a08ee8624348e5265ae9",
-          "message": "Merge pull request #2699 from f1shl3gs/extensions/healthcheck/switch_to_framework_authorizer\n\nextensions/healthcheck: switch to framework::http::Authorizer",
-          "timestamp": "2025-12-02T15:15:48+08:00",
-          "tree_id": "2d48f252a6e3083211b39bb9b7f9c21c81d940ae",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f05cee1ece5307f08de2a08ee8624348e5265ae9"
-        },
-        "date": 1764659899886,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.615,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 157.92,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 310.47,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 678.49,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "79b169b7337f216409684ace4ada528f0e7ef22f",
           "message": "Merge pull request #2700 from f1shl3gs/dependabot/cargo/libc-0.2.178\n\nchore(deps): bump libc from 0.2.177 to 0.2.178",
           "timestamp": "2025-12-03T16:52:37+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 762.31,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a7e255b23eb833c5ea48b06ea0ae1c40c9e9e460",
+          "message": "Merge pull request #2892 from f1shl3gs/lib/buffer/fix_race_condition_to_prevent_hanging_forever\n\nlib/buffer: fix race condition to prevent receiver hanging forever",
+          "timestamp": "2026-04-14T23:07:51+08:00",
+          "tree_id": "fc612bdc266edf43527861578de6a9ac908730a1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a7e255b23eb833c5ea48b06ea0ae1c40c9e9e460"
+        },
+        "date": 1776179422520,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.828,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 164.37,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 346.11,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 725.2,
             "unit": "ns/op"
           }
         ]
