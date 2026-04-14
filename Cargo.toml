@@ -454,7 +454,7 @@ tracing = { version = "0.1.44", default-features = false }
 
 # HTTP
 hyper = { version = "1.9.0", default-features = false, features = ["server"] }
-hyper-rustls = { version = "0.27.8", default-features = false, features = ["rustls-native-certs", "http2"] }
+hyper-rustls = { version = "0.27.9", default-features = false, features = ["rustls-native-certs", "http2"] }
 hyper-util = { version = "0.1.20", default-features = false, features = ["client"] }
 http = { version = "1.4.0", default-features = false }
 httpdate = { version = "1.0.3", default-features = false, optional = true }
