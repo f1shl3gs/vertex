@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776138013309,
+  "lastUpdate": 1776138376107,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "53a97c87e43f17a810a2131b9f1182ffe323ec27",
-          "message": "Merge pull request #2696 from f1shl3gs/lib/framework/remove_unused_memchr\n\nlib/framework: remove memchr",
-          "timestamp": "2025-11-28T21:30:26+08:00",
-          "tree_id": "6b5edb8c64678b944e3fa0c22e046cbf6861b78c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/53a97c87e43f17a810a2131b9f1182ffe323ec27"
-        },
-        "date": 1764337182461,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 15372000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 601970,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.418,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2a4545f3e716d92dbb5f81c4e08407f34b0de853",
           "message": "Merge pull request #2697 from f1shl3gs/sinks/blackhole/enhance_acknowledgement\n\nsinks/blackhole: enhance acknowledgements",
           "timestamp": "2025-11-29T21:13:42+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.976,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4cd88878193d43720dc2e475a11989a539ae96df",
+          "message": "Merge pull request #2886 from f1shl3gs/dependabot/cargo/hyper-rustls-0.27.8\n\nchore(deps): bump hyper-rustls from 0.27.7 to 0.27.8",
+          "timestamp": "2026-04-14T11:36:14+08:00",
+          "tree_id": "61480ef32b9301f125e4c6e8237ee8a570dc488b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4cd88878193d43720dc2e475a11989a539ae96df"
+        },
+        "date": 1776138353057,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7900600,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 764920,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.925,
             "unit": "ns/op"
           }
         ]
