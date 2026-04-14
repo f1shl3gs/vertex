@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776138376107,
+  "lastUpdate": 1776138428349,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2a4545f3e716d92dbb5f81c4e08407f34b0de853",
-          "message": "Merge pull request #2697 from f1shl3gs/sinks/blackhole/enhance_acknowledgement\n\nsinks/blackhole: enhance acknowledgements",
-          "timestamp": "2025-11-29T21:13:42+08:00",
-          "tree_id": "a5c3db98d5fd8730172e1e8961f37622f1830ec3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2a4545f3e716d92dbb5f81c4e08407f34b0de853"
-        },
-        "date": 1764422731399,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 31693000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 514840,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 53.412,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "406190a50c4dd0e2a8572d724cf099a355d945d6",
           "message": "Merge pull request #2698 from f1shl3gs/dependabot/cargo/criterion-0.8.0\n\nchore(deps): bump criterion from 0.7.0 to 0.8.0",
           "timestamp": "2025-12-02T14:19:10+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.925,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e41de5c3be50df5ff3915508399fe8896b608143",
+          "message": "Merge pull request #2887 from f1shl3gs/dependabot/cargo/rand-0.10.1\n\nchore(deps): bump rand from 0.10.0 to 0.10.1",
+          "timestamp": "2026-04-14T11:36:33+08:00",
+          "tree_id": "929cdc2d7e9848e8054865e98439101e0f1939d1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e41de5c3be50df5ff3915508399fe8896b608143"
+        },
+        "date": 1776138405609,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7721000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 799340,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.861,
             "unit": "ns/op"
           }
         ]
