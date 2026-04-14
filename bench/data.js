@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776137023504,
+  "lastUpdate": 1776137097112,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bef4ff0cfbd63fdb9444cc9c97f67ee620e1cfa9",
-          "message": "Merge pull request #2783 from f1shl3gs/dependabot/cargo/syn-2.0.115\n\nchore(deps): bump syn from 2.0.114 to 2.0.115",
-          "timestamp": "2026-02-12T17:06:13+08:00",
-          "tree_id": "a1f3294fdf7bbcc06a8c60a470113ebab2c3574c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bef4ff0cfbd63fdb9444cc9c97f67ee620e1cfa9"
-        },
-        "date": 1770887865232,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 604,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40921.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "777f31e85d7a5d557bedd6a2990f60f063bc0162",
           "message": "Merge pull request #2784 from f1shl3gs/dependabot/cargo/libc-0.2.182\n\nchore(deps): bump libc from 0.2.181 to 0.2.182",
           "timestamp": "2026-02-13T17:21:37+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 605,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40631.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3d658d8046df09d7bd5a3128080fed0a52317d89",
+          "message": "Merge pull request #2890 from f1shl3gs/sources/node/fix_cpufreq_test\n\nsources/node: fix the order the stats",
+          "timestamp": "2026-04-14T11:13:31+08:00",
+          "tree_id": "44e0b717e10e059b2ca4aeeded43a8a48f479113",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3d658d8046df09d7bd5a3128080fed0a52317d89"
+        },
+        "date": 1776137074316,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 584,
             "unit": "s"
           },
           {
