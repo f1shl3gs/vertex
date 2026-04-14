@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776138428349,
+  "lastUpdate": 1776138466301,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "941b74975245db266bb977f2d7ed526e70c56598",
-          "message": "Merge pull request #2787 from f1shl3gs/toolchain/1.93.1\n\ntoolchain: 1.93.1",
-          "timestamp": "2026-02-14T00:37:49+08:00",
-          "tree_id": "af34a4ee98f8b10b585b134a2c66b6ae23ba297d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/941b74975245db266bb977f2d7ed526e70c56598"
-        },
-        "date": 1771001345609,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 590,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40910.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "36e9a103a657a3f0edc59bf5f575a6b17daf98d3",
           "message": "Merge pull request #2788 from f1shl3gs/sources/node/add_kernel_hung\n\nsources/node: add kernel_hung",
           "timestamp": "2026-02-14T01:23:49+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40625.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e41de5c3be50df5ff3915508399fe8896b608143",
+          "message": "Merge pull request #2887 from f1shl3gs/dependabot/cargo/rand-0.10.1\n\nchore(deps): bump rand from 0.10.0 to 0.10.1",
+          "timestamp": "2026-04-14T11:36:33+08:00",
+          "tree_id": "929cdc2d7e9848e8054865e98439101e0f1939d1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e41de5c3be50df5ff3915508399fe8896b608143"
+        },
+        "date": 1776138443231,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 566,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40627.4,
             "unit": "KiB"
           }
         ]
