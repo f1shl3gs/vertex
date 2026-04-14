@@ -84,6 +84,7 @@ jobs:
     name: Cargo test
     runs-on: ubuntu-24.04
     needs: changes
+    timeout-minutes: 20
     if: ${{ needs.changes.outputs.source == 'true' }}
     steps:
       - uses: actions/checkout@v6
