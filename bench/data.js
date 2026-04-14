@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776136567096,
+  "lastUpdate": 1776136574609,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "83a052122ccc47a24e9708f07fb97d601d7f73f3",
-          "message": "Merge pull request #2693 from f1shl3gs/dependabot/cargo/tracing-core-0.1.35\n\nchore(deps): bump tracing-core from 0.1.34 to 0.1.35",
-          "timestamp": "2025-11-27T20:00:19+08:00",
-          "tree_id": "e9abfd28458b42704234dc0930cdb2feda35e873",
-          "url": "https://github.com/f1shl3gs/vertex/commit/83a052122ccc47a24e9708f07fb97d601d7f73f3"
-        },
-        "date": 1764244969282,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.737,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 173.77,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 352.38,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 701.63,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b0c0782ec8b8419e7d77c64bd7bf26f6bb0094d9",
           "message": "Merge pull request #2694 from f1shl3gs/dependabot/cargo/tracing-0.1.43\n\nchore(deps): bump tracing from 0.1.41 to 0.1.43",
           "timestamp": "2025-11-28T19:17:00+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 687.24,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3d658d8046df09d7bd5a3128080fed0a52317d89",
+          "message": "Merge pull request #2890 from f1shl3gs/sources/node/fix_cpufreq_test\n\nsources/node: fix the order the stats",
+          "timestamp": "2026-04-14T11:13:31+08:00",
+          "tree_id": "44e0b717e10e059b2ca4aeeded43a8a48f479113",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3d658d8046df09d7bd5a3128080fed0a52317d89"
+        },
+        "date": 1776136552081,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.78,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 192.34,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 361.38,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 740.8,
             "unit": "ns/op"
           }
         ]
