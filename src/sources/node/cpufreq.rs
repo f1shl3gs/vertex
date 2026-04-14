@@ -180,7 +180,10 @@ mod tests {
     #[test]
     fn cpu_freq_stat() {
         let sys_path = Path::new("tests/node/fixtures/sys");
-        let stats = get_cpu_freq_stat(sys_path).unwrap();
+        let mut stats = get_cpu_freq_stat(sys_path).unwrap();
+
+        // the order of stats is not guaranteed by read_dir
+        stats.sort_by(|(a, _), (b, _)| a.cmp(b));
 
         assert_eq!(
             stats[0],
