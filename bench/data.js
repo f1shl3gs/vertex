@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776184883732,
+  "lastUpdate": 1776264571904,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f749b60e9ac0cf108e0b9c981140456aff7ab595",
-          "message": "Merge pull request #2702 from f1shl3gs/sources/netflow/refactor\n\nsources/netflow: refactor",
-          "timestamp": "2025-12-04T03:11:18+08:00",
-          "tree_id": "f4ffc641ff570aebda4301747c7c117baa938695",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f749b60e9ac0cf108e0b9c981140456aff7ab595"
-        },
-        "date": 1764789261606,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 528590,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 506010,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "88989cb33c13b973626a44bfb39609602efce942",
+          "message": "Merge pull request #2895 from f1shl3gs/dependabot/cargo/tokio-1.52.0\n\nchore(deps): bump tokio from 1.51.1 to 1.52.0",
+          "timestamp": "2026-04-15T22:46:49+08:00",
+          "tree_id": "eb9ab41f8d18effd4a8791bcf580359bead42446",
+          "url": "https://github.com/f1shl3gs/vertex/commit/88989cb33c13b973626a44bfb39609602efce942"
+        },
+        "date": 1776264548392,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 502970,
             "unit": "ns/op"
           }
         ]
