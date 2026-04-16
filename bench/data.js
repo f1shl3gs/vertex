@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776319673540,
+  "lastUpdate": 1776319687620,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f749b60e9ac0cf108e0b9c981140456aff7ab595",
-          "message": "Merge pull request #2702 from f1shl3gs/sources/netflow/refactor\n\nsources/netflow: refactor",
-          "timestamp": "2025-12-04T03:11:18+08:00",
-          "tree_id": "f4ffc641ff570aebda4301747c7c117baa938695",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f749b60e9ac0cf108e0b9c981140456aff7ab595"
-        },
-        "date": 1764789244954,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.499,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 152.47,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 294.36,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 646.39,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ee91beed797c4f0aa7f3a847ef58b3abca163151",
           "message": "Merge pull request #2703 from f1shl3gs/misc/fix_internal_log_rate_limit\n\nmisc: fix `internal_log_rate_limit`",
           "timestamp": "2025-12-04T04:58:22+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 639.77,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "92f86397acc6d5732cab522c09c31be1dd7d8aca",
+          "message": "Merge pull request #2896 from f1shl3gs/dependabot/cargo/lru-0.17.0\n\nchore(deps): bump lru from 0.16.4 to 0.17.0",
+          "timestamp": "2026-04-16T14:05:17+08:00",
+          "tree_id": "b4655ef3936d7c2c2054a2335841179874d1f684",
+          "url": "https://github.com/f1shl3gs/vertex/commit/92f86397acc6d5732cab522c09c31be1dd7d8aca"
+        },
+        "date": 1776319664624,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.972,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 182.1,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 333.55,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 730.64,
             "unit": "ns/op"
           }
         ]
