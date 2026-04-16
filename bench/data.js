@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776320191083,
+  "lastUpdate": 1776350531550,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7494e148d8ee4e60566c2643af476445fd922c42",
-          "message": "Merge pull request #2704 from f1shl3gs/misc/add_default_can_acknowledge_implement\n\nmisc: add default `SourceConfig::can_acknowledge` implement",
-          "timestamp": "2025-12-04T05:18:22+08:00",
-          "tree_id": "d360d916aedcbd62ca0daf1980d55545e2d079f1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7494e148d8ee4e60566c2643af476445fd922c42"
-        },
-        "date": 1764796838994,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 532620,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 540440,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "05caee31cc6b2ec69a14f0ee9d762af4bae6e3c6",
+          "message": "Merge pull request #2897 from f1shl3gs/toolchain/1.95.0\n\ntoolchain: bump to 1.95.0",
+          "timestamp": "2026-04-16T22:39:31+08:00",
+          "tree_id": "da519b658c8bcd39eb6b09887a93cc32e9b02e6a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/05caee31cc6b2ec69a14f0ee9d762af4bae6e3c6"
+        },
+        "date": 1776350503509,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 492270,
             "unit": "ns/op"
           }
         ]
