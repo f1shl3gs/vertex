@@ -713,10 +713,8 @@ fn parse_station_info(data: &[u8]) -> Result<StationInfo, Error> {
 
     for (typ, data) in attrs {
         match typ {
-            NL80211_ATTR_IFINDEX => {
-                if data.len() < 4 {
-                    return Err(Error::TooShort);
-                }
+            NL80211_ATTR_IFINDEX if data.len() < 4 => {
+                return Err(Error::TooShort);
             }
             NL80211_ATTR_MAC => {
                 info.mac = data.to_vec();

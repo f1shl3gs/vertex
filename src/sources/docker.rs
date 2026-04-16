@@ -147,7 +147,7 @@ impl SourceConfig for Config {
                     .collect::<Vec<Result<ContainerStats, Error>>>()
                     .await;
 
-                for result in inspects.into_iter().zip(stats.into_iter()) {
+                for result in inspects.into_iter().zip(stats) {
                     if let (Ok(inspect), Ok(stats)) = result {
                         let metrics = build_metrics(inspect, stats);
 

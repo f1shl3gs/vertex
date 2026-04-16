@@ -285,11 +285,7 @@ impl FromFrame for BTreeMap<String, String> {
 
                 let mut map = BTreeMap::new();
                 let mut arr = arr.into_iter();
-                loop {
-                    let Some(Frame::Bulk(key)) = arr.next() else {
-                        break;
-                    };
-
+                while let Some(Frame::Bulk(key)) = arr.next() {
                     let Some(Frame::Bulk(value)) = arr.next() else {
                         break;
                     };

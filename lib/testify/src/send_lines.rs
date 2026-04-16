@@ -21,7 +21,7 @@ pub async fn send_encodable<I, E: From<std::io::Error> + std::fmt::Debug>(
     let stream = TcpStream::connect(&addr).await.unwrap();
     let mut sink = FramedWrite::new(stream, encoder);
 
-    let mut lines = futures::stream::iter(lines.into_iter()).map(Ok);
+    let mut lines = futures::stream::iter(lines).map(Ok);
     sink.send_all(&mut lines).await.unwrap();
 
     let stream = sink.get_mut();

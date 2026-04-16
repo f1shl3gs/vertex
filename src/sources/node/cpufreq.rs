@@ -183,7 +183,7 @@ mod tests {
         let mut stats = get_cpu_freq_stat(sys_path).unwrap();
 
         // the order of stats is not guaranteed by read_dir
-        stats.sort_by(|(a, _), (b, _)| a.cmp(b));
+        stats.sort_by_key(|(a, _)| *a);
 
         assert_eq!(
             stats[0],

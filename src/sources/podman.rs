@@ -108,7 +108,7 @@ async fn gather(client: &Client) -> Result<Vec<Metric>, Error> {
 
     let stats = client.stats(&ids).await?;
     let mut metrics = Vec::with_capacity(stats.len() * 16);
-    for (container, stat) in containers.into_iter().zip(stats.into_iter()) {
+    for (container, stat) in containers.into_iter().zip(stats) {
         let tags = tags!(
             "id" => stat.container_id.clone(),
             "image" => container.image.clone(),
