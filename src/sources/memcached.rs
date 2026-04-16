@@ -85,14 +85,8 @@ macro_rules! get_value {
 macro_rules! get_bool_value {
     ($map:expr, $key: expr) => {
         match $map.get($key) {
-            None => 0.0,
-            Some(v) => {
-                if v == "yes" {
-                    1.0
-                } else {
-                    0.0
-                }
-            }
+            None => false,
+            Some(v) => v == "yes",
         }
     };
 }

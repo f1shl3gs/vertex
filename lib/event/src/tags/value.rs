@@ -137,20 +137,16 @@ impl PartialEq<Value> for Value {
         match (self, other) {
             (Value::Bool(a), Value::Bool(b)) => a.eq(b),
             (Value::I64(a), Value::I64(b)) => a.eq(b),
-            (Value::F64(a), Value::F64(b)) => {
-                // This compares floats with the following rules:
-                // * NaNs compares as equal
-                // * Positive and negative infinity are not equal
-                // * -0 and +0 are not equal
-                // * Floats will compare using truncated portion
-                if a.is_sign_negative() == b.is_sign_negative() {
-                    if a.is_finite() && b.is_finite() {
-                        a.trunc().eq(&b.trunc())
-                    } else {
-                        a.is_finite() == b.is_finite()
-                    }
+            // This compares floats with the following rules:
+            // * NaNs compares as equal
+            // * Positive and negative infinity are not equal
+            // * -0 and +0 are not equal
+            // * Floats will compare using truncated portion
+            (Value::F64(a), Value::F64(b)) if a.is_sign_negative() == b.is_sign_negative() => {
+                if a.is_finite() && b.is_finite() {
+                    a.trunc().eq(&b.trunc())
                 } else {
-                    false
+                    a.is_finite() == b.is_finite()
                 }
             }
             (Value::String(a), Value::String(b)) => a.eq(b),

@@ -621,11 +621,7 @@ fn parse_mount_stats(content: &str) -> Result<Vec<Mount<'_>>, Error> {
     let mut lines = content.lines();
     let mut mounts = Vec::new();
 
-    loop {
-        let Some(line) = lines.next() else {
-            break;
-        };
-
+    while let Some(line) = lines.next() {
         let mut fields = line.split_ascii_whitespace();
 
         // check for specific words appearing at specific indices to ensure
@@ -699,11 +695,7 @@ fn parse_nfs_mount_stats<'a, I: Iterator<Item = &'a str>>(
         ..Default::default()
     };
 
-    loop {
-        let Some(line) = lines.next() else {
-            break;
-        };
-
+    for line in lines.by_ref() {
         let mut fields = line.split_ascii_whitespace();
         let Some(field) = fields.next() else {
             continue;

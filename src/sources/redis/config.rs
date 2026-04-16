@@ -32,14 +32,11 @@ pub async fn collect(conn: &mut Connection) -> Result<Vec<Metric>, Error> {
             "client-output-buffer-limit" => {
                 // client-output-buffer-limit "normal 0 0 0 slave 1610612736 1610612736 0 pubsub 33554432 8388608 60"
                 let mut fields = value.split_ascii_whitespace();
-                loop {
-                    let Some(class) = fields.next() else {
-                        break;
-                    };
-
+                while let Some(class) = fields.next() {
                     let Some(value) = fields.next() else {
                         break;
                     };
+
                     if let Ok(value) = value.parse::<f64>() {
                         metrics.push(Metric::gauge_with_tags(
                             "redis_config_client_output_buffer_limit_bytes",

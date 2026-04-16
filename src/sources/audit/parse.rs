@@ -409,10 +409,8 @@ fn parse_pairs(input: &[u8]) -> BTreeMap<String, Value> {
     if !garbage && !noop_buf(&buf) {
         match key {
             Some(key) if key == "subj" => {
-                if key == "subj" {
-                    for (suffix, value) in SELINUX_SUBJ_KEY_SUFFIXES.iter().zip(buf.split(":")) {
-                        fields.insert(format!("subj{suffix}"), value.into());
-                    }
+                for (suffix, value) in SELINUX_SUBJ_KEY_SUFFIXES.iter().zip(buf.split(":")) {
+                    fields.insert(format!("subj{suffix}"), value.into());
                 }
             }
             Some(key) => {
