@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776865128343,
+  "lastUpdate": 1776865145246,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7494e148d8ee4e60566c2643af476445fd922c42",
-          "message": "Merge pull request #2704 from f1shl3gs/misc/add_default_can_acknowledge_implement\n\nmisc: add default `SourceConfig::can_acknowledge` implement",
-          "timestamp": "2025-12-04T05:18:22+08:00",
-          "tree_id": "d360d916aedcbd62ca0daf1980d55545e2d079f1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7494e148d8ee4e60566c2643af476445fd922c42"
-        },
-        "date": 1764796852640,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.561,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 149.89,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 324.82,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 679.23,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c82c1c344ab87028cdf723c3dfa0dac2e0fce788",
           "message": "Merge pull request #2705 from f1shl3gs/lib/buffer/add_derive_feature_to_serde\n\nlib/buffer: add `derive` feature to serde",
           "timestamp": "2025-12-04T06:16:46+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 674.55,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8b98c67e61dfe4499af6d6a614ff0eb17041396e",
+          "message": "Merge pull request #2898 from f1shl3gs/dependabot/cargo/tokio-1.52.1\n\nchore(deps): bump tokio from 1.52.0 to 1.52.1",
+          "timestamp": "2026-04-22T21:35:56+08:00",
+          "tree_id": "169555293bab09ce2963e1279de1371c3cf6b4f8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8b98c67e61dfe4499af6d6a614ff0eb17041396e"
+        },
+        "date": 1776865122522,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.618,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 170.82,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 352.77,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 747.97,
             "unit": "ns/op"
           }
         ]
