@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776865170993,
+  "lastUpdate": 1776865172970,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c82c1c344ab87028cdf723c3dfa0dac2e0fce788",
-          "message": "Merge pull request #2705 from f1shl3gs/lib/buffer/add_derive_feature_to_serde\n\nlib/buffer: add `derive` feature to serde",
-          "timestamp": "2025-12-04T06:16:46+08:00",
-          "tree_id": "f97442614cc59c7264c0e7dfe71d959de7597477",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c82c1c344ab87028cdf723c3dfa0dac2e0fce788"
-        },
-        "date": 1764800351457,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.606,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 152.06,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 300.98,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 645,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0af7dbf4404d173a2a85367df36343a2afe539b2",
           "message": "Merge pull request #2706 from f1shl3gs/sources/internal_logs/fix_err_handling\n\nsources/internal_logs: fix err handling",
           "timestamp": "2025-12-04T21:53:15+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 747.97,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ac747cc9fd6569c079f8e141214dd8fe635924e5",
+          "message": "Merge pull request #2899 from f1shl3gs/dependabot/cargo/mimalloc-0.1.49\n\nchore(deps): bump mimalloc from 0.1.48 to 0.1.49",
+          "timestamp": "2026-04-22T21:36:24+08:00",
+          "tree_id": "bd00522f816a6d87eab34e9828fd489b02b2e67a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ac747cc9fd6569c079f8e141214dd8fe635924e5"
+        },
+        "date": 1776865149564,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.5,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 174.38,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 336.27,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 702.86,
             "unit": "ns/op"
           }
         ]
