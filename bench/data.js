@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776873916152,
+  "lastUpdate": 1776873930810,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "1d51e1ee4daec904964ebc17c3c5edf3a89a6284",
-          "message": "Merge pull request #2707 from f1shl3gs/deps/bump_humanize_to_latest_version\n\ndeps: bump `humanize` to latest version",
-          "timestamp": "2025-12-04T22:42:16+08:00",
-          "tree_id": "624af05fb2db1bd28c7f5434b47e039acc056c39",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1d51e1ee4daec904964ebc17c3c5edf3a89a6284"
-        },
-        "date": 1764859473898,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.108,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 100.53,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 176.97,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6796,6 +6757,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_2_labels",
             "value": 87.191,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 162.67,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5e4f47f868b6392adcb8863a33bf2e2744d1c70c",
+          "message": "Merge pull request #2900 from f1shl3gs/dependabot/cargo/rustls-webpki-0.103.13\n\nchore(deps): bump rustls-webpki from 0.103.10 to 0.103.13",
+          "timestamp": "2026-04-23T00:02:43+08:00",
+          "tree_id": "3d1f56ced3f3a74c56aea04c9d19279e7cc6066b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5e4f47f868b6392adcb8863a33bf2e2744d1c70c"
+        },
+        "date": 1776873907671,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.179,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 85.823,
             "unit": "ns/op"
           },
           {
