@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776865122464,
+  "lastUpdate": 1776865128343,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c82c1c344ab87028cdf723c3dfa0dac2e0fce788",
-          "message": "Merge pull request #2705 from f1shl3gs/lib/buffer/add_derive_feature_to_serde\n\nlib/buffer: add `derive` feature to serde",
-          "timestamp": "2025-12-04T06:16:46+08:00",
-          "tree_id": "f97442614cc59c7264c0e7dfe71d959de7597477",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c82c1c344ab87028cdf723c3dfa0dac2e0fce788"
-        },
-        "date": 1764800325278,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 524130,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 492270,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8b98c67e61dfe4499af6d6a614ff0eb17041396e",
+          "message": "Merge pull request #2898 from f1shl3gs/dependabot/cargo/tokio-1.52.1\n\nchore(deps): bump tokio from 1.52.0 to 1.52.1",
+          "timestamp": "2026-04-22T21:35:56+08:00",
+          "tree_id": "169555293bab09ce2963e1279de1371c3cf6b4f8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8b98c67e61dfe4499af6d6a614ff0eb17041396e"
+        },
+        "date": 1776865101081,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 491650,
             "unit": "ns/op"
           }
         ]
