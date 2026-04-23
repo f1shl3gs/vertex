@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776939482137,
+  "lastUpdate": 1776939872624,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "46554e147f6425453408fd1170e40bb2b422b5b5",
-          "message": "Merge pull request #2708 from f1shl3gs/dependabot/cargo/flate2-1.1.7\n\nchore(deps): bump flate2 from 1.1.5 to 1.1.7",
-          "timestamp": "2025-12-06T16:59:41+08:00",
-          "tree_id": "5db2f923b669c9477b3896d97a7935a9741a7a18",
-          "url": "https://github.com/f1shl3gs/vertex/commit/46554e147f6425453408fd1170e40bb2b422b5b5"
-        },
-        "date": 1765012152413,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 15144000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 653360,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.272,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6c951fbae8ab39fe8fcc2e5801465e1824f54985",
           "message": "Merge pull request #2710 from f1shl3gs/lib/buffer/simplify_config\n\nlib/buffer: simplify BufferConfig",
           "timestamp": "2025-12-08T00:58:26+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 54.185,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "820d7cb0d2a970292c796b2215ba0e89db3a3422",
+          "message": "Merge pull request #2902 from f1shl3gs/dependabot/cargo/rustls-0.23.39\n\nchore(deps): bump rustls from 0.23.38 to 0.23.39",
+          "timestamp": "2026-04-23T18:14:30+08:00",
+          "tree_id": "1195564bc2ebffcaebe973b73ad3927ea495ad88",
+          "url": "https://github.com/f1shl3gs/vertex/commit/820d7cb0d2a970292c796b2215ba0e89db3a3422"
+        },
+        "date": 1776939849588,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7248400,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 654250,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.157,
             "unit": "ns/op"
           }
         ]
