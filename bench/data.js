@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776874422603,
+  "lastUpdate": 1776909570249,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "46554e147f6425453408fd1170e40bb2b422b5b5",
-          "message": "Merge pull request #2708 from f1shl3gs/dependabot/cargo/flate2-1.1.7\n\nchore(deps): bump flate2 from 1.1.5 to 1.1.7",
-          "timestamp": "2025-12-06T16:59:41+08:00",
-          "tree_id": "5db2f923b669c9477b3896d97a7935a9741a7a18",
-          "url": "https://github.com/f1shl3gs/vertex/commit/46554e147f6425453408fd1170e40bb2b422b5b5"
-        },
-        "date": 1765011705044,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 529400,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 514260,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "dbff79c3e1f2a9c4b5379b73aaff077dba3cae65",
+          "message": "Merge pull request #2901 from f1shl3gs/dependabot/cargo/mimalloc-0.1.50\n\nchore(deps): bump mimalloc from 0.1.49 to 0.1.50",
+          "timestamp": "2026-04-23T09:57:08+08:00",
+          "tree_id": "282da0725b05e5966b002a83412b0175d12c72c5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/dbff79c3e1f2a9c4b5379b73aaff077dba3cae65"
+        },
+        "date": 1776909547690,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 526250,
             "unit": "ns/op"
           }
         ]
