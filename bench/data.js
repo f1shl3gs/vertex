@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1777049139155,
+  "lastUpdate": 1777049153029,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "6c951fbae8ab39fe8fcc2e5801465e1824f54985",
-          "message": "Merge pull request #2710 from f1shl3gs/lib/buffer/simplify_config\n\nlib/buffer: simplify BufferConfig",
-          "timestamp": "2025-12-08T00:58:26+08:00",
-          "tree_id": "47da9cf219fd521c0df36d8719287a26bc629316",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6c951fbae8ab39fe8fcc2e5801465e1824f54985"
-        },
-        "date": 1765126865418,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.139,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 158.43,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 327.82,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 708.76,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c52f976cd5cd3cfddcd034d7eeb5675ff356bbee",
           "message": "Merge pull request #2711 from f1shl3gs/lib/buffer/fix_reader_shutdown\n\nlib/buffer: fix reader shutdown",
           "timestamp": "2025-12-08T03:44:10+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 665.98,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9bee4d5d0d78ae1d6f979b7083410134a6767bb9",
+          "message": "Merge pull request #2903 from f1shl3gs/dependabot/cargo/libc-0.2.186\n\nchore(deps): bump libc from 0.2.185 to 0.2.186",
+          "timestamp": "2026-04-25T00:42:54+08:00",
+          "tree_id": "02ebe8d73984b3e392cfbaafe46cb588af560236",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9bee4d5d0d78ae1d6f979b7083410134a6767bb9"
+        },
+        "date": 1777049130008,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.873,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 182.74,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 360.07,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 727.05,
             "unit": "ns/op"
           }
         ]
