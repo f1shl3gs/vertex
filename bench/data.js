@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1777391130126,
+  "lastUpdate": 1777391507981,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "94b621ce8e9f867946e1572a1e4f5451eeaeedc4",
-          "message": "Merge pull request #2712 from f1shl3gs/dependabot/cargo/criterion-0.8.1\n\nchore(deps): bump criterion from 0.8.0 to 0.8.1",
-          "timestamp": "2025-12-08T23:16:51+08:00",
-          "tree_id": "ec1515b75c6c1476a096acbaaeede5df855a2493",
-          "url": "https://github.com/f1shl3gs/vertex/commit/94b621ce8e9f867946e1572a1e4f5451eeaeedc4"
-        },
-        "date": 1765207594443,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 15265000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 646310,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.992,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "db35751171505b9aabb16a9508fbad09401f3bc1",
           "message": "Merge pull request #2713 from f1shl3gs/lib/buffer/fix_flush\n\nlib/buffer: fix flush",
           "timestamp": "2025-12-10T10:28:48+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 57.279,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3f9e2635cd3a1fb6a8dd415b0f72c315a4d2c1cf",
+          "message": "Merge pull request #2906 from f1shl3gs/deps/bump_pkcs8_to_0.11.0\n\ndeps: bump pkcs8 to 0.11.0",
+          "timestamp": "2026-04-28T23:41:20+08:00",
+          "tree_id": "edd7accc697056ff528c477f918d86541aaf1de6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3f9e2635cd3a1fb6a8dd415b0f72c315a4d2c1cf"
+        },
+        "date": 1777391482597,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7485300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 857870,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.086,
             "unit": "ns/op"
           }
         ]
