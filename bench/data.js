@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1777049588355,
+  "lastUpdate": 1777368037464,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "94b621ce8e9f867946e1572a1e4f5451eeaeedc4",
-          "message": "Merge pull request #2712 from f1shl3gs/dependabot/cargo/criterion-0.8.1\n\nchore(deps): bump criterion from 0.8.0 to 0.8.1",
-          "timestamp": "2025-12-08T23:16:51+08:00",
-          "tree_id": "ec1515b75c6c1476a096acbaaeede5df855a2493",
-          "url": "https://github.com/f1shl3gs/vertex/commit/94b621ce8e9f867946e1572a1e4f5451eeaeedc4"
-        },
-        "date": 1765207161920,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.758,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 99.642,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 180.46,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 165.18,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cc6c61cf8c56dfdf40ab604be676d46efa4da67d",
+          "message": "Merge pull request #2904 from f1shl3gs/dependabot/cargo/lru-0.18.0\n\nchore(deps): bump lru from 0.17.0 to 0.18.0",
+          "timestamp": "2026-04-28T17:17:59+08:00",
+          "tree_id": "fbbfe362c9a6c26578ca03dc8351a86293e20b96",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cc6c61cf8c56dfdf40ab604be676d46efa4da67d"
+        },
+        "date": 1777368012922,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 14.863,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 87.539,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 165.77,
             "unit": "ns/op"
           }
         ]
