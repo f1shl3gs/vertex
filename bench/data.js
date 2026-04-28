@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1777397581099,
+  "lastUpdate": 1777397930143,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "db35751171505b9aabb16a9508fbad09401f3bc1",
-          "message": "Merge pull request #2713 from f1shl3gs/lib/buffer/fix_flush\n\nlib/buffer: fix flush",
-          "timestamp": "2025-12-10T10:28:48+08:00",
-          "tree_id": "aa9b7b842f8de81c8ecdb919cb7383a652e15721",
-          "url": "https://github.com/f1shl3gs/vertex/commit/db35751171505b9aabb16a9508fbad09401f3bc1"
-        },
-        "date": 1765334298501,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14813000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 603500,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.655,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "69ee5e62903bf60a8fa32e51c33111acef48e66a",
           "message": "Merge pull request #2714 from f1shl3gs/toolchain/1.92.0\n\ntoolchain: bump to 1.92.0",
           "timestamp": "2025-12-12T00:36:15+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.086,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "419777b84e1169bddfd3e06440ca291b8e9a683b",
+          "message": "Merge pull request #2907 from f1shl3gs/dependabot/cargo/rustls-0.23.40\n\nchore(deps): bump rustls from 0.23.39 to 0.23.40",
+          "timestamp": "2026-04-29T01:29:02+08:00",
+          "tree_id": "2b3fdd35cb92586249a5998d7ff6b6dca2106ce9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/419777b84e1169bddfd3e06440ca291b8e9a683b"
+        },
+        "date": 1777397902185,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7337200,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 513390,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 47.506,
             "unit": "ns/op"
           }
         ]
