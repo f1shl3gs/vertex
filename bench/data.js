@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1777368038764,
+  "lastUpdate": 1777368060472,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c52f976cd5cd3cfddcd034d7eeb5675ff356bbee",
-          "message": "Merge pull request #2711 from f1shl3gs/lib/buffer/fix_reader_shutdown\n\nlib/buffer: fix reader shutdown",
-          "timestamp": "2025-12-08T03:44:10+08:00",
-          "tree_id": "2ec67d5f7277fce71c68eec4f3fb5f335f6bcedc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c52f976cd5cd3cfddcd034d7eeb5675ff356bbee"
-        },
-        "date": 1765136800499,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.517,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 157.11,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 304.17,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 649.88,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "94b621ce8e9f867946e1572a1e4f5451eeaeedc4",
           "message": "Merge pull request #2712 from f1shl3gs/dependabot/cargo/criterion-0.8.1\n\nchore(deps): bump criterion from 0.8.0 to 0.8.1",
           "timestamp": "2025-12-08T23:16:51+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 727.05,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cc6c61cf8c56dfdf40ab604be676d46efa4da67d",
+          "message": "Merge pull request #2904 from f1shl3gs/dependabot/cargo/lru-0.18.0\n\nchore(deps): bump lru from 0.17.0 to 0.18.0",
+          "timestamp": "2026-04-28T17:17:59+08:00",
+          "tree_id": "fbbfe362c9a6c26578ca03dc8351a86293e20b96",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cc6c61cf8c56dfdf40ab604be676d46efa4da67d"
+        },
+        "date": 1777368036846,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.776,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 184.24,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 356.98,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 727.79,
             "unit": "ns/op"
           }
         ]
