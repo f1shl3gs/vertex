@@ -289,8 +289,6 @@ fn load_private_key(
     filename: &PathBuf,
     password: Option<&str>,
 ) -> Result<PrivateKeyDer<'static>, TlsError> {
-    use pkcs8::der::Decode;
-
     let expected_tag = match password {
         Some(_) => "ENCRYPTED PRIVATE KEY",
         None => "PRIVATE KEY",
@@ -314,12 +312,11 @@ fn load_private_key(
     let key = match iter.next() {
         Some(key) => match password {
             Some(password) => {
-                let encrypted = pkcs8::EncryptedPrivateKeyInfo::from_der(&key).map_err(|err| {
-                    TlsError::PrivateKeyParse {
+                let encrypted = pkcs8::EncryptedPrivateKeyInfoRef::try_from(key.as_slice())
+                    .map_err(|err| TlsError::PrivateKeyParse {
                         filename: filename.clone(),
                         err: io::Error::new(io::ErrorKind::InvalidData, err),
-                    }
-                })?;
+                    })?;
                 let decrypted =
                     encrypted
                         .decrypt(password)
