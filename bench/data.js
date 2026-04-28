@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1777368520113,
+  "lastUpdate": 1777368595215,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0f8ed9499f4d0b872ddcb2390bc5fe9d8c760657",
-          "message": "Merge pull request #2802 from f1shl3gs/cargo/update\n\ncargo: update",
-          "timestamp": "2026-02-21T00:01:27+08:00",
-          "tree_id": "8d873aa5d1bafdc0777db32f35d738d1e6c56f4c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0f8ed9499f4d0b872ddcb2390bc5fe9d8c760657"
-        },
-        "date": 1771603980272,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 595,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40947.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b144e98f8c17907658a8d0fc15a1c2c162205cf6",
           "message": "Merge pull request #2803 from f1shl3gs/dependabot/cargo/quick-xml-0.39.2\n\nchore(deps): bump quick-xml from 0.39.1 to 0.39.2",
           "timestamp": "2026-02-21T20:13:47+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 485,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40592.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cc6c61cf8c56dfdf40ab604be676d46efa4da67d",
+          "message": "Merge pull request #2904 from f1shl3gs/dependabot/cargo/lru-0.18.0\n\nchore(deps): bump lru from 0.17.0 to 0.18.0",
+          "timestamp": "2026-04-28T17:17:59+08:00",
+          "tree_id": "fbbfe362c9a6c26578ca03dc8351a86293e20b96",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cc6c61cf8c56dfdf40ab604be676d46efa4da67d"
+        },
+        "date": 1777368571254,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 600,
             "unit": "s"
           },
           {
