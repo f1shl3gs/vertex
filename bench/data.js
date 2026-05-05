@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1778001622221,
+  "lastUpdate": 1778001636664,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7aba6f9593c4c5337095bf0053be17f9080ddfb3",
-          "message": "Merge pull request #2717 from f1shl3gs/lib/framework/simplify_tracked_writer\n\nlib/framework: simplify TrackedWriter",
-          "timestamp": "2025-12-13T03:28:55+08:00",
-          "tree_id": "95e402175e7210793334a194d5d6371d12c4c5d2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7aba6f9593c4c5337095bf0053be17f9080ddfb3"
-        },
-        "date": 1765567891369,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.466,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 165.63,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 324.53,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 683.97,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "fe1fd40e9006bd17ec973ecf194a2beca3a0ac9e",
           "message": "Merge pull request #2719 from f1shl3gs/dependabot/cargo/tracing-0.1.44\n\nchore(deps): bump tracing from 0.1.43 to 0.1.44",
           "timestamp": "2025-12-20T17:21:59+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 694.4,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b078d7c53a8ab9f3a1d9917422e7f006d0d56628",
+          "message": "Merge pull request #2911 from f1shl3gs/deps/bump_rskafka_to_latest\n\ndeps: bump rskafka to latest",
+          "timestamp": "2026-05-06T01:17:20+08:00",
+          "tree_id": "0a91b260551c7d8f403f8f7d3a1a859edc09cbaa",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b078d7c53a8ab9f3a1d9917422e7f006d0d56628"
+        },
+        "date": 1778001606979,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.518,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 179.88,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 352.64,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 698.45,
             "unit": "ns/op"
           }
         ]
