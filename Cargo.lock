@@ -632,15 +632,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b"
 
 [[package]]
-name = "core2"
-version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b49ba7ef1ad6107f8824dbe97de947cbaac53c44e7f9756a1fba0d37c1eec505"
-dependencies = [
- "memchr",
-]
-
-[[package]]
 name = "cpubits"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3430,12 +3421,11 @@ dependencies = [
 
 [[package]]
 name = "rsasl"
-version = "2.2.1"
+version = "2.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9f1bcb95b531681a622f3d6972eaab523e17e2aad6d6209f0276628eb1cb5038"
+checksum = "ed828a88913fd477c73bc3768b05d4b335ee775e29f2397bb59b9a4dd69ffb83"
 dependencies = [
  "base64 0.22.1",
- "core2",
  "digest 0.10.7",
  "hmac 0.12.1",
  "pbkdf2 0.12.2",
@@ -3450,7 +3440,7 @@ dependencies = [
 [[package]]
 name = "rskafka"
 version = "0.6.0"
-source = "git+https://github.com/f1shl3gs/rskafka?rev=c18c924934f3d0edf8e442212fa595f81c20d027#c18c924934f3d0edf8e442212fa595f81c20d027"
+source = "git+https://github.com/f1shl3gs/rskafka?rev=72d3caba288eb80a01fc123f1999a581f799817e#72d3caba288eb80a01fc123f1999a581f799817e"
 dependencies = [
  "chrono",
  "crc32c",
@@ -3458,7 +3448,7 @@ dependencies = [
  "futures",
  "lz4",
  "parking_lot",
- "rand 0.9.2",
+ "rand 0.10.1",
  "rsasl",
  "rustls",
  "snap",
