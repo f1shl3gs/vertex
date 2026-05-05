@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1777999021502,
+  "lastUpdate": 1777999222966,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "69ee5e62903bf60a8fa32e51c33111acef48e66a",
-          "message": "Merge pull request #2714 from f1shl3gs/toolchain/1.92.0\n\ntoolchain: bump to 1.92.0",
-          "timestamp": "2025-12-12T00:36:15+08:00",
-          "tree_id": "daca759010186752aa9bcbe87487c6f557a598f4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/69ee5e62903bf60a8fa32e51c33111acef48e66a"
-        },
-        "date": 1765471549291,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 16604000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 633580,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 53.37,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f194eec4b5b690fab852ce7349cc018d1d9d5760",
           "message": "Merge pull request #2715 from f1shl3gs/dependabot/github_actions/actions/cache-5\n\nchore(ci): bump actions/cache from 4 to 5",
           "timestamp": "2025-12-12T20:02:57+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 47.506,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "586468d3da10ad2c47bc326feacedad3242997e6",
+          "message": "Merge pull request #2910 from f1shl3gs/sources/mysql/refactor\n\nsources/mysql: refactor",
+          "timestamp": "2026-05-06T00:30:02+08:00",
+          "tree_id": "c3c19d93193566ca1dcd357e524b58d409660746",
+          "url": "https://github.com/f1shl3gs/vertex/commit/586468d3da10ad2c47bc326feacedad3242997e6"
+        },
+        "date": 1777999200216,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7214600,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 788130,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 51.882,
             "unit": "ns/op"
           }
         ]
