@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1777999263305,
+  "lastUpdate": 1777999267121,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ab695c814e992c4cdeaeebd2f8a50a29df9af6e5",
-          "message": "Merge pull request #2716 from f1shl3gs/sinks/alertmanager/init\n\nsinks/alertmanager: init",
-          "timestamp": "2025-12-13T01:17:02+08:00",
-          "tree_id": "ed3ea8aa49cce8c1f862b53ec562c074b7dde4e0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ab695c814e992c4cdeaeebd2f8a50a29df9af6e5"
-        },
-        "date": 1765560405586,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 15367000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 610120,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.904,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7aba6f9593c4c5337095bf0053be17f9080ddfb3",
           "message": "Merge pull request #2717 from f1shl3gs/lib/framework/simplify_tracked_writer\n\nlib/framework: simplify TrackedWriter",
           "timestamp": "2025-12-13T03:28:55+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.471,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "000480b211aa3c8d72056aad71fcb7cc9c9741c8",
+          "message": "Merge pull request #2909 from f1shl3gs/dependabot/cargo/quick-xml-0.39.3\n\nchore(deps): bump quick-xml from 0.39.2 to 0.39.3",
+          "timestamp": "2026-05-06T00:30:21+08:00",
+          "tree_id": "01a78b0cd75cb66f2bcc9fbf08ae625affe7c1a2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/000480b211aa3c8d72056aad71fcb7cc9c9741c8"
+        },
+        "date": 1777999244106,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 8312400,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 635410,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.216,
             "unit": "ns/op"
           }
         ]
