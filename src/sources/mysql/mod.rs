@@ -46,17 +46,14 @@ fn default_user() -> String {
 }
 
 #[derive(Configurable, Clone, Serialize, Deserialize, Debug)]
-#[serde(untagged)]
-pub enum AuthConfig {
-    NativePassword {
-        /// Username used to connect to MySQL instance
-        #[serde(default = "default_user")]
-        user: String,
+pub struct AuthConfig {
+    /// Username used to connect to MySQL instance
+    #[serde(default = "default_user")]
+    user: String,
 
-        /// Password used to connect to MySQL instance
-        #[serde(default)]
-        password: Option<String>,
-    },
+    /// Password used to connect to MySQL instance
+    #[serde(default)]
+    password: Option<String>,
 }
 
 #[derive(Configurable, Clone, Serialize, Deserialize, Debug)]
@@ -115,14 +112,17 @@ struct Config {
 #[typetag::serde(name = "mysql")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
+        // validate
+        if self.endpoints.is_empty() {
+            return Err("endpoints required".into());
+        }
+
         let interval = self.interval;
         let output = cx.output;
         let shutdown = cx.shutdown;
-        let auth = match &self.auth {
-            AuthConfig::NativePassword { user, password } => connection::AuthConfig {
-                username: user.clone(),
-                password: password.clone(),
-            },
+        let auth = connection::AuthConfig {
+            username: self.auth.user.clone(),
+            password: self.auth.password.clone(),
         };
 
         let mut endpoints = self.endpoints.clone();
@@ -142,7 +142,7 @@ impl SourceConfig for Config {
                 )
             }));
 
-            while tasks.next().await.is_none() {}
+            while tasks.next().await.is_some() {}
 
             Ok(())
         }))

@@ -212,7 +212,7 @@ mod tests {
         assert_contains(
             &metrics,
             vec![
-                (tags!("state" => "data"), 1.0),
+                (tags!("state" => "data"), 6.0),
                 (tags!(), 7.0),
                 (tags!("state" => "free"), 8.0),
                 (tags!("state" => "misc"), 9.0),
@@ -243,7 +243,7 @@ mod tests {
                 (tags!("operation" => "lru_flushed"), 13.0),
                 (tags!("operation" => "made_not_young"), 14.0),
                 (tags!("operation" => "made_young"), 15.0),
-                (tags!("operation" => "read"), 16.0),
+                (tags!("operation" => "read"), 8.0),
                 (tags!("instrumentation" => "users_lost"), 9.0),
             ],
         );

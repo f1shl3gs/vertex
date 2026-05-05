@@ -40,7 +40,7 @@ pub async fn collect(conn: &mut Connection) -> Result<Vec<Metric>, Error> {
             Metric::sum_with_tags(
                 "mysql_info_schema_innodb_cmpmem_relocation_time_seconds_total",
                 "Total time in seconds spent in relocating blocks.",
-                relocation_time,
+                relocation_time / 1000.0,
                 tags!("page_size" => page_size, "buffer_pool" => buffer_pool),
             )
         ]);
@@ -56,7 +56,7 @@ mod tests {
     use crate::sources::mysql::connection::mock;
 
     #[tokio::test]
-    async fn innodb_cmpmem() {
+    async fn smoke() {
         let mut conn = mock(|_| {
             (
                 vec![

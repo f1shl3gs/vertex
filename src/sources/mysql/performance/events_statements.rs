@@ -29,7 +29,7 @@ pub struct Config {
     limit: usize,
 
     /// Limit how old the 'last_seen' events statements can be
-    #[serde(default = "default_time_limit")]
+    #[serde(default = "default_time_limit", with = "humanize::duration::serde")]
     time_limit: Duration,
 
     /// Maximum length of the normalized statement text
