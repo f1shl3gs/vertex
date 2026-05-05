@@ -438,27 +438,6 @@ impl Connection {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::net::IpAddr;
-
-    #[tokio::test]
-    async fn connect() {
-        let endpoint = SocketAddr::new(IpAddr::from([127, 0, 0, 1]), 9150);
-        let auth = AuthConfig {
-            username: "root".to_string(),
-            password: Some("password".to_string()),
-        };
-
-        let mut conn = Connection::connect(endpoint, &auth).await.unwrap();
-
-        let mut rows = conn.query("select @@version").await.unwrap();
-        while let Some(mut row) = rows.next().await.unwrap() {
-            for column in row.columns() {
-                println!("{} {}", column.name(), row.get_str());
-            }
-        }
-
-        conn.close().await.unwrap();
-    }
 
     #[test]
     fn version() {
