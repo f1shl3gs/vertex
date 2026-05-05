@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1777998830805,
+  "lastUpdate": 1777998845436,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ab695c814e992c4cdeaeebd2f8a50a29df9af6e5",
-          "message": "Merge pull request #2716 from f1shl3gs/sinks/alertmanager/init\n\nsinks/alertmanager: init",
-          "timestamp": "2025-12-13T01:17:02+08:00",
-          "tree_id": "ed3ea8aa49cce8c1f862b53ec562c074b7dde4e0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ab695c814e992c4cdeaeebd2f8a50a29df9af6e5"
-        },
-        "date": 1765559975235,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.779,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 181.54,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 320.02,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 680.87,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7aba6f9593c4c5337095bf0053be17f9080ddfb3",
           "message": "Merge pull request #2717 from f1shl3gs/lib/framework/simplify_tracked_writer\n\nlib/framework: simplify TrackedWriter",
           "timestamp": "2025-12-13T03:28:55+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 667.41,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "586468d3da10ad2c47bc326feacedad3242997e6",
+          "message": "Merge pull request #2910 from f1shl3gs/sources/mysql/refactor\n\nsources/mysql: refactor",
+          "timestamp": "2026-05-06T00:30:02+08:00",
+          "tree_id": "c3c19d93193566ca1dcd357e524b58d409660746",
+          "url": "https://github.com/f1shl3gs/vertex/commit/586468d3da10ad2c47bc326feacedad3242997e6"
+        },
+        "date": 1777998821530,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 24.559,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 183.72,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 340.48,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 694.4,
             "unit": "ns/op"
           }
         ]
