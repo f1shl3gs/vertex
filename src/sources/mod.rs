@@ -64,8 +64,8 @@ mod memcached;
 mod mqtt;
 #[cfg(feature = "sources-multiplier")]
 mod multiplier;
-#[cfg(feature = "sources-mysqld")]
-mod mysqld;
+#[cfg(feature = "sources-mysql")]
+mod mysql;
 #[cfg(feature = "sources-nats_metrics")]
 mod nats_metrics;
 #[cfg(feature = "sources-netflow")]

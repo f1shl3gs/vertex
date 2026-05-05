@@ -1,0 +1,7 @@
+services:
+  mariadb:
+    image: mariadb:10.5
+    ports:
+      - 3307:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=password

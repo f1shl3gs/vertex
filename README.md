@@ -37,7 +37,7 @@ has already been ported.
 | haproxy                 | Scrapes metrics from haproxy                                      | &check; | &cross; | &cross; |
 | http_check              | Expose http endpoint health metrics                               | &check; | &cross; | &cross; |
 | internal_logs           | Collect internal logs                                             | &cross; | &check; | &cross; |
-| internal_metrics        | Collect internal metrics                                          | &check; | &cross; | &cross; |
+| internal_metrics        | Collect metrics about the vertex and it's components              | &check; | &cross; | &cross; |
 | internal_traces         | Collect internal traces                                           | &cross; | &cross; | &check; |
 | jaeger                  | Running as a agent/collector to collect metrics                   | &cross; | &cross; | &check; |
 | journald                | Collect logs from journald                                        | &cross; | &check; | &cross; |
@@ -47,7 +47,7 @@ has already been ported.
 | kubernetes_logs         | Collect logs from pod                                             | &cross; | &check; | &cross; |
 | libvirt                 | Collect status from libvirt                                       | &check; | &cross; | &cross; |
 | memcached               | Collect memcached stats                                           | &check; | &cross; | &cross; |
-| mysqld                  | Collect various stat of mysql server                              | &check; | &cross; | &cross; |
+| mysql                   | Collect various stat of mysql server                              | &check; | &cross; | &cross; |
 | netflow                 | Collect IPFIX & NetFlow v9                                        | &cross; | &check; | &cross; |
 | nginx_stub              | Collect metrics from nginx stub api                               | &check; | &cross; | &cross; |
 | node                    | Collect hardware and OS metrics, just like node_exporter          | &check; | &cross; | &cross; |
@@ -183,14 +183,6 @@ There are some keywords
 - `type` is used to represent component type
 - `inputs` is an array used to build the Topology(DAG)
 
-### Node Exporter
-Compare to node_exporter, Vertex use less CPU and memory
-![cpu -- less is better](docs/node/cpu.png)
-![memory -- less is better](docs/node/memory.png)
-
-But, still high performance
-![scrape -- less is better](docs/node/scrape.png)
-
 ### Hot Reload
 - Hot reload from files or HTTP endpoint
   - File watch needs `inotify`, so only Linux supported.
@@ -228,7 +220,7 @@ kubernetes_events
 kubernetes_logs
 libvirt
 memcached
-mysqld
+mysql
 nginx_stub
 node
 ntp
@@ -266,6 +258,25 @@ interval: "15s"
 ```
 
 There are more example configurations under `examples/config` to help you know what's Vertex capable of.
+
+## Compare to others
+
+### Node Exporter
+Compare to node_exporter, Vertex use less CPU and memory
+![cpu -- less is better](docs/node/cpu.png)
+![memory -- less is better](docs/node/memory.png)
+
+But, still high performance
+![scrape duration -- less is better](docs/node/scrape.png)
+
+Binary size, no compression
+
+|                           | size     |
+|---------------------------|----------|
+| vertex (minimal features) | 17848144 |
+| node_exporter             | 23702136 |
+| vertex (full features)    | 49371400 |
+
 
 ## Turning
 

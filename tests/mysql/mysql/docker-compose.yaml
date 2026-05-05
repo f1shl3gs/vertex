@@ -1,0 +1,7 @@
+services:
+  mysql:
+    image: ${IMAGE:-mysql:5.7.44}
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
