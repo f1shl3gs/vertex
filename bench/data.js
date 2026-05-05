@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1777998815283,
+  "lastUpdate": 1777998820774,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "69ee5e62903bf60a8fa32e51c33111acef48e66a",
-          "message": "Merge pull request #2714 from f1shl3gs/toolchain/1.92.0\n\ntoolchain: bump to 1.92.0",
-          "timestamp": "2025-12-12T00:36:15+08:00",
-          "tree_id": "daca759010186752aa9bcbe87487c6f557a598f4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/69ee5e62903bf60a8fa32e51c33111acef48e66a"
-        },
-        "date": 1765471138276,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.486,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 183.13,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 349.65,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 673.8,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f194eec4b5b690fab852ce7349cc018d1d9d5760",
           "message": "Merge pull request #2715 from f1shl3gs/dependabot/github_actions/actions/cache-5\n\nchore(ci): bump actions/cache from 4 to 5",
           "timestamp": "2025-12-12T20:02:57+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 694.18,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "000480b211aa3c8d72056aad71fcb7cc9c9741c8",
+          "message": "Merge pull request #2909 from f1shl3gs/dependabot/cargo/quick-xml-0.39.3\n\nchore(deps): bump quick-xml from 0.39.2 to 0.39.3",
+          "timestamp": "2026-05-06T00:30:21+08:00",
+          "tree_id": "01a78b0cd75cb66f2bcc9fbf08ae625affe7c1a2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/000480b211aa3c8d72056aad71fcb7cc9c9741c8"
+        },
+        "date": 1777998797513,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.339,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 174.7,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 353.91,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 739.82,
             "unit": "ns/op"
           }
         ]
