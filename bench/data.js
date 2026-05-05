@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1777398038514,
+  "lastUpdate": 1777998793358,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f194eec4b5b690fab852ce7349cc018d1d9d5760",
-          "message": "Merge pull request #2715 from f1shl3gs/dependabot/github_actions/actions/cache-5\n\nchore(ci): bump actions/cache from 4 to 5",
-          "timestamp": "2025-12-12T20:02:57+08:00",
-          "tree_id": "fdc9e474aa59b6fb09b5835b8a2348aa01d071ce",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f194eec4b5b690fab852ce7349cc018d1d9d5760"
-        },
-        "date": 1765541116580,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 539370,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 534080,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ff613a49d1ae4de20877b2c858c619a16d8e3c55",
+          "message": "Merge pull request #2908 from f1shl3gs/dependabot/cargo/tokio-1.52.2\n\nchore(deps): bump tokio from 1.52.1 to 1.52.2",
+          "timestamp": "2026-05-06T00:30:30+08:00",
+          "tree_id": "cc6cf3f7226da05567ce78f82a0dcb46f73f847e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ff613a49d1ae4de20877b2c858c619a16d8e3c55"
+        },
+        "date": 1777998765600,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 508240,
             "unit": "ns/op"
           }
         ]
