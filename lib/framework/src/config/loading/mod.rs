@@ -19,6 +19,12 @@ pub use config::{Builder, ConfigLoader};
 /// Default to 128Mib, which should be large enough.
 const CONFIG_CACHE_LIMIT: usize = 128 * 1024 * 1024;
 
+/// A limitation of the documents in single YAML file
+///
+/// serde_yaml cannot handle some special character,
+/// or maybe some other wired bugs.
+const YAML_DOCUMENT_LIMIT: usize = 256;
+
 pub trait Loader {
     type Output;
     type Item: serde::de::DeserializeOwned;
@@ -58,10 +64,13 @@ fn process<L: Loader>(
                 }
             },
             Format::YAML => {
+                let mut count = 0;
+
                 // multiple documentations
                 for doc in serde_yaml::Deserializer::from_str(content) {
                     use serde::Deserialize;
 
+                    count += 1;
                     match L::Item::deserialize(doc) {
                         Ok(item) => {
                             if let Err(partial) = loader.merge(item) {
@@ -71,6 +80,14 @@ fn process<L: Loader>(
                         Err(err) => {
                             errs.push(format!("deserialize {path:?} failed, {err}"));
                         }
+                    }
+
+                    if count > YAML_DOCUMENT_LIMIT {
+                        errs.push(format!(
+                            "too many documents > {} in {:?}",
+                            YAML_DOCUMENT_LIMIT, path
+                        ));
+                        break;
                     }
                 }
             }

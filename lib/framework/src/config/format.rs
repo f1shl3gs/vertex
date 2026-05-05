@@ -32,7 +32,7 @@ impl Format {
     pub fn deserialize<T: serde::de::DeserializeOwned>(&self, content: &str) -> Result<T, String> {
         match self {
             Format::JSON => serde_json::from_str(content).map_err(|err| err.to_string()),
-            Format::YAML => serde_json::from_str(content).map_err(|err| err.to_string()),
+            Format::YAML => serde_yaml::from_str(content).map_err(|err| err.to_string()),
         }
     }
 }
