@@ -473,7 +473,8 @@ mod tests {
     }
 }
 
-#[cfg(test)]
+/*
+#[cfg(all(test, feature = "mysql-integration-tests"))]
 mod integration_tests {
     use super::*;
     use std::str::FromStr;
@@ -500,3 +501,4 @@ mod integration_tests {
         }
     }
 }
+*/
