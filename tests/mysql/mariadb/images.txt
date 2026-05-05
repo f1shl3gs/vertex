@@ -1,0 +1,4 @@
+mariadb:10.5
+mariadb:10.6
+mariadb:10.11
+mariadb:11.4

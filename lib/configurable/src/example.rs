@@ -37,8 +37,13 @@ impl Buf {
     fn push_value(&mut self, value: &Value) {
         match value {
             Value::String(s) => {
+                const RESERVED: [&str; 5] = ["*", "?", "!", "-", ":"];
+
                 if s.is_empty() {
                     self.push_str(r#""""#)
+                } else if RESERVED.iter().any(|&r| r == s) {
+                    // * is a special character
+                    self.push_str(&format!("'{s}'"))
                 } else {
                     self.push_str(s)
                 }

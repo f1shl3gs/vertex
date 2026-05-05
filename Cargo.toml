@@ -9,7 +9,8 @@ publish = false
 rust-version = "1.94"
 exclude = [ "tests/node" ]
 
-# Optimized for binary size, and it will take alot time
+# Optimized for binary size, and it will take a lot of time to compile,
+# but you might not able to observe the performance improvement.
 [profile.minimal]
 inherits = "release"
 debug = false
@@ -211,7 +212,7 @@ sources-memcached = []
 sources-mongodb = []
 sources-mqtt = []
 sources-multiplier = []
-sources-mysqld = ["dep:sqlx"]
+sources-mysql = ["dep:base64", "dep:sha1", "dep:sha2"]
 sources-nats_metrics = []
 sources-netflow = ["dep:parking_lot"]
 sources-nginx_stub = []
@@ -273,7 +274,7 @@ sources = [
     "sources-mongodb",
     "sources-mqtt",
     "sources-multiplier",
-    "sources-mysqld",
+    "sources-mysql",
     "sources-nats_metrics",
     "sources-netflow",
     "sources-nginx_stub",
@@ -511,9 +512,10 @@ rand = { version = "0.10.1", default-features = false }
 regex = { version = "1.12.3", default-features = false }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "c18c924934f3d0edf8e442212fa595f81c20d027", optional = true, features = ["transport-tls"] }
 sbbf = { git = "https://github.com/f1shl3gs/sbbf.git", rev = "d619ab889a9637dd849206568a3023dee7046a8f", optional = true }
+sha1 = { version = "0.11.0", default-features = false, optional = true }
+sha2 = { version = "0.11.0", default-features = false, optional = true }
 snap = { version = "1.1.1", default-features = false, optional = true }
 socket2 = { version = "0.6.3", optional = true, default-features = false}
-sqlx = { version = "0.8.6", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
 thiserror = { version = "2.0.18", default-features = false }
 typetag = { version = "0.2.21" }
 url = { version = "2.5.8", default-features = false, features = ["serde"] }
