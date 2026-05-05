@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1777999222966,
+  "lastUpdate": 1777999234365,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d844bf104cd85a31afd27114d4639f98c0121390",
-          "message": "Merge pull request #2805 from f1shl3gs/dependabot/cargo/chrono-0.4.44\n\nchore(deps): bump chrono from 0.4.43 to 0.4.44",
-          "timestamp": "2026-02-24T05:00:13+08:00",
-          "tree_id": "16c785157b14c7648bd1f70da762d9e3134f74a8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d844bf104cd85a31afd27114d4639f98c0121390"
-        },
-        "date": 1771881072085,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 555,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40506.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2e8b6f7f4114f221fe38c4692ee0ed40e67000f9",
           "message": "Merge pull request #2806 from f1shl3gs/lib/events/use_key_string_as_tag_value\n\nlib/events: use key string as tag's value variant",
           "timestamp": "2026-02-24T22:58:02+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40643.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "586468d3da10ad2c47bc326feacedad3242997e6",
+          "message": "Merge pull request #2910 from f1shl3gs/sources/mysql/refactor\n\nsources/mysql: refactor",
+          "timestamp": "2026-05-06T00:30:02+08:00",
+          "tree_id": "c3c19d93193566ca1dcd357e524b58d409660746",
+          "url": "https://github.com/f1shl3gs/vertex/commit/586468d3da10ad2c47bc326feacedad3242997e6"
+        },
+        "date": 1777999212404,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 513,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40248.1,
             "unit": "KiB"
           }
         ]
