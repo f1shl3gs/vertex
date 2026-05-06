@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1778110565527,
+  "lastUpdate": 1778110953753,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fe1fd40e9006bd17ec973ecf194a2beca3a0ac9e",
-          "message": "Merge pull request #2719 from f1shl3gs/dependabot/cargo/tracing-0.1.44\n\nchore(deps): bump tracing from 0.1.43 to 0.1.44",
-          "timestamp": "2025-12-20T17:21:59+08:00",
-          "tree_id": "cf63f167b4de5db53f6cb4bb84e6941d22ca349a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fe1fd40e9006bd17ec973ecf194a2beca3a0ac9e"
-        },
-        "date": 1766223076580,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 15942000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 387640,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 48.003,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a364678075a8298bbd28e7cb76fe59d01615f24d",
           "message": "Merge pull request #2721 from f1shl3gs/dependabot/cargo/serde_json-1.0.146\n\nchore(deps): bump serde_json from 1.0.145 to 1.0.146",
           "timestamp": "2025-12-22T21:56:40+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 49.561,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "56b9e234013ee38ab4f4e2d8c09868fc8dc1971c",
+          "message": "Merge pull request #2913 from f1shl3gs/sources/mysql/remove_unused_config\n\nsources/mysql: remove unused config field",
+          "timestamp": "2026-05-07T07:32:16+08:00",
+          "tree_id": "31dbb45016ffe705e45169c7cb77b4059c36f4b4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/56b9e234013ee38ab4f4e2d8c09868fc8dc1971c"
+        },
+        "date": 1778110930239,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7211400,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 788700,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.822,
             "unit": "ns/op"
           }
         ]
