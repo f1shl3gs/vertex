@@ -58,10 +58,6 @@ pub struct Config {
     #[serde(default)]
     index_io_waits: bool,
 
-    /// Collect metrics from performance_schema.table_lock_waits_summary_by_table
-    #[serde(default)]
-    table_blocks: bool,
-
     /// Since 5.6, Collect metrics from performance_schema.table_io_waits_summary_by_table
     #[serde(default)]
     table_io_waits: bool,
