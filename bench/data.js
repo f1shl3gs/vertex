@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1778110964190,
+  "lastUpdate": 1778111001693,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e0691b632d245055cb2c9248778b148a6dd2396d",
-          "message": "Merge pull request #2809 from f1shl3gs/sinks/prometheus_exporter/simplify_metric_writing\n\nsinks/prometheus_exporter: simplify metric writing",
-          "timestamp": "2026-02-26T10:43:08+08:00",
-          "tree_id": "62b4ae30ab4990672c2036dcc04d3e63a1ea2b5b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e0691b632d245055cb2c9248778b148a6dd2396d"
-        },
-        "date": 1772074426737,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 564,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40456.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e98fa122fb7fff7c0e9d8c2709ccc8c78f33babb",
           "message": "Merge pull request #2811 from f1shl3gs/dependabot/cargo/pin-project-lite-0.2.17\n\nchore(deps): bump pin-project-lite from 0.2.16 to 0.2.17",
           "timestamp": "2026-02-27T23:41:29+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40234.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "49d0a96947d4a289d0815c34fceb6281772e2f3e",
+          "message": "Merge pull request #2912 from f1shl3gs/lib/framework/fix_some_loading_bugs\n\nlib/framework: fix some loading bugs",
+          "timestamp": "2026-05-07T07:32:00+08:00",
+          "tree_id": "81dc22394ac511ccfc5d6118c01af3741bd5f6e0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/49d0a96947d4a289d0815c34fceb6281772e2f3e"
+        },
+        "date": 1778110978076,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 554,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40240.5,
             "unit": "KiB"
           }
         ]
