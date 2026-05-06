@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1778111001693,
+  "lastUpdate": 1778111015177,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e98fa122fb7fff7c0e9d8c2709ccc8c78f33babb",
-          "message": "Merge pull request #2811 from f1shl3gs/dependabot/cargo/pin-project-lite-0.2.17\n\nchore(deps): bump pin-project-lite from 0.2.16 to 0.2.17",
-          "timestamp": "2026-02-27T23:41:29+08:00",
-          "tree_id": "c73788a3f07c6ad5f842ae0802131a02e4a0922b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e98fa122fb7fff7c0e9d8c2709ccc8c78f33babb"
-        },
-        "date": 1772207544538,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 579,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40457.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "93c1d5a549ff45960d546c38e1b155c74e9d2389",
           "message": "Merge pull request #2812 from f1shl3gs/lib/prometheus/restructure\n\nlib/prometheus: split parsers into two files",
           "timestamp": "2026-02-28T02:59:10+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40240.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "56b9e234013ee38ab4f4e2d8c09868fc8dc1971c",
+          "message": "Merge pull request #2913 from f1shl3gs/sources/mysql/remove_unused_config\n\nsources/mysql: remove unused config field",
+          "timestamp": "2026-05-07T07:32:16+08:00",
+          "tree_id": "31dbb45016ffe705e45169c7cb77b4059c36f4b4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/56b9e234013ee38ab4f4e2d8c09868fc8dc1971c"
+        },
+        "date": 1778110991957,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 565,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40239.6,
             "unit": "KiB"
           }
         ]
