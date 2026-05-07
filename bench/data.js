@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1778172150642,
+  "lastUpdate": 1778172162585,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d26ae6756c483833a6eeacd875ca44c2637fbc8c",
-          "message": "Merge pull request #2723 from f1shl3gs/dependabot/cargo/serde_json-1.0.148\n\nchore(deps): bump serde_json from 1.0.147 to 1.0.148",
-          "timestamp": "2025-12-27T19:24:31+08:00",
-          "tree_id": "996b6c36d15dfcb27136badaac85adc983b6a49b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d26ae6756c483833a6eeacd875ca44c2637fbc8c"
-        },
-        "date": 1766834802113,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.968,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 100.39,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 180.3,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 179.01,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7970eea52d262d1948d6cdbf24a70fdef8af1b97",
+          "message": "Merge pull request #2914 from f1shl3gs/dependabot/cargo/tonic-e49de9fdaa\n\nchore(deps): bump the tonic group with 4 updates",
+          "timestamp": "2026-05-08T00:39:44+08:00",
+          "tree_id": "bcfcd8b72790b3fda27e431615ebb61594b2d399",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7970eea52d262d1948d6cdbf24a70fdef8af1b97"
+        },
+        "date": 1778172138122,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.994,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 89.74,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 170.79,
             "unit": "ns/op"
           }
         ]
