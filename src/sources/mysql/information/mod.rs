@@ -107,37 +107,46 @@ const USERSTAT_CHECK_QUERY: &str =
 
 async fn check_userstat(conn: &mut Connection) -> Result<bool, Error> {
     let mut rows = conn.query(USERSTAT_CHECK_QUERY).await?;
-    let Some(mut row) = rows.next().await? else {
-        debug!(message = "detailed schema stats are not available");
-        return Ok(false);
-    };
 
-    let name = row.get_str();
-    let value = row.get_str();
-    if value == "OFF" {
-        debug!(message = "MySQL variable is OFF", variable = name);
-        while rows.next().await?.is_some() {}
-        return Ok(false);
+    let mut status = false;
+    while let Some(mut row) = rows.next().await? {
+        if status {
+            // make sure this while will drain all incoming rows
+            continue;
+        }
+
+        let name = row.get_str();
+        let value = row.get_str();
+        status = ["userstat", "userstat_running"].contains(&name) && value == "ON";
     }
 
-    while rows.next().await?.is_some() {}
-
-    Ok(true)
+    Ok(status)
 }
 
 pub async fn collect(conn: &mut Connection, conf: &Config) -> Result<Vec<Metric>, Error> {
     let version = conn.version();
-
-    let userstat = check_userstat(conn).await?;
-
     let mut metrics = Vec::new();
+
+    if check_userstat(conn).await? {
+        if conf.clientstats && version >= 5.5 {
+            metrics.extend(clientstats::collect(conn).await?);
+        }
+
+        if conf.schemastats && version >= 5.1 {
+            metrics.extend(schemastats::collect(conn).await?);
+        }
+
+        if conf.tablestats && version >= 5.1 {
+            metrics.extend(tablestats::collect(conn).await?);
+        }
+
+        if conf.userstats && version >= 5.1 {
+            metrics.extend(userstats::collect(conn).await?);
+        }
+    }
 
     if conf.auto_increment && version >= 5.1 {
         metrics.extend(auto_increment::collect(conn).await?);
-    }
-
-    if conf.clientstats && version >= 5.5 && userstat {
-        metrics.extend(clientstats::collect(conn).await?);
     }
 
     if conf.innodb_cmp && version >= 5.5 {
@@ -174,21 +183,29 @@ pub async fn collect(conn: &mut Connection, conf: &Config) -> Result<Vec<Metric>
         metrics.extend(rocksdb_perf_context::collect(conn).await?);
     }
 
-    if conf.schemastats && version >= 5.1 && userstat {
-        metrics.extend(schemastats::collect(conn).await?);
-    }
-
     if !conf.tables.is_empty() && version >= 5.1 {
         metrics.extend(tables::collect(conn, &conf.tables).await?);
     }
 
-    if conf.tablestats && version >= 5.1 && userstat {
-        metrics.extend(tablestats::collect(conn).await?);
-    }
-
-    if conf.userstats && version >= 5.1 && userstat {
-        metrics.extend(userstats::collect(conn).await?);
-    }
-
     Ok(metrics)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::sources::mysql::connection::mock;
+
+    #[tokio::test]
+    async fn userstats() {
+        for (key, value, want) in [
+            ("userstat", "ON", true),
+            ("userstat", "OFF", false),
+            ("xxxx", "ON", false),
+        ] {
+            let mut conn = mock(|_| (vec!["Variable_name", "Value"], vec![vec![key, value]])).await;
+
+            let got = check_userstat(&mut conn).await.unwrap();
+            assert_eq!(got, want);
+        }
+    }
 }

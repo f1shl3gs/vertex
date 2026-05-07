@@ -47,32 +47,27 @@ pub async fn collect(conn: &mut Connection) -> Result<Vec<Metric>, Error> {
 
 #[cfg(test)]
 mod tests {
-    use super::super::USERSTAT_CHECK_QUERY;
     use super::*;
     use crate::sources::mysql::assert_contains;
     use crate::sources::mysql::connection::mock;
 
     #[tokio::test]
     async fn smoke() {
-        let mut conn = mock(|query| {
-            if query == USERSTAT_CHECK_QUERY {
-                (vec!["Variable_name", "Value"], vec![vec!["userstat", "ON"]])
-            } else {
-                (
-                    vec![
-                        "TABLE_SCHEMA",
-                        "TABLE_NAME",
-                        "ROWS_READ",
-                        "ROWS_CHANGED",
-                        "ROWS_CHANGED_X_INDEXES",
-                    ],
-                    vec![
-                        vec!["mysql", "db", "238", "0", "8"],
-                        vec!["mysql", "proxies_priv", "99", "1", "0"],
-                        vec!["mysql", "user", "1064", "2", "5"],
-                    ],
-                )
-            }
+        let mut conn = mock(|_query| {
+            (
+                vec![
+                    "TABLE_SCHEMA",
+                    "TABLE_NAME",
+                    "ROWS_READ",
+                    "ROWS_CHANGED",
+                    "ROWS_CHANGED_X_INDEXES",
+                ],
+                vec![
+                    vec!["mysql", "db", "238", "0", "8"],
+                    vec!["mysql", "proxies_priv", "99", "1", "0"],
+                    vec!["mysql", "user", "1064", "2", "5"],
+                ],
+            )
         })
         .await;
 

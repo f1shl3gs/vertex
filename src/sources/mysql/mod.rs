@@ -83,6 +83,10 @@ struct CollectConfig {
     #[serde(default)]
     info_schema: information::Config,
 
+    /// Collecting metrics from `performance_schema` database, if the variable of
+    /// `performance_schema` is `OFF` then collecting is skipped.
+    ///
+    /// Since 5.6.6, this variable is default `ON`
     #[serde(default)]
     perf_schema: performance::Config,
 
