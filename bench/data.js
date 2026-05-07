@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1778172162585,
+  "lastUpdate": 1778172182843,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "534bbb060e2463c1c41232a21c7d3a5caf4583a4",
-          "message": "Merge pull request #2722 from f1shl3gs/dependabot/cargo/serde_json-1.0.147\n\nchore(deps): bump serde_json from 1.0.146 to 1.0.147",
-          "timestamp": "2025-12-24T19:36:57+08:00",
-          "tree_id": "8f46e9243e33be848afb7dad990fabeb3cdfbe55",
-          "url": "https://github.com/f1shl3gs/vertex/commit/534bbb060e2463c1c41232a21c7d3a5caf4583a4"
-        },
-        "date": 1766576365125,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.183,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 169.38,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 341.67,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 723.89,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d26ae6756c483833a6eeacd875ca44c2637fbc8c",
           "message": "Merge pull request #2723 from f1shl3gs/dependabot/cargo/serde_json-1.0.148\n\nchore(deps): bump serde_json from 1.0.147 to 1.0.148",
           "timestamp": "2025-12-27T19:24:31+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 698.17,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7970eea52d262d1948d6cdbf24a70fdef8af1b97",
+          "message": "Merge pull request #2914 from f1shl3gs/dependabot/cargo/tonic-e49de9fdaa\n\nchore(deps): bump the tonic group with 4 updates",
+          "timestamp": "2026-05-08T00:39:44+08:00",
+          "tree_id": "bcfcd8b72790b3fda27e431615ebb61594b2d399",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7970eea52d262d1948d6cdbf24a70fdef8af1b97"
+        },
+        "date": 1778172159598,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.707,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 185.38,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 313.22,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 648.21,
             "unit": "ns/op"
           }
         ]
