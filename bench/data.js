@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1778207371617,
+  "lastUpdate": 1778207428828,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ab1d7277ab46563eeb3f3e31ee3f527e90bc6f1d",
-          "message": "Merge pull request #2813 from f1shl3gs/ci/fix_benchmark\n\nci/fix_benchmark: fix benchmarks based on lib/testify",
-          "timestamp": "2026-02-28T03:24:31+08:00",
-          "tree_id": "970705193ebef7d880db6b4b445d2f6f51797872",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ab1d7277ab46563eeb3f3e31ee3f527e90bc6f1d"
-        },
-        "date": 1772220935216,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 587,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40457.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1ece04bb7930a6d1ff30705aa3a4b1e6eea78e59",
           "message": "Merge pull request #2814 from f1shl3gs/lib/event/fix_bench\n\nlib/event: fix bench",
           "timestamp": "2026-03-01T10:11:02+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40245.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3aa9aedcdb860799cc26a16dda66645915953dea",
+          "message": "Merge pull request #2915 from f1shl3gs/sources/mysql/simplify\n\nsources/mysql: simplify collect process, reduce some unneeded query",
+          "timestamp": "2026-05-08T10:18:29+08:00",
+          "tree_id": "e939654321005762459e7bb952e7d4971d06a484",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3aa9aedcdb860799cc26a16dda66645915953dea"
+        },
+        "date": 1778207400932,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 599,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40246.4,
             "unit": "KiB"
           }
         ]
