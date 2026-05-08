@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1778255729776,
+  "lastUpdate": 1778256145113,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "63ffb642230b3ebe632e0a6a3218cc42c20529f9",
-          "message": "Merge pull request #2724 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.104\n\nchore(deps): bump proc-macro2 from 1.0.103 to 1.0.104",
-          "timestamp": "2025-12-28T20:24:42+08:00",
-          "tree_id": "d133ff1f21e3649e0050e3dae67eed84beb52142",
-          "url": "https://github.com/f1shl3gs/vertex/commit/63ffb642230b3ebe632e0a6a3218cc42c20529f9"
-        },
-        "date": 1766925230525,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14980000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 638540,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.495,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d99c4171d46f7d8b9552b83633ad5b2a47d78ce2",
           "message": "Merge pull request #2725 from f1shl3gs/dependabot/cargo/rustls-native-certs-0.8.3\n\nchore(deps): bump rustls-native-certs from 0.8.2 to 0.8.3",
           "timestamp": "2025-12-29T23:25:31+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 54.11,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3494530c9c3152d23298486bdc5dca0f264ea55d",
+          "message": "Merge pull request #2916 from f1shl3gs/dependabot/cargo/tokio-1.52.3\n\nchore(deps): bump tokio from 1.52.2 to 1.52.3",
+          "timestamp": "2026-05-08T23:51:44+08:00",
+          "tree_id": "04526e525ab11ec811317e63bc373372c3a4b0fd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3494530c9c3152d23298486bdc5dca0f264ea55d"
+        },
+        "date": 1778256121040,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7213600,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 776020,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.127,
             "unit": "ns/op"
           }
         ]
