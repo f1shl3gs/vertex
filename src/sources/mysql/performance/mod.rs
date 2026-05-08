@@ -67,9 +67,31 @@ pub struct Config {
     table_lock_waits: bool,
 }
 
-pub async fn collect(conn: &mut Connection, conf: &Config) -> Result<Vec<Metric>, Error> {
-    let version = conn.version();
+async fn check_status(conn: &mut Connection) -> Result<bool, Error> {
+    let mut rows = conn
+        .query("SHOW VARIABLES LIKE 'performance_schema'")
+        .await?;
 
+    let mut status = false;
+    while let Some(mut row) = rows.next().await? {
+        let key = row.get_str();
+        let value = row.get_str();
+
+        if key == "performance_schema" && value == "ON" {
+            status = true
+        }
+    }
+
+    Ok(status)
+}
+
+pub async fn collect(conn: &mut Connection, conf: &Config) -> Result<Vec<Metric>, Error> {
+    if !check_status(conn).await? {
+        debug!(message = "performance_schema is disabled, skip collecting");
+        return Ok(vec![]);
+    }
+
+    let version = conn.version();
     let mut metrics = Vec::new();
 
     if let Some(conf) = &conf.events_statements

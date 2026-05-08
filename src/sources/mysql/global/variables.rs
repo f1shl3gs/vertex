@@ -428,6 +428,7 @@ fn get_desc(key: &str) -> &'static str {
     ];
 
     match GLOBAL_VARIABLE_DESC.binary_search_by_key(&key, |(ik, _)| ik) {
+        // SAFETY: index is guaranteed by `binary_search_by_key`
         Ok(index) => unsafe { GLOBAL_VARIABLE_DESC.get_unchecked(index).1 },
         Err(_) => "Generic gauge metric from SHOW GLOBAL VARIABLES.",
     }

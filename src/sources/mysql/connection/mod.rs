@@ -137,7 +137,7 @@ impl std::fmt::Display for Error {
                 if let Some(state) = state {
                     f.write_fmt(format_args!("{} ({}): {}", code, state, message))
                 } else {
-                    f.write_fmt(format_args!("{} ({})", code, message))
+                    f.write_fmt(format_args!("{}: {}", code, message))
                 }
             }
             Error::InvalidLengthEncoded => f.write_str("invalid length-encoded integer value"),
