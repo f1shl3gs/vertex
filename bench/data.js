@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1778298014435,
+  "lastUpdate": 1778652310834,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0f4b4f2b550cf9e22910e55593dc45e20d6d0881",
-          "message": "Merge pull request #2727 from f1shl3gs/lib/buffer/fix_blocking\n\nlib/buffer: simplify & fix memory channel blocking",
-          "timestamp": "2026-01-02T05:34:22+08:00",
-          "tree_id": "13a2088fc8baf7c9b80d48454fa2902acb79f252",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0f4b4f2b550cf9e22910e55593dc45e20d6d0881"
-        },
-        "date": 1767303381698,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 499970,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 509280,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "042a268d6df1b589a2ac67fcc27a37b2ce5c5674",
+          "message": "Merge pull request #2918 from f1shl3gs/dependabot/cargo/quick-xml-0.40.0\n\nchore(deps): bump quick-xml from 0.39.4 to 0.40.0",
+          "timestamp": "2026-05-13T14:02:35+08:00",
+          "tree_id": "0ffcf12b32e8a9b5a7584230bf86f61158aeeb17",
+          "url": "https://github.com/f1shl3gs/vertex/commit/042a268d6df1b589a2ac67fcc27a37b2ce5c5674"
+        },
+        "date": 1778652288020,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 536430,
             "unit": "ns/op"
           }
         ]
