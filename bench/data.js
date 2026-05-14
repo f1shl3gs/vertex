@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1778652828203,
+  "lastUpdate": 1778758998257,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "43d2006d81d9a9ed5a0be6e17e94fa9c51d6fa0e",
-          "message": "Merge pull request #2728 from f1shl3gs/cargo/upgrade\n\ncargo: upgrade",
-          "timestamp": "2026-01-02T18:07:46+08:00",
-          "tree_id": "a1a46b6f777d81925f9373f940350c5ad136ac9d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/43d2006d81d9a9ed5a0be6e17e94fa9c51d6fa0e"
-        },
-        "date": 1767348617233,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 490000,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 536430,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "149bd384e5b6cce9286ba09b9513c7cbaff16830",
+          "message": "Merge pull request #2919 from f1shl3gs/cargo/update\n\ncargo: update",
+          "timestamp": "2026-05-14T19:40:36+08:00",
+          "tree_id": "fb5ee1827aadb710fc0c5604cb5c08728f79a7db",
+          "url": "https://github.com/f1shl3gs/vertex/commit/149bd384e5b6cce9286ba09b9513c7cbaff16830"
+        },
+        "date": 1778758974502,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 532010,
             "unit": "ns/op"
           }
         ]
