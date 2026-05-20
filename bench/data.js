@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1779263417851,
+  "lastUpdate": 1779263420718,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "1ece04bb7930a6d1ff30705aa3a4b1e6eea78e59",
-          "message": "Merge pull request #2814 from f1shl3gs/lib/event/fix_bench\n\nlib/event: fix bench",
-          "timestamp": "2026-03-01T10:11:02+08:00",
-          "tree_id": "c70450203f76cd55ee5d2d2ced2063b2ef80d267",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1ece04bb7930a6d1ff30705aa3a4b1e6eea78e59"
-        },
-        "date": 1772331191860,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.985,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 99.604,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 171.37,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 168.26,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f5254c410c7f72297b72a77f51fc2bdaa2892dce",
+          "message": "Merge pull request #2922 from f1shl3gs/dependabot/cargo/typetag-0.2.22\n\nchore(deps): bump typetag from 0.2.21 to 0.2.22",
+          "timestamp": "2026-05-20T15:47:40+08:00",
+          "tree_id": "158e67e58c24c67f4c84c01d02a9f3482fe8c376",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f5254c410c7f72297b72a77f51fc2bdaa2892dce"
+        },
+        "date": 1779263392115,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 37.406,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 97.722,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 161.41,
             "unit": "ns/op"
           }
         ]
