@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1779263420718,
+  "lastUpdate": 1779263476321,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1ece04bb7930a6d1ff30705aa3a4b1e6eea78e59",
-          "message": "Merge pull request #2814 from f1shl3gs/lib/event/fix_bench\n\nlib/event: fix bench",
-          "timestamp": "2026-03-01T10:11:02+08:00",
-          "tree_id": "c70450203f76cd55ee5d2d2ced2063b2ef80d267",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1ece04bb7930a6d1ff30705aa3a4b1e6eea78e59"
-        },
-        "date": 1772331207298,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.683,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 165.22,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 318.69,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 667.53,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "23936397bfb91ac555a044269df2a892e24dbf05",
           "message": "Merge pull request #2810 from f1shl3gs/lib/framework/use_cow_for_endpoint_typ_field\n\nlib/framework: use Cow<'static, str> for Endpoint's typ field",
           "timestamp": "2026-03-01T11:21:53+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 719.85,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f5254c410c7f72297b72a77f51fc2bdaa2892dce",
+          "message": "Merge pull request #2922 from f1shl3gs/dependabot/cargo/typetag-0.2.22\n\nchore(deps): bump typetag from 0.2.21 to 0.2.22",
+          "timestamp": "2026-05-20T15:47:40+08:00",
+          "tree_id": "158e67e58c24c67f4c84c01d02a9f3482fe8c376",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f5254c410c7f72297b72a77f51fc2bdaa2892dce"
+        },
+        "date": 1779263451960,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.365,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 175.57,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 344.16,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 690.04,
             "unit": "ns/op"
           }
         ]
