@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1779263485796,
+  "lastUpdate": 1779263862436,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5fe9b975f08c1fda600d4470174dd9498df893e7",
-          "message": "Merge pull request #2729 from f1shl3gs/cargo/update\n\ncargo: update",
-          "timestamp": "2026-01-02T18:27:42+08:00",
-          "tree_id": "46161b2bb00984d372f06e641f13531658d9eef9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5fe9b975f08c1fda600d4470174dd9498df893e7"
-        },
-        "date": 1767350200375,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 14436000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 593530,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.972,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1ece04bb7930a6d1ff30705aa3a4b1e6eea78e59",
           "message": "Merge pull request #2814 from f1shl3gs/lib/event/fix_bench\n\nlib/event: fix bench",
           "timestamp": "2026-03-01T10:11:02+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 53.942,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2c851584a10e442651bdc804f48ffb456ac09903",
+          "message": "Merge pull request #2921 from f1shl3gs/dependabot/cargo/dashmap-6.2.1\n\nchore(deps): bump dashmap from 6.1.0 to 6.2.1",
+          "timestamp": "2026-05-20T15:46:38+08:00",
+          "tree_id": "637c5ad8a5ccb51e4c014a462e7735b04782d651",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2c851584a10e442651bdc804f48ffb456ac09903"
+        },
+        "date": 1779263837284,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7993500,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 803880,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.001,
             "unit": "ns/op"
           }
         ]
