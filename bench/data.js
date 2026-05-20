@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1778936515944,
+  "lastUpdate": 1779263346524,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d844bf104cd85a31afd27114d4639f98c0121390",
-          "message": "Merge pull request #2805 from f1shl3gs/dependabot/cargo/chrono-0.4.44\n\nchore(deps): bump chrono from 0.4.43 to 0.4.44",
-          "timestamp": "2026-02-24T05:00:13+08:00",
-          "tree_id": "16c785157b14c7648bd1f70da762d9e3134f74a8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d844bf104cd85a31afd27114d4639f98c0121390"
-        },
-        "date": 1771880563588,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 526610,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 542670,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2c851584a10e442651bdc804f48ffb456ac09903",
+          "message": "Merge pull request #2921 from f1shl3gs/dependabot/cargo/dashmap-6.2.1\n\nchore(deps): bump dashmap from 6.1.0 to 6.2.1",
+          "timestamp": "2026-05-20T15:46:38+08:00",
+          "tree_id": "637c5ad8a5ccb51e4c014a462e7735b04782d651",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2c851584a10e442651bdc804f48ffb456ac09903"
+        },
+        "date": 1779263323561,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 507480,
             "unit": "ns/op"
           }
         ]
