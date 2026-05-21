@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1779331141441,
+  "lastUpdate": 1779331206003,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a00ffcd763baccabccd90bd55953d712dc06265c",
-          "message": "Merge pull request #2821 from f1shl3gs/dependabot/cargo/tokio-1.50.0\n\nchore(deps): bump tokio from 1.49.0 to 1.50.0",
-          "timestamp": "2026-03-03T20:07:38+08:00",
-          "tree_id": "aa08924b90a3d58ad453e96d9dddb77bbca3bd12",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a00ffcd763baccabccd90bd55953d712dc06265c"
-        },
-        "date": 1772540326119,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 586,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40365.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e7bca2995622e3f6227fdaafdcb5cdefdd8064b1",
           "message": "Merge pull request #2819 from f1shl3gs/sources/node/add_zoneinfo\n\nsources/node: add zoneinfo collector",
           "timestamp": "2026-03-03T20:16:49+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 572,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40171.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "03aa6663c132910ce6559a597d1308eed034f65e",
+          "message": "Merge pull request #2923 from f1shl3gs/dependabot/cargo/mimalloc-0.1.51\n\nchore(deps): bump mimalloc from 0.1.50 to 0.1.51",
+          "timestamp": "2026-05-21T10:29:09+08:00",
+          "tree_id": "34946b0dcffa0316b9d699ab61188a75e206c03d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/03aa6663c132910ce6559a597d1308eed034f65e"
+        },
+        "date": 1779331182790,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 561,
             "unit": "s"
           },
           {
