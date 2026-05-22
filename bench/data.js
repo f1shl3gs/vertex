@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1779433014861,
+  "lastUpdate": 1779433016663,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "02440de246bf6389f7657e45c822947edacffe73",
-          "message": "Merge pull request #2815 from f1shl3gs/sources/haproxy/optimize_read_line_to_speed_up_parsing\n\nsources/haproxy: speed up parsing with read_line",
-          "timestamp": "2026-03-02T14:02:55+08:00",
-          "tree_id": "99fe06bc0beac70814e51bd9b3fc396825a57bb2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/02440de246bf6389f7657e45c822947edacffe73"
-        },
-        "date": 1772431504123,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.028,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 100.29,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 171.32,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 170.71,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "435698eff945e8d2df5ea733c94fb7fad6678eda",
+          "message": "Merge pull request #2924 from f1shl3gs/dependabot/cargo/serde_json-1.0.150\n\nchore(deps): bump serde_json from 1.0.149 to 1.0.150",
+          "timestamp": "2026-05-22T14:54:28+08:00",
+          "tree_id": "15079f48a1ac6acf66f4e747035afb803cefad15",
+          "url": "https://github.com/f1shl3gs/vertex/commit/435698eff945e8d2df5ea733c94fb7fad6678eda"
+        },
+        "date": 1779432992117,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 14.859,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 87.16,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 164.34,
             "unit": "ns/op"
           }
         ]
