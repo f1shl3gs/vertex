@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1779500106872,
+  "lastUpdate": 1779500506325,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7cf66d2420d7299ad9e134921d354a02144ef95e",
-          "message": "Merge pull request #2816 from f1shl3gs/sources/node/add_pcidevice_collector\n\nsources/node: add pcidevice collector",
-          "timestamp": "2026-03-02T23:48:11+08:00",
-          "tree_id": "a3d219ccea69aa6dd14e87a4eed09c0c1bafd665",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7cf66d2420d7299ad9e134921d354a02144ef95e"
-        },
-        "date": 1772467065648,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7692400,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 738470,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.186,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e44dc2f0580009e9e8ce7c07e7e59f270b25d558",
           "message": "Merge pull request #2817 from f1shl3gs/tests/use_ttar_to_manage_node_test_fixtures\n\nmanage node test fixtures with ttar",
           "timestamp": "2026-03-03T01:35:48+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 47.711,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4a800946f3ac71c20414580cbebb3445691e0e6c",
+          "message": "Merge pull request #2925 from f1shl3gs/dependabot/cargo/mimalloc-0.1.52\n\nchore(deps): bump mimalloc from 0.1.51 to 0.1.52",
+          "timestamp": "2026-05-23T09:31:26+08:00",
+          "tree_id": "559d0bf4f20881c84c74cbaa9737a55c7fa715b2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4a800946f3ac71c20414580cbebb3445691e0e6c"
+        },
+        "date": 1779500483087,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7017900,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 844990,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 53.527,
             "unit": "ns/op"
           }
         ]
