@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1779769728259,
+  "lastUpdate": 1779770157029,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e44dc2f0580009e9e8ce7c07e7e59f270b25d558",
-          "message": "Merge pull request #2817 from f1shl3gs/tests/use_ttar_to_manage_node_test_fixtures\n\nmanage node test fixtures with ttar",
-          "timestamp": "2026-03-03T01:35:48+08:00",
-          "tree_id": "fdb5bddb228b55dee01f6265eaa3e65ee95fbc1c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e44dc2f0580009e9e8ce7c07e7e59f270b25d558"
-        },
-        "date": 1772473521649,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7955000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 766870,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.536,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9260ec5a083354608779c8908c2d4c3c0782c89c",
           "message": "Merge pull request #2818 from f1shl3gs/sources/node/restructure\n\nsources/node: simplify & restructure",
           "timestamp": "2026-03-03T13:58:50+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 53.527,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "caff44c89120c0a5040c470e51a85ea757131820",
+          "message": "Merge pull request #2926 from f1shl3gs/dependabot/cargo/http-1.4.1\n\nchore(deps): bump http from 1.4.0 to 1.4.1",
+          "timestamp": "2026-05-26T12:25:18+08:00",
+          "tree_id": "e67f17e958808f366f3bd9ef262f29cb2bf0be6c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/caff44c89120c0a5040c470e51a85ea757131820"
+        },
+        "date": 1779770133769,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7220600,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 847070,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 54.532,
             "unit": "ns/op"
           }
         ]
