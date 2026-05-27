@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1779890594122,
+  "lastUpdate": 1779890624756,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f701b9d908b47aad4fbc402fc1e2278e4dcb4477",
-          "message": "Merge pull request #2825 from f1shl3gs/sources/node/lnstat\n\nsources/node/: add lnstat collector",
-          "timestamp": "2026-03-05T01:50:41+08:00",
-          "tree_id": "fce2c7f7ec7bc8009e2c8b74fe6ccd542e656f76",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f701b9d908b47aad4fbc402fc1e2278e4dcb4477"
-        },
-        "date": 1772647300212,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 578,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40513.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "eeddbd4783ae657d44934ab7da7dcb64da94b2fb",
           "message": "Merge pull request #2826 from f1shl3gs/sources/node/cgroups\n\nsources/node: add cgroups collector",
           "timestamp": "2026-03-05T02:11:36+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 569,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40173.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0158d22864d7f7b7866bb18dab072e95ffe138fd",
+          "message": "Merge pull request #2930 from f1shl3gs/sources/node/fix_infiniband_device_test\n\nsources/node: fix infiniband_devices test",
+          "timestamp": "2026-05-27T21:52:24+08:00",
+          "tree_id": "19ea91e543aa35c4e6fcdf61141eef559ff8c928",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0158d22864d7f7b7866bb18dab072e95ffe138fd"
+        },
+        "date": 1779890601353,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 567,
             "unit": "s"
           },
           {
