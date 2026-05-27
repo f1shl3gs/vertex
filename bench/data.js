@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1779890170902,
+  "lastUpdate": 1779890594122,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a00ffcd763baccabccd90bd55953d712dc06265c",
-          "message": "Merge pull request #2821 from f1shl3gs/dependabot/cargo/tokio-1.50.0\n\nchore(deps): bump tokio from 1.49.0 to 1.50.0",
-          "timestamp": "2026-03-03T20:07:38+08:00",
-          "tree_id": "aa08924b90a3d58ad453e96d9dddb77bbca3bd12",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a00ffcd763baccabccd90bd55953d712dc06265c"
-        },
-        "date": 1772540220271,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7535300,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 777150,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.786,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b39cdc6fdf6795e9c3e8e962c93790a64c09aeb1",
           "message": "Merge pull request #2820 from f1shl3gs/dependabot/cargo/ipnet-2.12.0\n\nchore(deps): bump ipnet from 2.11.0 to 2.12.0",
           "timestamp": "2026-03-03T20:07:26+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 53.653,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0158d22864d7f7b7866bb18dab072e95ffe138fd",
+          "message": "Merge pull request #2930 from f1shl3gs/sources/node/fix_infiniband_device_test\n\nsources/node: fix infiniband_devices test",
+          "timestamp": "2026-05-27T21:52:24+08:00",
+          "tree_id": "19ea91e543aa35c4e6fcdf61141eef559ff8c928",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0158d22864d7f7b7866bb18dab072e95ffe138fd"
+        },
+        "date": 1779890569086,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7688500,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 793520,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.832,
             "unit": "ns/op"
           }
         ]
