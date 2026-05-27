@@ -1110,7 +1110,8 @@ mod tests {
     fn infiniband_devices() {
         let root = PathBuf::from("tests/node/fixtures/sys/class/infiniband");
 
-        let got = parse_infiniband_device(root.join("hfi1_0")).unwrap();
+        let mut got = parse_infiniband_device(root.join("hfi1_0")).unwrap();
+        got.ports.sort_by_key(|port| port.port);
         assert_eq!(
             got,
             InfiniBandDevice {
@@ -1164,7 +1165,8 @@ mod tests {
             }
         );
 
-        let got = parse_infiniband_device(root.join("mlx4_0")).unwrap();
+        let mut got = parse_infiniband_device(root.join("mlx4_0")).unwrap();
+        got.ports.sort_by_key(|port| port.port);
         assert_eq!(
             got,
             InfiniBandDevice {
@@ -1259,7 +1261,8 @@ mod tests {
             }
         );
 
-        let got = parse_infiniband_device(root.join("mlx5_0")).unwrap();
+        let mut got = parse_infiniband_device(root.join("mlx5_0")).unwrap();
+        got.ports.sort_by_key(|port| port.port);
         assert_eq!(
             got,
             InfiniBandDevice {
