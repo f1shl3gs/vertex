@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1779938809978,
+  "lastUpdate": 1779938827902,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e7bca2995622e3f6227fdaafdcb5cdefdd8064b1",
-          "message": "Merge pull request #2819 from f1shl3gs/sources/node/add_zoneinfo\n\nsources/node: add zoneinfo collector",
-          "timestamp": "2026-03-03T20:16:49+08:00",
-          "tree_id": "de37af8b88eb14cf95ac5263a15a4cf9df485354",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e7bca2995622e3f6227fdaafdcb5cdefdd8064b1"
-        },
-        "date": 1772540331142,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.076,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 100.53,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 171.16,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 163.77,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "25d548f2c7028a0dd0c5bd8c9cbaa1755bdc5186",
+          "message": "Merge pull request #2932 from f1shl3gs/dependabot/cargo/hyper-1.10.0\n\nchore(deps): bump hyper from 1.9.0 to 1.10.0",
+          "timestamp": "2026-05-28T11:24:30+08:00",
+          "tree_id": "3b84090f2473bbd344bff6080be841808cc30d79",
+          "url": "https://github.com/f1shl3gs/vertex/commit/25d548f2c7028a0dd0c5bd8c9cbaa1755bdc5186"
+        },
+        "date": 1779938801983,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.162,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 85.605,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 164.12,
             "unit": "ns/op"
           }
         ]
