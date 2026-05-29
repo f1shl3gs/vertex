@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1780016498522,
+  "lastUpdate": 1780016519472,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ff1b7101c1124847b4bfc23520a6439f6a61cd93",
-          "message": "Merge pull request #2822 from f1shl3gs/dependabot/cargo/quote-1.0.45\n\nchore(deps): bump quote from 1.0.44 to 1.0.45",
-          "timestamp": "2026-03-04T13:13:37+08:00",
-          "tree_id": "edc722896887df9bb8c9dcde7c7412a9a93d0f02",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ff1b7101c1124847b4bfc23520a6439f6a61cd93"
-        },
-        "date": 1772601358063,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.665,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 167.62,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 327.11,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 688.91,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "625a6f7062c19654bc39329014a8c181e9d00b1d",
           "message": "Merge pull request #2823 from f1shl3gs/sources/node/add_slabinfo\n\nsources/node: add slabinfo",
           "timestamp": "2026-03-04T22:34:52+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 647.41,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1691ca756ad94ada330b73b6c647a7509898b0c0",
+          "message": "Merge pull request #2933 from f1shl3gs/dependabot/cargo/socket2-0.6.4\n\nchore(deps): bump socket2 from 0.6.3 to 0.6.4",
+          "timestamp": "2026-05-29T08:59:05+08:00",
+          "tree_id": "29bebed7caee51be3a0307e164481e6fae526ecb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1691ca756ad94ada330b73b6c647a7509898b0c0"
+        },
+        "date": 1780016493818,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.447,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 170.05,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 344.09,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 724,
             "unit": "ns/op"
           }
         ]
