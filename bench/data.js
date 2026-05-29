@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1779939320921,
+  "lastUpdate": 1780016494622,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ff1b7101c1124847b4bfc23520a6439f6a61cd93",
-          "message": "Merge pull request #2822 from f1shl3gs/dependabot/cargo/quote-1.0.45\n\nchore(deps): bump quote from 1.0.44 to 1.0.45",
-          "timestamp": "2026-03-04T13:13:37+08:00",
-          "tree_id": "edc722896887df9bb8c9dcde7c7412a9a93d0f02",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ff1b7101c1124847b4bfc23520a6439f6a61cd93"
-        },
-        "date": 1772601339762,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 527930,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 503940,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1691ca756ad94ada330b73b6c647a7509898b0c0",
+          "message": "Merge pull request #2933 from f1shl3gs/dependabot/cargo/socket2-0.6.4\n\nchore(deps): bump socket2 from 0.6.3 to 0.6.4",
+          "timestamp": "2026-05-29T08:59:05+08:00",
+          "tree_id": "29bebed7caee51be3a0307e164481e6fae526ecb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1691ca756ad94ada330b73b6c647a7509898b0c0"
+        },
+        "date": 1780016471408,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 504340,
             "unit": "ns/op"
           }
         ]
