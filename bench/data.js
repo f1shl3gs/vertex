@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1780136128448,
+  "lastUpdate": 1780136540255,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8db37963159df7d03cf9ca98c687b849eaf36023",
-          "message": "Merge pull request #2824 from f1shl3gs/sources/node/add_buddyinfo\n\nsources/node: add buddyinfo collector",
-          "timestamp": "2026-03-05T00:24:24+08:00",
-          "tree_id": "93b07572622459447a4ad819ddf26d468caaae6b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8db37963159df7d03cf9ca98c687b849eaf36023"
-        },
-        "date": 1772642058509,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7443200,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 752640,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.281,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f701b9d908b47aad4fbc402fc1e2278e4dcb4477",
           "message": "Merge pull request #2825 from f1shl3gs/sources/node/lnstat\n\nsources/node/: add lnstat collector",
           "timestamp": "2026-03-05T01:50:41+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.063,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "03be5c88ffc1bbbd0cd04ea20542f49886c30115",
+          "message": "Merge pull request #2935 from f1shl3gs/dependabot/cargo/hyper-1.10.1\n\nchore(deps): bump hyper from 1.10.0 to 1.10.1",
+          "timestamp": "2026-05-30T18:11:47+08:00",
+          "tree_id": "c2607556af225095e02804644c5cf034b458ae00",
+          "url": "https://github.com/f1shl3gs/vertex/commit/03be5c88ffc1bbbd0cd04ea20542f49886c30115"
+        },
+        "date": 1780136515894,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7501500,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 779870,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 53.802,
             "unit": "ns/op"
           }
         ]
