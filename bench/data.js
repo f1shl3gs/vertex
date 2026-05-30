@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1780135130209,
+  "lastUpdate": 1780135218998,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7e3b8e0e3d3492d53ab6b43a81670a192df7e874",
-          "message": "Merge pull request #2828 from f1shl3gs/dependabot/cargo/argh-0.1.15\n\nchore(deps): bump argh from 0.1.14 to 0.1.15",
-          "timestamp": "2026-03-05T13:25:14+08:00",
-          "tree_id": "e57ce3d07508ab403bb0f526438c9ae9f67c987a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7e3b8e0e3d3492d53ab6b43a81670a192df7e874"
-        },
-        "date": 1772688991538,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 594,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40526.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "932f68632761b4354a06a5b7a11063a01b2a5048",
           "message": "Merge pull request #2831 from f1shl3gs/sources/node/interrupts\n\nsources/node: add interrupts collector",
           "timestamp": "2026-03-05T14:44:18+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 553,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40093,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "16a1b4e07cb935ee7ec4f326fac7dda2bdee205f",
+          "message": "Merge pull request #2936 from f1shl3gs/chore/switch_to_assert_matches\n\nchore: switch to assert_matches",
+          "timestamp": "2026-05-30T17:48:52+08:00",
+          "tree_id": "6d4d803e2a75f7e93e8962bb9ab96affb52635b5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/16a1b4e07cb935ee7ec4f326fac7dda2bdee205f"
+        },
+        "date": 1780135195771,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 584,
             "unit": "s"
           },
           {
