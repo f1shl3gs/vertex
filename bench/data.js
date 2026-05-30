@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1780136540255,
+  "lastUpdate": 1780136585320,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "932f68632761b4354a06a5b7a11063a01b2a5048",
-          "message": "Merge pull request #2831 from f1shl3gs/sources/node/interrupts\n\nsources/node: add interrupts collector",
-          "timestamp": "2026-03-05T14:44:18+08:00",
-          "tree_id": "3d6711f0bfadad500fa032f2737e6a5d6097dcca",
-          "url": "https://github.com/f1shl3gs/vertex/commit/932f68632761b4354a06a5b7a11063a01b2a5048"
-        },
-        "date": 1772693736069,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 597,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40546,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "653aa84acd7ffcbeb18ffb263236198d7b2e42b1",
           "message": "Merge pull request #2832 from f1shl3gs/sources/node/ksmd\n\nsources/node: add ksmd collector",
           "timestamp": "2026-03-05T15:54:01+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40093,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "03be5c88ffc1bbbd0cd04ea20542f49886c30115",
+          "message": "Merge pull request #2935 from f1shl3gs/dependabot/cargo/hyper-1.10.1\n\nchore(deps): bump hyper from 1.10.0 to 1.10.1",
+          "timestamp": "2026-05-30T18:11:47+08:00",
+          "tree_id": "c2607556af225095e02804644c5cf034b458ae00",
+          "url": "https://github.com/f1shl3gs/vertex/commit/03be5c88ffc1bbbd0cd04ea20542f49886c30115"
+        },
+        "date": 1780136560100,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 574,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40087.1,
             "unit": "KiB"
           }
         ]
