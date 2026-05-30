@@ -460,7 +460,7 @@ impl Loader for ConfigLoader {
         let mut errs = Vec::new();
         let output = COLLECTOR.replace_all(input, |caps: &Captures<'_>| {
             caps.get(1)
-                .and_then(|s| caps.get(2).map(|k| (s, k)))
+                .zip(caps.get(2))
                 .and_then(|(s, k)| {
                     self.secrets
                         .get(s.as_str())?

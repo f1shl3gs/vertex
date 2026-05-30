@@ -102,9 +102,12 @@ pub async fn collect(conn: &mut Connection) -> Result<Vec<Metric>, Error> {
 
 #[cfg(test)]
 mod tests {
+    use std::assert_matches;
+
+    use event::MetricValue;
+
     use super::*;
     use crate::sources::mysql::connection::mock;
-    use event::MetricValue;
 
     #[tokio::test]
     async fn smoke() {
@@ -176,9 +179,9 @@ mod tests {
         ];
         for (metric, want) in metrics.iter().zip(want.iter()) {
             if want.0 == 1 {
-                assert!(matches!(metric.value(), MetricValue::Sum(got) if *got == want.2));
+                assert_matches!(metric.value(), MetricValue::Sum(got) if *got == want.2);
             } else {
-                assert!(matches!(metric.value(), MetricValue::Gauge(got) if *got == want.2));
+                assert_matches!(metric.value(), MetricValue::Gauge(got) if *got == want.2);
             }
         }
     }

@@ -433,33 +433,33 @@ async fn run_test(_params: TestParams) -> TestResults {
         .collect::<HashMap<_, _>>();
 
     // Ensure basic statistics are captured, don't actually examine them
-    assert!(matches!(
+    assert_matches!(
         metrics
             .get("adaptive_concurrency_observed_rtt")
             .unwrap()
             .value(),
         &MetricValue::Histogram { .. }
-    ));
-    assert!(matches!(
+    );
+    assert_matches!(
         metrics
             .get("adaptive_concurrency_averaged_rtt")
             .unwrap()
             .value(),
         &MetricValue::Histogram { .. }
-    ));
+    );
     if params.concurrency == Concurrency::Adaptive {
-        assert!(matches!(
+        assert_matches!(
             metrics.get("adaptive_concurrency_limit").unwrap().value(),
             &MetricValue::Histogram { .. }
-        ));
+        );
     }
-    assert!(matches!(
+    assert_matches!(
         metrics
             .get("adaptive_concurrency_inflight")
             .unwrap()
             .value(),
         &MetricValue::Histogram { .. }
-    ));
+    );
 
     TestResults { stats, cstats }*/
 }

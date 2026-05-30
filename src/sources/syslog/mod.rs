@@ -119,6 +119,8 @@ fn enrich_syslog_log(
 
 #[cfg(test)]
 mod tests {
+    use std::assert_matches;
+
     use bytes::Bytes;
     use chrono::{DateTime, Datelike, NaiveDate, TimeZone};
     use codecs::decoding::SyslogDeserializer;
@@ -141,7 +143,7 @@ tcp:
 "#;
         let config: Config = serde_yaml::from_str(text).unwrap();
 
-        assert!(matches!(config.mode, Mode::Tcp { .. }));
+        assert_matches!(config.mode, Mode::Tcp { .. });
     }
 
     fn event_from_bytes(host_key: &str, bytes: Bytes) -> Option<LogRecord> {

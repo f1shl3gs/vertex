@@ -95,10 +95,13 @@ fn get_error_reason(body: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use std::assert_matches;
+
     use bytes::Bytes;
     use event::EventStatus;
     use http::Response;
+
+    use super::*;
 
     #[test]
     fn error_response() {
@@ -109,7 +112,7 @@ mod tests {
             .unwrap();
 
         let logic = ElasticsearchRetryLogic;
-        assert!(matches!(
+        assert_matches!(
             logic.should_retry_resp(&ElasticsearchResponse {
                 http_response: resp,
                 event_status: EventStatus::Rejected,
@@ -117,7 +120,7 @@ mod tests {
                 events_byte_size: 1,
             }),
             RetryAction::DontRetry(_)
-        ))
+        )
     }
 
     #[test]

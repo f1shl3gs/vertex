@@ -171,6 +171,8 @@ where
 
 #[cfg(test)]
 mod tests {
+    use std::assert_matches;
+
     use event::log::parse_value_path;
 
     use super::*;
@@ -252,7 +254,7 @@ timestamp_format: unix
             let encoding = serde_yaml::from_str::<EncodingConfig>(input).unwrap();
             let serializer = encoding.config();
 
-            assert!(matches!(serializer, config));
+            assert_matches!(serializer, config);
             let got = encoding.transformer();
             assert_eq!(got, want)
         }
@@ -291,8 +293,8 @@ encoding:
             let encoding = serde_yaml::from_str::<EncodingConfigWithFraming>(input).unwrap();
             let (got_framing, serializer) = encoding.config();
 
-            assert!(matches!(got_framing, framing));
-            assert!(matches!(serializer, config));
+            assert_matches!(got_framing, framing);
+            assert_matches!(serializer, config);
             assert_eq!(encoding.transformer(), transformer)
         }
     }

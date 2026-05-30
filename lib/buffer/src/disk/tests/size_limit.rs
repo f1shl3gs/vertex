@@ -1,3 +1,4 @@
+use std::assert_matches;
 use std::fs::OpenOptions;
 use std::path::PathBuf;
 
@@ -27,13 +28,13 @@ async fn writer_error_when_record_is_over_the_record_limit() {
 
         let msg = Message::new(100);
         let result = tx.write(msg).await;
-        assert!(matches!(
+        assert_matches!(
             result,
             Err(Error::RecordTooLarge {
                 limit,
                 size
             }) if limit == 100 && size == 116
-        ));
+        );
     })
     .await
 }

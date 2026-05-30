@@ -72,8 +72,11 @@ pub fn encrypt(password: &[u8], key: &[u8]) -> Result<Vec<u8>, Error> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use std::assert_matches;
+
     use base64::{Engine, engine::general_purpose::STANDARD};
+
+    use super::*;
 
     const MOD_BYTES: usize = 256;
 
@@ -104,10 +107,10 @@ mod tests {
         let encoded = STANDARD.encode(pkcs1);
         let pem =
             format!("-----BEGIN RSA PUBLIC KEY-----\n{encoded}\n-----END RSA PUBLIC KEY-----\n");
-        assert!(matches!(
+        assert_matches!(
             encrypt(b"p", pem.as_bytes()),
             Err(Error::InvalidPublicKey(_))
-        ));
+        );
     }
 
     #[test]
@@ -119,10 +122,10 @@ mod tests {
         let encoded = STANDARD.encode(pkcs1);
         let pem =
             format!("-----BEGIN RSA PUBLIC KEY-----\n{encoded}\n-----END RSA PUBLIC KEY-----\n");
-        assert!(matches!(
+        assert_matches!(
             encrypt(b"p", pem.as_bytes()),
             Err(Error::InvalidPublicKey(_))
-        ));
+        );
     }
 
     #[test]
@@ -133,10 +136,10 @@ mod tests {
         let encoded = STANDARD.encode(pkcs1);
         let pem =
             format!("-----BEGIN RSA PUBLIC KEY-----\n{encoded}\n-----END RSA PUBLIC KEY-----\n");
-        assert!(matches!(
+        assert_matches!(
             encrypt(b"p", pem.as_bytes()),
             Err(Error::InvalidPublicKey(_))
-        ));
+        );
     }
 
     #[derive(Clone, Copy)]

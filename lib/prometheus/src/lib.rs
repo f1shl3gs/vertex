@@ -328,6 +328,8 @@ impl MetricGroupSet {
 
 #[cfg(test)]
 mod tests {
+    use std::assert_matches;
+
     use super::*;
     use crate::Error;
 
@@ -343,7 +345,7 @@ mod tests {
 
         let value = f64::NAN;
         let error = try_f64_to_u32(value).unwrap_err();
-        assert!(matches!(error, Error::ValueOutOfRange (value) if value.is_nan()));
+        assert_matches!(error, Error::ValueOutOfRange (value) if value.is_nan());
 
         let value = f64::INFINITY;
         let error = try_f64_to_u32(value).unwrap_err();

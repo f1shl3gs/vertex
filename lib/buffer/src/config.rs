@@ -277,6 +277,8 @@ impl BufferConfig {
 
 #[cfg(test)]
 mod tests {
+    use std::assert_matches;
+
     use super::*;
 
     #[test]
@@ -288,7 +290,7 @@ max_size: 16 mi
         let config = serde_yaml::from_str::<BufferConfig>(simple).unwrap();
         assert_eq!(config.max_size, 16 * 1024 * 1024);
         assert_eq!(config.when_full, WhenFull::default());
-        assert!(matches!(config.typ, BufferType::Memory));
+        assert_matches!(config.typ, BufferType::Memory);
 
         let simple_with_mode = r"
 max_size: 16 mi
@@ -298,7 +300,7 @@ when_full: drop_newest
         let config = serde_yaml::from_str::<BufferConfig>(simple_with_mode).unwrap();
         assert_eq!(config.max_size, 16 * 1024 * 1024);
         assert_eq!(config.when_full, WhenFull::DropNewest);
-        assert!(matches!(config.typ, BufferType::Memory if config.max_size == 16 * 1024 * 1024));
+        assert_matches!(config.typ, BufferType::Memory if config.max_size == 16 * 1024 * 1024);
 
         let custom_disk = r"
         max_size: 16 gib
@@ -308,9 +310,9 @@ when_full: drop_newest
         let config = serde_yaml::from_str::<BufferConfig>(custom_disk).unwrap();
         assert_eq!(config.max_size, 16 * 1024 * 1024 * 1024);
         assert_eq!(config.when_full, WhenFull::default());
-        assert!(matches!(
+        assert_matches!(
             config.typ,
             BufferType::Disk { max_chunk_size, .. } if max_chunk_size == 256 * 1024 * 1024,
-        ));
+        );
     }
 }

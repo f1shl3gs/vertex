@@ -283,6 +283,8 @@ impl Metricalize {
 
 #[cfg(test)]
 mod tests {
+    use std::assert_matches;
+
     use event::log::path::parse_target_path;
     use event::{Bucket, LogRecord, tags};
     use value::value;
@@ -472,7 +474,7 @@ mod tests {
             for (got, (want_name, want_tags, want_value)) in output.iter().zip(wants) {
                 assert_eq!(got.name(), want_name, "case: {test}");
                 assert_eq!(got.tags(), &want_tags, "case: {test}");
-                assert!(matches!(&got.value, want_value), "case: {test}");
+                assert_matches!(&got.value, want_value, "case: {test}");
             }
         }
     }
