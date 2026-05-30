@@ -116,6 +116,8 @@ pub mod ser_de {
 
 #[cfg(test)]
 mod tests {
+    use std::assert_matches;
+
     use chrono_tz::Tz;
 
     use super::TimeZone;
@@ -126,6 +128,6 @@ mod tests {
         let input = r#"CET"#;
 
         let tz: TimeZone = serde_yaml::from_str(input).unwrap();
-        assert!(matches!(tz, TimeZone::Named(got) if got == want ));
+        assert_matches!(tz, TimeZone::Named(got) if got == want );
     }
 }

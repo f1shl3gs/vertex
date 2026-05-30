@@ -371,6 +371,8 @@ impl SinkConfig for Config {
 
 #[cfg(test)]
 mod tests {
+    use std::assert_matches;
+
     use super::*;
 
     #[test]
@@ -395,7 +397,7 @@ data_stream:
         )
         .unwrap();
 
-        assert!(matches!(config.mode, ElasticsearchMode::DataStream));
+        assert_matches!(config.mode, ElasticsearchMode::DataStream);
         assert!(config.data_stream.is_some())
     }
 }

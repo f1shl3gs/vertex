@@ -521,6 +521,7 @@ where
 
 #[cfg(test)]
 mod tests {
+    use std::assert_matches;
     use std::convert::Infallible;
     use std::io::Error;
     use std::sync::atomic::{AtomicUsize, Ordering};
@@ -638,18 +639,15 @@ mod tests {
 
         let mut cx = Context::from_waker(noop_waker_ref());
         for item in 1..=3 {
-            assert!(matches!(
-                sink.poll_ready_unpin(&mut cx),
-                Poll::Ready(Ok(()))
-            ));
-            assert!(matches!(
+            assert_matches!(sink.poll_ready_unpin(&mut cx), Poll::Ready(Ok(())));
+            assert_matches!(
                 sink.start_send_unpin(Request::encoded(item, &ack_counter)),
                 Ok(())
-            ));
+            );
         }
 
         // Clear internal buffer
-        assert!(matches!(sink.poll_flush_unpin(&mut cx), Poll::Pending));
+        assert_matches!(sink.poll_flush_unpin(&mut cx), Poll::Pending);
         assert_eq!(ack_counter.load(Ordering::Relaxed), 0);
 
         yield_now().await;
@@ -657,35 +655,29 @@ mod tests {
         yield_now().await;
 
         for _ in 1..=3 {
-            assert!(matches!(
-                sink.poll_flush_unpin(&mut cx),
-                Poll::Ready(Ok(()))
-            ));
+            assert_matches!(sink.poll_flush_unpin(&mut cx), Poll::Ready(Ok(())));
         }
 
         // Events 1,2,3 should have been acked at this point.
         assert_eq!(ack_counter.load(Ordering::Relaxed), 6);
 
         for item in 4..=6 {
-            assert!(matches!(
-                sink.poll_ready_unpin(&mut cx),
-                Poll::Ready(Ok(()))
-            ));
-            assert!(matches!(
+            assert_matches!(sink.poll_ready_unpin(&mut cx), Poll::Ready(Ok(())));
+            assert_matches!(
                 sink.start_send_unpin(Request::encoded(item, &ack_counter)),
                 Ok(())
-            ));
+            );
         }
 
         // Clear internal buffer
-        assert!(matches!(sink.poll_flush_unpin(&mut cx), Poll::Pending));
+        assert_matches!(sink.poll_flush_unpin(&mut cx), Poll::Pending);
         assert_eq!(ack_counter.load(Ordering::Relaxed), 6);
 
         yield_now().await;
         advance_time(Duration::from_secs(2)).await;
         yield_now().await;
 
-        assert!(matches!(sink.poll_flush_unpin(&mut cx), Poll::Pending));
+        assert_matches!(sink.poll_flush_unpin(&mut cx), Poll::Pending);
 
         // Check that events 1-3,5,6 have been acked
         assert_eq!(ack_counter.load(Ordering::Relaxed), 17);
@@ -695,10 +687,7 @@ mod tests {
         yield_now().await;
 
         for _ in 4..=6 {
-            assert!(matches!(
-                sink.poll_flush_unpin(&mut cx),
-                Poll::Ready(Ok(()))
-            ));
+            assert_matches!(sink.poll_flush_unpin(&mut cx), Poll::Ready(Ok(())));
         }
 
         assert_eq!(ack_counter.load(Ordering::Relaxed), 21);
@@ -754,22 +743,10 @@ mod tests {
         let mut buffered = BatchSink::new(svc, VecBuffer::new(batch_settings.size), TIMEOUT);
 
         let mut cx = Context::from_waker(noop_waker_ref());
-        assert!(matches!(
-            buffered.poll_ready_unpin(&mut cx),
-            Poll::Ready(Ok(()))
-        ));
-        assert!(matches!(
-            buffered.start_send_unpin(EncodedEvent::new(0, 0)),
-            Ok(())
-        ));
-        assert!(matches!(
-            buffered.poll_ready_unpin(&mut cx),
-            Poll::Ready(Ok(()))
-        ));
-        assert!(matches!(
-            buffered.start_send_unpin(EncodedEvent::new(1, 0)),
-            Ok(())
-        ));
+        assert_matches!(buffered.poll_ready_unpin(&mut cx), Poll::Ready(Ok(())));
+        assert_matches!(buffered.start_send_unpin(EncodedEvent::new(0, 0)), Ok(()));
+        assert_matches!(buffered.poll_ready_unpin(&mut cx), Poll::Ready(Ok(())));
+        assert_matches!(buffered.start_send_unpin(EncodedEvent::new(1, 0)), Ok(()));
 
         buffered.close().await.unwrap();
 
@@ -793,22 +770,10 @@ mod tests {
         let mut buffered = BatchSink::new(svc, VecBuffer::new(batch_settings.size), TIMEOUT);
 
         let mut cx = Context::from_waker(noop_waker_ref());
-        assert!(matches!(
-            buffered.poll_ready_unpin(&mut cx),
-            Poll::Ready(Ok(()))
-        ));
-        assert!(matches!(
-            buffered.start_send_unpin(EncodedEvent::new(0, 0)),
-            Ok(())
-        ));
-        assert!(matches!(
-            buffered.poll_ready_unpin(&mut cx),
-            Poll::Ready(Ok(()))
-        ));
-        assert!(matches!(
-            buffered.start_send_unpin(EncodedEvent::new(1, 0)),
-            Ok(())
-        ));
+        assert_matches!(buffered.poll_ready_unpin(&mut cx), Poll::Ready(Ok(())));
+        assert_matches!(buffered.start_send_unpin(EncodedEvent::new(0, 0)), Ok(()));
+        assert_matches!(buffered.poll_ready_unpin(&mut cx), Poll::Ready(Ok(())));
+        assert_matches!(buffered.start_send_unpin(EncodedEvent::new(1, 0)), Ok(()));
 
         // Move clock forward by linger timeout + 1 sec
         advance_time(TIMEOUT + Duration::from_secs(1)).await;
@@ -932,15 +897,9 @@ mod tests {
         let mut sink = PartitionBatchSink::new(svc, VecBuffer::new(batch_settings.size), TIMEOUT);
 
         let mut cx = Context::from_waker(noop_waker_ref());
-        assert!(matches!(
-            sink.poll_ready_unpin(&mut cx),
-            Poll::Ready(Ok(()))
-        ));
-        assert!(matches!(
-            sink.start_send_unpin(EncodedEvent::new(1, 0)),
-            Ok(())
-        ));
-        assert!(matches!(sink.poll_flush_unpin(&mut cx), Poll::Pending));
+        assert_matches!(sink.poll_ready_unpin(&mut cx), Poll::Ready(Ok(())));
+        assert_matches!(sink.start_send_unpin(EncodedEvent::new(1, 0)), Ok(()));
+        assert_matches!(sink.poll_flush_unpin(&mut cx), Poll::Pending);
 
         advance_time(TIMEOUT + Duration::from_secs(1)).await;
 
@@ -987,9 +946,9 @@ mod tests {
         assert_eq!(ack_counter.load(Ordering::Relaxed), 0);
 
         let mut cx = Context::from_waker(noop_waker_ref());
-        assert!(matches!(fut1.poll_unpin(&mut cx), Poll::Ready(())));
-        assert!(matches!(fut2.poll_unpin(&mut cx), Poll::Ready(())));
-        assert!(matches!(sink.poll_complete(&mut cx), Poll::Ready(())));
+        assert_matches!(fut1.poll_unpin(&mut cx), Poll::Ready(()));
+        assert_matches!(fut2.poll_unpin(&mut cx), Poll::Ready(()));
+        assert_matches!(sink.poll_complete(&mut cx), Poll::Ready(()));
 
         yield_now().await;
         assert_eq!(ack_counter.load(Ordering::Relaxed), 3);
@@ -999,9 +958,9 @@ mod tests {
         let mut fut4 = sink.call(req(4));
 
         // make sure they all "worked"
-        assert!(matches!(fut3.poll_unpin(&mut cx), Poll::Ready(())));
-        assert!(matches!(fut4.poll_unpin(&mut cx), Poll::Ready(())));
-        assert!(matches!(sink.poll_complete(&mut cx), Poll::Ready(())));
+        assert_matches!(fut3.poll_unpin(&mut cx), Poll::Ready(()));
+        assert_matches!(fut4.poll_unpin(&mut cx), Poll::Ready(()));
+        assert_matches!(sink.poll_complete(&mut cx), Poll::Ready(()));
 
         yield_now().await;
         assert_eq!(ack_counter.load(Ordering::Relaxed), 7);

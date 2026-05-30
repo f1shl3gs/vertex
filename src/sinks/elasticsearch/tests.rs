@@ -1,3 +1,5 @@
+use std::assert_matches;
+
 use chrono::{TimeZone, Utc};
 use codecs::encoding::Transformer;
 use event::LogRecord;
@@ -169,7 +171,7 @@ async fn decode_bulk_action() {
         "message": "hi there",
     }));
     let action = es.mode.bulk_action(&log).unwrap();
-    assert!(matches!(action, BulkAction::Create))
+    assert_matches!(action, BulkAction::Create)
 }
 
 #[tokio::test]

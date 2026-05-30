@@ -12,6 +12,7 @@ use tower::timeout::error::Elapsed;
 
 use crate::Error;
 
+#[derive(Debug)]
 pub enum RetryAction {
     /// Indicate that this request should be retried with a reason
     Retry(Cow<'static, str>),

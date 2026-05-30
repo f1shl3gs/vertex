@@ -64,6 +64,8 @@ fn xor_in_place(left: &mut [u8], right: &[u8]) {
 
 #[cfg(test)]
 mod tests {
+    use std::assert_matches;
+
     use super::*;
 
     /// Inverse of `encode_with_seed`, used only for round-trip tests.
@@ -130,10 +132,10 @@ mod tests {
         let seed = [0u8; SHA1_LEN];
         let k = 64;
         let too_long = vec![0u8; k - 2 * SHA1_LEN - 1];
-        assert!(matches!(
+        assert_matches!(
             encode_with_seed(&too_long, k, seed),
             Err(Error::MessageTooLong)
-        ));
+        );
     }
 
     #[test]

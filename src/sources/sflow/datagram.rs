@@ -2020,6 +2020,8 @@ impl Datagram {
 
 #[cfg(test)]
 mod tests {
+    use std::assert_matches;
+
     use super::*;
 
     #[test]
@@ -2178,7 +2180,7 @@ mod tests {
             SampleData::Drop { records, .. } => {
                 assert_eq!(records.len(), 1);
 
-                assert!(matches!(records[0], FlowRecord::EgressQueue { queue } if queue == 42))
+                assert_matches!(records[0], FlowRecord::EgressQueue { queue } if queue == 42)
             }
             _ => panic!(),
         }

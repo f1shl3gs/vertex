@@ -256,6 +256,8 @@ pub fn get_lenenc(buf: &[u8], pos: &mut usize) -> Result<u64, Error> {
 
 #[cfg(test)]
 mod tests {
+    use std::assert_matches;
+
     use super::*;
 
     const SERVER_STATUS_AUTOCOMMIT: u16 = 2;
@@ -296,10 +298,7 @@ mod tests {
             assert_eq!(got, want);
         }
 
-        assert!(matches!(
-            OkPacket::deserialize(b"\x00\x00\x00\x01"),
-            Err(Error::Eof)
-        ));
+        assert_matches!(OkPacket::deserialize(b"\x00\x00\x00\x01"), Err(Error::Eof));
     }
 
     #[test]
