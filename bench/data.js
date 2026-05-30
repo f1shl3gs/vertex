@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1780017983099,
+  "lastUpdate": 1780134684021,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "625a6f7062c19654bc39329014a8c181e9d00b1d",
-          "message": "Merge pull request #2823 from f1shl3gs/sources/node/add_slabinfo\n\nsources/node: add slabinfo",
-          "timestamp": "2026-03-04T22:34:52+08:00",
-          "tree_id": "f56c6dca11f262b7e7dba44a56b2b3852bfc5f67",
-          "url": "https://github.com/f1shl3gs/vertex/commit/625a6f7062c19654bc39329014a8c181e9d00b1d"
-        },
-        "date": 1772635016803,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 527420,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 504340,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "16a1b4e07cb935ee7ec4f326fac7dda2bdee205f",
+          "message": "Merge pull request #2936 from f1shl3gs/chore/switch_to_assert_matches\n\nchore: switch to assert_matches",
+          "timestamp": "2026-05-30T17:48:52+08:00",
+          "tree_id": "6d4d803e2a75f7e93e8962bb9ab96affb52635b5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/16a1b4e07cb935ee7ec4f326fac7dda2bdee205f"
+        },
+        "date": 1780134655434,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 495750,
             "unit": "ns/op"
           }
         ]
