@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1780136585320,
+  "lastUpdate": 1780401475790,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f701b9d908b47aad4fbc402fc1e2278e4dcb4477",
-          "message": "Merge pull request #2825 from f1shl3gs/sources/node/lnstat\n\nsources/node/: add lnstat collector",
-          "timestamp": "2026-03-05T01:50:41+08:00",
-          "tree_id": "fce2c7f7ec7bc8009e2c8b74fe6ccd542e656f76",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f701b9d908b47aad4fbc402fc1e2278e4dcb4477"
-        },
-        "date": 1772646774466,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 524240,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 498010,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "79c4cea6bcf0d83690caad707b0d2271ca49c8eb",
+          "message": "Merge pull request #2937 from f1shl3gs/dependabot/cargo/rustls-native-certs-0.8.4\n\nchore(deps): bump rustls-native-certs from 0.8.3 to 0.8.4",
+          "timestamp": "2026-06-02T19:55:26+08:00",
+          "tree_id": "fcb5e7f9d5a0b979a37226786b2bd89086383633",
+          "url": "https://github.com/f1shl3gs/vertex/commit/79c4cea6bcf0d83690caad707b0d2271ca49c8eb"
+        },
+        "date": 1780401452537,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 501050,
             "unit": "ns/op"
           }
         ]
