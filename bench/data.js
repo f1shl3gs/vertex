@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1780401489853,
+  "lastUpdate": 1780401510784,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f701b9d908b47aad4fbc402fc1e2278e4dcb4477",
-          "message": "Merge pull request #2825 from f1shl3gs/sources/node/lnstat\n\nsources/node/: add lnstat collector",
-          "timestamp": "2026-03-05T01:50:41+08:00",
-          "tree_id": "fce2c7f7ec7bc8009e2c8b74fe6ccd542e656f76",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f701b9d908b47aad4fbc402fc1e2278e4dcb4477"
-        },
-        "date": 1772646795831,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.675,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 167.06,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 320.93,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 716.05,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "eeddbd4783ae657d44934ab7da7dcb64da94b2fb",
           "message": "Merge pull request #2826 from f1shl3gs/sources/node/cgroups\n\nsources/node: add cgroups collector",
           "timestamp": "2026-03-05T02:11:36+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 740.47,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "79c4cea6bcf0d83690caad707b0d2271ca49c8eb",
+          "message": "Merge pull request #2937 from f1shl3gs/dependabot/cargo/rustls-native-certs-0.8.4\n\nchore(deps): bump rustls-native-certs from 0.8.3 to 0.8.4",
+          "timestamp": "2026-06-02T19:55:26+08:00",
+          "tree_id": "fcb5e7f9d5a0b979a37226786b2bd89086383633",
+          "url": "https://github.com/f1shl3gs/vertex/commit/79c4cea6bcf0d83690caad707b0d2271ca49c8eb"
+        },
+        "date": 1780401484759,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.54,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 169.85,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 322.8,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 691.54,
             "unit": "ns/op"
           }
         ]
