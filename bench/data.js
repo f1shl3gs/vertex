@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1780644930246,
+  "lastUpdate": 1780644932710,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "eeddbd4783ae657d44934ab7da7dcb64da94b2fb",
-          "message": "Merge pull request #2826 from f1shl3gs/sources/node/cgroups\n\nsources/node: add cgroups collector",
-          "timestamp": "2026-03-05T02:11:36+08:00",
-          "tree_id": "8bfc60493612b223cec24a348ba41890e7ec7599",
-          "url": "https://github.com/f1shl3gs/vertex/commit/eeddbd4783ae657d44934ab7da7dcb64da94b2fb"
-        },
-        "date": 1772648033492,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.025,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 100.15,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 172.75,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 162.45,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c4fc9fc2e3b5046628b91c6ee2f95bf6513f1c8d",
+          "message": "Merge pull request #2938 from f1shl3gs/dependabot/cargo/chrono-0.4.45\n\nchore(deps): bump chrono from 0.4.44 to 0.4.45",
+          "timestamp": "2026-06-05T15:32:38+08:00",
+          "tree_id": "beef8cf508d6c42f5f2cd1ee403e1baa8dcb1557",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c4fc9fc2e3b5046628b91c6ee2f95bf6513f1c8d"
+        },
+        "date": 1780644908807,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.929,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 91.1,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 169.88,
             "unit": "ns/op"
           }
         ]
