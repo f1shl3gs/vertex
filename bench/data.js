@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1780981286153,
+  "lastUpdate": 1780981326288,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ecac551549f199eb86591ba3a2f3ca541611c0dc",
-          "message": "Merge pull request #2834 from f1shl3gs/sources/mysqld/remove_unnecessary_path\n\nsources/mysqld: remove unnecessary path",
-          "timestamp": "2026-03-05T23:50:41+08:00",
-          "tree_id": "2d2bbd5e6b597fa3d6e7095aa977097c74754708",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ecac551549f199eb86591ba3a2f3ca541611c0dc"
-        },
-        "date": 1772726515113,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 588,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40565.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "654ec36c0dab4b049c80809022520fc2f958d3d3",
           "message": "Merge pull request #2835 from f1shl3gs/dependabot/github_actions/docker/build-push-action-7\n\nchore(ci): bump docker/build-push-action from 6 to 7",
           "timestamp": "2026-03-06T11:36:06+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40090.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0ad784b05097e414d59cfa689315600bbb079c50",
+          "message": "Merge pull request #2939 from f1shl3gs/dependabot/cargo/prost-b2daf72eba\n\nchore(deps): bump the prost group with 3 updates",
+          "timestamp": "2026-06-09T12:50:52+08:00",
+          "tree_id": "4e8809618423411c85a37a5d4c2ef518319f0f3c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0ad784b05097e414d59cfa689315600bbb079c50"
+        },
+        "date": 1780981303131,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 567,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40090.6,
             "unit": "KiB"
           }
         ]
