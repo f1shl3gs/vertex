@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1780980818222,
+  "lastUpdate": 1780980827785,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e43dc5a22b787c54aa03f2f7aa68bebe023397dc",
-          "message": "Merge pull request #2829 from f1shl3gs/ci/tests/timeout\n\nci/tests: add timeout for tests",
-          "timestamp": "2026-03-05T12:15:59+08:00",
-          "tree_id": "e85ecb1afe00f8a95870eba8bf2f2f6f40adc2ec",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e43dc5a22b787c54aa03f2f7aa68bebe023397dc"
-        },
-        "date": 1772684307780,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.642,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 179.57,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 324.47,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 676.52,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e8c42ddd4ea1195549c00227896b10488f8590ef",
           "message": "Merge pull request #2830 from f1shl3gs/deps/humanize/bump_to_latest\n\ndeps/humanize: bump to latest version",
           "timestamp": "2026-03-05T12:23:55+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 722.81,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0ad784b05097e414d59cfa689315600bbb079c50",
+          "message": "Merge pull request #2939 from f1shl3gs/dependabot/cargo/prost-b2daf72eba\n\nchore(deps): bump the prost group with 3 updates",
+          "timestamp": "2026-06-09T12:50:52+08:00",
+          "tree_id": "4e8809618423411c85a37a5d4c2ef518319f0f3c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0ad784b05097e414d59cfa689315600bbb079c50"
+        },
+        "date": 1780980804561,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.744,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 176.7,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 348.73,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 732.81,
             "unit": "ns/op"
           }
         ]
