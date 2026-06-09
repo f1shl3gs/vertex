@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1780981068787,
+  "lastUpdate": 1780981286153,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e43dc5a22b787c54aa03f2f7aa68bebe023397dc",
-          "message": "Merge pull request #2829 from f1shl3gs/ci/tests/timeout\n\nci/tests: add timeout for tests",
-          "timestamp": "2026-03-05T12:15:59+08:00",
-          "tree_id": "e85ecb1afe00f8a95870eba8bf2f2f6f40adc2ec",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e43dc5a22b787c54aa03f2f7aa68bebe023397dc"
-        },
-        "date": 1772684740832,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7679900,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 769440,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 61.965,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e8c42ddd4ea1195549c00227896b10488f8590ef",
           "message": "Merge pull request #2830 from f1shl3gs/deps/humanize/bump_to_latest\n\ndeps/humanize: bump to latest version",
           "timestamp": "2026-03-05T12:23:55+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 57.185,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0ad784b05097e414d59cfa689315600bbb079c50",
+          "message": "Merge pull request #2939 from f1shl3gs/dependabot/cargo/prost-b2daf72eba\n\nchore(deps): bump the prost group with 3 updates",
+          "timestamp": "2026-06-09T12:50:52+08:00",
+          "tree_id": "4e8809618423411c85a37a5d4c2ef518319f0f3c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0ad784b05097e414d59cfa689315600bbb079c50"
+        },
+        "date": 1780981262622,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7649300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 757020,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 53.288,
             "unit": "ns/op"
           }
         ]
