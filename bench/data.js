@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1780982313768,
+  "lastUpdate": 1780982385158,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "84accf8705ffb1e9100a62788f02687b105900d0",
-          "message": "Merge pull request #2836 from f1shl3gs/dependabot/cargo/argh-0.1.16\n\nchore(deps): bump argh from 0.1.15 to 0.1.16",
-          "timestamp": "2026-03-06T12:24:46+08:00",
-          "tree_id": "250bf221ed51ef93b5d1eaccb2f9c8a4b794ebb2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/84accf8705ffb1e9100a62788f02687b105900d0"
-        },
-        "date": 1772771766360,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 589,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40565.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1c6e150bcca39b6887ad25984e8a5d6d6918b96e",
           "message": "Merge pull request #2837 from f1shl3gs/toolchain/1.94.0\n\ntoolchain: bump to 1.94.0",
           "timestamp": "2026-03-06T13:58:11+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40091.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e8fe7915a6543dac02bbb66353247b3f641d6d6b",
+          "message": "Merge pull request #2940 from f1shl3gs/dependabot/cargo/thrift-0.23.0\n\nchore(deps): bump thrift from 0.17.0 to 0.23.0",
+          "timestamp": "2026-06-09T13:07:39+08:00",
+          "tree_id": "dc947d9e3d0d4352dea83079893200ab7cdab4c2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e8fe7915a6543dac02bbb66353247b3f641d6d6b"
+        },
+        "date": 1780982361800,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 613,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40096.5,
             "unit": "KiB"
           }
         ]
