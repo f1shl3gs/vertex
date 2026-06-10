@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1780982385158,
+  "lastUpdate": 1781053950151,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "932f68632761b4354a06a5b7a11063a01b2a5048",
-          "message": "Merge pull request #2831 from f1shl3gs/sources/node/interrupts\n\nsources/node: add interrupts collector",
-          "timestamp": "2026-03-05T14:44:18+08:00",
-          "tree_id": "3d6711f0bfadad500fa032f2737e6a5d6097dcca",
-          "url": "https://github.com/f1shl3gs/vertex/commit/932f68632761b4354a06a5b7a11063a01b2a5048"
-        },
-        "date": 1772693191952,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 498800,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 533650,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7c0967681d7a8e6b9a0a5942a8b46d5874ad9e52",
+          "message": "Merge pull request #2942 from f1shl3gs/dependabot/cargo/regex-1.12.4\n\nchore(deps): bump regex from 1.12.3 to 1.12.4",
+          "timestamp": "2026-06-10T09:09:52+08:00",
+          "tree_id": "25669efddedf8be2c9c662fc180b5f554c12e5e8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7c0967681d7a8e6b9a0a5942a8b46d5874ad9e52"
+        },
+        "date": 1781053924520,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 531060,
             "unit": "ns/op"
           }
         ]
