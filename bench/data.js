@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1781232038597,
+  "lastUpdate": 1781232420977,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "653aa84acd7ffcbeb18ffb263236198d7b2e42b1",
-          "message": "Merge pull request #2832 from f1shl3gs/sources/node/ksmd\n\nsources/node: add ksmd collector",
-          "timestamp": "2026-03-05T15:54:01+08:00",
-          "tree_id": "b0d41df422bcf7a8af159eb0db5acf3417f17371",
-          "url": "https://github.com/f1shl3gs/vertex/commit/653aa84acd7ffcbeb18ffb263236198d7b2e42b1"
-        },
-        "date": 1772697849015,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7643000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 701000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.815,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b517983d90235a5ebcce718be839a519bec2fbb2",
           "message": "Merge pull request #2833 from f1shl3gs/sources/node/add_nvme_namespace_metrics\n\nsources/node: add nvme namespace metrics",
           "timestamp": "2026-03-05T18:27:02+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 41.791,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d7a4a3bfc5611562ae3122ee5a1b78d5cfa7cc4c",
+          "message": "Merge pull request #2943 from f1shl3gs/dependabot/cargo/memchr-2.8.2\n\nchore(deps): bump memchr from 2.8.1 to 2.8.2",
+          "timestamp": "2026-06-12T10:37:07+08:00",
+          "tree_id": "536c7bc190387149fbf70e120c03641948a9f440",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d7a4a3bfc5611562ae3122ee5a1b78d5cfa7cc4c"
+        },
+        "date": 1781232397650,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 6944900,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 840960,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 53.282,
             "unit": "ns/op"
           }
         ]
