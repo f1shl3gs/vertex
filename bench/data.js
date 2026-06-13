@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1781322550430,
+  "lastUpdate": 1781322557148,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b517983d90235a5ebcce718be839a519bec2fbb2",
-          "message": "Merge pull request #2833 from f1shl3gs/sources/node/add_nvme_namespace_metrics\n\nsources/node: add nvme namespace metrics",
-          "timestamp": "2026-03-05T18:27:02+08:00",
-          "tree_id": "77aa0d4625e18bd1ed282bffb2a0a75fb2f94501",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b517983d90235a5ebcce718be839a519bec2fbb2"
-        },
-        "date": 1772706549335,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.176,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 94.507,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 165.49,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 166.06,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b3d02829c39b75d5df6c6e5b6203d68ad1a999ab",
+          "message": "Merge pull request #2944 from f1shl3gs/deps/bump_memchr_to_2.8.2\n\ndeps: bump memchr to 2.8.2",
+          "timestamp": "2026-06-13T11:46:49+08:00",
+          "tree_id": "34b0a4cafc6837f855add81b62e7f5ce1aabea6e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b3d02829c39b75d5df6c6e5b6203d68ad1a999ab"
+        },
+        "date": 1781322532560,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.624,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 86.318,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 163.15,
             "unit": "ns/op"
           }
         ]
