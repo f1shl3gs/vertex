@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1781323063222,
+  "lastUpdate": 1781785893997,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ecac551549f199eb86591ba3a2f3ca541611c0dc",
-          "message": "Merge pull request #2834 from f1shl3gs/sources/mysqld/remove_unnecessary_path\n\nsources/mysqld: remove unnecessary path",
-          "timestamp": "2026-03-05T23:50:41+08:00",
-          "tree_id": "2d2bbd5e6b597fa3d6e7095aa977097c74754708",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ecac551549f199eb86591ba3a2f3ca541611c0dc"
-        },
-        "date": 1772725961340,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 522810,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 526090,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "29625eb192b97508a23739a8e56887ace305470a",
+          "message": "Merge pull request #2945 from f1shl3gs/dependabot/cargo/syn-2.0.118\n\nchore(deps): bump syn from 2.0.117 to 2.0.118",
+          "timestamp": "2026-06-18T20:29:06+08:00",
+          "tree_id": "6460536e38f65002cc1c3fc78a1ed8f38a1d7620",
+          "url": "https://github.com/f1shl3gs/vertex/commit/29625eb192b97508a23739a8e56887ace305470a"
+        },
+        "date": 1781785865776,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 496040,
             "unit": "ns/op"
           }
         ]
