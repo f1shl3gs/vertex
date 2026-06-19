@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1781851807813,
+  "lastUpdate": 1781851809207,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ca4232dc2a56c87f43f2951f747cac4189282f78",
-          "message": "Merge pull request #2840 from f1shl3gs/sources/journald/cleanup\n\nsources/journald: cleanup",
-          "timestamp": "2026-03-06T14:28:13+08:00",
-          "tree_id": "7995f01533bfaf33450b3f46ad76157ff6885468",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ca4232dc2a56c87f43f2951f747cac4189282f78"
-        },
-        "date": 1772778653318,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.136,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 186.5,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 364.84,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 763.72,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ad6b73a0e9b4071ff761e647509f0c35eb4e706a",
           "message": "Merge pull request #2839 from f1shl3gs/sinks/prometheus_exporter/simplify_http_handler\n\nsinks/prometheus_exporter: simplify http handler",
           "timestamp": "2026-03-06T14:29:29+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 689.97,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5a323ff4f212bba42be7842d6629c40f8f27c945",
+          "message": "Merge pull request #2948 from f1shl3gs/dependabot/github_actions/actions/checkout-7\n\nchore(ci): bump actions/checkout from 6 to 7",
+          "timestamp": "2026-06-19T14:47:34+08:00",
+          "tree_id": "0537c8841cb7de92a15153ed10809d63dc0caba2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5a323ff4f212bba42be7842d6629c40f8f27c945"
+        },
+        "date": 1781851789570,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 16.841,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 129.63,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 269.42,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 538.18,
             "unit": "ns/op"
           }
         ]
