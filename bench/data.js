@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1782298493451,
+  "lastUpdate": 1782298516188,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "28820eedf1e6767d2539e1e5fdd8673d3914c661",
-          "message": "Merge pull request #2850 from f1shl3gs/sinks/prometheus/wrap_const_labels_with_arc\n\nsinks/prometheus: wrap const_labels with Arc, which reduce some clones(allocation)",
-          "timestamp": "2026-03-13T02:01:12+08:00",
-          "tree_id": "d3ca7a8b8716bec79de29051bdd04f369494d9a4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/28820eedf1e6767d2539e1e5fdd8673d3914c661"
-        },
-        "date": 1773339150912,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 589,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40665.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "90831cda7b1a75d1c229852d30c3316fbb57c172",
           "message": "Merge pull request #2852 from f1shl3gs/sinks/prometheus/reimplement_resp_writer\n\nsinks/prometheus_exporter: re-implement RespWriter to reduce allocations and CPU usage",
           "timestamp": "2026-03-13T06:15:22+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40045.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5d35fe999f468dd46d3bb3eb8711bbbd13e2c68b",
+          "message": "Merge pull request #2952 from f1shl3gs/dependabot/cargo/rustls-0.23.41\n\nchore(deps): bump rustls from 0.23.40 to 0.23.41",
+          "timestamp": "2026-06-24T18:43:51+08:00",
+          "tree_id": "24d8975e7750d33de45817002cfba9a43f5b0a81",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5d35fe999f468dd46d3bb3eb8711bbbd13e2c68b"
+        },
+        "date": 1782298492717,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 575,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40046,
             "unit": "KiB"
           }
         ]
