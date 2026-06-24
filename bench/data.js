@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1782298338492,
+  "lastUpdate": 1782298376385,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a39fcadd8bd2d02fec20e3d68897ce573bef2784",
-          "message": "Merge pull request #2849 from f1shl3gs/dependabot/github_actions/styfle/cancel-workflow-action-0.13.1\n\nchore(ci): bump styfle/cancel-workflow-action from 0.13.0 to 0.13.1",
-          "timestamp": "2026-03-13T01:48:03+08:00",
-          "tree_id": "59a30c3c5d6dfed00f337054f0ef1f6eaea8ba9b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a39fcadd8bd2d02fec20e3d68897ce573bef2784"
-        },
-        "date": 1773338361001,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 594,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40663,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bee79e851361bfb4786a3f77e94de945e006a7eb",
           "message": "Merge pull request #2851 from f1shl3gs/sources/node/fix_zfs_test_data\n\nsources/node: fix filename of zfs' dbuf stats",
           "timestamp": "2026-03-13T01:57:41+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40039.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d9f162603b4a246f56eaba931d5f6878756500e5",
+          "message": "Merge pull request #2953 from f1shl3gs/dependabot/cargo/quote-1.0.46\n\nchore(deps): bump quote from 1.0.45 to 1.0.46",
+          "timestamp": "2026-06-24T18:42:09+08:00",
+          "tree_id": "f896f3009119cac93ec2e52f8f76ac74e40bd391",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d9f162603b4a246f56eaba931d5f6878756500e5"
+        },
+        "date": 1782298350795,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 547,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40044.6,
             "unit": "KiB"
           }
         ]
