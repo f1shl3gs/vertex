@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1782298316104,
+  "lastUpdate": 1782298331579,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ec32e3426a303b6747d59a9ba78f6110d553dcac",
-          "message": "Merge pull request #2847 from f1shl3gs/dependabot/cargo/quinn-proto-0.11.14\n\nchore(deps): bump quinn-proto from 0.11.13 to 0.11.14",
-          "timestamp": "2026-03-11T23:47:46+08:00",
-          "tree_id": "a80d42c05d4a62b50bff2a222fd09f78955920a9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ec32e3426a303b6747d59a9ba78f6110d553dcac"
-        },
-        "date": 1773244746745,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 590,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40663,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a39fcadd8bd2d02fec20e3d68897ce573bef2784",
           "message": "Merge pull request #2849 from f1shl3gs/dependabot/github_actions/styfle/cancel-workflow-action-0.13.1\n\nchore(ci): bump styfle/cancel-workflow-action from 0.13.0 to 0.13.1",
           "timestamp": "2026-03-13T01:48:03+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 582,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40039.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bedb1497822cb911110507490efdacc99861e5e8",
+          "message": "Merge pull request #2954 from f1shl3gs/dependabot/github_actions/actions/cache-6\n\nchore(ci): bump actions/cache from 5 to 6",
+          "timestamp": "2026-06-24T18:41:15+08:00",
+          "tree_id": "2602f2702a83fee261e03d40e5e9b00df7ed644a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bedb1497822cb911110507490efdacc99861e5e8"
+        },
+        "date": 1782298306980,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 556,
             "unit": "s"
           },
           {
