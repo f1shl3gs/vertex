@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1782298426505,
+  "lastUpdate": 1782298457628,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bee79e851361bfb4786a3f77e94de945e006a7eb",
-          "message": "Merge pull request #2851 from f1shl3gs/sources/node/fix_zfs_test_data\n\nsources/node: fix filename of zfs' dbuf stats",
-          "timestamp": "2026-03-13T01:57:41+08:00",
-          "tree_id": "af9d53bb935f31e183f99b221219bad7204b802c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bee79e851361bfb4786a3f77e94de945e006a7eb"
-        },
-        "date": 1773338937130,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 587,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40663,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "28820eedf1e6767d2539e1e5fdd8673d3914c661",
           "message": "Merge pull request #2850 from f1shl3gs/sinks/prometheus/wrap_const_labels_with_arc\n\nsinks/prometheus: wrap const_labels with Arc, which reduce some clones(allocation)",
           "timestamp": "2026-03-13T02:01:12+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40044.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "aa5dba57b62cd6033ad492b5c75026a7669c40fe",
+          "message": "Merge pull request #2951 from f1shl3gs/dependabot/cargo/memmap2-0.9.11\n\nchore(deps): bump memmap2 from 0.9.10 to 0.9.11",
+          "timestamp": "2026-06-24T18:43:13+08:00",
+          "tree_id": "25d0ff1e6bf8467ed0a96300a9bb5d637f10c122",
+          "url": "https://github.com/f1shl3gs/vertex/commit/aa5dba57b62cd6033ad492b5c75026a7669c40fe"
+        },
+        "date": 1782298432882,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 560,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40045.2,
             "unit": "KiB"
           }
         ]
