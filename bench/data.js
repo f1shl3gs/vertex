@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1782297977266,
+  "lastUpdate": 1782297987154,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "354d8ed6cca9e9a924d7cfb590216f767b7b9def",
-          "message": "Merge pull request #2845 from f1shl3gs/sources/node/simplify_and_cleanup\n\nsources/node: cleanup and simplify",
-          "timestamp": "2026-03-08T20:11:55+08:00",
-          "tree_id": "7f8a16a7e08a4d4da04378e96c58a08126fd7c57",
-          "url": "https://github.com/f1shl3gs/vertex/commit/354d8ed6cca9e9a924d7cfb590216f767b7b9def"
-        },
-        "date": 1772972051063,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.019,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 98.661,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 173.94,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 162.4,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5d35fe999f468dd46d3bb3eb8711bbbd13e2c68b",
+          "message": "Merge pull request #2952 from f1shl3gs/dependabot/cargo/rustls-0.23.41\n\nchore(deps): bump rustls from 0.23.40 to 0.23.41",
+          "timestamp": "2026-06-24T18:43:51+08:00",
+          "tree_id": "24d8975e7750d33de45817002cfba9a43f5b0a81",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5d35fe999f468dd46d3bb3eb8711bbbd13e2c68b"
+        },
+        "date": 1782297963378,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.964,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 93.784,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 173.74,
             "unit": "ns/op"
           }
         ]
