@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1782298516188,
+  "lastUpdate": 1782663333389,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a2949777d3787ae903952a7671e7475b6d89de6a",
-          "message": "Merge pull request #2846 from f1shl3gs/sinks/file/init\n\nsinks/file: add",
-          "timestamp": "2026-03-11T00:28:57+08:00",
-          "tree_id": "8419a1df579016a37dc759cd6d6f411da26c63a2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a2949777d3787ae903952a7671e7475b6d89de6a"
-        },
-        "date": 1773160277466,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.366,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 97.873,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 173.19,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 173.74,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c345c152e010b61363599f58b4d7b7e129bcee6f",
+          "message": "Merge pull request #2955 from f1shl3gs/misc/bump_some_deps\n\ndeps: bump to memmap2@0.9.11, quote@1.0.46 and rustls@0.23.41",
+          "timestamp": "2026-06-29T00:13:21+08:00",
+          "tree_id": "7a12871e2463ea0945e336123c3023830453b5fe",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c345c152e010b61363599f58b4d7b7e129bcee6f"
+        },
+        "date": 1782663314054,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 13.154,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 68.318,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 126.92,
             "unit": "ns/op"
           }
         ]
