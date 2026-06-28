@@ -61,7 +61,7 @@ pkcs8 = { version = "0.11.0", default-features = false, features = ["pkcs5", "st
 rand = { version = "0.10.1", default-features = false }
 regex = { version = "1.12.4", default-features = false }
 resolver = { path = "../resolver" }
-rustls = { version = "0.23.40", default-features = false, features = ["ring"] }
+rustls = { version = "0.23.41", default-features = false, features = ["ring"] }
 rustls-native-certs = { version = "0.8.4", default-features = false }
 serde = { version = "1.0.228", default-features = false, features = ["derive", "std"] }
 serde_json = { version = "1.0.150", default-features = false }
