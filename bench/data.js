@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1782663336857,
+  "lastUpdate": 1782663382787,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a2949777d3787ae903952a7671e7475b6d89de6a",
-          "message": "Merge pull request #2846 from f1shl3gs/sinks/file/init\n\nsinks/file: add",
-          "timestamp": "2026-03-11T00:28:57+08:00",
-          "tree_id": "8419a1df579016a37dc759cd6d6f411da26c63a2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a2949777d3787ae903952a7671e7475b6d89de6a"
-        },
-        "date": 1773160293979,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.929,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 176.2,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 352.08,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 720.26,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ec32e3426a303b6747d59a9ba78f6110d553dcac",
           "message": "Merge pull request #2847 from f1shl3gs/dependabot/cargo/quinn-proto-0.11.14\n\nchore(deps): bump quinn-proto from 0.11.13 to 0.11.14",
           "timestamp": "2026-03-11T23:47:46+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 719.39,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c345c152e010b61363599f58b4d7b7e129bcee6f",
+          "message": "Merge pull request #2955 from f1shl3gs/misc/bump_some_deps\n\ndeps: bump to memmap2@0.9.11, quote@1.0.46 and rustls@0.23.41",
+          "timestamp": "2026-06-29T00:13:21+08:00",
+          "tree_id": "7a12871e2463ea0945e336123c3023830453b5fe",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c345c152e010b61363599f58b4d7b7e129bcee6f"
+        },
+        "date": 1782663357169,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.566,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 181.38,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 329.56,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 698.57,
             "unit": "ns/op"
           }
         ]
