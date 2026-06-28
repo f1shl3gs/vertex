@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1782663836681,
+  "lastUpdate": 1782663864802,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "90831cda7b1a75d1c229852d30c3316fbb57c172",
-          "message": "Merge pull request #2852 from f1shl3gs/sinks/prometheus/reimplement_resp_writer\n\nsinks/prometheus_exporter: re-implement RespWriter to reduce allocations and CPU usage",
-          "timestamp": "2026-03-13T06:15:22+08:00",
-          "tree_id": "65944b89fd45e2fd91e353e3e8148328568820ee",
-          "url": "https://github.com/f1shl3gs/vertex/commit/90831cda7b1a75d1c229852d30c3316fbb57c172"
-        },
-        "date": 1773354424998,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 600,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40668.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f0fb7da49c4282a1b1282c79404929cb50118454",
           "message": "Merge pull request #2853 from f1shl3gs/dependabot/github_actions/dorny/paths-filter-4\n\nchore(ci): bump dorny/paths-filter from 3 to 4",
           "timestamp": "2026-03-13T17:18:27+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 575,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40046,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c345c152e010b61363599f58b4d7b7e129bcee6f",
+          "message": "Merge pull request #2955 from f1shl3gs/misc/bump_some_deps\n\ndeps: bump to memmap2@0.9.11, quote@1.0.46 and rustls@0.23.41",
+          "timestamp": "2026-06-29T00:13:21+08:00",
+          "tree_id": "7a12871e2463ea0945e336123c3023830453b5fe",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c345c152e010b61363599f58b4d7b7e129bcee6f"
+        },
+        "date": 1782663836884,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 561,
             "unit": "s"
           },
           {
