@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1782663333389,
+  "lastUpdate": 1782663336857,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a2949777d3787ae903952a7671e7475b6d89de6a",
-          "message": "Merge pull request #2846 from f1shl3gs/sinks/file/init\n\nsinks/file: add",
-          "timestamp": "2026-03-11T00:28:57+08:00",
-          "tree_id": "8419a1df579016a37dc759cd6d6f411da26c63a2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a2949777d3787ae903952a7671e7475b6d89de6a"
-        },
-        "date": 1773160269117,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 497070,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 532650,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c345c152e010b61363599f58b4d7b7e129bcee6f",
+          "message": "Merge pull request #2955 from f1shl3gs/misc/bump_some_deps\n\ndeps: bump to memmap2@0.9.11, quote@1.0.46 and rustls@0.23.41",
+          "timestamp": "2026-06-29T00:13:21+08:00",
+          "tree_id": "7a12871e2463ea0945e336123c3023830453b5fe",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c345c152e010b61363599f58b4d7b7e129bcee6f"
+        },
+        "date": 1782663312209,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 534220,
             "unit": "ns/op"
           }
         ]
