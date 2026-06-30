@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1782830880857,
+  "lastUpdate": 1782830896796,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ec32e3426a303b6747d59a9ba78f6110d553dcac",
-          "message": "Merge pull request #2847 from f1shl3gs/dependabot/cargo/quinn-proto-0.11.14\n\nchore(deps): bump quinn-proto from 0.11.13 to 0.11.14",
-          "timestamp": "2026-03-11T23:47:46+08:00",
-          "tree_id": "a80d42c05d4a62b50bff2a222fd09f78955920a9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ec32e3426a303b6747d59a9ba78f6110d553dcac"
-        },
-        "date": 1773244220686,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.942,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 98.159,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 173.02,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 126.92,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "dd3dcb02d2f1b2add924c55ae1643f90ee64589f",
+          "message": "Merge pull request #2956 from f1shl3gs/dependabot/cargo/quick-xml-0.41.0\n\nchore(deps): bump quick-xml from 0.40.1 to 0.41.0",
+          "timestamp": "2026-06-30T22:45:21+08:00",
+          "tree_id": "f3ee4a5b48e56a13c568fb2b4822dbb6e9610a39",
+          "url": "https://github.com/f1shl3gs/vertex/commit/dd3dcb02d2f1b2add924c55ae1643f90ee64589f"
+        },
+        "date": 1782830872279,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 16.997,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 89.014,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 167.74,
             "unit": "ns/op"
           }
         ]
