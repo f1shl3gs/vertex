@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1782663864802,
+  "lastUpdate": 1782830880857,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ec32e3426a303b6747d59a9ba78f6110d553dcac",
-          "message": "Merge pull request #2847 from f1shl3gs/dependabot/cargo/quinn-proto-0.11.14\n\nchore(deps): bump quinn-proto from 0.11.13 to 0.11.14",
-          "timestamp": "2026-03-11T23:47:46+08:00",
-          "tree_id": "a80d42c05d4a62b50bff2a222fd09f78955920a9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ec32e3426a303b6747d59a9ba78f6110d553dcac"
-        },
-        "date": 1773244201508,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 529530,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 534220,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "dd3dcb02d2f1b2add924c55ae1643f90ee64589f",
+          "message": "Merge pull request #2956 from f1shl3gs/dependabot/cargo/quick-xml-0.41.0\n\nchore(deps): bump quick-xml from 0.40.1 to 0.41.0",
+          "timestamp": "2026-06-30T22:45:21+08:00",
+          "tree_id": "f3ee4a5b48e56a13c568fb2b4822dbb6e9610a39",
+          "url": "https://github.com/f1shl3gs/vertex/commit/dd3dcb02d2f1b2add924c55ae1643f90ee64589f"
+        },
+        "date": 1782830851845,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 498260,
             "unit": "ns/op"
           }
         ]
