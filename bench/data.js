@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1783006718520,
+  "lastUpdate": 1783006735067,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a39fcadd8bd2d02fec20e3d68897ce573bef2784",
-          "message": "Merge pull request #2849 from f1shl3gs/dependabot/github_actions/styfle/cancel-workflow-action-0.13.1\n\nchore(ci): bump styfle/cancel-workflow-action from 0.13.0 to 0.13.1",
-          "timestamp": "2026-03-13T01:48:03+08:00",
-          "tree_id": "59a30c3c5d6dfed00f337054f0ef1f6eaea8ba9b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a39fcadd8bd2d02fec20e3d68897ce573bef2784"
-        },
-        "date": 1773337814753,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.989,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 97.872,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 172.02,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 167.74,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f8a7852114d153f3076aa711aaa047c1c352f510",
+          "message": "Merge pull request #2957 from f1shl3gs/dependabot/cargo/rand-0.10.2\n\nchore(deps): bump rand from 0.10.1 to 0.10.2",
+          "timestamp": "2026-07-02T23:36:11+08:00",
+          "tree_id": "3a79f1982fd059d32c9917bd645016e924935c00",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f8a7852114d153f3076aa711aaa047c1c352f510"
+        },
+        "date": 1783006710525,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.576,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 86.778,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 162.4,
             "unit": "ns/op"
           }
         ]
