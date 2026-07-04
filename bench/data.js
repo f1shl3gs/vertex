@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1783140127325,
+  "lastUpdate": 1783140508931,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bee79e851361bfb4786a3f77e94de945e006a7eb",
-          "message": "Merge pull request #2851 from f1shl3gs/sources/node/fix_zfs_test_data\n\nsources/node: fix filename of zfs' dbuf stats",
-          "timestamp": "2026-03-13T01:57:41+08:00",
-          "tree_id": "af9d53bb935f31e183f99b221219bad7204b802c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bee79e851361bfb4786a3f77e94de945e006a7eb"
-        },
-        "date": 1773338841692,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7641500,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 691340,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.039,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "28820eedf1e6767d2539e1e5fdd8673d3914c661",
           "message": "Merge pull request #2850 from f1shl3gs/sinks/prometheus/wrap_const_labels_with_arc\n\nsinks/prometheus: wrap const_labels with Arc, which reduce some clones(allocation)",
           "timestamp": "2026-03-13T02:01:12+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 51.768,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c08c64c1bcc182cf3c4ce0112ec811db8fc9a079",
+          "message": "Merge pull request #2958 from f1shl3gs/deps/bump_rand_to_0.10.2\n\ndeps: bump rand to 0.10.2",
+          "timestamp": "2026-07-04T12:38:26+08:00",
+          "tree_id": "42d1d8d5e6963f938bab51c842c8c23fa7320f93",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c08c64c1bcc182cf3c4ce0112ec811db8fc9a079"
+        },
+        "date": 1783140484018,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7440500,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 772570,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.038,
             "unit": "ns/op"
           }
         ]
