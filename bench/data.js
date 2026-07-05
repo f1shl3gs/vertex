@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1783265449378,
+  "lastUpdate": 1783265546190,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c4315b87c42b4748625d0113280d4301c176f70f",
-          "message": "Merge pull request #2857 from f1shl3gs/sinks/prometheus_exporter/remove_gc_task\n\nsinks/prometheus_exporter: move gc task to consume loop",
-          "timestamp": "2026-03-14T23:55:30+08:00",
-          "tree_id": "9d3b120beed77590546870cead9a6a42027ca2fd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c4315b87c42b4748625d0113280d4301c176f70f"
-        },
-        "date": 1773504375828,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 572,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40643.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4567ad594d7669a55f9cb40fad237461c6b150b7",
           "message": "Merge pull request #2859 from f1shl3gs/tracked_allocator/impl_all_methods_of_allocator\n\ntracked_allocator: impl all methods of GlobalAlloc for TrackedAllocator",
           "timestamp": "2026-03-15T01:55:51+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 40055.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "13eb8b53a026449fa5da4d6953a62b3221fd77ae",
+          "message": "Merge pull request #2960 from f1shl3gs/cargo/update\n\nmisc: cargo update",
+          "timestamp": "2026-07-05T23:21:30+08:00",
+          "tree_id": "ed0cfb4232ff822f78abae1ae1ee64be3174c654",
+          "url": "https://github.com/f1shl3gs/vertex/commit/13eb8b53a026449fa5da4d6953a62b3221fd77ae"
+        },
+        "date": 1783265520387,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 540,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40075,
             "unit": "KiB"
           }
         ]
