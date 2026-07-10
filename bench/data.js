@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1783670644321,
+  "lastUpdate": 1783670957667,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c4315b87c42b4748625d0113280d4301c176f70f",
-          "message": "Merge pull request #2857 from f1shl3gs/sinks/prometheus_exporter/remove_gc_task\n\nsinks/prometheus_exporter: move gc task to consume loop",
-          "timestamp": "2026-03-14T23:55:30+08:00",
-          "tree_id": "9d3b120beed77590546870cead9a6a42027ca2fd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c4315b87c42b4748625d0113280d4301c176f70f"
-        },
-        "date": 1773504339057,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7338800,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 672600,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.702,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4567ad594d7669a55f9cb40fad237461c6b150b7",
           "message": "Merge pull request #2859 from f1shl3gs/tracked_allocator/impl_all_methods_of_allocator\n\ntracked_allocator: impl all methods of GlobalAlloc for TrackedAllocator",
           "timestamp": "2026-03-15T01:55:51+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.06,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d14e5f936384dada0d2aa634dc3dc7502e55fa08",
+          "message": "Merge pull request #2962 from f1shl3gs/dependabot/cargo/bytes-1.12.1\n\nchore(deps): bump bytes from 1.12.0 to 1.12.1",
+          "timestamp": "2026-07-10T15:58:33+08:00",
+          "tree_id": "8de6a28312ef1ba7aa9c0b9c93818e8d0c8d6717",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d14e5f936384dada0d2aa634dc3dc7502e55fa08"
+        },
+        "date": 1783670932042,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7624200,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 835160,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.196,
             "unit": "ns/op"
           }
         ]
