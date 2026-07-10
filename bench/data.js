@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1783265546190,
+  "lastUpdate": 1783666304084,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4567ad594d7669a55f9cb40fad237461c6b150b7",
-          "message": "Merge pull request #2859 from f1shl3gs/tracked_allocator/impl_all_methods_of_allocator\n\ntracked_allocator: impl all methods of GlobalAlloc for TrackedAllocator",
-          "timestamp": "2026-03-15T01:55:51+08:00",
-          "tree_id": "462b12b5046a52a48ad1fa19709679202edd67ab",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4567ad594d7669a55f9cb40fad237461c6b150b7"
-        },
-        "date": 1773511612088,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 580,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40643.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "be360c6d85034e3bd0666c1d10a480b803da0c42",
           "message": "Merge pull request #2858 from f1shl3gs/sources/node/cleanup\n\nsources/node: cleanup",
           "timestamp": "2026-03-15T02:11:05+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 540,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 40075,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3ab30c6498180ed757f88a8a7a0818be6efa2d91",
+          "message": "Merge pull request #2967 from f1shl3gs/misc/force_dependabot_update_cargo_toml\n\nmisc: force dependabot update Cargo.toml",
+          "timestamp": "2026-07-10T14:42:38+08:00",
+          "tree_id": "2c5cf39046ac87fc3c365a8e387caaef4f71144c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3ab30c6498180ed757f88a8a7a0818be6efa2d91"
+        },
+        "date": 1783666285046,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 452,
             "unit": "s"
           },
           {
