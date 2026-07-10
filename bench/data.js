@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1783670966491,
+  "lastUpdate": 1783670996177,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7133e4bf49139e86e9add16c233f4306e7b5c183",
-          "message": "Merge pull request #2866 from f1shl3gs/dependabot/cargo/argh-0.1.19\n\nchore(deps): bump argh from 0.1.18 to 0.1.19",
-          "timestamp": "2026-03-17T06:22:34+08:00",
-          "tree_id": "4c6ddfc7b21599095ea98509bd8a8454ba3c0f80",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7133e4bf49139e86e9add16c233f4306e7b5c183"
-        },
-        "date": 1773700429084,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 588,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40540.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c1ec141ec03e1962f484783292484690884fe518",
           "message": "Merge pull request #2867 from f1shl3gs/docs/add_vertex_resource_usage\n\ndocs: add resource usage  of node_exporter and vertex",
           "timestamp": "2026-03-20T19:55:13+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41892.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6105b43ab77847b8ae74a35efbe3bc15ec7d55de",
+          "message": "Merge pull request #2961 from f1shl3gs/dependabot/cargo/crossbeam-utils-0.8.22\n\nchore(deps): bump crossbeam-utils from 0.8.21 to 0.8.22",
+          "timestamp": "2026-07-10T15:59:03+08:00",
+          "tree_id": "54874e9a21d40adc8bf13e09d6c2fb4bc77f8c9d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6105b43ab77847b8ae74a35efbe3bc15ec7d55de"
+        },
+        "date": 1783670971584,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 551,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41891.4,
             "unit": "KiB"
           }
         ]
