@@ -9,8 +9,6 @@ updates:
       - "deps"
     commit-message:
       prefix: "chore(deps)"
-    # force dependabot update Cargo.toml
-    versioning-strategy: "increase"
     open-pull-requests-limit: 20
     groups:
       prost:
