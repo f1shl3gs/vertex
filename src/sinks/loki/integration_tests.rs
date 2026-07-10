@@ -55,7 +55,7 @@ endpoint: http://{}
 labels:
   foo: {}
     "#,
-                service_addr, &label_value
+                service_addr, label_value
             );
 
             let config: Config = serde_yaml::from_str(&config).unwrap();

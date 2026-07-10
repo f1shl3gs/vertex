@@ -118,7 +118,7 @@ async fn flush_metrics(
         }
 
         let mut metrics = Vec::with_capacity(stats.len() * 7);
-        for (_, stat) in stats.iter() {
+        for stat in stats.values() {
             let (max, min, mean, stddev) = stat.count_sketch.lock().compute();
             let sent = stat.send.load(Ordering::Acquire);
             let recv = stat.recv.load(Ordering::Acquire);

@@ -466,7 +466,7 @@ impl StreamSink for PrometheusExporter {
                     let mut cleaned = 0;
                     let now = Utc::now().timestamp_millis();
                     let mut states = states.write();
-                    for (_name, set) in states.iter_mut() {
+                    for set in states.values_mut() {
                         set.metrics.retain(|entry| {
                             let keep = entry.expired_at > now;
                             if !keep {

@@ -1716,10 +1716,7 @@ fn machine_type_to_string(n: u32) -> String {
 // for the binary data to sth. like this
 // 936DA01F-9ABD-4D9D-80C7-02AF85C822A8
 fn format_uuid(data: [u8; 16]) -> String {
-    const LOWER: [u8; 16] = [
-        b'0', b'1', b'2', b'3', b'4', b'5', b'6', b'7', b'8', b'9', b'a', b'b', b'c', b'd', b'e',
-        b'f',
-    ];
+    const LOWER: &[u8; 16] = b"0123456789abcdef";
 
     let groups = [(0, 8), (9, 13), (14, 18), (19, 23), (24, 36)];
     let mut dst = vec![0; 36];

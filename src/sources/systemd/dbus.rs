@@ -77,7 +77,7 @@ impl Client {
             }
 
             let want = header_len + padding(header_len, 8) + body_len;
-            buf.truncate(0);
+            buf.clear();
             buf.reserve(want);
 
             let mut size = 0;

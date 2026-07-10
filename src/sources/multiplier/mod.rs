@@ -208,7 +208,7 @@ async fn run(
             Change::Add(endpoints) => {
                 for endpoint in endpoints {
                     for (index, template) in templates.iter().enumerate() {
-                        let key = format!("{}/{}/{}", cx.key.id(), index, &endpoint.id);
+                        let key = format!("{}/{}/{}", cx.key.id(), index, endpoint.id);
 
                         match template.filter(&endpoint) {
                             Ok(true) => {}
@@ -244,7 +244,7 @@ async fn run(
             Change::Remove(endpoints) => {
                 for endpoint in endpoints {
                     for (index, _template) in templates.iter().enumerate() {
-                        let key = format!("{}/{}/{}", cx.key.id(), index, &endpoint.id);
+                        let key = format!("{}/{}/{}", cx.key.id(), index, endpoint.id);
 
                         debug!(message = "remove sub source", ?key);
 
@@ -257,7 +257,7 @@ async fn run(
             Change::Update(endpoints) => {
                 for endpoint in endpoints {
                     for (index, template) in templates.iter().enumerate() {
-                        let key = format!("{}/{}/{}", cx.key.id(), index, &endpoint.id);
+                        let key = format!("{}/{}/{}", cx.key.id(), index, endpoint.id);
 
                         debug!(message = "remove sub source while updating", ?key);
                         // shutdown anyway

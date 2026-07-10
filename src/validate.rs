@@ -94,7 +94,7 @@ impl Validate {
         let paths_list: Vec<_> = paths.iter().map(<&PathBuf>::from).collect();
 
         let mut report_error = |errs| {
-            fmt.title(format!("Failed to load {:?}", &paths_list));
+            fmt.title(format!("Failed to load {:?}", paths_list));
             fmt.sub_error(errs)
         };
 
@@ -116,10 +116,10 @@ impl Validate {
                 return None;
             }
 
-            fmt.title(format!("Loaded with warnings {:?}", &paths_list));
+            fmt.title(format!("Loaded with warnings {:?}", paths_list));
             fmt.sub_warning(warnings);
         } else {
-            fmt.success(format!("Loaded {:?}", &paths_list));
+            fmt.success(format!("Loaded {:?}", paths_list));
         }
 
         Some(config)
