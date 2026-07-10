@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1783670151011,
+  "lastUpdate": 1783670181392,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "99e1ea00156b09f4f93d0fd5ea6b823d37582792",
-          "message": "Merge pull request #2861 from f1shl3gs/sources/node/zfs/simplify_and_remove_glob\n\nsources/node: remove glob operations in zfs collector",
-          "timestamp": "2026-03-15T03:48:08+08:00",
-          "tree_id": "b39f8476db196296f5a47ccb6476c8a699a915e5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/99e1ea00156b09f4f93d0fd5ea6b823d37582792"
-        },
-        "date": 1773518371630,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 596,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40647.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6b601a17ae2ed3b0069356c902e91f6dce371574",
           "message": "Merge pull request #2862 from f1shl3gs/sources/node/simplify\n\nsources/node: simplify",
           "timestamp": "2026-03-15T19:11:24+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 564,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41885.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7d83ade000e9d9bf7f048551356c45d1bf1c5501",
+          "message": "Merge pull request #2969 from f1shl3gs/ci/fix_dependabot_config\n\nci: remove versioning-strategy of dependabot",
+          "timestamp": "2026-07-10T15:44:48+08:00",
+          "tree_id": "d76f2b75c3ba7fd84bd9fb958dc195714f89e0df",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7d83ade000e9d9bf7f048551356c45d1bf1c5501"
+        },
+        "date": 1783670155829,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 583,
             "unit": "s"
           },
           {
