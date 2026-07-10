@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1783670480328,
+  "lastUpdate": 1783670510112,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4567ad594d7669a55f9cb40fad237461c6b150b7",
-          "message": "Merge pull request #2859 from f1shl3gs/tracked_allocator/impl_all_methods_of_allocator\n\ntracked_allocator: impl all methods of GlobalAlloc for TrackedAllocator",
-          "timestamp": "2026-03-15T01:55:51+08:00",
-          "tree_id": "462b12b5046a52a48ad1fa19709679202edd67ab",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4567ad594d7669a55f9cb40fad237461c6b150b7"
-        },
-        "date": 1773511090889,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.001,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 99.026,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 172.06,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 187.53,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6105b43ab77847b8ae74a35efbe3bc15ec7d55de",
+          "message": "Merge pull request #2961 from f1shl3gs/dependabot/cargo/crossbeam-utils-0.8.22\n\nchore(deps): bump crossbeam-utils from 0.8.21 to 0.8.22",
+          "timestamp": "2026-07-10T15:59:03+08:00",
+          "tree_id": "54874e9a21d40adc8bf13e09d6c2fb4bc77f8c9d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6105b43ab77847b8ae74a35efbe3bc15ec7d55de"
+        },
+        "date": 1783670484847,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.829,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 85.502,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 169.08,
             "unit": "ns/op"
           }
         ]
