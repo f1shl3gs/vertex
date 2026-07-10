@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1783669276207,
+  "lastUpdate": 1783669301343,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2c7dd9b3743375c67d48e0387fb9d67942748ad8",
-          "message": "Merge pull request #2860 from f1shl3gs/sources/node/add_bcachefs_collector\n\nsources/node: add bcachefs collector",
-          "timestamp": "2026-03-15T03:41:57+08:00",
-          "tree_id": "4ce60f5827120cbf7b6be181135ff29c0a55cd37",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2c7dd9b3743375c67d48e0387fb9d67942748ad8"
-        },
-        "date": 1773517973622,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 583,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40682,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "99e1ea00156b09f4f93d0fd5ea6b823d37582792",
           "message": "Merge pull request #2861 from f1shl3gs/sources/node/zfs/simplify_and_remove_glob\n\nsources/node: remove glob operations in zfs collector",
           "timestamp": "2026-03-15T03:48:08+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 584,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41885.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "65254506d1fbc387eac8af7b900b6100fc045431",
+          "message": "Merge pull request #2968 from f1shl3gs/misc/fix_clippy_check\n\nmisc: fix clippy warnings",
+          "timestamp": "2026-07-10T15:30:30+08:00",
+          "tree_id": "74268b07759b2ae4348d77fd39770cde571451f3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/65254506d1fbc387eac8af7b900b6100fc045431"
+        },
+        "date": 1783669276804,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 564,
             "unit": "s"
           },
           {
