@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1783669301343,
+  "lastUpdate": 1783669923266,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3f2a0bfde692c569df3c9bda1db40883a8bde940",
-          "message": "Merge pull request #2854 from f1shl3gs/lib/event/remove_metric_kind\n\nlib/event: remove metric Kind",
-          "timestamp": "2026-03-13T23:08:10+08:00",
-          "tree_id": "f1f824165dd783e3f03c68221cd92982ae8952c8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3f2a0bfde692c569df3c9bda1db40883a8bde940"
-        },
-        "date": 1773414612925,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 533460,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 532620,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "80c0b31b4a07f5d5acb1b65245b38a5826ca5bf8",
+          "message": "Merge pull request #2965 from f1shl3gs/dependabot/cargo/lru-0.18.1\n\nchore(deps): bump lru from 0.18.0 to 0.18.1",
+          "timestamp": "2026-07-10T15:49:30+08:00",
+          "tree_id": "67cb3e61fefcd2be0f82c46651afba80ce1133d0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/80c0b31b4a07f5d5acb1b65245b38a5826ca5bf8"
+        },
+        "date": 1783669898766,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 499260,
             "unit": "ns/op"
           }
         ]
