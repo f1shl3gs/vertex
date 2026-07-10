@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1783670093959,
+  "lastUpdate": 1783670108407,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "45ef538145e74aca83158927704e73bc77536eca",
-          "message": "Merge pull request #2856 from f1shl3gs/dependabot/cargo/tracing-subscriber-0.3.23\n\nchore(deps): bump tracing-subscriber from 0.3.22 to 0.3.23",
-          "timestamp": "2026-03-14T02:58:53+08:00",
-          "tree_id": "6840f13ba592cc7e47179d5ab83c6013485ac5e4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/45ef538145e74aca83158927704e73bc77536eca"
-        },
-        "date": 1773428462320,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 530440,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 525390,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d5018fedd44ae541630646a54467ffe469e65110",
+          "message": "Merge pull request #2963 from f1shl3gs/dependabot/cargo/memchr-2.8.3\n\nchore(deps): bump memchr from 2.8.2 to 2.8.3",
+          "timestamp": "2026-07-10T15:52:45+08:00",
+          "tree_id": "1f374028c352f27cb882f453b96c7be935bb7a3f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d5018fedd44ae541630646a54467ffe469e65110"
+        },
+        "date": 1783670083785,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 520970,
             "unit": "ns/op"
           }
         ]
