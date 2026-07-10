@@ -10,16 +10,10 @@ pub fn get<'a>(
         match (path_iter.next(), value) {
             (None, _) => return Some(value),
             (Some(BorrowedSegment::Field(key)), Value::Object(map)) => {
-                match map.get_value(key.as_ref()) {
-                    None => return None,
-                    Some(nested) => value = nested,
-                }
+                value = map.get_value(key.as_ref())?
             }
             (Some(BorrowedSegment::Index(index)), Value::Array(array)) => {
-                match array.get_value(&index) {
-                    None => return None,
-                    Some(nested) => value = nested,
-                }
+                value = array.get_value(&index)?
             }
             _ => return None,
         }

@@ -15,13 +15,12 @@ impl Iterator for LookupIp {
 
     fn next(&mut self) -> Option<Self::Item> {
         loop {
-            match self.0.next() {
-                Some(record) => match record.data {
-                    RecordData::A(addr) => return Some(SocketAddr::from((addr, 0))),
-                    RecordData::AAAA(addr) => return Some(SocketAddr::from((addr, 0))),
-                    _ => continue,
-                },
-                None => return None,
+            let record = self.0.next()?;
+
+            match record.data {
+                RecordData::A(addr) => return Some(SocketAddr::from((addr, 0))),
+                RecordData::AAAA(addr) => return Some(SocketAddr::from((addr, 0))),
+                _ => continue,
             }
         }
     }
