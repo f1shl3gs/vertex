@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1783670997718,
+  "lastUpdate": 1783928829609,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "be360c6d85034e3bd0666c1d10a480b803da0c42",
-          "message": "Merge pull request #2858 from f1shl3gs/sources/node/cleanup\n\nsources/node: cleanup",
-          "timestamp": "2026-03-15T02:11:05+08:00",
-          "tree_id": "683ce62285c8be9ea5fec2e4ce983b77223de3d6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/be360c6d85034e3bd0666c1d10a480b803da0c42"
-        },
-        "date": 1773511991358,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 528210,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 535910,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c47df6447e86d80133dd4ccc3f49a6b4441fdade",
+          "message": "Merge pull request #2970 from f1shl3gs/dependabot/cargo/thrift-0.24.0\n\nchore(deps): bump thrift from 0.23.0 to 0.24.0",
+          "timestamp": "2026-07-13T15:44:41+08:00",
+          "tree_id": "4b41c3da8b53abda08de9712997b4b146eed2d6a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c47df6447e86d80133dd4ccc3f49a6b4441fdade"
+        },
+        "date": 1783928804579,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 533000,
             "unit": "ns/op"
           }
         ]
