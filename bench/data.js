@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1783929263334,
+  "lastUpdate": 1783929355688,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c1ec141ec03e1962f484783292484690884fe518",
-          "message": "Merge pull request #2867 from f1shl3gs/docs/add_vertex_resource_usage\n\ndocs: add resource usage  of node_exporter and vertex",
-          "timestamp": "2026-03-20T19:55:13+08:00",
-          "tree_id": "0ac38dc124eac3bffc2b1c01c88a6bad8d355015",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c1ec141ec03e1962f484783292484690884fe518"
-        },
-        "date": 1774008395912,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 603,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40540.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "66224e54623a52850e7153ee480e5d6752080557",
           "message": "Merge pull request #2868 from f1shl3gs/dependabot/cargo/rustls-webpki-0.103.10\n\nchore(deps): bump rustls-webpki from 0.103.9 to 0.103.10",
           "timestamp": "2026-03-22T02:18:04+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41891.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c47df6447e86d80133dd4ccc3f49a6b4441fdade",
+          "message": "Merge pull request #2970 from f1shl3gs/dependabot/cargo/thrift-0.24.0\n\nchore(deps): bump thrift from 0.23.0 to 0.24.0",
+          "timestamp": "2026-07-13T15:44:41+08:00",
+          "tree_id": "4b41c3da8b53abda08de9712997b4b146eed2d6a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c47df6447e86d80133dd4ccc3f49a6b4441fdade"
+        },
+        "date": 1783929330307,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 557,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41891.2,
             "unit": "KiB"
           }
         ]
