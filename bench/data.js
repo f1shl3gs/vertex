@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784127392478,
+  "lastUpdate": 1784127402199,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2c7dd9b3743375c67d48e0387fb9d67942748ad8",
-          "message": "Merge pull request #2860 from f1shl3gs/sources/node/add_bcachefs_collector\n\nsources/node: add bcachefs collector",
-          "timestamp": "2026-03-15T03:41:57+08:00",
-          "tree_id": "4ce60f5827120cbf7b6be181135ff29c0a55cd37",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2c7dd9b3743375c67d48e0387fb9d67942748ad8"
-        },
-        "date": 1773517473603,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.767,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 174.62,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 329.58,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 705.74,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "99e1ea00156b09f4f93d0fd5ea6b823d37582792",
           "message": "Merge pull request #2861 from f1shl3gs/sources/node/zfs/simplify_and_remove_glob\n\nsources/node: remove glob operations in zfs collector",
           "timestamp": "2026-03-15T03:48:08+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 721.1,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b086ae645d4a3e053fba10d27942836385a2c0a9",
+          "message": "Merge pull request #2971 from f1shl3gs/dependabot/cargo/socket2-0.6.5\n\nchore(deps): bump socket2 from 0.6.4 to 0.6.5",
+          "timestamp": "2026-07-15T22:53:44+08:00",
+          "tree_id": "d53415fddfd8cc694f4d74c9e03db5eb11f01ab4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b086ae645d4a3e053fba10d27942836385a2c0a9"
+        },
+        "date": 1784127376429,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.92,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 160.98,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 308.61,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 681.9,
             "unit": "ns/op"
           }
         ]
