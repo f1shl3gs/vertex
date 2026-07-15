@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784127402199,
+  "lastUpdate": 1784127413690,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "99e1ea00156b09f4f93d0fd5ea6b823d37582792",
-          "message": "Merge pull request #2861 from f1shl3gs/sources/node/zfs/simplify_and_remove_glob\n\nsources/node: remove glob operations in zfs collector",
-          "timestamp": "2026-03-15T03:48:08+08:00",
-          "tree_id": "b39f8476db196296f5a47ccb6476c8a699a915e5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/99e1ea00156b09f4f93d0fd5ea6b823d37582792"
-        },
-        "date": 1773517814692,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 496880,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 357430,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "383d58adf8de30ddb067ac9f44695bd84b090d1f",
+          "message": "Merge pull request #2972 from f1shl3gs/dependabot/cargo/http-body-util-0.1.4\n\nchore(deps): bump http-body-util from 0.1.3 to 0.1.4",
+          "timestamp": "2026-07-15T22:54:18+08:00",
+          "tree_id": "1c2fbf73e02f8565721b4c7b637ff42a9c022af5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/383d58adf8de30ddb067ac9f44695bd84b090d1f"
+        },
+        "date": 1784127390139,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 501050,
             "unit": "ns/op"
           }
         ]
