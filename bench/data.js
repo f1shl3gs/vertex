@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784127350412,
+  "lastUpdate": 1784127392478,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2c7dd9b3743375c67d48e0387fb9d67942748ad8",
-          "message": "Merge pull request #2860 from f1shl3gs/sources/node/add_bcachefs_collector\n\nsources/node: add bcachefs collector",
-          "timestamp": "2026-03-15T03:41:57+08:00",
-          "tree_id": "4ce60f5827120cbf7b6be181135ff29c0a55cd37",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2c7dd9b3743375c67d48e0387fb9d67942748ad8"
-        },
-        "date": 1773517455063,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.012,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 97.869,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 172.25,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 125.72,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b086ae645d4a3e053fba10d27942836385a2c0a9",
+          "message": "Merge pull request #2971 from f1shl3gs/dependabot/cargo/socket2-0.6.5\n\nchore(deps): bump socket2 from 0.6.4 to 0.6.5",
+          "timestamp": "2026-07-15T22:53:44+08:00",
+          "tree_id": "d53415fddfd8cc694f4d74c9e03db5eb11f01ab4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b086ae645d4a3e053fba10d27942836385a2c0a9"
+        },
+        "date": 1784127367066,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 39.397,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 88.466,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 152.93,
             "unit": "ns/op"
           }
         ]
