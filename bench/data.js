@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784352126139,
+  "lastUpdate": 1784352171528,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e9bcad852267e3434859c9796a914c41addf560b",
-          "message": "Merge pull request #2865 from f1shl3gs/sources/node/add_meminfo_numa\n\nsources/node: add meminfo_numa collector",
-          "timestamp": "2026-03-17T06:07:41+08:00",
-          "tree_id": "10c22a9e32804d9b446270ccbe9b6d5846fd68a2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e9bcad852267e3434859c9796a914c41addf560b"
-        },
-        "date": 1773699464692,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7831600,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 767960,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.618,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7133e4bf49139e86e9add16c233f4306e7b5c183",
           "message": "Merge pull request #2866 from f1shl3gs/dependabot/cargo/argh-0.1.19\n\nchore(deps): bump argh from 0.1.18 to 0.1.19",
           "timestamp": "2026-03-17T06:22:34+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.203,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d3a67f89e5e907ddd95ad58433c43b846a5debd0",
+          "message": "Merge pull request #2977 from f1shl3gs/dependabot/cargo/regex-1.13.1\n\nchore(deps): bump regex from 1.13.0 to 1.13.1",
+          "timestamp": "2026-07-18T13:11:54+08:00",
+          "tree_id": "9263c5e603264d5d0a6e26156e3d9e177ba6f0bf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d3a67f89e5e907ddd95ad58433c43b846a5debd0"
+        },
+        "date": 1784352147107,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7460500,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 862790,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 54.152,
             "unit": "ns/op"
           }
         ]
