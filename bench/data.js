@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784352084695,
+  "lastUpdate": 1784352102515,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d184c05a84b0a00524f06364e4c493dd8fe63a88",
-          "message": "Merge pull request #2872 from f1shl3gs/sources/node/refactor_and_reduce_reallocs\n\nsources/node: refactor and reduce some allocations",
-          "timestamp": "2026-03-29T03:32:54+08:00",
-          "tree_id": "1dcb2968ad5975ea16b73d0ec1faace679aa4f29",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d184c05a84b0a00524f06364e4c493dd8fe63a88"
-        },
-        "date": 1774727030429,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 572,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40564.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b74445bd722dd8932bac960cfcc56138d0e789f1",
           "message": "Merge pull request #2873 from f1shl3gs/dependabot/cargo/inventory-0.3.23\n\nchore(deps): bump inventory from 0.3.22 to 0.3.23",
           "timestamp": "2026-03-29T03:52:41+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41884.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "42e556af270157b173d5629be8315aee318bcf58",
+          "message": "Merge pull request #2975 from f1shl3gs/dependabot/cargo/snap-1.1.2\n\nchore(deps): bump snap from 1.1.1 to 1.1.2",
+          "timestamp": "2026-07-18T13:11:14+08:00",
+          "tree_id": "17c6be55ec8d875db7f075bd04e2c6fa8177e685",
+          "url": "https://github.com/f1shl3gs/vertex/commit/42e556af270157b173d5629be8315aee318bcf58"
+        },
+        "date": 1784352080297,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 526,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41886.3,
             "unit": "KiB"
           }
         ]
