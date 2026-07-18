@@ -410,7 +410,7 @@ event = { path = "lib/event", features = ["test"] }
 framework = { path = "lib/framework", features = ["test-util"] }
 serde_path_to_error = { version = "0.1.20", default-features = false }
 testify = { path = "lib/testify" }
-tokio = { version = "1.52.3", default-features = false, features = ["test-util"] }
+tokio = { version = "1.53.0", default-features = false, features = ["test-util"] }
 tonic = { version = "0.14.6", default-features = false, features = ["server", "router"]}
 
 [dependencies]
@@ -447,7 +447,7 @@ tikv-jemalloc-ctl = { version = "0.7.0", optional = true, features = ["use_std"]
 async-stream = { version = "0.3.6", optional = true }
 async-trait = { version = "0.1.89", default-features = false }
 futures = { version = "0.3.32", default-features = false }
-tokio = { version = "1.52.3", default-features = false, features = ["time", "net", "signal", "rt-multi-thread", "io-util"] }
+tokio = { version = "1.53.0", default-features = false, features = ["time", "net", "signal", "rt-multi-thread", "io-util"] }
 tokio-util = { version = "0.7.18", default-features = false, features = ["codec", "time", "net"] }
 
 # Tracing
@@ -459,10 +459,10 @@ hyper-rustls = { version = "0.27.9", default-features = false, features = ["rust
 hyper-util = { version = "0.1.20", default-features = false, features = ["client"] }
 http = { version = "1.4.2", default-features = false }
 httpdate = { version = "1.0.3", default-features = false, optional = true }
-http-body-util = { version = "0.1.3", default-features = false }
+http-body-util = { version = "0.1.4", default-features = false }
 
 # TLS
-rustls = { version = "0.23.41", default-features = false, features = ["ring"] }
+rustls = { version = "0.23.42", default-features = false, features = ["ring"] }
 
 # Tower
 tower = { version = "0.5.3", default-features = false }
@@ -487,7 +487,7 @@ argh = { version = "0.1.19", default-features = false, features = ["help"] }
 
 # External libs
 base64 = { version = "0.22.1", default-features = false, optional = true }
-bytes = { version = "1.12.0", default-features = false }
+bytes = { version = "1.12.1", default-features = false }
 chrono = { version = "0.4.45", default-features = false }
 dashmap = { version = "6.2.1", default-features = false, optional = true }
 encoding_rs = { version = "0.8.35", optional = true, features = ["serde"] }
@@ -500,7 +500,7 @@ hyper-unix = { path = "lib/hyper-unix", optional = true }
 indexmap = { version = "2.14.0", default-features = false, features = ["serde"] }
 inventory = { version = "0.3.24", default-features = false }
 libc = { version = "0.2.186", default-features = false }
-lru = { version = "0.18.0", default-features = false, optional = true }
+lru = { version = "0.18.1", default-features = false, optional = true }
 maxminddb = { git = "https://github.com/f1shl3gs/maxminddb.git", rev = "eb9a6d1861cfe7313589c0e0281ddbb660a88962", optional = true, features = ["mmap", "unsafe-str"] }
 md-5 = { version = "0.11.0", default-features = false, optional = true }
 parking_lot = { version = "0.12.5", default-features = false, optional = true }
@@ -509,13 +509,13 @@ pin-project-lite = { version = "0.2.17", default-features = false }
 pulsar = { git = "https://github.com/f1shl3gs/pulsar-rs", rev = "bab5d791bb64f9e19d53eef242b8b33c96e836d0", default-features = false, optional = true, features = ["auth-oauth2", "compression", "tokio-rustls-runtime"] }
 quick-xml = { version = "0.41.0", default-features = false, features = ["serialize"], optional = true }
 rand = { version = "0.10.2", default-features = false }
-regex = { version = "1.12.4", default-features = false }
+regex = { version = "1.13.1", default-features = false }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "72d3caba288eb80a01fc123f1999a581f799817e", optional = true, features = ["transport-tls"] }
 sbbf = { git = "https://github.com/f1shl3gs/sbbf.git", rev = "d619ab889a9637dd849206568a3023dee7046a8f", optional = true }
 sha1 = { version = "0.11.0", default-features = false, optional = true }
 sha2 = { version = "0.11.0", default-features = false, optional = true }
-snap = { version = "1.1.1", default-features = false, optional = true }
-socket2 = { version = "0.6.4", optional = true, default-features = false}
+snap = { version = "1.1.2", default-features = false, optional = true }
+socket2 = { version = "0.6.5", optional = true, default-features = false}
 thiserror = { version = "2.0.18", default-features = false }
 typetag = { version = "0.2.22" }
 url = { version = "2.5.8", default-features = false, features = ["serde"] }
