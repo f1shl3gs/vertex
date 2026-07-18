@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784352171528,
+  "lastUpdate": 1784352201271,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b74445bd722dd8932bac960cfcc56138d0e789f1",
-          "message": "Merge pull request #2873 from f1shl3gs/dependabot/cargo/inventory-0.3.23\n\nchore(deps): bump inventory from 0.3.22 to 0.3.23",
-          "timestamp": "2026-03-29T03:52:41+08:00",
-          "tree_id": "d2bcea98799280b1981db43a9bebaca1a082952b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b74445bd722dd8932bac960cfcc56138d0e789f1"
-        },
-        "date": 1774728259488,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 607,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40567.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0686b59a7c9938df323ec2e846ce411fbfb6804d",
           "message": "Merge pull request #2874 from f1shl3gs/sources/tengine/init\n\nsources/tengine: init",
           "timestamp": "2026-03-29T11:19:18+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41886.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d3a67f89e5e907ddd95ad58433c43b846a5debd0",
+          "message": "Merge pull request #2977 from f1shl3gs/dependabot/cargo/regex-1.13.1\n\nchore(deps): bump regex from 1.13.0 to 1.13.1",
+          "timestamp": "2026-07-18T13:11:54+08:00",
+          "tree_id": "9263c5e603264d5d0a6e26156e3d9e177ba6f0bf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d3a67f89e5e907ddd95ad58433c43b846a5debd0"
+        },
+        "date": 1784352176829,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 582,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41903.7,
             "unit": "KiB"
           }
         ]
