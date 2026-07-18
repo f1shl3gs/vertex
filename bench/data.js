@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784351596874,
+  "lastUpdate": 1784351610669,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "45fac12e923bcd1af3b0eea83c78b85c38d64faa",
-          "message": "Merge pull request #2864 from f1shl3gs/sources/node/refactor_some_error_handling\n\nsources/node: refactor some error handling",
-          "timestamp": "2026-03-17T05:25:52+08:00",
-          "tree_id": "efa83deb712a86fa600d0e56e2b590dc7d617f07",
-          "url": "https://github.com/f1shl3gs/vertex/commit/45fac12e923bcd1af3b0eea83c78b85c38d64faa"
-        },
-        "date": 1773696500676,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.614,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 169.9,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 334.89,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 695.61,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e9bcad852267e3434859c9796a914c41addf560b",
           "message": "Merge pull request #2865 from f1shl3gs/sources/node/add_meminfo_numa\n\nsources/node: add meminfo_numa collector",
           "timestamp": "2026-03-17T06:07:41+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 734.93,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "42e556af270157b173d5629be8315aee318bcf58",
+          "message": "Merge pull request #2975 from f1shl3gs/dependabot/cargo/snap-1.1.2\n\nchore(deps): bump snap from 1.1.1 to 1.1.2",
+          "timestamp": "2026-07-18T13:11:14+08:00",
+          "tree_id": "17c6be55ec8d875db7f075bd04e2c6fa8177e685",
+          "url": "https://github.com/f1shl3gs/vertex/commit/42e556af270157b173d5629be8315aee318bcf58"
+        },
+        "date": 1784351594065,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 14.442,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 111.47,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 215.81,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 438.82,
             "unit": "ns/op"
           }
         ]
