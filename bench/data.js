@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784352102515,
+  "lastUpdate": 1784352126139,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "45fac12e923bcd1af3b0eea83c78b85c38d64faa",
-          "message": "Merge pull request #2864 from f1shl3gs/sources/node/refactor_some_error_handling\n\nsources/node: refactor some error handling",
-          "timestamp": "2026-03-17T05:25:52+08:00",
-          "tree_id": "efa83deb712a86fa600d0e56e2b590dc7d617f07",
-          "url": "https://github.com/f1shl3gs/vertex/commit/45fac12e923bcd1af3b0eea83c78b85c38d64faa"
-        },
-        "date": 1773696957588,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7478300,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 784730,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.864,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e9bcad852267e3434859c9796a914c41addf560b",
           "message": "Merge pull request #2865 from f1shl3gs/sources/node/add_meminfo_numa\n\nsources/node: add meminfo_numa collector",
           "timestamp": "2026-03-17T06:07:41+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 48.003,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "42e556af270157b173d5629be8315aee318bcf58",
+          "message": "Merge pull request #2975 from f1shl3gs/dependabot/cargo/snap-1.1.2\n\nchore(deps): bump snap from 1.1.1 to 1.1.2",
+          "timestamp": "2026-07-18T13:11:14+08:00",
+          "tree_id": "17c6be55ec8d875db7f075bd04e2c6fa8177e685",
+          "url": "https://github.com/f1shl3gs/vertex/commit/42e556af270157b173d5629be8315aee318bcf58"
+        },
+        "date": 1784352100709,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7372900,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 793140,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.203,
             "unit": "ns/op"
           }
         ]
