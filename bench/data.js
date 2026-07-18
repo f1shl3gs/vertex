@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784351630540,
+  "lastUpdate": 1784351638792,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "45fac12e923bcd1af3b0eea83c78b85c38d64faa",
-          "message": "Merge pull request #2864 from f1shl3gs/sources/node/refactor_some_error_handling\n\nsources/node: refactor some error handling",
-          "timestamp": "2026-03-17T05:25:52+08:00",
-          "tree_id": "efa83deb712a86fa600d0e56e2b590dc7d617f07",
-          "url": "https://github.com/f1shl3gs/vertex/commit/45fac12e923bcd1af3b0eea83c78b85c38d64faa"
-        },
-        "date": 1773696480665,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 530280,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 510300,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "42e556af270157b173d5629be8315aee318bcf58",
+          "message": "Merge pull request #2975 from f1shl3gs/dependabot/cargo/snap-1.1.2\n\nchore(deps): bump snap from 1.1.1 to 1.1.2",
+          "timestamp": "2026-07-18T13:11:14+08:00",
+          "tree_id": "17c6be55ec8d875db7f075bd04e2c6fa8177e685",
+          "url": "https://github.com/f1shl3gs/vertex/commit/42e556af270157b173d5629be8315aee318bcf58"
+        },
+        "date": 1784351615564,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 500980,
             "unit": "ns/op"
           }
         ]
