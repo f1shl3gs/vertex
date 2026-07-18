@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784127985839,
+  "lastUpdate": 1784351584871,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8242b53843797e30a43e3e9facfc4590ce671a09",
-          "message": "Merge pull request #2863 from f1shl3gs/sources/node/refactor_errors\n\nsources/node: refactor Error",
-          "timestamp": "2026-03-16T01:58:08+08:00",
-          "tree_id": "c6a2b695dfa467c63c7eb08df94e6ec25385eda9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8242b53843797e30a43e3e9facfc4590ce671a09"
-        },
-        "date": 1773597617210,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 536660,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 441570,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fe0f0e9f0629453703652fd178f304fe0d841683",
+          "message": "Merge pull request #2974 from f1shl3gs/dependabot/cargo/syn-2.0.119\n\nchore(deps): bump syn from 2.0.118 to 2.0.119",
+          "timestamp": "2026-07-18T13:10:27+08:00",
+          "tree_id": "dea40cfc561229ba67e588aac475623fa9c14481",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fe0f0e9f0629453703652fd178f304fe0d841683"
+        },
+        "date": 1784351558754,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 510300,
             "unit": "ns/op"
           }
         ]
