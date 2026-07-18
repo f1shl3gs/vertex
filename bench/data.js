@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784351681021,
+  "lastUpdate": 1784351684406,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e9bcad852267e3434859c9796a914c41addf560b",
-          "message": "Merge pull request #2865 from f1shl3gs/sources/node/add_meminfo_numa\n\nsources/node: add meminfo_numa collector",
-          "timestamp": "2026-03-17T06:07:41+08:00",
-          "tree_id": "10c22a9e32804d9b446270ccbe9b6d5846fd68a2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e9bcad852267e3434859c9796a914c41addf560b"
-        },
-        "date": 1773699005872,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 19.855,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 134.72,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 293.9,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 649.67,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7133e4bf49139e86e9add16c233f4306e7b5c183",
           "message": "Merge pull request #2866 from f1shl3gs/dependabot/cargo/argh-0.1.19\n\nchore(deps): bump argh from 0.1.18 to 0.1.19",
           "timestamp": "2026-03-17T06:22:34+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 438.82,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d3a67f89e5e907ddd95ad58433c43b846a5debd0",
+          "message": "Merge pull request #2977 from f1shl3gs/dependabot/cargo/regex-1.13.1\n\nchore(deps): bump regex from 1.13.0 to 1.13.1",
+          "timestamp": "2026-07-18T13:11:54+08:00",
+          "tree_id": "9263c5e603264d5d0a6e26156e3d9e177ba6f0bf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d3a67f89e5e907ddd95ad58433c43b846a5debd0"
+        },
+        "date": 1784351659843,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.346,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 192.01,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 343.14,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 705.53,
             "unit": "ns/op"
           }
         ]
