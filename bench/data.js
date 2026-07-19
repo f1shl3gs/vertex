@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784482180163,
+  "lastUpdate": 1784482184498,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7133e4bf49139e86e9add16c233f4306e7b5c183",
-          "message": "Merge pull request #2866 from f1shl3gs/dependabot/cargo/argh-0.1.19\n\nchore(deps): bump argh from 0.1.18 to 0.1.19",
-          "timestamp": "2026-03-17T06:22:34+08:00",
-          "tree_id": "4c6ddfc7b21599095ea98509bd8a8454ba3c0f80",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7133e4bf49139e86e9add16c233f4306e7b5c183"
-        },
-        "date": 1773699876844,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 529610,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 501390,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b0ccc4b00de2b40111f9df24c543bdb5d21ea12a",
+          "message": "Merge pull request #2979 from f1shl3gs/misc/update_deps\n\nmisc: update deps",
+          "timestamp": "2026-07-20T01:27:08+08:00",
+          "tree_id": "8ca1a4dcedb3738f1a16ef1af7db27da6463ce95",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b0ccc4b00de2b40111f9df24c543bdb5d21ea12a"
+        },
+        "date": 1784482160469,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 508210,
             "unit": "ns/op"
           }
         ]
