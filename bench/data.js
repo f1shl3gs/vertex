@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784482764333,
+  "lastUpdate": 1784556331167,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "66224e54623a52850e7153ee480e5d6752080557",
-          "message": "Merge pull request #2868 from f1shl3gs/dependabot/cargo/rustls-webpki-0.103.10\n\nchore(deps): bump rustls-webpki from 0.103.9 to 0.103.10",
-          "timestamp": "2026-03-22T02:18:04+08:00",
-          "tree_id": "077d31ca09474327bd5d34e213698871315d7e6a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/66224e54623a52850e7153ee480e5d6752080557"
-        },
-        "date": 1774117199409,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 531620,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 508210,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6f68b0a76229ab739703a3d0de9109d01dbf1734",
+          "message": "Merge pull request #2990 from f1shl3gs/deps/update\n\ndpes: update",
+          "timestamp": "2026-07-20T22:02:50+08:00",
+          "tree_id": "d56723e066fdb8aa57f8221781ac5c6684fe12b7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6f68b0a76229ab739703a3d0de9109d01dbf1734"
+        },
+        "date": 1784556306043,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 491590,
             "unit": "ns/op"
           }
         ]
