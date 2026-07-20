@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784558532140,
+  "lastUpdate": 1784558553927,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8d2c24e1e6138a7c442224e5dc1f8a26122ff8fd",
-          "message": "Merge pull request #2870 from f1shl3gs/dependabot/cargo/snmalloc-rs-0.7.4\n\nchore(deps): bump snmalloc-rs from 0.3.8 to 0.7.4",
-          "timestamp": "2026-03-26T09:50:28+08:00",
-          "tree_id": "7acc26a88a442760741e8388c490667ea598b405",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8d2c24e1e6138a7c442224e5dc1f8a26122ff8fd"
-        },
-        "date": 1774489954241,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.984,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 97.674,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 172.61,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 127.05,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5e1271f5241b7b3946c0e8fe4f45802bc8c638b4",
+          "message": "Merge pull request #2992 from f1shl3gs/deps/bump_hyper_to_1.11.0\n\ndeps: bump hyper to 1.11.0",
+          "timestamp": "2026-07-20T22:39:38+08:00",
+          "tree_id": "619b3e309d499c70ca1e6076a8de4d4a3380556c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5e1271f5241b7b3946c0e8fe4f45802bc8c638b4"
+        },
+        "date": 1784558528610,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.882,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 86.461,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 163.97,
             "unit": "ns/op"
           }
         ]
