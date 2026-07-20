@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784556331167,
+  "lastUpdate": 1784556344408,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "66224e54623a52850e7153ee480e5d6752080557",
-          "message": "Merge pull request #2868 from f1shl3gs/dependabot/cargo/rustls-webpki-0.103.10\n\nchore(deps): bump rustls-webpki from 0.103.9 to 0.103.10",
-          "timestamp": "2026-03-22T02:18:04+08:00",
-          "tree_id": "077d31ca09474327bd5d34e213698871315d7e6a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/66224e54623a52850e7153ee480e5d6752080557"
-        },
-        "date": 1774117236380,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.796,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 177.92,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 328.48,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 692.14,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "994024b194d462eafd0c656ba796195cd436acf9",
           "message": "Merge pull request #2869 from f1shl3gs/dependabot/cargo/proptest-1.11.0\n\nchore(deps): bump proptest from 1.10.0 to 1.11.0",
           "timestamp": "2026-03-25T09:52:56+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 475.66,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6f68b0a76229ab739703a3d0de9109d01dbf1734",
+          "message": "Merge pull request #2990 from f1shl3gs/deps/update\n\ndpes: update",
+          "timestamp": "2026-07-20T22:02:50+08:00",
+          "tree_id": "d56723e066fdb8aa57f8221781ac5c6684fe12b7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6f68b0a76229ab739703a3d0de9109d01dbf1734"
+        },
+        "date": 1784556319835,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.389,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 167.85,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 330.26,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 690.92,
             "unit": "ns/op"
           }
         ]
