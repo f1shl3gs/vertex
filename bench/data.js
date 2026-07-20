@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784556879650,
+  "lastUpdate": 1784557327304,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "994024b194d462eafd0c656ba796195cd436acf9",
-          "message": "Merge pull request #2869 from f1shl3gs/dependabot/cargo/proptest-1.11.0\n\nchore(deps): bump proptest from 1.10.0 to 1.11.0",
-          "timestamp": "2026-03-25T09:52:56+08:00",
-          "tree_id": "04fa3c1e8a784f4763d90c9df7848e48a6e5b8aa",
-          "url": "https://github.com/f1shl3gs/vertex/commit/994024b194d462eafd0c656ba796195cd436acf9"
-        },
-        "date": 1774403703477,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.041,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 98.315,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 172.48,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 158.69,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8823fbc19cc70b474ab20c7c1bf462bf57e95681",
+          "message": "Merge pull request #2991 from f1shl3gs/deps/update_syn_to_3.0.2\n\ndeps: bump syn to 3.0.2",
+          "timestamp": "2026-07-20T22:19:49+08:00",
+          "tree_id": "413ea55e3531c78ff199183266b1ff9eef2775dc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8823fbc19cc70b474ab20c7c1bf462bf57e95681"
+        },
+        "date": 1784557306410,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 13.147,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 68.725,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 127.05,
             "unit": "ns/op"
           }
         ]
