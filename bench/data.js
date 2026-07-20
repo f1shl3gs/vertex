@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784557327304,
+  "lastUpdate": 1784557347934,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "994024b194d462eafd0c656ba796195cd436acf9",
-          "message": "Merge pull request #2869 from f1shl3gs/dependabot/cargo/proptest-1.11.0\n\nchore(deps): bump proptest from 1.10.0 to 1.11.0",
-          "timestamp": "2026-03-25T09:52:56+08:00",
-          "tree_id": "04fa3c1e8a784f4763d90c9df7848e48a6e5b8aa",
-          "url": "https://github.com/f1shl3gs/vertex/commit/994024b194d462eafd0c656ba796195cd436acf9"
-        },
-        "date": 1774403693282,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 529030,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 491590,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8823fbc19cc70b474ab20c7c1bf462bf57e95681",
+          "message": "Merge pull request #2991 from f1shl3gs/deps/update_syn_to_3.0.2\n\ndeps: bump syn to 3.0.2",
+          "timestamp": "2026-07-20T22:19:49+08:00",
+          "tree_id": "413ea55e3531c78ff199183266b1ff9eef2775dc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8823fbc19cc70b474ab20c7c1bf462bf57e95681"
+        },
+        "date": 1784557321947,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 530850,
             "unit": "ns/op"
           }
         ]
