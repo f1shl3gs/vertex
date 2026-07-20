@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784557860737,
+  "lastUpdate": 1784557912999,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bf4b71b558f4a66e3ecce00570374fb93b32918e",
-          "message": "Merge pull request #2875 from f1shl3gs/dependabot/cargo/hyper-1.9.0\n\nchore(deps): bump hyper from 1.8.1 to 1.9.0",
-          "timestamp": "2026-04-01T22:10:47+08:00",
-          "tree_id": "9ec8c9110dc861db63a78051d2bdd38c8884d911",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bf4b71b558f4a66e3ecce00570374fb93b32918e"
-        },
-        "date": 1775053318222,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 583,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40620.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0ba19cb5f762a22dab63fea4b8052fccb7a13de9",
           "message": "Merge pull request #2876 from f1shl3gs/dependabot/cargo/inventory-0.3.24\n\nchore(deps): bump inventory from 0.3.23 to 0.3.24",
           "timestamp": "2026-04-01T22:11:15+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41918.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8823fbc19cc70b474ab20c7c1bf462bf57e95681",
+          "message": "Merge pull request #2991 from f1shl3gs/deps/update_syn_to_3.0.2\n\ndeps: bump syn to 3.0.2",
+          "timestamp": "2026-07-20T22:19:49+08:00",
+          "tree_id": "413ea55e3531c78ff199183266b1ff9eef2775dc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8823fbc19cc70b474ab20c7c1bf462bf57e95681"
+        },
+        "date": 1784557889093,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 600,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41918.1,
             "unit": "KiB"
           }
         ]
