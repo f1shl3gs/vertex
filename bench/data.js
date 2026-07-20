@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784558600013,
+  "lastUpdate": 1784559004620,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8d2c24e1e6138a7c442224e5dc1f8a26122ff8fd",
-          "message": "Merge pull request #2870 from f1shl3gs/dependabot/cargo/snmalloc-rs-0.7.4\n\nchore(deps): bump snmalloc-rs from 0.3.8 to 0.7.4",
-          "timestamp": "2026-03-26T09:50:28+08:00",
-          "tree_id": "7acc26a88a442760741e8388c490667ea598b405",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8d2c24e1e6138a7c442224e5dc1f8a26122ff8fd"
-        },
-        "date": 1774490417563,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7275000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 746480,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.148,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5bcbe580811f1c9669498a3d63b6564d61c3c8af",
           "message": "Merge pull request #2871 from f1shl3gs/dependabot/cargo/md-5-0.11.0\n\nchore(deps): bump md-5 from 0.10.6 to 0.11.0",
           "timestamp": "2026-03-28T11:55:43+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 54.411,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5e1271f5241b7b3946c0e8fe4f45802bc8c638b4",
+          "message": "Merge pull request #2992 from f1shl3gs/deps/bump_hyper_to_1.11.0\n\ndeps: bump hyper to 1.11.0",
+          "timestamp": "2026-07-20T22:39:38+08:00",
+          "tree_id": "619b3e309d499c70ca1e6076a8de4d4a3380556c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5e1271f5241b7b3946c0e8fe4f45802bc8c638b4"
+        },
+        "date": 1784558979220,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7222100,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 773610,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.401,
             "unit": "ns/op"
           }
         ]
