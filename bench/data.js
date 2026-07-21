@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784640740708,
+  "lastUpdate": 1784640764133,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d184c05a84b0a00524f06364e4c493dd8fe63a88",
-          "message": "Merge pull request #2872 from f1shl3gs/sources/node/refactor_and_reduce_reallocs\n\nsources/node: refactor and reduce some allocations",
-          "timestamp": "2026-03-29T03:32:54+08:00",
-          "tree_id": "1dcb2968ad5975ea16b73d0ec1faace679aa4f29",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d184c05a84b0a00524f06364e4c493dd8fe63a88"
-        },
-        "date": 1774726516143,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.023,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 100.72,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 174.39,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 170.72,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ee97a5d92a7b6799ce7cccd049ab0ae9c721c104",
+          "message": "Merge pull request #2994 from f1shl3gs/dependabot/cargo/tokio-1.53.1\n\nchore(deps): bump tokio from 1.53.0 to 1.53.1",
+          "timestamp": "2026-07-21T21:29:48+08:00",
+          "tree_id": "24b1fca8f1485fbb72e1426e972d459a95a0b6f1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ee97a5d92a7b6799ce7cccd049ab0ae9c721c104"
+        },
+        "date": 1784640738403,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.277,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 87.566,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 167.4,
             "unit": "ns/op"
           }
         ]
