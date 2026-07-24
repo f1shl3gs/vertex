@@ -13,10 +13,10 @@ harness = false
 
 [dev-dependencies]
 criterion = { version = "0.8.2", default-features = false }
-glob = { version = "0.3.3", default-features = false }
+glob = { version = "0.3.4", default-features = false }
 
 [dependencies]
-base64 = { version = "0.22.1", default-features = false, features = ["alloc"] }
+base64 = { version = "0.23.0", default-features = false, features = ["alloc"] }
 bytes = { version = "1.12.1", default-features = false }
 chrono = { version = "0.4.45", default-features = false, features = ["now"] }
 dyn-clone = { version = "1.0.20", default-features = false }
