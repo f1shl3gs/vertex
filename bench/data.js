@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784868400014,
+  "lastUpdate": 1784868409804,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b74445bd722dd8932bac960cfcc56138d0e789f1",
-          "message": "Merge pull request #2873 from f1shl3gs/dependabot/cargo/inventory-0.3.23\n\nchore(deps): bump inventory from 0.3.22 to 0.3.23",
-          "timestamp": "2026-03-29T03:52:41+08:00",
-          "tree_id": "d2bcea98799280b1981db43a9bebaca1a082952b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b74445bd722dd8932bac960cfcc56138d0e789f1"
-        },
-        "date": 1774727700346,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 36.374,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 111.07,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 159.73,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 167.4,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1a2b25dc5b7421e5a6c47397a7dd2e52dbb23d92",
+          "message": "Merge pull request #2997 from f1shl3gs/dependabot/cargo/tokio-util-0.7.19\n\nchore(deps): bump tokio-util from 0.7.18 to 0.7.19",
+          "timestamp": "2026-07-24T12:44:06+08:00",
+          "tree_id": "53936e99f8b0864c108754c0f542196bb32f9e2e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1a2b25dc5b7421e5a6c47397a7dd2e52dbb23d92"
+        },
+        "date": 1784868384455,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 39.578,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 86.652,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 154.36,
             "unit": "ns/op"
           }
         ]
