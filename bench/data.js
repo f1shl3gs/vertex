@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784868966173,
+  "lastUpdate": 1784868969640,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ff6cd7870a1fbb880143b8dff7658f40892b5ee3",
-          "message": "Merge pull request #2883 from f1shl3gs/sources/node/fix_kernel_hung\n\nsources/node: fix kernel_hung",
-          "timestamp": "2026-04-06T14:01:15+08:00",
-          "tree_id": "d9ad242e7dc7bc6c2a2a0b235497d11f04ce8067",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ff6cd7870a1fbb880143b8dff7658f40892b5ee3"
-        },
-        "date": 1775455939867,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 586,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40634,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5585ea376b35202c7f37e27ff0ebae6fbff2fed4",
           "message": "Merge pull request #2884 from f1shl3gs/dependabot/cargo/tokio-1.51.1\n\nchore(deps): bump tokio from 1.51.0 to 1.51.1",
           "timestamp": "2026-04-09T09:58:06+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41938.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "472325afeb5d8d55e5fd2fafe19d0f685f5ea042",
+          "message": "Merge pull request #3001 from f1shl3gs/dependabot/cargo/syn-3.0.3\n\nchore(deps): bump syn from 3.0.2 to 3.0.3",
+          "timestamp": "2026-07-24T12:44:40+08:00",
+          "tree_id": "3d6221154d51b2648b3276695d7b354d9ce541dd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/472325afeb5d8d55e5fd2fafe19d0f685f5ea042"
+        },
+        "date": 1784868946270,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 593,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41949.5,
             "unit": "KiB"
           }
         ]
