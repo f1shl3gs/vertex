@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784868935497,
+  "lastUpdate": 1784868966173,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "83fe81167a6731058bc5f2790dc2530cb3f60617",
-          "message": "Merge pull request #2882 from f1shl3gs/sources/node/default_enable_kernel_hung\n\nsources/node: enable kernel_hung by default",
-          "timestamp": "2026-04-05T20:20:37+08:00",
-          "tree_id": "4fd52bc0479b619a4195dcbc1de34e12d1f4949f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/83fe81167a6731058bc5f2790dc2530cb3f60617"
-        },
-        "date": 1775392284883,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 573,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40629.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ff6cd7870a1fbb880143b8dff7658f40892b5ee3",
           "message": "Merge pull request #2883 from f1shl3gs/sources/node/fix_kernel_hung\n\nsources/node: fix kernel_hung",
           "timestamp": "2026-04-06T14:01:15+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41950.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3e50a46c2ceba53262b9221928e93b389c1234f6",
+          "message": "Merge pull request #3002 from f1shl3gs/dependabot/cargo/tokio-stream-0.1.19\n\nchore(deps): bump tokio-stream from 0.1.18 to 0.1.19",
+          "timestamp": "2026-07-24T12:44:23+08:00",
+          "tree_id": "6588a3e5a3a01c20c05f284c917054c1d00c5de8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3e50a46c2ceba53262b9221928e93b389c1234f6"
+        },
+        "date": 1784868942287,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 599,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41938.6,
             "unit": "KiB"
           }
         ]
