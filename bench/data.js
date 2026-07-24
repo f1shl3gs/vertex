@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784868969640,
+  "lastUpdate": 1784868974661,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5585ea376b35202c7f37e27ff0ebae6fbff2fed4",
-          "message": "Merge pull request #2884 from f1shl3gs/dependabot/cargo/tokio-1.51.1\n\nchore(deps): bump tokio from 1.51.0 to 1.51.1",
-          "timestamp": "2026-04-09T09:58:06+08:00",
-          "tree_id": "8763ea2aefff679154571204a39f9030acf162e4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5585ea376b35202c7f37e27ff0ebae6fbff2fed4"
-        },
-        "date": 1775700540993,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 579,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40623.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0920a04d58fe5894e3929abbb8c2e9d0511213c3",
           "message": "Merge pull request #2885 from f1shl3gs/dependabot/cargo/indexmap-2.14.0\n\nchore(deps): bump indexmap from 2.13.1 to 2.14.0",
           "timestamp": "2026-04-11T09:58:26+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41949.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "288625d5df1131c25d1e98cc3fc20f3ef0e4faab",
+          "message": "Merge pull request #3000 from f1shl3gs/dependabot/cargo/libc-0.2.189\n\nchore(deps): bump libc from 0.2.186 to 0.2.189",
+          "timestamp": "2026-07-24T12:45:11+08:00",
+          "tree_id": "0726b68f87bb56dfb1bff4adedc1dcafbf9f5461",
+          "url": "https://github.com/f1shl3gs/vertex/commit/288625d5df1131c25d1e98cc3fc20f3ef0e4faab"
+        },
+        "date": 1784868949608,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 556,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41937.2,
             "unit": "KiB"
           }
         ]
