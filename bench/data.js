@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784869099018,
+  "lastUpdate": 1784869132160,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3d658d8046df09d7bd5a3128080fed0a52317d89",
-          "message": "Merge pull request #2890 from f1shl3gs/sources/node/fix_cpufreq_test\n\nsources/node: fix the order the stats",
-          "timestamp": "2026-04-14T11:13:31+08:00",
-          "tree_id": "44e0b717e10e059b2ca4aeeded43a8a48f479113",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3d658d8046df09d7bd5a3128080fed0a52317d89"
-        },
-        "date": 1776137074316,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 584,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40631.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "800c32edb66febaf6f36909e737e8596e9fa02f6",
           "message": "Merge pull request #2888 from f1shl3gs/dependabot/cargo/rustls-0.23.38\n\nchore(deps): bump rustls from 0.23.37 to 0.23.38",
           "timestamp": "2026-04-14T11:23:46+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 563,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41945.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e06ee164e4510c0c65c9f0e5ebad04c69655b23b",
+          "message": "Merge pull request #2999 from f1shl3gs/dependabot/github_actions/actions/labeler-7\n\nchore(ci): bump actions/labeler from 6 to 7",
+          "timestamp": "2026-07-24T12:46:01+08:00",
+          "tree_id": "3f93adc2b2ede7fe038d66246d94d5eedfcb9fdf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e06ee164e4510c0c65c9f0e5ebad04c69655b23b"
+        },
+        "date": 1784869108723,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 588,
             "unit": "s"
           },
           {
