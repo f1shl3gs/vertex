@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784868427553,
+  "lastUpdate": 1784868449324,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "cc5ad00474685146c03546a803022233108cc22e",
-          "message": "Merge pull request #2877 from f1shl3gs/tests/add_node_infiband_testdata\n\nnode/infiniband: add missing testdata",
-          "timestamp": "2026-04-01T21:33:43+08:00",
-          "tree_id": "767f4abac7199ab504d99f00a6f61da5bfe1030c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cc5ad00474685146c03546a803022233108cc22e"
-        },
-        "date": 1775050566319,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.608,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 104.08,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 172.1,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 170.3,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "472325afeb5d8d55e5fd2fafe19d0f685f5ea042",
+          "message": "Merge pull request #3001 from f1shl3gs/dependabot/cargo/syn-3.0.3\n\nchore(deps): bump syn from 3.0.2 to 3.0.3",
+          "timestamp": "2026-07-24T12:44:40+08:00",
+          "tree_id": "3d6221154d51b2648b3276695d7b354d9ce541dd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/472325afeb5d8d55e5fd2fafe19d0f685f5ea042"
+        },
+        "date": 1784868424738,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.605,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 85.49,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 161.82,
             "unit": "ns/op"
           }
         ]
