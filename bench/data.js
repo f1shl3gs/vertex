@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784868409804,
+  "lastUpdate": 1784868419108,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b74445bd722dd8932bac960cfcc56138d0e789f1",
-          "message": "Merge pull request #2873 from f1shl3gs/dependabot/cargo/inventory-0.3.23\n\nchore(deps): bump inventory from 0.3.22 to 0.3.23",
-          "timestamp": "2026-03-29T03:52:41+08:00",
-          "tree_id": "d2bcea98799280b1981db43a9bebaca1a082952b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b74445bd722dd8932bac960cfcc56138d0e789f1"
-        },
-        "date": 1774727721838,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 23.853,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 171.87,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 329.54,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 702.19,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0686b59a7c9938df323ec2e846ce411fbfb6804d",
           "message": "Merge pull request #2874 from f1shl3gs/sources/tengine/init\n\nsources/tengine: init",
           "timestamp": "2026-03-29T11:19:18+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 603.57,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "472325afeb5d8d55e5fd2fafe19d0f685f5ea042",
+          "message": "Merge pull request #3001 from f1shl3gs/dependabot/cargo/syn-3.0.3\n\nchore(deps): bump syn from 3.0.2 to 3.0.3",
+          "timestamp": "2026-07-24T12:44:40+08:00",
+          "tree_id": "3d6221154d51b2648b3276695d7b354d9ce541dd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/472325afeb5d8d55e5fd2fafe19d0f685f5ea042"
+        },
+        "date": 1784868401782,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 14.383,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 121.7,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 213.55,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 446.77,
             "unit": "ns/op"
           }
         ]
