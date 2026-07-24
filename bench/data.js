@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784869132160,
+  "lastUpdate": 1784879999303,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "470ed4a1702ffbac629549fe95eb1b5f29099f17",
-          "message": "Merge pull request #2878 from f1shl3gs/dependabot/cargo/libc-0.2.184\n\nchore(deps): bump libc from 0.2.183 to 0.2.184",
-          "timestamp": "2026-04-03T10:13:16+08:00",
-          "tree_id": "f9ee3c52c005bb9ba3bd5958788b8eab7cdc1a9b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/470ed4a1702ffbac629549fe95eb1b5f29099f17"
-        },
-        "date": 1775182524900,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.556,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 99.402,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 175.65,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 167.44,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "63bd33266da47e3011f421439f5c3713cb000b27",
+          "message": "Merge pull request #3003 from f1shl3gs/cargo/upgrade\n\ncargo: upgrade",
+          "timestamp": "2026-07-24T15:57:04+08:00",
+          "tree_id": "b75f86aff601938167866d2f78a1103cac4f77b9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/63bd33266da47e3011f421439f5c3713cb000b27"
+        },
+        "date": 1784879975021,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 17.05,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 87.854,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 167.88,
             "unit": "ns/op"
           }
         ]
