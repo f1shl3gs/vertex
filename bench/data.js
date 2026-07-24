@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784868568467,
+  "lastUpdate": 1784868571596,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0ba19cb5f762a22dab63fea4b8052fccb7a13de9",
-          "message": "Merge pull request #2876 from f1shl3gs/dependabot/cargo/inventory-0.3.24\n\nchore(deps): bump inventory from 0.3.23 to 0.3.24",
-          "timestamp": "2026-04-01T22:11:15+08:00",
-          "tree_id": "b5f92887b5ec26f5fe165e55374086ee2a9c3a12",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0ba19cb5f762a22dab63fea4b8052fccb7a13de9"
-        },
-        "date": 1775052813409,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 536400,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 382720,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fca6aef24b2565c079a0af773915908a9da49cb1",
+          "message": "Merge pull request #2998 from f1shl3gs/dependabot/cargo/glob-0.3.4\n\nchore(deps): bump glob from 0.3.3 to 0.3.4",
+          "timestamp": "2026-07-24T12:45:44+08:00",
+          "tree_id": "0fb230fcbdaecada1635ac8d2703dd45e4e24e01",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fca6aef24b2565c079a0af773915908a9da49cb1"
+        },
+        "date": 1784868546845,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 527680,
             "unit": "ns/op"
           }
         ]
