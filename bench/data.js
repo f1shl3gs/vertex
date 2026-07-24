@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1784868425917,
+  "lastUpdate": 1784868427553,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "cc5ad00474685146c03546a803022233108cc22e",
-          "message": "Merge pull request #2877 from f1shl3gs/tests/add_node_infiband_testdata\n\nnode/infiniband: add missing testdata",
-          "timestamp": "2026-04-01T21:33:43+08:00",
-          "tree_id": "767f4abac7199ab504d99f00a6f61da5bfe1030c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cc5ad00474685146c03546a803022233108cc22e"
-        },
-        "date": 1775050571643,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.586,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 181.14,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 352.61,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 729.99,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bf4b71b558f4a66e3ecce00570374fb93b32918e",
           "message": "Merge pull request #2875 from f1shl3gs/dependabot/cargo/hyper-1.9.0\n\nchore(deps): bump hyper from 1.8.1 to 1.9.0",
           "timestamp": "2026-04-01T22:10:47+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 717.3,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1a2b25dc5b7421e5a6c47397a7dd2e52dbb23d92",
+          "message": "Merge pull request #2997 from f1shl3gs/dependabot/cargo/tokio-util-0.7.19\n\nchore(deps): bump tokio-util from 0.7.18 to 0.7.19",
+          "timestamp": "2026-07-24T12:44:06+08:00",
+          "tree_id": "53936e99f8b0864c108754c0f542196bb32f9e2e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1a2b25dc5b7421e5a6c47397a7dd2e52dbb23d92"
+        },
+        "date": 1784868401538,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.322,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 168.46,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 325.29,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 690.34,
             "unit": "ns/op"
           }
         ]
