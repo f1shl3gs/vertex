@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1785331421569,
+  "lastUpdate": 1785331866596,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "40899a0aa1494b7be6be80a7032c570968467e43",
-          "message": "Merge pull request #2881 from f1shl3gs/dependabot/cargo/indexmap-2.13.1\n\nchore(deps): bump indexmap from 2.13.0 to 2.13.1",
-          "timestamp": "2026-04-03T23:32:49+08:00",
-          "tree_id": "70d2e027bf97dac99845d0645a6a1833a91ea325",
-          "url": "https://github.com/f1shl3gs/vertex/commit/40899a0aa1494b7be6be80a7032c570968467e43"
-        },
-        "date": 1775231003584,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7901200,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 701730,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.107,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "83fe81167a6731058bc5f2790dc2530cb3f60617",
           "message": "Merge pull request #2882 from f1shl3gs/sources/node/default_enable_kernel_hung\n\nsources/node: enable kernel_hung by default",
           "timestamp": "2026-04-05T20:20:37+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 53.477,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c5752797c944c181c6dedf4e5fe20ed4169146dd",
+          "message": "Merge pull request #3005 from f1shl3gs/dependabot/cargo/pem-4.0.0\n\nchore(deps): bump pem from 3.0.6 to 4.0.0",
+          "timestamp": "2026-07-29T21:19:52+08:00",
+          "tree_id": "99cfb53d418d8141b19930c866244f35c8fa037b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c5752797c944c181c6dedf4e5fe20ed4169146dd"
+        },
+        "date": 1785331842962,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7142100,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 902260,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 54.022,
             "unit": "ns/op"
           }
         ]
