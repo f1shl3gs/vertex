@@ -102,7 +102,7 @@ struct Batch<I> {
     /// The maximum number of allocated bytes(not including overhead) allowed
     allocation_limit: usize,
     /// The store of `I` elements.
-    elementes: Vec<I>,
+    elements: Vec<I>,
 }
 
 impl<I> TypeSize for Batch<I> {
@@ -144,7 +144,7 @@ where
             allocated_bytes: 0,
             element_limit,
             allocation_limit,
-            elementes: Vec::with_capacity(128),
+            elements: Vec::with_capacity(128),
         }
     }
 
@@ -155,7 +155,7 @@ where
     /// not fail.
     fn with(mut self, value: I) -> Self {
         self.allocated_bytes += value.size_of();
-        self.elementes.push(value);
+        self.elements.push(value);
         self
     }
 
@@ -164,7 +164,7 @@ where
     /// Called by the user when they want to get at the internal store of items. Returns a tuple,
     /// the first element being the allocated size of stored items and the second the store of items.
     fn into_inner(self) -> Vec<I> {
-        self.elementes
+        self.elements
     }
 
     /// Whether the batch has space for a new item
@@ -172,7 +172,7 @@ where
     /// This function returns true of there is space both in terms of item count and byte count for
     /// the given item, false otherwise
     fn has_space(&self, value: &I) -> bool {
-        let too_many_elements = self.elementes.len() + 1 > self.element_limit;
+        let too_many_elements = self.elements.len() + 1 > self.element_limit;
         let too_many_bytes = self.allocated_bytes + value.size_of() > self.allocation_limit;
         !(too_many_bytes || too_many_elements)
     }
@@ -189,16 +189,16 @@ where
     fn push(&mut self, value: I) {
         assert!(self.has_space(&value));
         self.allocated_bytes += value.size_of();
-        self.elementes.push(value);
+        self.elements.push(value);
     }
 }
 
-/// Controls the behaviour of the batcher in terms of batch size and flush interval
+/// Controls the behavior of the batcher in terms of batch size and flush interval
 ///
 /// This is a temporary solution for pushing in a fixed settings structure so we don't have to
 /// worry about misordering parameters and what not. At some point, we will push
 /// `BatchConfig`/`BatchSettings`/`BatchSize` out of this crate and move them into an individual
-/// crate, and make it more generalized. We can't do that yet, though, until we've converted all of
+/// crate, and make it more generalized. We can't do that yet, though, until we've converted all
 /// the sinks with their various specialized batch buffers.
 #[derive(Copy, Clone, Debug)]
 pub struct BatcherSettings {
