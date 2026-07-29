@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1785356641859,
+  "lastUpdate": 1785356719569,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ff6cd7870a1fbb880143b8dff7658f40892b5ee3",
-          "message": "Merge pull request #2883 from f1shl3gs/sources/node/fix_kernel_hung\n\nsources/node: fix kernel_hung",
-          "timestamp": "2026-04-06T14:01:15+08:00",
-          "tree_id": "d9ad242e7dc7bc6c2a2a0b235497d11f04ce8067",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ff6cd7870a1fbb880143b8dff7658f40892b5ee3"
-        },
-        "date": 1775455874488,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7513700,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 670290,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.858,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5585ea376b35202c7f37e27ff0ebae6fbff2fed4",
           "message": "Merge pull request #2884 from f1shl3gs/dependabot/cargo/tokio-1.51.1\n\nchore(deps): bump tokio from 1.51.0 to 1.51.1",
           "timestamp": "2026-04-09T09:58:06+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 37.052,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "13863f899211b22791131ba1eeae67c76e535766",
+          "message": "Merge pull request #3006 from f1shl3gs/dependabot/cargo/http-1.5.0\n\nchore(deps): bump http from 1.4.2 to 1.5.0",
+          "timestamp": "2026-07-30T04:14:06+08:00",
+          "tree_id": "d8145d481a4af05626973d08a1f3ff742616019a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/13863f899211b22791131ba1eeae67c76e535766"
+        },
+        "date": 1785356693614,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7814500,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 870810,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.28,
             "unit": "ns/op"
           }
         ]
