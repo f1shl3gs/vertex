@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1785331866596,
+  "lastUpdate": 1785331879802,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e41de5c3be50df5ff3915508399fe8896b608143",
-          "message": "Merge pull request #2887 from f1shl3gs/dependabot/cargo/rand-0.10.1\n\nchore(deps): bump rand from 0.10.0 to 0.10.1",
-          "timestamp": "2026-04-14T11:36:33+08:00",
-          "tree_id": "929cdc2d7e9848e8054865e98439101e0f1939d1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e41de5c3be50df5ff3915508399fe8896b608143"
-        },
-        "date": 1776138443231,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 566,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40627.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4cd88878193d43720dc2e475a11989a539ae96df",
           "message": "Merge pull request #2886 from f1shl3gs/dependabot/cargo/hyper-rustls-0.27.8\n\nchore(deps): bump hyper-rustls from 0.27.7 to 0.27.8",
           "timestamp": "2026-04-14T11:36:14+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41953.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c5752797c944c181c6dedf4e5fe20ed4169146dd",
+          "message": "Merge pull request #3005 from f1shl3gs/dependabot/cargo/pem-4.0.0\n\nchore(deps): bump pem from 3.0.6 to 4.0.0",
+          "timestamp": "2026-07-29T21:19:52+08:00",
+          "tree_id": "99cfb53d418d8141b19930c866244f35c8fa037b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c5752797c944c181c6dedf4e5fe20ed4169146dd"
+        },
+        "date": 1785331853752,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 562,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41956.6,
             "unit": "KiB"
           }
         ]
