@@ -23,7 +23,7 @@ tracing = { version = "0.1.44", default-features = false }
 
 # TLS
 pem = { version = "4.0.0", default-features = false, features = ["std"] }
-rustls = { version = "0.23.42", default-features = false, features = ["ring"] }
+rustls = { version = "0.23.43", default-features = false, features = ["ring"] }
 rustls-native-certs = { version = "0.8.4", default-features = false }
 
 # Future
@@ -31,7 +31,7 @@ futures = { version = "0.3.33", default-features = false, features = ["alloc"] }
 
 # HTTP
 headers = { version = "0.4.1", default-features = false }
-http = { version = "1.4.2", default-features = false }
+http = { version = "1.5.0", default-features = false }
 http-body-util = { version = "0.1.4", default-features = false }
 hyper = { version = "1.11.0", default-features = false }
 hyper-util = { version = "0.1.20", default-features = false, features = ["client-legacy", "http1"] }

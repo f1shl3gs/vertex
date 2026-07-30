@@ -457,12 +457,12 @@ tracing = { version = "0.1.44", default-features = false }
 hyper = { version = "1.11.0", default-features = false, features = ["server"] }
 hyper-rustls = { version = "0.27.9", default-features = false, features = ["rustls-native-certs", "http2"] }
 hyper-util = { version = "0.1.20", default-features = false, features = ["client"] }
-http = { version = "1.4.2", default-features = false }
+http = { version = "1.5.0", default-features = false }
 httpdate = { version = "1.0.3", default-features = false, optional = true }
 http-body-util = { version = "0.1.4", default-features = false }
 
 # TLS
-rustls = { version = "0.23.42", default-features = false, features = ["ring"] }
+rustls = { version = "0.23.43", default-features = false, features = ["ring"] }
 
 # Tower
 tower = { version = "0.5.3", default-features = false }
