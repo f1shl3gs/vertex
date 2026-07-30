@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1785379950846,
+  "lastUpdate": 1785379991167,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a7e255b23eb833c5ea48b06ea0ae1c40c9e9e460",
-          "message": "Merge pull request #2892 from f1shl3gs/lib/buffer/fix_race_condition_to_prevent_hanging_forever\n\nlib/buffer: fix race condition to prevent receiver hanging forever",
-          "timestamp": "2026-04-14T23:07:51+08:00",
-          "tree_id": "fc612bdc266edf43527861578de6a9ac908730a1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a7e255b23eb833c5ea48b06ea0ae1c40c9e9e460"
-        },
-        "date": 1776179930144,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 579,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40627.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8556576d01857db5e761929d19b730b4e5cfc3d5",
           "message": "Merge pull request #2894 from f1shl3gs/ci/add_timeout_for_cargo_test\n\nci: add 20m timeout for 'Cargo test'",
           "timestamp": "2026-04-15T00:27:44+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 578,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41989.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e3f38f1af5f16bf7397fd3e255387a7dcf60e7e5",
+          "message": "Merge pull request #3008 from f1shl3gs/misc/typo\n\nmisc: fix typo",
+          "timestamp": "2026-07-30T10:42:06+08:00",
+          "tree_id": "e04dfcd8136f0a0b965a44d2a2f187811c5eedf2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e3f38f1af5f16bf7397fd3e255387a7dcf60e7e5"
+        },
+        "date": 1785379965767,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 556,
             "unit": "s"
           },
           {
