@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1785379552289,
+  "lastUpdate": 1785379950846,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5585ea376b35202c7f37e27ff0ebae6fbff2fed4",
-          "message": "Merge pull request #2884 from f1shl3gs/dependabot/cargo/tokio-1.51.1\n\nchore(deps): bump tokio from 1.51.0 to 1.51.1",
-          "timestamp": "2026-04-09T09:58:06+08:00",
-          "tree_id": "8763ea2aefff679154571204a39f9030acf162e4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5585ea376b35202c7f37e27ff0ebae6fbff2fed4"
-        },
-        "date": 1775700477993,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7764700,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 749020,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.176,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0920a04d58fe5894e3929abbb8c2e9d0511213c3",
           "message": "Merge pull request #2885 from f1shl3gs/dependabot/cargo/indexmap-2.14.0\n\nchore(deps): bump indexmap from 2.13.1 to 2.14.0",
           "timestamp": "2026-04-11T09:58:26+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.28,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e3f38f1af5f16bf7397fd3e255387a7dcf60e7e5",
+          "message": "Merge pull request #3008 from f1shl3gs/misc/typo\n\nmisc: fix typo",
+          "timestamp": "2026-07-30T10:42:06+08:00",
+          "tree_id": "e04dfcd8136f0a0b965a44d2a2f187811c5eedf2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e3f38f1af5f16bf7397fd3e255387a7dcf60e7e5"
+        },
+        "date": 1785379924513,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7504500,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 857250,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.405,
             "unit": "ns/op"
           }
         ]
