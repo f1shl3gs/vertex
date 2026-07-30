@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1785391809418,
+  "lastUpdate": 1785391829748,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8556576d01857db5e761929d19b730b4e5cfc3d5",
-          "message": "Merge pull request #2894 from f1shl3gs/ci/add_timeout_for_cargo_test\n\nci: add 20m timeout for 'Cargo test'",
-          "timestamp": "2026-04-15T00:27:44+08:00",
-          "tree_id": "7d5a415d8570fbd5a3b11580723e3cbcc592b5b6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8556576d01857db5e761929d19b730b4e5cfc3d5"
-        },
-        "date": 1776184742268,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 593,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40627.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3d2cf63f06a9816ed07578cfd7da3ab9df93ac87",
           "message": "Merge pull request #2893 from f1shl3gs/dependabot/cargo/hyper-rustls-0.27.9\n\nchore(deps): bump hyper-rustls from 0.27.8 to 0.27.9",
           "timestamp": "2026-04-15T00:29:37+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41989.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "577cdc4bef92ee6231723948628ea9c494ff8f75",
+          "message": "Merge pull request #3009 from f1shl3gs/cargo/update\n\nmisc: cargo update",
+          "timestamp": "2026-07-30T13:59:38+08:00",
+          "tree_id": "d7efcddcd3ab50511c29f2ee6ae384b6d0595004",
+          "url": "https://github.com/f1shl3gs/vertex/commit/577cdc4bef92ee6231723948628ea9c494ff8f75"
+        },
+        "date": 1785391804897,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 553,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42007,
             "unit": "KiB"
           }
         ]
