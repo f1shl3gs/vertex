@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1785379462758,
+  "lastUpdate": 1785379475822,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5585ea376b35202c7f37e27ff0ebae6fbff2fed4",
-          "message": "Merge pull request #2884 from f1shl3gs/dependabot/cargo/tokio-1.51.1\n\nchore(deps): bump tokio from 1.51.0 to 1.51.1",
-          "timestamp": "2026-04-09T09:58:06+08:00",
-          "tree_id": "8763ea2aefff679154571204a39f9030acf162e4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5585ea376b35202c7f37e27ff0ebae6fbff2fed4"
-        },
-        "date": 1775700016358,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.176,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 100.95,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 178.52,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 158.92,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e3f38f1af5f16bf7397fd3e255387a7dcf60e7e5",
+          "message": "Merge pull request #3008 from f1shl3gs/misc/typo\n\nmisc: fix typo",
+          "timestamp": "2026-07-30T10:42:06+08:00",
+          "tree_id": "e04dfcd8136f0a0b965a44d2a2f187811c5eedf2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e3f38f1af5f16bf7397fd3e255387a7dcf60e7e5"
+        },
+        "date": 1785379450959,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.943,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 84.819,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 162.88,
             "unit": "ns/op"
           }
         ]
