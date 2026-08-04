@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1785845694201,
+  "lastUpdate": 1785846115474,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9f23a9356eaee6d6e7e316b6800a3f9a8b686e95",
-          "message": "Merge pull request #2889 from f1shl3gs/dependabot/cargo/libc-0.2.185\n\nchore(deps): bump libc from 0.2.184 to 0.2.185",
-          "timestamp": "2026-04-14T11:23:34+08:00",
-          "tree_id": "66fffede4ddf7b9fbce70b2f13efeb5f11122d69",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9f23a9356eaee6d6e7e316b6800a3f9a8b686e95"
-        },
-        "date": 1776137593502,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7471500,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 646750,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.411,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "800c32edb66febaf6f36909e737e8596e9fa02f6",
           "message": "Merge pull request #2888 from f1shl3gs/dependabot/cargo/rustls-0.23.38\n\nchore(deps): bump rustls from 0.23.37 to 0.23.38",
           "timestamp": "2026-04-14T11:23:46+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 42.062,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c964c23a7dcb349bd432d9f2e54efe0cc2dc917c",
+          "message": "Merge pull request #3013 from f1shl3gs/misc/remove_unused_deps\n\nmisc: remove unused deps",
+          "timestamp": "2026-08-04T20:11:08+08:00",
+          "tree_id": "495d13ba4dc3042298dd1e4494b9a657cbf2a8c5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c964c23a7dcb349bd432d9f2e54efe0cc2dc917c"
+        },
+        "date": 1785846089611,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7904300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 836180,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.578,
             "unit": "ns/op"
           }
         ]
