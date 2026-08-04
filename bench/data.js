@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1785576912695,
+  "lastUpdate": 1785808812223,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "92f86397acc6d5732cab522c09c31be1dd7d8aca",
-          "message": "Merge pull request #2896 from f1shl3gs/dependabot/cargo/lru-0.17.0\n\nchore(deps): bump lru from 0.16.4 to 0.17.0",
-          "timestamp": "2026-04-16T14:05:17+08:00",
-          "tree_id": "b4655ef3936d7c2c2054a2335841179874d1f684",
-          "url": "https://github.com/f1shl3gs/vertex/commit/92f86397acc6d5732cab522c09c31be1dd7d8aca"
-        },
-        "date": 1776320168401,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 575,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40636.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "05caee31cc6b2ec69a14f0ee9d762af4bae6e3c6",
           "message": "Merge pull request #2897 from f1shl3gs/toolchain/1.95.0\n\ntoolchain: bump to 1.95.0",
           "timestamp": "2026-04-16T22:39:31+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 598,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42007,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f92faa887da696a094867eaa8f3c60731d8f0e92",
+          "message": "Merge pull request #3012 from f1shl3gs/dependabot/github_actions/docker/login-action-4.6.0\n\nchore(ci): bump docker/login-action from 4.5.2 to 4.6.0",
+          "timestamp": "2026-08-04T09:49:05+08:00",
+          "tree_id": "8b3f056881656d0230b514a452c3d7142de1dbaf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f92faa887da696a094867eaa8f3c60731d8f0e92"
+        },
+        "date": 1785808786883,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 561,
             "unit": "s"
           },
           {
