@@ -3,9 +3,6 @@ name = "docker"
 version = "0.1.0"
 edition = "2024"
 
-[dev-dependencies]
-tokio = { version = "1.53.1", default-features = false, features = ["macros"]}
-
 [dependencies]
 bytes = { version = "1.12.1", default-features = false }
 chrono = { version = "0.4.45", default-features = false, features = ["serde"] }
