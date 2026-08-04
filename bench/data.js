@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1785845604753,
+  "lastUpdate": 1785845638717,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9f23a9356eaee6d6e7e316b6800a3f9a8b686e95",
-          "message": "Merge pull request #2889 from f1shl3gs/dependabot/cargo/libc-0.2.185\n\nchore(deps): bump libc from 0.2.184 to 0.2.185",
-          "timestamp": "2026-04-14T11:23:34+08:00",
-          "tree_id": "66fffede4ddf7b9fbce70b2f13efeb5f11122d69",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9f23a9356eaee6d6e7e316b6800a3f9a8b686e95"
-        },
-        "date": 1776137146661,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 17.437,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 109.73,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 185.45,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 166.73,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c964c23a7dcb349bd432d9f2e54efe0cc2dc917c",
+          "message": "Merge pull request #3013 from f1shl3gs/misc/remove_unused_deps\n\nmisc: remove unused deps",
+          "timestamp": "2026-08-04T20:11:08+08:00",
+          "tree_id": "495d13ba4dc3042298dd1e4494b9a657cbf2a8c5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c964c23a7dcb349bd432d9f2e54efe0cc2dc917c"
+        },
+        "date": 1785845613243,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.95,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 95.446,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 162.96,
             "unit": "ns/op"
           }
         ]
