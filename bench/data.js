@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1785808812223,
+  "lastUpdate": 1785845604753,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9f23a9356eaee6d6e7e316b6800a3f9a8b686e95",
-          "message": "Merge pull request #2889 from f1shl3gs/dependabot/cargo/libc-0.2.185\n\nchore(deps): bump libc from 0.2.184 to 0.2.185",
-          "timestamp": "2026-04-14T11:23:34+08:00",
-          "tree_id": "66fffede4ddf7b9fbce70b2f13efeb5f11122d69",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9f23a9356eaee6d6e7e316b6800a3f9a8b686e95"
-        },
-        "date": 1776137134958,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 500860,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 530250,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c964c23a7dcb349bd432d9f2e54efe0cc2dc917c",
+          "message": "Merge pull request #3013 from f1shl3gs/misc/remove_unused_deps\n\nmisc: remove unused deps",
+          "timestamp": "2026-08-04T20:11:08+08:00",
+          "tree_id": "495d13ba4dc3042298dd1e4494b9a657cbf2a8c5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c964c23a7dcb349bd432d9f2e54efe0cc2dc917c"
+        },
+        "date": 1785845587763,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 362880,
             "unit": "ns/op"
           }
         ]
