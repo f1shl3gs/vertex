@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1786365315909,
+  "lastUpdate": 1786365377892,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e41de5c3be50df5ff3915508399fe8896b608143",
-          "message": "Merge pull request #2887 from f1shl3gs/dependabot/cargo/rand-0.10.1\n\nchore(deps): bump rand from 0.10.0 to 0.10.1",
-          "timestamp": "2026-04-14T11:36:33+08:00",
-          "tree_id": "929cdc2d7e9848e8054865e98439101e0f1939d1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e41de5c3be50df5ff3915508399fe8896b608143"
-        },
-        "date": 1776138405609,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7721000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 799340,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.861,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "05a545187047a2058673b4b4ea30f4fcb27b4479",
           "message": "Merge pull request #2891 from f1shl3gs/dependabot/cargo/lru-0.16.4\n\nchore(deps): bump lru from 0.16.3 to 0.16.4",
           "timestamp": "2026-04-14T11:59:59+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 53.955,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9067dda74e7de50409c8224fb49133ba020842de",
+          "message": "Merge pull request #3016 from f1shl3gs/deps/async-trait_0.1.92\n\ndeps: bump async-trait to 0.1.92",
+          "timestamp": "2026-08-10T20:25:47+08:00",
+          "tree_id": "870afc8675783397556af22c4cfa2aef4afd18a7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9067dda74e7de50409c8224fb49133ba020842de"
+        },
+        "date": 1786365352409,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 8236300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 863570,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.632,
             "unit": "ns/op"
           }
         ]
