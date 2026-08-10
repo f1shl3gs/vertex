@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1786364801001,
+  "lastUpdate": 1786364806834,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4cd88878193d43720dc2e475a11989a539ae96df",
-          "message": "Merge pull request #2886 from f1shl3gs/dependabot/cargo/hyper-rustls-0.27.8\n\nchore(deps): bump hyper-rustls from 0.27.7 to 0.27.8",
-          "timestamp": "2026-04-14T11:36:14+08:00",
-          "tree_id": "61480ef32b9301f125e4c6e8237ee8a570dc488b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4cd88878193d43720dc2e475a11989a539ae96df"
-        },
-        "date": 1776137928920,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 13.6,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 80.019,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 134.21,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 163.75,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b83dd8b533e92ce8d13b6c51ac23906896000eb5",
+          "message": "Merge pull request #3017 from f1shl3gs/deps/thiserror_2.0.20\n\ndeps: bump thiserror to 2.0.20",
+          "timestamp": "2026-08-10T20:23:50+08:00",
+          "tree_id": "2f9e8713ea35737e443d514f58ab564be858ea1e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b83dd8b533e92ce8d13b6c51ac23906896000eb5"
+        },
+        "date": 1786364780847,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.879,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 85.197,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 163.19,
             "unit": "ns/op"
           }
         ]
