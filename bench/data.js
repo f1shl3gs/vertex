@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1786365377892,
+  "lastUpdate": 1786365432011,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5e4f47f868b6392adcb8863a33bf2e2744d1c70c",
-          "message": "Merge pull request #2900 from f1shl3gs/dependabot/cargo/rustls-webpki-0.103.13\n\nchore(deps): bump rustls-webpki from 0.103.10 to 0.103.13",
-          "timestamp": "2026-04-23T00:02:43+08:00",
-          "tree_id": "3d1f56ced3f3a74c56aea04c9d19279e7cc6066b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5e4f47f868b6392adcb8863a33bf2e2744d1c70c"
-        },
-        "date": 1776874400086,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 566,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40592.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "dbff79c3e1f2a9c4b5379b73aaff077dba3cae65",
           "message": "Merge pull request #2901 from f1shl3gs/dependabot/cargo/mimalloc-0.1.50\n\nchore(deps): bump mimalloc from 0.1.49 to 0.1.50",
           "timestamp": "2026-04-23T09:57:08+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41999.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9067dda74e7de50409c8224fb49133ba020842de",
+          "message": "Merge pull request #3016 from f1shl3gs/deps/async-trait_0.1.92\n\ndeps: bump async-trait to 0.1.92",
+          "timestamp": "2026-08-10T20:25:47+08:00",
+          "tree_id": "870afc8675783397556af22c4cfa2aef4afd18a7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9067dda74e7de50409c8224fb49133ba020842de"
+        },
+        "date": 1786365408382,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 585,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42007,
             "unit": "KiB"
           }
         ]
