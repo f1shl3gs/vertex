@@ -439,14 +439,14 @@ vtl = { path = "lib/vtl" }
 # Allocators
 mimalloc = { version = "0.1.52", default-features = false, optional = true }
 scudo = { git = "https://github.com/google/rust-scudo", rev = "0b2d15e4dce43c9dea1de55c5cf746130cb0849b", optional = true }
-snmalloc-rs = { version = "0.7.4", optional = true, default-features = false, features = ["build_cc"] }
+snmalloc-rs = { version = "0.7.5", optional = true, default-features = false, features = ["build_cc"] }
 tikv-jemallocator = { version = "0.7.0", optional = true, features = ["unprefixed_malloc_on_supported_platforms"] }
 tikv-jemalloc-ctl = { version = "0.7.0", optional = true, features = ["use_std"] }
 
 # Futrures & Tokio
 async-stream = { version = "0.3.6", optional = true }
 async-trait = { version = "0.1.92", default-features = false }
-futures = { version = "0.3.33", default-features = false }
+futures = { version = "0.3.34", default-features = false }
 tokio = { version = "1.53.1", default-features = false, features = ["time", "net", "signal", "rt-multi-thread", "io-util"] }
 tokio-util = { version = "0.7.19", default-features = false, features = ["codec", "time", "net"] }
 
@@ -459,7 +459,7 @@ hyper-rustls = { version = "0.27.9", default-features = false, features = ["rust
 hyper-util = { version = "0.1.20", default-features = false, features = ["client"] }
 http = { version = "1.5.0", default-features = false }
 httpdate = { version = "1.0.3", default-features = false, optional = true }
-http-body-util = { version = "0.1.4", default-features = false }
+http-body-util = { version = "0.1.5", default-features = false }
 
 # TLS
 rustls = { version = "0.23.43", default-features = false, features = ["ring"] }

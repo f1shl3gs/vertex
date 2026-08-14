@@ -7,10 +7,10 @@ publish = false
 [dependencies]
 event = { path = "../event" }
 hyper = { version = "1.11.0", default-features = false, features = ["full"] }
-http-body-util = { version = "0.1.4", default-features = false }
+http-body-util = { version = "0.1.5", default-features = false }
 hyper-util = { version = "0.1.20", default-features = false, features = ["client-legacy", "http1"] }
 hyper-unix = { path = "../hyper-unix" }
-futures = { version = "0.3.33", default-features = false }
+futures = { version = "0.3.34", default-features = false }
 percent-encoding = { version = "2.3.2", default-features = false }
 rand = { version = "0.10.2", default-features = false, features = ["thread_rng"] }
 serde = { version = "1.0.229", default-features = false }
