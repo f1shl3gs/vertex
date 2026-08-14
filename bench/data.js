@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1786682497049,
+  "lastUpdate": 1786682891677,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "05a545187047a2058673b4b4ea30f4fcb27b4479",
-          "message": "Merge pull request #2891 from f1shl3gs/dependabot/cargo/lru-0.16.4\n\nchore(deps): bump lru from 0.16.3 to 0.16.4",
-          "timestamp": "2026-04-14T11:59:59+08:00",
-          "tree_id": "3ff38473cd8c850a3adb89c4b937be1bd23f6c82",
-          "url": "https://github.com/f1shl3gs/vertex/commit/05a545187047a2058673b4b4ea30f4fcb27b4479"
-        },
-        "date": 1776139833012,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7767000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 706510,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.072,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a7e255b23eb833c5ea48b06ea0ae1c40c9e9e460",
           "message": "Merge pull request #2892 from f1shl3gs/lib/buffer/fix_race_condition_to_prevent_hanging_forever\n\nlib/buffer: fix race condition to prevent receiver hanging forever",
           "timestamp": "2026-04-14T23:07:51+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.632,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "89fc6d5d514743c997e1fe2bebb2c5306c4e9ffc",
+          "message": "Merge pull request #3018 from f1shl3gs/cargo/upgrade\n\nmisc: cargo upgrade incompatible",
+          "timestamp": "2026-08-14T12:37:57+08:00",
+          "tree_id": "6328d1203db8dc4ee98e57fcc499063e342e8698",
+          "url": "https://github.com/f1shl3gs/vertex/commit/89fc6d5d514743c997e1fe2bebb2c5306c4e9ffc"
+        },
+        "date": 1786682866320,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7443100,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 681110,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.509,
             "unit": "ns/op"
           }
         ]
