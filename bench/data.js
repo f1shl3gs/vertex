@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1786365432011,
+  "lastUpdate": 1786682415463,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "05a545187047a2058673b4b4ea30f4fcb27b4479",
-          "message": "Merge pull request #2891 from f1shl3gs/dependabot/cargo/lru-0.16.4\n\nchore(deps): bump lru from 0.16.3 to 0.16.4",
-          "timestamp": "2026-04-14T11:59:59+08:00",
-          "tree_id": "3ff38473cd8c850a3adb89c4b937be1bd23f6c82",
-          "url": "https://github.com/f1shl3gs/vertex/commit/05a545187047a2058673b4b4ea30f4fcb27b4479"
-        },
-        "date": 1776139314948,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 506030,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 502230,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "89fc6d5d514743c997e1fe2bebb2c5306c4e9ffc",
+          "message": "Merge pull request #3018 from f1shl3gs/cargo/upgrade\n\nmisc: cargo upgrade incompatible",
+          "timestamp": "2026-08-14T12:37:57+08:00",
+          "tree_id": "6328d1203db8dc4ee98e57fcc499063e342e8698",
+          "url": "https://github.com/f1shl3gs/vertex/commit/89fc6d5d514743c997e1fe2bebb2c5306c4e9ffc"
+        },
+        "date": 1786682390534,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 527080,
             "unit": "ns/op"
           }
         ]
