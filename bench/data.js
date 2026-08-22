@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1787377198887,
+  "lastUpdate": 1787377201968,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "820d7cb0d2a970292c796b2215ba0e89db3a3422",
-          "message": "Merge pull request #2902 from f1shl3gs/dependabot/cargo/rustls-0.23.39\n\nchore(deps): bump rustls from 0.23.38 to 0.23.39",
-          "timestamp": "2026-04-23T18:14:30+08:00",
-          "tree_id": "1195564bc2ebffcaebe973b73ad3927ea495ad88",
-          "url": "https://github.com/f1shl3gs/vertex/commit/820d7cb0d2a970292c796b2215ba0e89db3a3422"
-        },
-        "date": 1776939928018,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 587,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40588.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9bee4d5d0d78ae1d6f979b7083410134a6767bb9",
           "message": "Merge pull request #2903 from f1shl3gs/dependabot/cargo/libc-0.2.186\n\nchore(deps): bump libc from 0.2.185 to 0.2.186",
           "timestamp": "2026-04-25T00:42:54+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41998.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "921dcde50b1e17cde0db02cdf8d285cc83bc873a",
+          "message": "Merge pull request #3019 from f1shl3gs/extensions/heartbeat\n\nextensions: add a simple heartbeat extension",
+          "timestamp": "2026-08-22T13:28:20+08:00",
+          "tree_id": "14e0273567151db7619a40e7afca39e2c5885ae1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/921dcde50b1e17cde0db02cdf8d285cc83bc873a"
+        },
+        "date": 1787377173321,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 586,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42047.4,
             "unit": "KiB"
           }
         ]
