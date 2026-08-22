@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1787376696175,
+  "lastUpdate": 1787376708724,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a7e255b23eb833c5ea48b06ea0ae1c40c9e9e460",
-          "message": "Merge pull request #2892 from f1shl3gs/lib/buffer/fix_race_condition_to_prevent_hanging_forever\n\nlib/buffer: fix race condition to prevent receiver hanging forever",
-          "timestamp": "2026-04-14T23:07:51+08:00",
-          "tree_id": "fc612bdc266edf43527861578de6a9ac908730a1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a7e255b23eb833c5ea48b06ea0ae1c40c9e9e460"
-        },
-        "date": 1776179422520,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.828,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 164.37,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 346.11,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 725.2,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3d2cf63f06a9816ed07578cfd7da3ab9df93ac87",
           "message": "Merge pull request #2893 from f1shl3gs/dependabot/cargo/hyper-rustls-0.27.9\n\nchore(deps): bump hyper-rustls from 0.27.8 to 0.27.9",
           "timestamp": "2026-04-15T00:29:37+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 690.84,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "921dcde50b1e17cde0db02cdf8d285cc83bc873a",
+          "message": "Merge pull request #3019 from f1shl3gs/extensions/heartbeat\n\nextensions: add a simple heartbeat extension",
+          "timestamp": "2026-08-22T13:28:20+08:00",
+          "tree_id": "14e0273567151db7619a40e7afca39e2c5885ae1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/921dcde50b1e17cde0db02cdf8d285cc83bc873a"
+        },
+        "date": 1787376685962,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.499,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 189.72,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 349.8,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 706.58,
             "unit": "ns/op"
           }
         ]
