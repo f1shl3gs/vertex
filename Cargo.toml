@@ -155,6 +155,7 @@ extensions-dns_observer = ["dep:resolver"]
 extensions-docker_observer = ["dep:docker"]
 extensions-exec_observer = ["tokio/process"]
 extensions-healthcheck = ["tonic/router", "dep:tonic-health"]
+extensions-heartbeat = []
 extensions-host_observer = []
 extensions-http_observer = []
 extensions-kubernetes_observer = ["dep:kubernetes"]
@@ -168,6 +169,7 @@ extensions = [
     "extensions-docker_observer",
     "extensions-exec_observer",
     "extensions-healthcheck",
+    "extensions-heartbeat",
     "extensions-host_observer",
     "extensions-http_observer",
     "extensions-kubernetes_observer",
