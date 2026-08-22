@@ -8,6 +8,8 @@ mod docker_observer;
 mod exec_observer;
 #[cfg(feature = "extensions-healthcheck")]
 pub mod healthcheck;
+#[cfg(feature = "extensions-heartbeat")]
+mod heartbeat;
 #[cfg(feature = "extensions-host_observer")]
 mod host_observer;
 #[cfg(feature = "extensions-http_observer")]
