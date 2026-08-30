@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1788095797047,
+  "lastUpdate": 1788095800211,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "88989cb33c13b973626a44bfb39609602efce942",
-          "message": "Merge pull request #2895 from f1shl3gs/dependabot/cargo/tokio-1.52.0\n\nchore(deps): bump tokio from 1.51.1 to 1.52.0",
-          "timestamp": "2026-04-15T22:46:49+08:00",
-          "tree_id": "eb9ab41f8d18effd4a8791bcf580359bead42446",
-          "url": "https://github.com/f1shl3gs/vertex/commit/88989cb33c13b973626a44bfb39609602efce942"
-        },
-        "date": 1776264548126,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.415,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 98.981,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 174.3,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 162.56,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "417339aa2fd4d32db07f88223b22fd3e6fec5d45",
+          "message": "Merge pull request #3021 from f1shl3gs/dependabot/cargo/crc32fast-1.5.1\n\nchore(deps): bump crc32fast from 1.5.0 to 1.5.1",
+          "timestamp": "2026-08-30T21:14:14+08:00",
+          "tree_id": "11e36e96e6b454d1769dff18c433461316d0e663",
+          "url": "https://github.com/f1shl3gs/vertex/commit/417339aa2fd4d32db07f88223b22fd3e6fec5d45"
+        },
+        "date": 1788095777192,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.685,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 84.988,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 164.27,
             "unit": "ns/op"
           }
         ]
