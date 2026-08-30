@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1788095762266,
+  "lastUpdate": 1788095777649,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3d2cf63f06a9816ed07578cfd7da3ab9df93ac87",
-          "message": "Merge pull request #2893 from f1shl3gs/dependabot/cargo/hyper-rustls-0.27.9\n\nchore(deps): bump hyper-rustls from 0.27.8 to 0.27.9",
-          "timestamp": "2026-04-15T00:29:37+08:00",
-          "tree_id": "0d127bc334a21845f1e163bba7e8e45f1fec0c94",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3d2cf63f06a9816ed07578cfd7da3ab9df93ac87"
-        },
-        "date": 1776184312279,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.049,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 99.123,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 172.64,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 166.79,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d0e4ef684ef8b5dd22ebe9b85082704ae83074a9",
+          "message": "Merge pull request #3022 from f1shl3gs/dependabot/cargo/syn-3.0.4\n\nchore(deps): bump syn from 3.0.3 to 3.0.4",
+          "timestamp": "2026-08-30T21:13:43+08:00",
+          "tree_id": "bbbe51480c389629e5d5f16c09d4e15c821e3cdb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d0e4ef684ef8b5dd22ebe9b85082704ae83074a9"
+        },
+        "date": 1788095753748,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.621,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 85.02,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 162.56,
             "unit": "ns/op"
           }
         ]
