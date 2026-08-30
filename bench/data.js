@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1788095824551,
+  "lastUpdate": 1788095832730,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "92f86397acc6d5732cab522c09c31be1dd7d8aca",
-          "message": "Merge pull request #2896 from f1shl3gs/dependabot/cargo/lru-0.17.0\n\nchore(deps): bump lru from 0.16.4 to 0.17.0",
-          "timestamp": "2026-04-16T14:05:17+08:00",
-          "tree_id": "b4655ef3936d7c2c2054a2335841179874d1f684",
-          "url": "https://github.com/f1shl3gs/vertex/commit/92f86397acc6d5732cab522c09c31be1dd7d8aca"
-        },
-        "date": 1776319649937,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 540440,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 546920,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "73205bd60fc40a2fe6356775f6c7deb8166f0d9b",
+          "message": "Merge pull request #3020 from f1shl3gs/dependabot/cargo/quick-xml-0.42.0\n\nchore(deps): bump quick-xml from 0.41.0 to 0.42.0",
+          "timestamp": "2026-08-30T21:14:40+08:00",
+          "tree_id": "aad171b45deabdaf7ce91a804df247b40b03d841",
+          "url": "https://github.com/f1shl3gs/vertex/commit/73205bd60fc40a2fe6356775f6c7deb8166f0d9b"
+        },
+        "date": 1788095808543,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 545880,
             "unit": "ns/op"
           }
         ]
