@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1788260158910,
+  "lastUpdate": 1788260379498,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "05caee31cc6b2ec69a14f0ee9d762af4bae6e3c6",
-          "message": "Merge pull request #2897 from f1shl3gs/toolchain/1.95.0\n\ntoolchain: bump to 1.95.0",
-          "timestamp": "2026-04-16T22:39:31+08:00",
-          "tree_id": "da519b658c8bcd39eb6b09887a93cc32e9b02e6a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/05caee31cc6b2ec69a14f0ee9d762af4bae6e3c6"
-        },
-        "date": 1776350946188,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7121000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 750950,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.247,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8b98c67e61dfe4499af6d6a614ff0eb17041396e",
           "message": "Merge pull request #2898 from f1shl3gs/dependabot/cargo/tokio-1.52.1\n\nchore(deps): bump tokio from 1.52.0 to 1.52.1",
           "timestamp": "2026-04-22T21:35:56+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.942,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "df8f567317c1aa5ee2f8dd324a72468be5f9dc58",
+          "message": "Merge pull request #3024 from f1shl3gs/dependabot/cargo/hyper-1.11.1\n\nchore(deps): bump hyper from 1.11.0 to 1.11.1",
+          "timestamp": "2026-09-01T18:50:36+08:00",
+          "tree_id": "5b22700dc8fe4d313e15df1d07fbe1bed9e5dcb5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/df8f567317c1aa5ee2f8dd324a72468be5f9dc58"
+        },
+        "date": 1788260359516,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 6108000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 621920,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 41.673,
             "unit": "ns/op"
           }
         ]
