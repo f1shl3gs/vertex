@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1788260487281,
+  "lastUpdate": 1788260488781,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "586468d3da10ad2c47bc326feacedad3242997e6",
-          "message": "Merge pull request #2910 from f1shl3gs/sources/mysql/refactor\n\nsources/mysql: refactor",
-          "timestamp": "2026-05-06T00:30:02+08:00",
-          "tree_id": "c3c19d93193566ca1dcd357e524b58d409660746",
-          "url": "https://github.com/f1shl3gs/vertex/commit/586468d3da10ad2c47bc326feacedad3242997e6"
-        },
-        "date": 1777999212404,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 513,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40248.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ff613a49d1ae4de20877b2c858c619a16d8e3c55",
           "message": "Merge pull request #2908 from f1shl3gs/dependabot/cargo/tokio-1.52.2\n\nchore(deps): bump tokio from 1.52.1 to 1.52.2",
           "timestamp": "2026-05-06T00:30:30+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42052.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "162df6273c99d1982931d16f22f1863f3ec8eb88",
+          "message": "Merge pull request #3023 from f1shl3gs/dependabot/cargo/twox-hash-2.1.4\n\nchore(deps): bump twox-hash from 2.1.3 to 2.1.4",
+          "timestamp": "2026-09-01T18:49:52+08:00",
+          "tree_id": "2256687998dade4550a5d3b5976e02d0c4f5042d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/162df6273c99d1982931d16f22f1863f3ec8eb88"
+        },
+        "date": 1788260464419,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 598,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42053.9,
             "unit": "KiB"
           }
         ]
