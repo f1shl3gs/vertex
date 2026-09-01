@@ -583,7 +583,7 @@ dependencies = [
  "event",
  "http",
  "humanize",
- "indexmap 2.14.0",
+ "indexmap 2.14.1",
  "inventory",
  "regex",
  "serde",
@@ -1301,7 +1301,7 @@ dependencies = [
  "hyper",
  "hyper-rustls",
  "hyper-util",
- "indexmap 2.14.0",
+ "indexmap 2.14.1",
  "inventory",
  "ipnet",
  "libc",
@@ -1533,7 +1533,7 @@ dependencies = [
  "futures-core",
  "futures-sink",
  "http",
- "indexmap 2.14.0",
+ "indexmap 2.14.1",
  "slab",
  "tokio",
  "tokio-util",
@@ -1967,9 +1967,9 @@ dependencies = [
 
 [[package]]
 name = "indexmap"
-version = "2.14.0"
+version = "2.14.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d466e9454f08e4a911e14806c24e16fba1b4c121d1ea474396f396069cf949d9"
+checksum = "07aa2048142242915a31d35844fb311e0e53fcca590c3a0a40dcf1b841fa09eb"
 dependencies = [
  "equivalent",
  "hashbrown 0.17.1",
@@ -1984,7 +1984,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "232929e1d75fe899576a3d5c7416ad0d88dbfbb3c3d6aa00873a7408a50ddb88"
 dependencies = [
  "ahash",
- "indexmap 2.14.0",
+ "indexmap 2.14.1",
  "is-terminal",
  "itoa",
  "log",
@@ -2687,7 +2687,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b4c5cc86750666a3ed20bdaf5ca2a0344f9c67674cae0515bec2da16fbaa47db"
 dependencies = [
  "fixedbitset 0.4.2",
- "indexmap 2.14.0",
+ "indexmap 2.14.1",
 ]
 
 [[package]]
@@ -2698,7 +2698,7 @@ checksum = "8701b58ea97060d5e5b155d383a69952a60943f0e6dfe30b04c287beb0b27455"
 dependencies = [
  "fixedbitset 0.5.7",
  "hashbrown 0.15.5",
- "indexmap 2.14.0",
+ "indexmap 2.14.1",
 ]
 
 [[package]]
@@ -2895,7 +2895,7 @@ name = "prometheus"
 version = "0.1.0"
 dependencies = [
  "criterion",
- "indexmap 2.14.0",
+ "indexmap 2.14.1",
  "prost 0.14.4",
  "prost-build 0.14.4",
 ]
@@ -3864,7 +3864,7 @@ dependencies = [
  "chrono",
  "hex",
  "indexmap 1.9.3",
- "indexmap 2.14.0",
+ "indexmap 2.14.1",
  "schemars 0.9.0",
  "schemars 1.2.2",
  "serde_core",
@@ -3890,7 +3890,7 @@ name = "serde_yaml"
 version = "0.9.34+deprecated"
 source = "git+https://github.com/f1shl3gs/serde-yaml.git?rev=62dea63989d8bfd09a9453fa957605dcf09aa4a7#62dea63989d8bfd09a9453fa957605dcf09aa4a7"
 dependencies = [
- "indexmap 2.14.0",
+ "indexmap 2.14.1",
  "itoa",
  "serde_core",
  "unsafe-libyaml",
@@ -4570,7 +4570,7 @@ checksum = "ebe5ef63511595f1344e2d5cfa636d973292adc0eec1f0ad45fae9f0851ab1d4"
 dependencies = [
  "futures-core",
  "futures-util",
- "indexmap 2.14.0",
+ "indexmap 2.14.1",
  "pin-project-lite",
  "slab",
  "sync_wrapper",
@@ -4918,7 +4918,7 @@ dependencies = [
  "hyper-rustls",
  "hyper-unix",
  "hyper-util",
- "indexmap 2.14.0",
+ "indexmap 2.14.1",
  "inventory",
  "jaeger",
  "kubernetes",
