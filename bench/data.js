@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1788259945381,
+  "lastUpdate": 1788259976693,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8b98c67e61dfe4499af6d6a614ff0eb17041396e",
-          "message": "Merge pull request #2898 from f1shl3gs/dependabot/cargo/tokio-1.52.1\n\nchore(deps): bump tokio from 1.52.0 to 1.52.1",
-          "timestamp": "2026-04-22T21:35:56+08:00",
-          "tree_id": "169555293bab09ce2963e1279de1371c3cf6b4f8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8b98c67e61dfe4499af6d6a614ff0eb17041396e"
-        },
-        "date": 1776865101081,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 491650,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 516300,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "df8f567317c1aa5ee2f8dd324a72468be5f9dc58",
+          "message": "Merge pull request #3024 from f1shl3gs/dependabot/cargo/hyper-1.11.1\n\nchore(deps): bump hyper from 1.11.0 to 1.11.1",
+          "timestamp": "2026-09-01T18:50:36+08:00",
+          "tree_id": "5b22700dc8fe4d313e15df1d07fbe1bed9e5dcb5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/df8f567317c1aa5ee2f8dd324a72468be5f9dc58"
+        },
+        "date": 1788259953662,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 459660,
             "unit": "ns/op"
           }
         ]
