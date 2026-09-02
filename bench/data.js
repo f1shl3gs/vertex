@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1788324819117,
+  "lastUpdate": 1788324829076,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "dbff79c3e1f2a9c4b5379b73aaff077dba3cae65",
-          "message": "Merge pull request #2901 from f1shl3gs/dependabot/cargo/mimalloc-0.1.50\n\nchore(deps): bump mimalloc from 0.1.49 to 0.1.50",
-          "timestamp": "2026-04-23T09:57:08+08:00",
-          "tree_id": "282da0725b05e5966b002a83412b0175d12c72c5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/dbff79c3e1f2a9c4b5379b73aaff077dba3cae65"
-        },
-        "date": 1776909584816,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.815,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 172.99,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 336.51,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 725.9,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "820d7cb0d2a970292c796b2215ba0e89db3a3422",
           "message": "Merge pull request #2902 from f1shl3gs/dependabot/cargo/rustls-0.23.39\n\nchore(deps): bump rustls from 0.23.38 to 0.23.39",
           "timestamp": "2026-04-23T18:14:30+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 714.01,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "43914242339fdb15febaf2a472ef70f70dcdd9b1",
+          "message": "Merge pull request #3027 from f1shl3gs/dependabot/cargo/indexmap-2.14.1\n\nchore(deps): bump indexmap from 2.14.0 to 2.14.1",
+          "timestamp": "2026-09-02T12:51:04+08:00",
+          "tree_id": "7d0686d52e1b34f28be731d1fac36da3ba790fa1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/43914242339fdb15febaf2a472ef70f70dcdd9b1"
+        },
+        "date": 1788324805217,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.861,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 187.74,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 341.52,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 690.14,
             "unit": "ns/op"
           }
         ]
