@@ -63,6 +63,7 @@ where
     ///
     /// The return type is mostly to simplify caller code.
     /// An error is currently only returned if a service returns an error from `poll_ready`
+    #[allow(clippy::result_unit_err)]
     pub async fn run(self) -> Result<(), ()> {
         let mut inflight = FuturesUnorderedCount::new();
         let mut next_batch: Option<VecDeque<I::Item>> = None;

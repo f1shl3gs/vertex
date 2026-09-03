@@ -11,7 +11,7 @@ pub enum Error {
     Xdr(protocol::Error),
 
     /// Libvirt returned error
-    Libvirt(protocol::MessageError),
+    Libvirt(Box<protocol::MessageError>),
 }
 
 impl From<io::Error> for Error {
@@ -28,6 +28,6 @@ impl From<protocol::Error> for Error {
 
 impl From<protocol::MessageError> for Error {
     fn from(err: protocol::MessageError) -> Self {
-        Self::Libvirt(err)
+        Self::Libvirt(Box::new(err))
     }
 }

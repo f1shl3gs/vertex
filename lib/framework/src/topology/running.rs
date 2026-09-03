@@ -169,13 +169,13 @@ impl RunningTopology {
 
     /// On Error, topology is in invalid state.
     /// May change components even if reload fails.
-    pub async fn reload_config_and_respawn(&mut self, new_config: Config) -> Result<bool, ()> {
+    pub async fn reload_config_and_respawn(&mut self, new_config: Config) -> Option<bool> {
         if self.config.global != new_config.global {
             error!(
                 message = "Global options can't be changed while reloading config file; reload aborted. Please restart Vertex to reload the configuration file."
             );
 
-            return Ok(false);
+            return Some(false);
         }
 
         let diff = ConfigDiff::new(&self.config, &new_config);
@@ -200,7 +200,7 @@ impl RunningTopology {
             self.spawn_diff(&diff, new_pieces);
             self.config = new_config;
             // We have successfully changed to new config.
-            return Ok(true);
+            return Some(true);
         }
 
         // We need to rebuild the removed.
@@ -214,13 +214,13 @@ impl RunningTopology {
             self.connect_diff(&diff, &mut new_pieces).await;
             self.spawn_diff(&diff, new_pieces);
             // We have successfully returned to old config.
-            return Ok(false);
+            return Some(false);
         }
 
         // We failed in rebuilding the old state.
         error!("Failed in rebuilding the old configuration.");
 
-        Err(())
+        None
     }
 
     pub(crate) async fn run_healthchecks(

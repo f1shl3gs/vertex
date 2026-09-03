@@ -251,7 +251,7 @@ impl<R: Read, T: Unpack<R>> Unpack<R> for Vec<T> {
 #[cfg(test)]
 pub fn assert_pack<P>(req: P, want: &[u8])
 where
-    P: for<'a> Pack<Vec<u8>> + Sized,
+    P: Pack<Vec<u8>> + Sized,
 {
     let mut buf = Vec::new();
     req.pack(&mut buf).expect("encode success");

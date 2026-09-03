@@ -7,6 +7,7 @@ pub use observer::{Change, Notifier, Observer, available_observers, current_endp
 
 /// `run` is a simple helper for period service discovery, others with WATCH mechanism is
 /// not suitable for this function.
+#[allow(clippy::result_unit_err)]
 pub async fn run<L>(
     observer: Observer,
     interval: std::time::Duration,
