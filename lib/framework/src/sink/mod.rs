@@ -64,6 +64,7 @@ impl Sink {
     /// # Errors
     ///
     /// It is unclear under what conditions this function will error.
+    #[allow(clippy::result_unit_err)]
     pub async fn run<S>(self, input: S) -> Result<(), ()>
     where
         S: Stream<Item = Events> + Send,
@@ -77,6 +78,7 @@ impl Sink {
     /// Run the `Sink` with a one-time `Vec` of `Event`, for use in tests
     ///
     /// Note: this function should be used for test only.
+    #[allow(clippy::result_unit_err)]
     pub async fn run_events<I>(self, input: I) -> Result<(), ()>
     where
         I: IntoIterator<Item = Event> + Send,

@@ -225,17 +225,17 @@ impl RootCommand {
                                     Ok(mut new_config) => {
                                         new_config.healthcheck.set_require_healthy(true);
                                         match topology.reload_config_and_respawn(new_config).await {
-                                            Ok(true) => {
+                                            Some(true) => {
                                                 #[cfg(feature = "extensions-remote_tap")]
                                                 remote_tap::update_config(topology.config());
 
                                                 info!(message = "Vertex reloaded");
                                             },
-                                            Ok(false) => {
+                                            Some(false) => {
                                                 info!(message = "Vertex reload failed");
                                             },
                                             // Trigger graceful shutdown for what remains of the topology
-                                            Err(()) => {
+                                            None => {
                                                 break SignalTo::Shutdown;
                                             }
                                         }
@@ -262,16 +262,16 @@ impl RootCommand {
                                 if let Some(mut new_config) = new_config {
                                     new_config.healthcheck.set_require_healthy(true);
                                     match topology.reload_config_and_respawn(new_config).await {
-                                        Ok(true) => {
+                                        Some(true) => {
                                             #[cfg(feature = "extensions-remote_tap")]
                                             remote_tap::update_config(topology.config());
 
                                             info!(message = "Reload config successes");
                                         },
-                                        Ok(false) => {
+                                        Some(false) => {
                                             warn!(message = "Reload config failed");
                                         },
-                                        Err(()) => {
+                                        None => {
                                             break SignalTo::Shutdown;
                                         }
                                     }
