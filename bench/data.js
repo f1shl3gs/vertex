@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1788437514403,
+  "lastUpdate": 1788748793373,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9bee4d5d0d78ae1d6f979b7083410134a6767bb9",
-          "message": "Merge pull request #2903 from f1shl3gs/dependabot/cargo/libc-0.2.186\n\nchore(deps): bump libc from 0.2.185 to 0.2.186",
-          "timestamp": "2026-04-25T00:42:54+08:00",
-          "tree_id": "02ebe8d73984b3e392cfbaafe46cb588af560236",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9bee4d5d0d78ae1d6f979b7083410134a6767bb9"
-        },
-        "date": 1777049113145,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 541870,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 525030,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "94bd4a92dd6c36a4f27f39791bc70754f42f1434",
+          "message": "Merge pull request #3030 from f1shl3gs/cargo/upgrade\n\ncargo: upgrade",
+          "timestamp": "2026-09-07T10:37:26+08:00",
+          "tree_id": "5f815bb809897b4655aef2d3d51e35051b7ec418",
+          "url": "https://github.com/f1shl3gs/vertex/commit/94bd4a92dd6c36a4f27f39791bc70754f42f1434"
+        },
+        "date": 1788748765309,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 511260,
             "unit": "ns/op"
           }
         ]
