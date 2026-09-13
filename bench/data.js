@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1789282058638,
+  "lastUpdate": 1789282146304,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a3711005e86453245b11bbbdea041acdcbbdb0ff",
-          "message": "Merge pull request #2917 from f1shl3gs/dependabot/cargo/quick-xml-0.39.4\n\nchore(deps): bump quick-xml from 0.39.3 to 0.39.4",
-          "timestamp": "2026-05-09T11:28:52+08:00",
-          "tree_id": "2e7bccc9ddc9e73f97d744ad269024d1e0224567",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a3711005e86453245b11bbbdea041acdcbbdb0ff"
-        },
-        "date": 1778297991222,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 565,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40253.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "042a268d6df1b589a2ac67fcc27a37b2ce5c5674",
           "message": "Merge pull request #2918 from f1shl3gs/dependabot/cargo/quick-xml-0.40.0\n\nchore(deps): bump quick-xml from 0.39.4 to 0.40.0",
           "timestamp": "2026-05-13T14:02:35+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42008.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ae71338332dae5d695750ab2a4b0f15fdf802649",
+          "message": "Merge pull request #3034 from f1shl3gs/dependabot/cargo/encoding_rs-0.8.40\n\nchore(deps): bump encoding_rs from 0.8.35 to 0.8.40",
+          "timestamp": "2026-09-13T14:37:54+08:00",
+          "tree_id": "d523206fb53759e2cfa9ff3449fcb81cf43785ae",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ae71338332dae5d695750ab2a4b0f15fdf802649"
+        },
+        "date": 1789282122580,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 573,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42012.6,
             "unit": "KiB"
           }
         ]
