@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1789281635284,
+  "lastUpdate": 1789281637592,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "419777b84e1169bddfd3e06440ca291b8e9a683b",
-          "message": "Merge pull request #2907 from f1shl3gs/dependabot/cargo/rustls-0.23.40\n\nchore(deps): bump rustls from 0.23.39 to 0.23.40",
-          "timestamp": "2026-04-29T01:29:02+08:00",
-          "tree_id": "2b3fdd35cb92586249a5998d7ff6b6dca2106ce9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/419777b84e1169bddfd3e06440ca291b8e9a683b"
-        },
-        "date": 1777397472819,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.011,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 87.481,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 164.95,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 167.61,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ae71338332dae5d695750ab2a4b0f15fdf802649",
+          "message": "Merge pull request #3034 from f1shl3gs/dependabot/cargo/encoding_rs-0.8.40\n\nchore(deps): bump encoding_rs from 0.8.35 to 0.8.40",
+          "timestamp": "2026-09-13T14:37:54+08:00",
+          "tree_id": "d523206fb53759e2cfa9ff3449fcb81cf43785ae",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ae71338332dae5d695750ab2a4b0f15fdf802649"
+        },
+        "date": 1789281612284,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.554,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 87.402,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 168.17,
             "unit": "ns/op"
           }
         ]
