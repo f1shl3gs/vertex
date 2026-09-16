@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1789282146304,
+  "lastUpdate": 1789562298304,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ff613a49d1ae4de20877b2c858c619a16d8e3c55",
-          "message": "Merge pull request #2908 from f1shl3gs/dependabot/cargo/tokio-1.52.2\n\nchore(deps): bump tokio from 1.52.1 to 1.52.2",
-          "timestamp": "2026-05-06T00:30:30+08:00",
-          "tree_id": "cc6cf3f7226da05567ce78f82a0dcb46f73f847e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ff613a49d1ae4de20877b2c858c619a16d8e3c55"
-        },
-        "date": 1777998765600,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 508240,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 519090,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b39d8fd397deec6dca3fd0f4f67c2967cfc5bb9a",
+          "message": "Merge pull request #3036 from f1shl3gs/dependabot/cargo/crc32fast-1.5.2\n\nchore(deps): bump crc32fast from 1.5.1 to 1.5.2",
+          "timestamp": "2026-09-16T20:36:13+08:00",
+          "tree_id": "4d4f985e75e9630cf3f14883b13493bc8b97804c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b39d8fd397deec6dca3fd0f4f67c2967cfc5bb9a"
+        },
+        "date": 1789562278199,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 384370,
             "unit": "ns/op"
           }
         ]
