@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1789564528464,
+  "lastUpdate": 1789564908146,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "cbd7860038b998b81404a6a475b1be13d94fb50c",
-          "message": "Merge pull request #2920 from f1shl3gs/dependabot/cargo/quick-xml-0.40.1\n\nchore(deps): bump quick-xml from 0.40.0 to 0.40.1",
-          "timestamp": "2026-05-16T20:51:04+08:00",
-          "tree_id": "09439b9736cba23a3baabe9d87af6d348ed80952",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cbd7860038b998b81404a6a475b1be13d94fb50c"
-        },
-        "date": 1778936491693,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 550,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40168.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2c851584a10e442651bdc804f48ffb456ac09903",
           "message": "Merge pull request #2921 from f1shl3gs/dependabot/cargo/dashmap-6.2.1\n\nchore(deps): bump dashmap from 6.1.0 to 6.2.1",
           "timestamp": "2026-05-20T15:46:38+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42004.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "34114e03042e50938666a693b8cb59c3884b5067",
+          "message": "Merge pull request #3037 from f1shl3gs/extensions/heartbeat/add_retry_after\n\nextensions/heartbeat: honor Retry-After header",
+          "timestamp": "2026-09-16T21:11:58+08:00",
+          "tree_id": "41d585de0abf58145034ccfb7b3985fa205ac9a1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/34114e03042e50938666a693b8cb59c3884b5067"
+        },
+        "date": 1789564889221,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 494,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42007.4,
             "unit": "KiB"
           }
         ]
