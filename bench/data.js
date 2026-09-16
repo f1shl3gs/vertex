@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1789562789761,
+  "lastUpdate": 1789562804692,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ff613a49d1ae4de20877b2c858c619a16d8e3c55",
-          "message": "Merge pull request #2908 from f1shl3gs/dependabot/cargo/tokio-1.52.2\n\nchore(deps): bump tokio from 1.52.1 to 1.52.2",
-          "timestamp": "2026-05-06T00:30:30+08:00",
-          "tree_id": "cc6cf3f7226da05567ce78f82a0dcb46f73f847e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ff613a49d1ae4de20877b2c858c619a16d8e3c55"
-        },
-        "date": 1777999240536,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7179400,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 636280,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.471,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "000480b211aa3c8d72056aad71fcb7cc9c9741c8",
           "message": "Merge pull request #2909 from f1shl3gs/dependabot/cargo/quick-xml-0.39.3\n\nchore(deps): bump quick-xml from 0.39.2 to 0.39.3",
           "timestamp": "2026-05-06T00:30:21+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.579,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a69a5e129e492737411ecb5c8c7e5e5dfba96a5a",
+          "message": "Merge pull request #3035 from f1shl3gs/dependabot/cargo/encoding_rs-0.8.41\n\nchore(deps): bump encoding_rs from 0.8.40 to 0.8.41",
+          "timestamp": "2026-09-16T20:36:29+08:00",
+          "tree_id": "8c98e167b801fcf6f93f9a0ec450c84d1d7a70ab",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a69a5e129e492737411ecb5c8c7e5e5dfba96a5a"
+        },
+        "date": 1789562781352,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7560300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 762680,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 54.076,
             "unit": "ns/op"
           }
         ]
