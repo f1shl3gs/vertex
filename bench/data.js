@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1789564468739,
+  "lastUpdate": 1789564522306,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "586468d3da10ad2c47bc326feacedad3242997e6",
-          "message": "Merge pull request #2910 from f1shl3gs/sources/mysql/refactor\n\nsources/mysql: refactor",
-          "timestamp": "2026-05-06T00:30:02+08:00",
-          "tree_id": "c3c19d93193566ca1dcd357e524b58d409660746",
-          "url": "https://github.com/f1shl3gs/vertex/commit/586468d3da10ad2c47bc326feacedad3242997e6"
-        },
-        "date": 1777998821530,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 24.559,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 183.72,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 340.48,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 694.4,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b078d7c53a8ab9f3a1d9917422e7f006d0d56628",
           "message": "Merge pull request #2911 from f1shl3gs/deps/bump_rskafka_to_latest\n\ndeps: bump rskafka to latest",
           "timestamp": "2026-05-06T01:17:20+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 708.63,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "34114e03042e50938666a693b8cb59c3884b5067",
+          "message": "Merge pull request #3037 from f1shl3gs/extensions/heartbeat/add_retry_after\n\nextensions/heartbeat: honor Retry-After header",
+          "timestamp": "2026-09-16T21:11:58+08:00",
+          "tree_id": "41d585de0abf58145034ccfb7b3985fa205ac9a1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/34114e03042e50938666a693b8cb59c3884b5067"
+        },
+        "date": 1789564499386,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.459,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 161.11,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 327.22,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 664,
             "unit": "ns/op"
           }
         ]
