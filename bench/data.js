@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1789576762799,
+  "lastUpdate": 1789576820624,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2c851584a10e442651bdc804f48ffb456ac09903",
-          "message": "Merge pull request #2921 from f1shl3gs/dependabot/cargo/dashmap-6.2.1\n\nchore(deps): bump dashmap from 6.1.0 to 6.2.1",
-          "timestamp": "2026-05-20T15:46:38+08:00",
-          "tree_id": "637c5ad8a5ccb51e4c014a462e7735b04782d651",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2c851584a10e442651bdc804f48ffb456ac09903"
-        },
-        "date": 1779263849546,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 573,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40169,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f5254c410c7f72297b72a77f51fc2bdaa2892dce",
           "message": "Merge pull request #2922 from f1shl3gs/dependabot/cargo/typetag-0.2.22\n\nchore(deps): bump typetag from 0.2.21 to 0.2.22",
           "timestamp": "2026-05-20T15:47:40+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42007.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eaa7d762d4fb8f67a020efd183b5af68f271e2e5",
+          "message": "Merge pull request #3038 from f1shl3gs/cargo/update\n\ndeps: bump crc32fast, encoding_rs and rustls",
+          "timestamp": "2026-09-17T00:28:54+08:00",
+          "tree_id": "c76d2fe1c9a2bd752075c85d8b11c24cbeaa653e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/eaa7d762d4fb8f67a020efd183b5af68f271e2e5"
+        },
+        "date": 1789576796818,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 573,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42027.2,
             "unit": "KiB"
           }
         ]
