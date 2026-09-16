@@ -38,6 +38,8 @@ struct Config {
     tls: Option<TlsConfig>,
 
     auth: Option<Auth>,
+
+    // TODO: options for content control
 }
 
 #[async_trait::async_trait]
@@ -61,17 +63,28 @@ impl ExtensionConfig for Config {
 
         let auth = self.auth.clone();
         let endpoint = self.endpoint.parse::<Uri>()?;
-        let mut ticker = tokio::time::interval(self.interval);
+        let interval = self.interval;
         let mut shutdown = cx.shutdown;
 
         Ok(Box::pin(async move {
+            // random delay
+            let delay = rand::random::<u64>() % interval.as_secs();
+            tokio::select! {
+                _ = &mut shutdown => return Ok(()),
+                _ = tokio::time::sleep(Duration::from_secs(delay)) => {
+                    // first delay done
+                }
+            }
+
             loop {
+                let wait = send_heartbeat(&client, &endpoint, auth.as_ref(), &heartbeat)
+                    .await
+                    .unwrap_or(interval);
+
                 tokio::select! {
                     _ = &mut shutdown => break,
-                    _ = ticker.tick() => {}
+                    _ = tokio::time::sleep(wait) => {}
                 }
-
-                send_heartbeat(&client, &endpoint, auth.as_ref(), &heartbeat).await;
             }
 
             Ok(())
@@ -126,7 +139,7 @@ async fn send_heartbeat(
     endpoint: &Uri,
     auth: Option<&Auth>,
     heartbeat: &Heartbeat,
-) {
+) -> Option<Duration> {
     let payload =
         Bytes::from(serde_json::to_vec(heartbeat).expect("failed to serialize heartbeat"));
     let mut req = match Request::builder()
@@ -137,8 +150,7 @@ async fn send_heartbeat(
         Ok(req) => req,
         Err(err) => {
             error!(message = "build heartbeat request failed", ?err);
-
-            return;
+            return None;
         }
     };
 
@@ -150,16 +162,23 @@ async fn send_heartbeat(
         Ok(resp) => resp,
         Err(err) => {
             warn!(message = "failed to send http request", ?err);
-            return;
+            return None;
         }
     };
 
-    if resp.status().is_success() {
+    let (parts, incoming) = resp.into_parts();
+    let retry_after = parts
+        .headers
+        .get("Retry-After")
+        .and_then(|v| v.to_str().ok())
+        .and_then(|v| v.parse().ok())
+        .map(Duration::from_secs);
+
+    if parts.status.is_success() {
         debug!(message = "send heartbeat success");
-        return;
+        return retry_after;
     }
 
-    let (parts, incoming) = resp.into_parts();
     match incoming.collect().await {
         Ok(body) => {
             warn!(
@@ -177,6 +196,8 @@ async fn send_heartbeat(
             )
         }
     }
+
+    retry_after
 }
 
 #[cfg(test)]
