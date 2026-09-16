@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1789562414810,
+  "lastUpdate": 1789562768603,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "042a268d6df1b589a2ac67fcc27a37b2ce5c5674",
-          "message": "Merge pull request #2918 from f1shl3gs/dependabot/cargo/quick-xml-0.40.0\n\nchore(deps): bump quick-xml from 0.39.4 to 0.40.0",
-          "timestamp": "2026-05-13T14:02:35+08:00",
-          "tree_id": "0ffcf12b32e8a9b5a7584230bf86f61158aeeb17",
-          "url": "https://github.com/f1shl3gs/vertex/commit/042a268d6df1b589a2ac67fcc27a37b2ce5c5674"
-        },
-        "date": 1778652805051,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 563,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40247.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "149bd384e5b6cce9286ba09b9513c7cbaff16830",
           "message": "Merge pull request #2919 from f1shl3gs/cargo/update\n\ncargo: update",
           "timestamp": "2026-05-14T19:40:36+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42012.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b39d8fd397deec6dca3fd0f4f67c2967cfc5bb9a",
+          "message": "Merge pull request #3036 from f1shl3gs/dependabot/cargo/crc32fast-1.5.2\n\nchore(deps): bump crc32fast from 1.5.1 to 1.5.2",
+          "timestamp": "2026-09-16T20:36:13+08:00",
+          "tree_id": "4d4f985e75e9630cf3f14883b13493bc8b97804c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b39d8fd397deec6dca3fd0f4f67c2967cfc5bb9a"
+        },
+        "date": 1789562747191,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 501,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42021,
             "unit": "KiB"
           }
         ]
