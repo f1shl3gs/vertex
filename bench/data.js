@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1789576276852,
+  "lastUpdate": 1789576290091,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b078d7c53a8ab9f3a1d9917422e7f006d0d56628",
-          "message": "Merge pull request #2911 from f1shl3gs/deps/bump_rskafka_to_latest\n\ndeps: bump rskafka to latest",
-          "timestamp": "2026-05-06T01:17:20+08:00",
-          "tree_id": "0a91b260551c7d8f403f8f7d3a1a859edc09cbaa",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b078d7c53a8ab9f3a1d9917422e7f006d0d56628"
-        },
-        "date": 1778001593788,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 36.502,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 94.246,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 160.6,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 166.69,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eaa7d762d4fb8f67a020efd183b5af68f271e2e5",
+          "message": "Merge pull request #3038 from f1shl3gs/cargo/update\n\ndeps: bump crc32fast, encoding_rs and rustls",
+          "timestamp": "2026-09-17T00:28:54+08:00",
+          "tree_id": "c76d2fe1c9a2bd752075c85d8b11c24cbeaa653e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/eaa7d762d4fb8f67a020efd183b5af68f271e2e5"
+        },
+        "date": 1789576266787,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.31,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 87.004,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 167.15,
             "unit": "ns/op"
           }
         ]
