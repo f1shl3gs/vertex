@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1789564908146,
+  "lastUpdate": 1789564931150,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "000480b211aa3c8d72056aad71fcb7cc9c9741c8",
-          "message": "Merge pull request #2909 from f1shl3gs/dependabot/cargo/quick-xml-0.39.3\n\nchore(deps): bump quick-xml from 0.39.2 to 0.39.3",
-          "timestamp": "2026-05-06T00:30:21+08:00",
-          "tree_id": "01a78b0cd75cb66f2bcc9fbf08ae625affe7c1a2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/000480b211aa3c8d72056aad71fcb7cc9c9741c8"
-        },
-        "date": 1777999244106,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 8312400,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 635410,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.216,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b078d7c53a8ab9f3a1d9917422e7f006d0d56628",
           "message": "Merge pull request #2911 from f1shl3gs/deps/bump_rskafka_to_latest\n\ndeps: bump rskafka to latest",
           "timestamp": "2026-05-06T01:17:20+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 54.076,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "34114e03042e50938666a693b8cb59c3884b5067",
+          "message": "Merge pull request #3037 from f1shl3gs/extensions/heartbeat/add_retry_after\n\nextensions/heartbeat: honor Retry-After header",
+          "timestamp": "2026-09-16T21:11:58+08:00",
+          "tree_id": "41d585de0abf58145034ccfb7b3985fa205ac9a1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/34114e03042e50938666a693b8cb59c3884b5067"
+        },
+        "date": 1789564907825,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7519000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 719120,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.168,
             "unit": "ns/op"
           }
         ]
