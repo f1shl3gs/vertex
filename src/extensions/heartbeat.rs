@@ -38,7 +38,6 @@ struct Config {
     tls: Option<TlsConfig>,
 
     auth: Option<Auth>,
-
     // TODO: options for content control
 }
 
