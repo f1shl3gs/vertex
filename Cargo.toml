@@ -464,7 +464,7 @@ httpdate = { version = "1.0.3", default-features = false, optional = true }
 http-body-util = { version = "0.1.5", default-features = false }
 
 # TLS
-rustls = { version = "0.23.43", default-features = false, features = ["ring"] }
+rustls = { version = "0.23.45", default-features = false, features = ["ring"] }
 
 # Tower
 tower = { version = "0.5.3", default-features = false }
@@ -492,7 +492,7 @@ base64 = { version = "0.23.1", default-features = false, optional = true }
 bytes = { version = "1.12.1", default-features = false }
 chrono = { version = "0.4.45", default-features = false }
 dashmap = { version = "6.2.1", default-features = false, optional = true }
-encoding_rs = { version = "0.8.35", optional = true, features = ["serde"] }
+encoding_rs = { version = "0.8.41", optional = true, features = ["serde"] }
 exitcode = { version = "1.1.2" }
 flate2 = { version = "1.1.10", optional = true }
 gcra = { git = "https://github.com/f1shl3gs/gcra.git", rev = "c4011e32aa408947decf812dd6fa2eee7492be16", optional = true }
