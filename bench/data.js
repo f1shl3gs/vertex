@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1789576355097,
+  "lastUpdate": 1789576762799,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b078d7c53a8ab9f3a1d9917422e7f006d0d56628",
-          "message": "Merge pull request #2911 from f1shl3gs/deps/bump_rskafka_to_latest\n\ndeps: bump rskafka to latest",
-          "timestamp": "2026-05-06T01:17:20+08:00",
-          "tree_id": "0a91b260551c7d8f403f8f7d3a1a859edc09cbaa",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b078d7c53a8ab9f3a1d9917422e7f006d0d56628"
-        },
-        "date": 1778002080063,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 8702300,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 416490,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 49.561,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "56b9e234013ee38ab4f4e2d8c09868fc8dc1971c",
           "message": "Merge pull request #2913 from f1shl3gs/sources/mysql/remove_unused_config\n\nsources/mysql: remove unused config field",
           "timestamp": "2026-05-07T07:32:16+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.168,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eaa7d762d4fb8f67a020efd183b5af68f271e2e5",
+          "message": "Merge pull request #3038 from f1shl3gs/cargo/update\n\ndeps: bump crc32fast, encoding_rs and rustls",
+          "timestamp": "2026-09-17T00:28:54+08:00",
+          "tree_id": "c76d2fe1c9a2bd752075c85d8b11c24cbeaa653e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/eaa7d762d4fb8f67a020efd183b5af68f271e2e5"
+        },
+        "date": 1789576737760,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7559300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 864660,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.21,
             "unit": "ns/op"
           }
         ]
