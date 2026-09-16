@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1789562858407,
+  "lastUpdate": 1789564461063,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "000480b211aa3c8d72056aad71fcb7cc9c9741c8",
-          "message": "Merge pull request #2909 from f1shl3gs/dependabot/cargo/quick-xml-0.39.3\n\nchore(deps): bump quick-xml from 0.39.2 to 0.39.3",
-          "timestamp": "2026-05-06T00:30:21+08:00",
-          "tree_id": "01a78b0cd75cb66f2bcc9fbf08ae625affe7c1a2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/000480b211aa3c8d72056aad71fcb7cc9c9741c8"
-        },
-        "date": 1777998879625,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 531920,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 502420,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "34114e03042e50938666a693b8cb59c3884b5067",
+          "message": "Merge pull request #3037 from f1shl3gs/extensions/heartbeat/add_retry_after\n\nextensions/heartbeat: honor Retry-After header",
+          "timestamp": "2026-09-16T21:11:58+08:00",
+          "tree_id": "41d585de0abf58145034ccfb7b3985fa205ac9a1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/34114e03042e50938666a693b8cb59c3884b5067"
+        },
+        "date": 1789564441034,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 388560,
             "unit": "ns/op"
           }
         ]
