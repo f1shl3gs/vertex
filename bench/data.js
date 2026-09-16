@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1789562314509,
+  "lastUpdate": 1789562331195,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "586468d3da10ad2c47bc326feacedad3242997e6",
-          "message": "Merge pull request #2910 from f1shl3gs/sources/mysql/refactor\n\nsources/mysql: refactor",
-          "timestamp": "2026-05-06T00:30:02+08:00",
-          "tree_id": "c3c19d93193566ca1dcd357e524b58d409660746",
-          "url": "https://github.com/f1shl3gs/vertex/commit/586468d3da10ad2c47bc326feacedad3242997e6"
-        },
-        "date": 1777998791551,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 534600,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 384370,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a69a5e129e492737411ecb5c8c7e5e5dfba96a5a",
+          "message": "Merge pull request #3035 from f1shl3gs/dependabot/cargo/encoding_rs-0.8.41\n\nchore(deps): bump encoding_rs from 0.8.40 to 0.8.41",
+          "timestamp": "2026-09-16T20:36:29+08:00",
+          "tree_id": "8c98e167b801fcf6f93f9a0ec450c84d1d7a70ab",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a69a5e129e492737411ecb5c8c7e5e5dfba96a5a"
+        },
+        "date": 1789562306936,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 502420,
             "unit": "ns/op"
           }
         ]
