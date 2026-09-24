@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790222201805,
+  "lastUpdate": 1790222249007,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "49d0a96947d4a289d0815c34fceb6281772e2f3e",
-          "message": "Merge pull request #2912 from f1shl3gs/lib/framework/fix_some_loading_bugs\n\nlib/framework: fix some loading bugs",
-          "timestamp": "2026-05-07T07:32:00+08:00",
-          "tree_id": "81dc22394ac511ccfc5d6118c01af3741bd5f6e0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/49d0a96947d4a289d0815c34fceb6281772e2f3e"
-        },
-        "date": 1778110466742,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 533540,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 521790,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1c7c8e5991e1453951fab4a3da7d39ff7d3b8875",
+          "message": "Merge pull request #3039 from f1shl3gs/dependabot/cargo/syn-3.0.6\n\nchore(deps): bump syn from 3.0.5 to 3.0.6",
+          "timestamp": "2026-09-24T11:54:57+08:00",
+          "tree_id": "3c479633d7db10268dbfc3bd9ad06551d49d96fb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1c7c8e5991e1453951fab4a3da7d39ff7d3b8875"
+        },
+        "date": 1790222225033,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 501910,
             "unit": "ns/op"
           }
         ]
