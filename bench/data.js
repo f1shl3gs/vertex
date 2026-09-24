@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1789576820624,
+  "lastUpdate": 1790222187132,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "49d0a96947d4a289d0815c34fceb6281772e2f3e",
-          "message": "Merge pull request #2912 from f1shl3gs/lib/framework/fix_some_loading_bugs\n\nlib/framework: fix some loading bugs",
-          "timestamp": "2026-05-07T07:32:00+08:00",
-          "tree_id": "81dc22394ac511ccfc5d6118c01af3741bd5f6e0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/49d0a96947d4a289d0815c34fceb6281772e2f3e"
-        },
-        "date": 1778110478405,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.814,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 173.95,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 353.43,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 729.86,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "56b9e234013ee38ab4f4e2d8c09868fc8dc1971c",
           "message": "Merge pull request #2913 from f1shl3gs/sources/mysql/remove_unused_config\n\nsources/mysql: remove unused config field",
           "timestamp": "2026-05-07T07:32:16+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 691.65,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "238f1e48ea2bc2cf4c8363e51d2a043e6537da50",
+          "message": "Merge pull request #3040 from f1shl3gs/dependabot/cargo/rand-0.10.3\n\nchore(deps): bump rand from 0.10.2 to 0.10.3",
+          "timestamp": "2026-09-24T11:53:38+08:00",
+          "tree_id": "0215e22832b738cecefa1e433744b75ccdf7668a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/238f1e48ea2bc2cf4c8363e51d2a043e6537da50"
+        },
+        "date": 1790222171695,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 13.98,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 105.5,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 200.57,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 409.63,
             "unit": "ns/op"
           }
         ]
