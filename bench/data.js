@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790222773392,
+  "lastUpdate": 1790222781612,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7970eea52d262d1948d6cdbf24a70fdef8af1b97",
-          "message": "Merge pull request #2914 from f1shl3gs/dependabot/cargo/tonic-e49de9fdaa\n\nchore(deps): bump the tonic group with 4 updates",
-          "timestamp": "2026-05-08T00:39:44+08:00",
-          "tree_id": "bcfcd8b72790b3fda27e431615ebb61594b2d399",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7970eea52d262d1948d6cdbf24a70fdef8af1b97"
-        },
-        "date": 1778172634313,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7882500,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 643490,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.419,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3aa9aedcdb860799cc26a16dda66645915953dea",
           "message": "Merge pull request #2915 from f1shl3gs/sources/mysql/simplify\n\nsources/mysql: simplify collect process, reduce some unneeded query",
           "timestamp": "2026-05-08T10:18:29+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 53.52,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fa6924528e6e6b10c2e4ca4ab9a4954613a9f29f",
+          "message": "Merge pull request #3041 from f1shl3gs/dependabot/cargo/hyper-rustls-0.27.10\n\nchore(deps): bump hyper-rustls from 0.27.9 to 0.27.10",
+          "timestamp": "2026-09-24T11:55:17+08:00",
+          "tree_id": "9a65f6dd29b48d530a6708bb6919cec0e7b3a887",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fa6924528e6e6b10c2e4ca4ab9a4954613a9f29f"
+        },
+        "date": 1790222756713,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7502600,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 810250,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 54.125,
             "unit": "ns/op"
           }
         ]
