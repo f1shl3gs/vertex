@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790222200428,
+  "lastUpdate": 1790222201805,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "56b9e234013ee38ab4f4e2d8c09868fc8dc1971c",
-          "message": "Merge pull request #2913 from f1shl3gs/sources/mysql/remove_unused_config\n\nsources/mysql: remove unused config field",
-          "timestamp": "2026-05-07T07:32:16+08:00",
-          "tree_id": "31dbb45016ffe705e45169c7cb77b4059c36f4b4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/56b9e234013ee38ab4f4e2d8c09868fc8dc1971c"
-        },
-        "date": 1778110469070,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 537570,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 528250,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "238f1e48ea2bc2cf4c8363e51d2a043e6537da50",
+          "message": "Merge pull request #3040 from f1shl3gs/dependabot/cargo/rand-0.10.3\n\nchore(deps): bump rand from 0.10.2 to 0.10.3",
+          "timestamp": "2026-09-24T11:53:38+08:00",
+          "tree_id": "0215e22832b738cecefa1e433744b75ccdf7668a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/238f1e48ea2bc2cf4c8363e51d2a043e6537da50"
+        },
+        "date": 1790222178262,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 521790,
             "unit": "ns/op"
           }
         ]
