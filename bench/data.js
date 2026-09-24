@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790222261320,
+  "lastUpdate": 1790222266894,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7970eea52d262d1948d6cdbf24a70fdef8af1b97",
-          "message": "Merge pull request #2914 from f1shl3gs/dependabot/cargo/tonic-e49de9fdaa\n\nchore(deps): bump the tonic group with 4 updates",
-          "timestamp": "2026-05-08T00:39:44+08:00",
-          "tree_id": "bcfcd8b72790b3fda27e431615ebb61594b2d399",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7970eea52d262d1948d6cdbf24a70fdef8af1b97"
-        },
-        "date": 1778172159598,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.707,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 185.38,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 313.22,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 648.21,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3aa9aedcdb860799cc26a16dda66645915953dea",
           "message": "Merge pull request #2915 from f1shl3gs/sources/mysql/simplify\n\nsources/mysql: simplify collect process, reduce some unneeded query",
           "timestamp": "2026-05-08T10:18:29+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 692.2,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fa6924528e6e6b10c2e4ca4ab9a4954613a9f29f",
+          "message": "Merge pull request #3041 from f1shl3gs/dependabot/cargo/hyper-rustls-0.27.10\n\nchore(deps): bump hyper-rustls from 0.27.9 to 0.27.10",
+          "timestamp": "2026-09-24T11:55:17+08:00",
+          "tree_id": "9a65f6dd29b48d530a6708bb6919cec0e7b3a887",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fa6924528e6e6b10c2e4ca4ab9a4954613a9f29f"
+        },
+        "date": 1790222246730,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 16.808,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 133.02,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 277.93,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 573.95,
             "unit": "ns/op"
           }
         ]
