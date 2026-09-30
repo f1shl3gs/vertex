@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790759933876,
+  "lastUpdate": 1790760000411,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "cbd7860038b998b81404a6a475b1be13d94fb50c",
-          "message": "Merge pull request #2920 from f1shl3gs/dependabot/cargo/quick-xml-0.40.1\n\nchore(deps): bump quick-xml from 0.40.0 to 0.40.1",
-          "timestamp": "2026-05-16T20:51:04+08:00",
-          "tree_id": "09439b9736cba23a3baabe9d87af6d348ed80952",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cbd7860038b998b81404a6a475b1be13d94fb50c"
-        },
-        "date": 1778936004817,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.374,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 179.54,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 348.36,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 718.33,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2c851584a10e442651bdc804f48ffb456ac09903",
           "message": "Merge pull request #2921 from f1shl3gs/dependabot/cargo/dashmap-6.2.1\n\nchore(deps): bump dashmap from 6.1.0 to 6.2.1",
           "timestamp": "2026-05-20T15:46:38+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 394.69,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "41da0a9c58ac33e92f03f6d54c0def4c81526876",
+          "message": "Merge pull request #3042 from jkondrat-sd/deps/replace-bitnami-images\n\nfix: replace Bitnami images with open Soldevelo equivalents",
+          "timestamp": "2026-09-30T17:15:05+08:00",
+          "tree_id": "e9ddb95949d7bfe0f70236675b23a3338492b18b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/41da0a9c58ac33e92f03f6d54c0def4c81526876"
+        },
+        "date": 1790759977240,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.554,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 181.68,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 344.77,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 690.83,
             "unit": "ns/op"
           }
         ]
