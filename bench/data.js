@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790759725069,
+  "lastUpdate": 1790759739298,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a3711005e86453245b11bbbdea041acdcbbdb0ff",
-          "message": "Merge pull request #2917 from f1shl3gs/dependabot/cargo/quick-xml-0.39.4\n\nchore(deps): bump quick-xml from 0.39.3 to 0.39.4",
-          "timestamp": "2026-05-09T11:28:52+08:00",
-          "tree_id": "2e7bccc9ddc9e73f97d744ad269024d1e0224567",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a3711005e86453245b11bbbdea041acdcbbdb0ff"
-        },
-        "date": 1778297472658,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 509280,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 532790,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "75378a9767f1b8ca1ba9eca85eafaac9ffda66c3",
+          "message": "Merge pull request #3045 from f1shl3gs/dependabot/cargo/thiserror-2.0.21\n\nchore(deps): bump thiserror from 2.0.20 to 2.0.21",
+          "timestamp": "2026-09-30T17:13:32+08:00",
+          "tree_id": "ee8ffe6e38cca731ce3bedba6852c70124a499fc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/75378a9767f1b8ca1ba9eca85eafaac9ffda66c3"
+        },
+        "date": 1790759724115,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 250910,
             "unit": "ns/op"
           }
         ]
