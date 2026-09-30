@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790759683425,
+  "lastUpdate": 1790759688623,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3494530c9c3152d23298486bdc5dca0f264ea55d",
-          "message": "Merge pull request #2916 from f1shl3gs/dependabot/cargo/tokio-1.52.3\n\nchore(deps): bump tokio from 1.52.2 to 1.52.3",
-          "timestamp": "2026-05-08T23:51:44+08:00",
-          "tree_id": "04526e525ab11ec811317e63bc373372c3a4b0fd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3494530c9c3152d23298486bdc5dca0f264ea55d"
-        },
-        "date": 1778255636252,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 532490,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 498700,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a09be89d9204d46a0beaa436b77f1e0fcfe29a35",
+          "message": "Merge pull request #3047 from f1shl3gs/dependabot/cargo/encoding_rs-0.8.42\n\nchore(deps): bump encoding_rs from 0.8.41 to 0.8.42",
+          "timestamp": "2026-09-30T17:12:29+08:00",
+          "tree_id": "db06c3b696a5caead6a9808578ee7cc019fda348",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a09be89d9204d46a0beaa436b77f1e0fcfe29a35"
+        },
+        "date": 1790759665394,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 532790,
             "unit": "ns/op"
           }
         ]
