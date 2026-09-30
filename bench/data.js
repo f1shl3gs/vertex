@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790759857565,
+  "lastUpdate": 1790759874969,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "149bd384e5b6cce9286ba09b9513c7cbaff16830",
-          "message": "Merge pull request #2919 from f1shl3gs/cargo/update\n\ncargo: update",
-          "timestamp": "2026-05-14T19:40:36+08:00",
-          "tree_id": "fb5ee1827aadb710fc0c5604cb5c08728f79a7db",
-          "url": "https://github.com/f1shl3gs/vertex/commit/149bd384e5b6cce9286ba09b9513c7cbaff16830"
-        },
-        "date": 1778758974502,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 532010,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 258990,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ddd909b742efd72c4f51e599ec8059fc486cc82e",
+          "message": "Merge pull request #3043 from f1shl3gs/dependabot/cargo/hyper-util-0.1.21\n\nchore(deps): bump hyper-util from 0.1.20 to 0.1.21",
+          "timestamp": "2026-09-30T17:14:33+08:00",
+          "tree_id": "9b705b656df06178a95928b36b299da2e1659a97",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ddd909b742efd72c4f51e599ec8059fc486cc82e"
+        },
+        "date": 1790759860910,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 248280,
             "unit": "ns/op"
           }
         ]
