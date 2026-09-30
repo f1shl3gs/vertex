@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790222789526,
+  "lastUpdate": 1790759659510,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3aa9aedcdb860799cc26a16dda66645915953dea",
-          "message": "Merge pull request #2915 from f1shl3gs/sources/mysql/simplify\n\nsources/mysql: simplify collect process, reduce some unneeded query",
-          "timestamp": "2026-05-08T10:18:29+08:00",
-          "tree_id": "e939654321005762459e7bb952e7d4971d06a484",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3aa9aedcdb860799cc26a16dda66645915953dea"
-        },
-        "date": 1778206849037,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.627,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 87.347,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 166.06,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 165.54,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a595a5588c4e0a5abdd41c2d3ad4b0326eca35c8",
+          "message": "Merge pull request #3048 from f1shl3gs/dependabot/cargo/headers-0.4.2\n\nchore(deps): bump headers from 0.4.1 to 0.4.2",
+          "timestamp": "2026-09-30T17:11:58+08:00",
+          "tree_id": "e2d1aad3bfee22654074cb7b623ec4ab3965fb60",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a595a5588c4e0a5abdd41c2d3ad4b0326eca35c8"
+        },
+        "date": 1790759639186,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 13.127,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 68.28,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 129.13,
             "unit": "ns/op"
           }
         ]
