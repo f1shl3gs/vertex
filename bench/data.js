@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790760395846,
+  "lastUpdate": 1790760428565,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "25d548f2c7028a0dd0c5bd8c9cbaa1755bdc5186",
-          "message": "Merge pull request #2932 from f1shl3gs/dependabot/cargo/hyper-1.10.0\n\nchore(deps): bump hyper from 1.9.0 to 1.10.0",
-          "timestamp": "2026-05-28T11:24:30+08:00",
-          "tree_id": "3b84090f2473bbd344bff6080be841808cc30d79",
-          "url": "https://github.com/f1shl3gs/vertex/commit/25d548f2c7028a0dd0c5bd8c9cbaa1755bdc5186"
-        },
-        "date": 1779939296176,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 558,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40161.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1691ca756ad94ada330b73b6c647a7509898b0c0",
           "message": "Merge pull request #2933 from f1shl3gs/dependabot/cargo/socket2-0.6.4\n\nchore(deps): bump socket2 from 0.6.3 to 0.6.4",
           "timestamp": "2026-05-29T08:59:05+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 593,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42005.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "41da0a9c58ac33e92f03f6d54c0def4c81526876",
+          "message": "Merge pull request #3042 from jkondrat-sd/deps/replace-bitnami-images\n\nfix: replace Bitnami images with open Soldevelo equivalents",
+          "timestamp": "2026-09-30T17:15:05+08:00",
+          "tree_id": "e9ddb95949d7bfe0f70236675b23a3338492b18b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/41da0a9c58ac33e92f03f6d54c0def4c81526876"
+        },
+        "date": 1790760404390,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 561,
             "unit": "s"
           },
           {
