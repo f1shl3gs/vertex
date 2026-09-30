@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790760314114,
+  "lastUpdate": 1790760318303,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0158d22864d7f7b7866bb18dab072e95ffe138fd",
-          "message": "Merge pull request #2930 from f1shl3gs/sources/node/fix_infiniband_device_test\n\nsources/node: fix infiniband_devices test",
-          "timestamp": "2026-05-27T21:52:24+08:00",
-          "tree_id": "19ea91e543aa35c4e6fcdf61141eef559ff8c928",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0158d22864d7f7b7866bb18dab072e95ffe138fd"
-        },
-        "date": 1779890601353,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 567,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40173.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1306c6c38e6f3977dc211a18a93c00af8ee996e6",
           "message": "Merge pull request #2931 from f1shl3gs/deps/bump_jemalloc_to_0.7.0\n\ndeps: bump tikv-jemalloc to 0.7.0",
           "timestamp": "2026-05-27T22:15:07+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42018.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "75378a9767f1b8ca1ba9eca85eafaac9ffda66c3",
+          "message": "Merge pull request #3045 from f1shl3gs/dependabot/cargo/thiserror-2.0.21\n\nchore(deps): bump thiserror from 2.0.20 to 2.0.21",
+          "timestamp": "2026-09-30T17:13:32+08:00",
+          "tree_id": "ee8ffe6e38cca731ce3bedba6852c70124a499fc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/75378a9767f1b8ca1ba9eca85eafaac9ffda66c3"
+        },
+        "date": 1790760258945,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 573,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42019.9,
             "unit": "KiB"
           }
         ]
