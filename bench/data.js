@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790760022685,
+  "lastUpdate": 1790760028225,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "cbd7860038b998b81404a6a475b1be13d94fb50c",
-          "message": "Merge pull request #2920 from f1shl3gs/dependabot/cargo/quick-xml-0.40.1\n\nchore(deps): bump quick-xml from 0.40.0 to 0.40.1",
-          "timestamp": "2026-05-16T20:51:04+08:00",
-          "tree_id": "09439b9736cba23a3baabe9d87af6d348ed80952",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cbd7860038b998b81404a6a475b1be13d94fb50c"
-        },
-        "date": 1778935979265,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 542670,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 248280,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "41da0a9c58ac33e92f03f6d54c0def4c81526876",
+          "message": "Merge pull request #3042 from jkondrat-sd/deps/replace-bitnami-images\n\nfix: replace Bitnami images with open Soldevelo equivalents",
+          "timestamp": "2026-09-30T17:15:05+08:00",
+          "tree_id": "e9ddb95949d7bfe0f70236675b23a3338492b18b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/41da0a9c58ac33e92f03f6d54c0def4c81526876"
+        },
+        "date": 1790760005110,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 533760,
             "unit": "ns/op"
           }
         ]
