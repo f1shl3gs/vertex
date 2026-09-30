@@ -11,7 +11,7 @@ services:
     volumes:
       - zookeeper_data:/bitnami/zookeeper
   kafka-0:
-    image: docker.io/bitnami/kafka:3
+    image: docker.io/soldevelo/kafka:3.9
     ports:
       - "9010:9010"
     environment:
@@ -28,7 +28,7 @@ services:
     depends_on:
       - zookeeper
   kafka-1:
-    image: docker.io/bitnami/kafka:3
+    image: docker.io/soldevelo/kafka:3.9
     ports:
       - "9011:9011"
     environment:
@@ -45,7 +45,7 @@ services:
     depends_on:
       - zookeeper
   kafka-2:
-    image: docker.io/bitnami/kafka:3
+    image: docker.io/soldevelo/kafka:3.9
     ports:
       - "9012:9012"
     environment:
