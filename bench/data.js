@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790759679959,
+  "lastUpdate": 1790759683425,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3aa9aedcdb860799cc26a16dda66645915953dea",
-          "message": "Merge pull request #2915 from f1shl3gs/sources/mysql/simplify\n\nsources/mysql: simplify collect process, reduce some unneeded query",
-          "timestamp": "2026-05-08T10:18:29+08:00",
-          "tree_id": "e939654321005762459e7bb952e7d4971d06a484",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3aa9aedcdb860799cc26a16dda66645915953dea"
-        },
-        "date": 1778206874270,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.069,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 174.04,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 352.98,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 769.32,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3494530c9c3152d23298486bdc5dca0f264ea55d",
           "message": "Merge pull request #2916 from f1shl3gs/dependabot/cargo/tokio-1.52.3\n\nchore(deps): bump tokio from 1.52.2 to 1.52.3",
           "timestamp": "2026-05-08T23:51:44+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 573.95,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a09be89d9204d46a0beaa436b77f1e0fcfe29a35",
+          "message": "Merge pull request #3047 from f1shl3gs/dependabot/cargo/encoding_rs-0.8.42\n\nchore(deps): bump encoding_rs from 0.8.41 to 0.8.42",
+          "timestamp": "2026-09-30T17:12:29+08:00",
+          "tree_id": "db06c3b696a5caead6a9808578ee7cc019fda348",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a09be89d9204d46a0beaa436b77f1e0fcfe29a35"
+        },
+        "date": 1790759667999,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 13.629,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 100.83,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 195.04,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 403.45,
             "unit": "ns/op"
           }
         ]
