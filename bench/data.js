@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790759690176,
+  "lastUpdate": 1790759694784,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3494530c9c3152d23298486bdc5dca0f264ea55d",
-          "message": "Merge pull request #2916 from f1shl3gs/dependabot/cargo/tokio-1.52.3\n\nchore(deps): bump tokio from 1.52.2 to 1.52.3",
-          "timestamp": "2026-05-08T23:51:44+08:00",
-          "tree_id": "04526e525ab11ec811317e63bc373372c3a4b0fd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3494530c9c3152d23298486bdc5dca0f264ea55d"
-        },
-        "date": 1778255663753,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.701,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 177.92,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 339.46,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 713.09,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a3711005e86453245b11bbbdea041acdcbbdb0ff",
           "message": "Merge pull request #2917 from f1shl3gs/dependabot/cargo/quick-xml-0.39.4\n\nchore(deps): bump quick-xml from 0.39.3 to 0.39.4",
           "timestamp": "2026-05-09T11:28:52+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 403.45,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a595a5588c4e0a5abdd41c2d3ad4b0326eca35c8",
+          "message": "Merge pull request #3048 from f1shl3gs/dependabot/cargo/headers-0.4.2\n\nchore(deps): bump headers from 0.4.1 to 0.4.2",
+          "timestamp": "2026-09-30T17:11:58+08:00",
+          "tree_id": "e2d1aad3bfee22654074cb7b623ec4ab3965fb60",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a595a5588c4e0a5abdd41c2d3ad4b0326eca35c8"
+        },
+        "date": 1790759671558,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.489,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 177.53,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 340.61,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 708.02,
             "unit": "ns/op"
           }
         ]
