@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790760220309,
+  "lastUpdate": 1790760250073,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "042a268d6df1b589a2ac67fcc27a37b2ce5c5674",
-          "message": "Merge pull request #2918 from f1shl3gs/dependabot/cargo/quick-xml-0.40.0\n\nchore(deps): bump quick-xml from 0.39.4 to 0.40.0",
-          "timestamp": "2026-05-13T14:02:35+08:00",
-          "tree_id": "0ffcf12b32e8a9b5a7584230bf86f61158aeeb17",
-          "url": "https://github.com/f1shl3gs/vertex/commit/042a268d6df1b589a2ac67fcc27a37b2ce5c5674"
-        },
-        "date": 1778652782516,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7730000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 722640,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 51.863,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "149bd384e5b6cce9286ba09b9513c7cbaff16830",
           "message": "Merge pull request #2919 from f1shl3gs/cargo/update\n\ncargo: update",
           "timestamp": "2026-05-14T19:40:36+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.891,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "75378a9767f1b8ca1ba9eca85eafaac9ffda66c3",
+          "message": "Merge pull request #3045 from f1shl3gs/dependabot/cargo/thiserror-2.0.21\n\nchore(deps): bump thiserror from 2.0.20 to 2.0.21",
+          "timestamp": "2026-09-30T17:13:32+08:00",
+          "tree_id": "ee8ffe6e38cca731ce3bedba6852c70124a499fc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/75378a9767f1b8ca1ba9eca85eafaac9ffda66c3"
+        },
+        "date": 1790760226381,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7746100,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 772060,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.652,
             "unit": "ns/op"
           }
         ]
