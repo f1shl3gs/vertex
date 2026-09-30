@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790760171399,
+  "lastUpdate": 1790760175067,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3494530c9c3152d23298486bdc5dca0f264ea55d",
-          "message": "Merge pull request #2916 from f1shl3gs/dependabot/cargo/tokio-1.52.3\n\nchore(deps): bump tokio from 1.52.2 to 1.52.3",
-          "timestamp": "2026-05-08T23:51:44+08:00",
-          "tree_id": "04526e525ab11ec811317e63bc373372c3a4b0fd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3494530c9c3152d23298486bdc5dca0f264ea55d"
-        },
-        "date": 1778256121040,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7213600,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 776020,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.127,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a3711005e86453245b11bbbdea041acdcbbdb0ff",
           "message": "Merge pull request #2917 from f1shl3gs/dependabot/cargo/quick-xml-0.39.4\n\nchore(deps): bump quick-xml from 0.39.3 to 0.39.4",
           "timestamp": "2026-05-09T11:28:52+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.862,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "65dd6c82a52fcbce25e187e93f85458d213db69b",
+          "message": "Merge pull request #3044 from f1shl3gs/dependabot/cargo/tokio-test-0.4.6\n\nchore(deps): bump tokio-test from 0.4.5 to 0.4.6",
+          "timestamp": "2026-09-30T17:14:05+08:00",
+          "tree_id": "f2586a3891c6d47c3a1bc5f4bf2819191153f589",
+          "url": "https://github.com/f1shl3gs/vertex/commit/65dd6c82a52fcbce25e187e93f85458d213db69b"
+        },
+        "date": 1790760154639,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 5846900,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 627550,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 42.302,
             "unit": "ns/op"
           }
         ]
