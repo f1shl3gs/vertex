@@ -45,7 +45,6 @@ where
 {
     /// Produce a finalizer set along with the output stream of
     /// received acknowledged batch identifiers.
-    #[must_use]
     pub fn new<SS>(shutdown: Option<SS>) -> (Self, BoxStream<'static, (BatchStatus, T)>)
     where
         SS: Future + Send + Unpin + 'static,
@@ -66,7 +65,6 @@ where
     /// stream of acknowledged identifiers. In the case the finalizer
     /// is not to be used, a special empty stream is returned that is
     /// always pending and so never wakes.
-    #[must_use]
     pub fn maybe_new<SS>(
         maybe: bool,
         shutdown: Option<SS>,
