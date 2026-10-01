@@ -446,7 +446,7 @@ mod tests {
             ),
             (
                 r#"{"algorithm": "gzip", "level": -1}"#,
-                r#"integer could not be converted to u32: out of range integral type conversion attempted at line 1 column 33"#,
+                r#"integer could not be converted to u32: number too small to fit in target type at line 1 column 33"#,
             ),
             (
                 r#"{"algorithm": "gzip", "level": "good"}"#,
@@ -464,7 +464,7 @@ mod tests {
         for (input, result) in fixtures_invalid {
             let deserialized: Result<Compression, _> = serde_json::from_str(input);
             let err = deserialized.expect_err("invalid source");
-            assert_eq!(err.to_string().as_str(), result);
+            assert_eq!(err.to_string().as_str(), result, "input: {}", input);
         }
     }
 }
