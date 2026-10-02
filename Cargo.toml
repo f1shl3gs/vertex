@@ -457,8 +457,8 @@ tracing = { version = "0.1.44", default-features = false }
 
 # HTTP
 hyper = { version = "1.11.1", default-features = false, features = ["server"] }
-hyper-rustls = { version = "0.27.9", default-features = false, features = ["rustls-native-certs", "http2"] }
-hyper-util = { version = "0.1.20", default-features = false, features = ["client"] }
+hyper-rustls = { version = "0.27.10", default-features = false, features = ["rustls-native-certs", "http2"] }
+hyper-util = { version = "0.1.21", default-features = false, features = ["client"] }
 http = { version = "1.5.0", default-features = false }
 httpdate = { version = "1.0.3", default-features = false, optional = true }
 http-body-util = { version = "0.1.5", default-features = false }
@@ -492,7 +492,7 @@ base64 = { version = "0.23.1", default-features = false, optional = true }
 bytes = { version = "1.12.1", default-features = false }
 chrono = { version = "0.4.45", default-features = false }
 dashmap = { version = "6.2.1", default-features = false, optional = true }
-encoding_rs = { version = "0.8.41", optional = true, features = ["serde"] }
+encoding_rs = { version = "0.8.42", optional = true, features = ["serde"] }
 exitcode = { version = "1.1.2" }
 flate2 = { version = "1.1.10", optional = true }
 gcra = { git = "https://github.com/f1shl3gs/gcra.git", rev = "c4011e32aa408947decf812dd6fa2eee7492be16", optional = true }
@@ -502,7 +502,7 @@ hyper-unix = { path = "lib/hyper-unix", optional = true }
 indexmap = { version = "2.14.2", default-features = false, features = ["serde"] }
 inventory = { version = "0.3.24", default-features = false }
 libc = { version = "0.2.189", default-features = false }
-lru = { version = "0.18.4", default-features = false, optional = true }
+lru = { version = "0.18.5", default-features = false, optional = true }
 maxminddb = { git = "https://github.com/f1shl3gs/maxminddb.git", rev = "eb9a6d1861cfe7313589c0e0281ddbb660a88962", optional = true, features = ["mmap", "unsafe-str"] }
 md-5 = { version = "0.11.0", default-features = false, optional = true }
 parking_lot = { version = "0.12.5", default-features = false, optional = true }
@@ -510,7 +510,7 @@ percent-encoding = { version = "2.3.2", default-features = false }
 pin-project-lite = { version = "0.2.17", default-features = false }
 pulsar = { git = "https://github.com/f1shl3gs/pulsar-rs", rev = "bab5d791bb64f9e19d53eef242b8b33c96e836d0", default-features = false, optional = true, features = ["auth-oauth2", "compression", "tokio-rustls-runtime"] }
 quick-xml = { version = "0.42.0", default-features = false, features = ["serialize"], optional = true }
-rand = { version = "0.10.2", default-features = false }
+rand = { version = "0.10.3", default-features = false }
 regex = { version = "1.13.1", default-features = false }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "b55080ee3f195d5badcc7161abfe0a3f45fb0546", optional = true, features = ["transport-tls"] }
 sbbf = { git = "https://github.com/f1shl3gs/sbbf.git", rev = "d619ab889a9637dd849206568a3023dee7046a8f", optional = true }
@@ -518,6 +518,6 @@ sha1 = { version = "0.11.0", default-features = false, optional = true }
 sha2 = { version = "0.11.0", default-features = false, optional = true }
 snap = { version = "1.1.2", default-features = false, optional = true }
 socket2 = { version = "0.6.5", optional = true, default-features = false}
-thiserror = { version = "2.0.20", default-features = false }
+thiserror = { version = "2.0.21", default-features = false }
 typetag = { version = "0.2.23" }
 url = { version = "2.5.8", default-features = false, features = ["serde"] }
