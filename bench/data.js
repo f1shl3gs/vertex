@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790929220885,
+  "lastUpdate": 1790929237503,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "03aa6663c132910ce6559a597d1308eed034f65e",
-          "message": "Merge pull request #2923 from f1shl3gs/dependabot/cargo/mimalloc-0.1.51\n\nchore(deps): bump mimalloc from 0.1.50 to 0.1.51",
-          "timestamp": "2026-05-21T10:29:09+08:00",
-          "tree_id": "34946b0dcffa0316b9d699ab61188a75e206c03d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/03aa6663c132910ce6559a597d1308eed034f65e"
-        },
-        "date": 1779330687945,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.98,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 90.398,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 170.71,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 171.83,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2a51d548a1fdddce1fd355d2546330307597368b",
+          "message": "Merge pull request #3050 from f1shl3gs/cargo/update\n\ncargo: update",
+          "timestamp": "2026-10-02T16:17:56+08:00",
+          "tree_id": "aa54d213e0ca6de074c3ec12ac13947b6600ca67",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2a51d548a1fdddce1fd355d2546330307597368b"
+        },
+        "date": 1790929213802,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.529,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 86.862,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 166.34,
             "unit": "ns/op"
           }
         ]
