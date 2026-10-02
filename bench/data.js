@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790929237503,
+  "lastUpdate": 1790929249353,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "03aa6663c132910ce6559a597d1308eed034f65e",
-          "message": "Merge pull request #2923 from f1shl3gs/dependabot/cargo/mimalloc-0.1.51\n\nchore(deps): bump mimalloc from 0.1.50 to 0.1.51",
-          "timestamp": "2026-05-21T10:29:09+08:00",
-          "tree_id": "34946b0dcffa0316b9d699ab61188a75e206c03d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/03aa6663c132910ce6559a597d1308eed034f65e"
-        },
-        "date": 1779330694617,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 18.771,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 158.49,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 319.74,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 674.14,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "435698eff945e8d2df5ea733c94fb7fad6678eda",
           "message": "Merge pull request #2924 from f1shl3gs/dependabot/cargo/serde_json-1.0.150\n\nchore(deps): bump serde_json from 1.0.149 to 1.0.150",
           "timestamp": "2026-05-22T14:54:28+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 685.7,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2a51d548a1fdddce1fd355d2546330307597368b",
+          "message": "Merge pull request #3050 from f1shl3gs/cargo/update\n\ncargo: update",
+          "timestamp": "2026-10-02T16:17:56+08:00",
+          "tree_id": "aa54d213e0ca6de074c3ec12ac13947b6600ca67",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2a51d548a1fdddce1fd355d2546330307597368b"
+        },
+        "date": 1790929225660,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.422,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 177.12,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 337.57,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 690.73,
             "unit": "ns/op"
           }
         ]
