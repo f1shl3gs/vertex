@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1791510542745,
+  "lastUpdate": 1791510544642,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4a800946f3ac71c20414580cbebb3445691e0e6c",
-          "message": "Merge pull request #2925 from f1shl3gs/dependabot/cargo/mimalloc-0.1.52\n\nchore(deps): bump mimalloc from 0.1.51 to 0.1.52",
-          "timestamp": "2026-05-23T09:31:26+08:00",
-          "tree_id": "559d0bf4f20881c84c74cbaa9737a55c7fa715b2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4a800946f3ac71c20414580cbebb3445691e0e6c"
-        },
-        "date": 1779500033085,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.406,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 168.39,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 332.29,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 690.54,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "caff44c89120c0a5040c470e51a85ea757131820",
           "message": "Merge pull request #2926 from f1shl3gs/dependabot/cargo/http-1.4.1\n\nchore(deps): bump http from 1.4.0 to 1.4.1",
           "timestamp": "2026-05-26T12:25:18+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 681.03,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5a839674b6927da340ef11bf4d29b047db4a17b1",
+          "message": "Merge pull request #3053 from f1shl3gs/dependabot/cargo/snmalloc-rs-0.7.6\n\nchore(deps): bump snmalloc-rs from 0.7.5 to 0.7.6",
+          "timestamp": "2026-10-09T09:46:30+08:00",
+          "tree_id": "e07107ad070d1bec1f4d8078a1b0f99b3c2499d8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5a839674b6927da340ef11bf4d29b047db4a17b1"
+        },
+        "date": 1791510523131,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 16.953,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 124.16,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 257.07,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 533.72,
             "unit": "ns/op"
           }
         ]
