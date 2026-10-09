@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1791510469725,
+  "lastUpdate": 1791510488880,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "435698eff945e8d2df5ea733c94fb7fad6678eda",
-          "message": "Merge pull request #2924 from f1shl3gs/dependabot/cargo/serde_json-1.0.150\n\nchore(deps): bump serde_json from 1.0.149 to 1.0.150",
-          "timestamp": "2026-05-22T14:54:28+08:00",
-          "tree_id": "15079f48a1ac6acf66f4e747035afb803cefad15",
-          "url": "https://github.com/f1shl3gs/vertex/commit/435698eff945e8d2df5ea733c94fb7fad6678eda"
-        },
-        "date": 1779432992117,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 14.859,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 87.16,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 164.34,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 166.34,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "354f07375989e436992d6782d2b9fc5dbf7676d2",
+          "message": "Merge pull request #3054 from f1shl3gs/dependabot/cargo/tokio-1.53.2\n\nchore(deps): bump tokio from 1.53.1 to 1.53.2",
+          "timestamp": "2026-10-09T09:45:43+08:00",
+          "tree_id": "66bc93531260526d911a4a86dd21d3a53aa70d38",
+          "url": "https://github.com/f1shl3gs/vertex/commit/354f07375989e436992d6782d2b9fc5dbf7676d2"
+        },
+        "date": 1791510465656,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.232,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 90.78,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 174.65,
             "unit": "ns/op"
           }
         ]
