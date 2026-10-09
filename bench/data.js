@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1791510523615,
+  "lastUpdate": 1791510526374,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "435698eff945e8d2df5ea733c94fb7fad6678eda",
-          "message": "Merge pull request #2924 from f1shl3gs/dependabot/cargo/serde_json-1.0.150\n\nchore(deps): bump serde_json from 1.0.149 to 1.0.150",
-          "timestamp": "2026-05-22T14:54:28+08:00",
-          "tree_id": "15079f48a1ac6acf66f4e747035afb803cefad15",
-          "url": "https://github.com/f1shl3gs/vertex/commit/435698eff945e8d2df5ea733c94fb7fad6678eda"
-        },
-        "date": 1779433003058,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.971,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 182.62,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 373.57,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 750.5,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4a800946f3ac71c20414580cbebb3445691e0e6c",
           "message": "Merge pull request #2925 from f1shl3gs/dependabot/cargo/mimalloc-0.1.52\n\nchore(deps): bump mimalloc from 0.1.51 to 0.1.52",
           "timestamp": "2026-05-23T09:31:26+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 690.73,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "69097108a355b6f216d59a0c65ffb99292c42ff6",
+          "message": "Merge pull request #3055 from f1shl3gs/dependabot/cargo/twox-hash-2.1.5\n\nchore(deps): bump twox-hash from 2.1.4 to 2.1.5",
+          "timestamp": "2026-10-09T09:46:00+08:00",
+          "tree_id": "abac5dabb23370d7c5de7e44b83fba5cde1692b3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/69097108a355b6f216d59a0c65ffb99292c42ff6"
+        },
+        "date": 1791510501713,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 21.915,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 174.89,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 344.68,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 681.03,
             "unit": "ns/op"
           }
         ]
