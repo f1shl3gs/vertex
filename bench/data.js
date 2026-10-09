@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1791510598355,
+  "lastUpdate": 1791510619847,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e6f6698623dcf824c7936a065d17143e11901add",
-          "message": "Merge pull request #2929 from f1shl3gs/dependabot/cargo/memchr-2.8.1\n\nchore(deps): bump memchr from 2.8.0 to 2.8.1",
-          "timestamp": "2026-05-27T21:12:44+08:00",
-          "tree_id": "97f80470784b4fd46e55d29822d0fc34acd09ba6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e6f6698623dcf824c7936a065d17143e11901add"
-        },
-        "date": 1779887729169,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 35.145,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 175.29,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 330.19,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 678.05,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0158d22864d7f7b7866bb18dab072e95ffe138fd",
           "message": "Merge pull request #2930 from f1shl3gs/sources/node/fix_infiniband_device_test\n\nsources/node: fix infiniband_devices test",
           "timestamp": "2026-05-27T21:52:24+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 717.6,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ed01e44df306370726fe799f8f3935a5f068d99b",
+          "message": "Merge pull request #3052 from f1shl3gs/dependabot/cargo/libc-0.2.190\n\nchore(deps): bump libc from 0.2.189 to 0.2.190",
+          "timestamp": "2026-10-09T09:46:53+08:00",
+          "tree_id": "953028e20cbbb6fdce94f5876cd2605fba876f16",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ed01e44df306370726fe799f8f3935a5f068d99b"
+        },
+        "date": 1791510599315,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 16.857,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 139.43,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 271.63,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 545.15,
             "unit": "ns/op"
           }
         ]
