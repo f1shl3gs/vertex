@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1791510983082,
+  "lastUpdate": 1791510992851,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e6f6698623dcf824c7936a065d17143e11901add",
-          "message": "Merge pull request #2929 from f1shl3gs/dependabot/cargo/memchr-2.8.1\n\nchore(deps): bump memchr from 2.8.0 to 2.8.1",
-          "timestamp": "2026-05-27T21:12:44+08:00",
-          "tree_id": "97f80470784b4fd46e55d29822d0fc34acd09ba6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e6f6698623dcf824c7936a065d17143e11901add"
-        },
-        "date": 1779888185372,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7507100,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 852600,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 53.653,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0158d22864d7f7b7866bb18dab072e95ffe138fd",
           "message": "Merge pull request #2930 from f1shl3gs/sources/node/fix_infiniband_device_test\n\nsources/node: fix infiniband_devices test",
           "timestamp": "2026-05-27T21:52:24+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 41.649,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5a839674b6927da340ef11bf4d29b047db4a17b1",
+          "message": "Merge pull request #3053 from f1shl3gs/dependabot/cargo/snmalloc-rs-0.7.6\n\nchore(deps): bump snmalloc-rs from 0.7.5 to 0.7.6",
+          "timestamp": "2026-10-09T09:46:30+08:00",
+          "tree_id": "e07107ad070d1bec1f4d8078a1b0f99b3c2499d8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5a839674b6927da340ef11bf4d29b047db4a17b1"
+        },
+        "date": 1791510968242,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 6652500,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 876880,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 53.005,
             "unit": "ns/op"
           }
         ]
