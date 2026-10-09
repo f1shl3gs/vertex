@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1791510544642,
+  "lastUpdate": 1791510546957,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "caff44c89120c0a5040c470e51a85ea757131820",
-          "message": "Merge pull request #2926 from f1shl3gs/dependabot/cargo/http-1.4.1\n\nchore(deps): bump http from 1.4.0 to 1.4.1",
-          "timestamp": "2026-05-26T12:25:18+08:00",
-          "tree_id": "e67f17e958808f366f3bd9ef262f29cb2bf0be6c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/caff44c89120c0a5040c470e51a85ea757131820"
-        },
-        "date": 1779769678362,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 21.772,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 174.64,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 341.04,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 661.53,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e6f6698623dcf824c7936a065d17143e11901add",
           "message": "Merge pull request #2929 from f1shl3gs/dependabot/cargo/memchr-2.8.1\n\nchore(deps): bump memchr from 2.8.0 to 2.8.1",
           "timestamp": "2026-05-27T21:12:44+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 533.72,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "354f07375989e436992d6782d2b9fc5dbf7676d2",
+          "message": "Merge pull request #3054 from f1shl3gs/dependabot/cargo/tokio-1.53.2\n\nchore(deps): bump tokio from 1.53.1 to 1.53.2",
+          "timestamp": "2026-10-09T09:45:43+08:00",
+          "tree_id": "66bc93531260526d911a4a86dd21d3a53aa70d38",
+          "url": "https://github.com/f1shl3gs/vertex/commit/354f07375989e436992d6782d2b9fc5dbf7676d2"
+        },
+        "date": 1791510523126,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.484,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 173.18,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 339.8,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 717.6,
             "unit": "ns/op"
           }
         ]
