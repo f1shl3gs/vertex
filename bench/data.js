@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1791510521214,
+  "lastUpdate": 1791510523615,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "caff44c89120c0a5040c470e51a85ea757131820",
-          "message": "Merge pull request #2926 from f1shl3gs/dependabot/cargo/http-1.4.1\n\nchore(deps): bump http from 1.4.0 to 1.4.1",
-          "timestamp": "2026-05-26T12:25:18+08:00",
-          "tree_id": "e67f17e958808f366f3bd9ef262f29cb2bf0be6c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/caff44c89120c0a5040c470e51a85ea757131820"
-        },
-        "date": 1779769626966,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 393380,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 534110,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5a839674b6927da340ef11bf4d29b047db4a17b1",
+          "message": "Merge pull request #3053 from f1shl3gs/dependabot/cargo/snmalloc-rs-0.7.6\n\nchore(deps): bump snmalloc-rs from 0.7.5 to 0.7.6",
+          "timestamp": "2026-10-09T09:46:30+08:00",
+          "tree_id": "e07107ad070d1bec1f4d8078a1b0f99b3c2499d8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5a839674b6927da340ef11bf4d29b047db4a17b1"
+        },
+        "date": 1791510500707,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 540210,
             "unit": "ns/op"
           }
         ]
