@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1791510958384,
+  "lastUpdate": 1791510967883,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "79c4cea6bcf0d83690caad707b0d2271ca49c8eb",
-          "message": "Merge pull request #2937 from f1shl3gs/dependabot/cargo/rustls-native-certs-0.8.4\n\nchore(deps): bump rustls-native-certs from 0.8.3 to 0.8.4",
-          "timestamp": "2026-06-02T19:55:26+08:00",
-          "tree_id": "fcb5e7f9d5a0b979a37226786b2bd89086383633",
-          "url": "https://github.com/f1shl3gs/vertex/commit/79c4cea6bcf0d83690caad707b0d2271ca49c8eb"
-        },
-        "date": 1780401905605,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 482,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40087.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c4fc9fc2e3b5046628b91c6ee2f95bf6513f1c8d",
           "message": "Merge pull request #2938 from f1shl3gs/dependabot/cargo/chrono-0.4.45\n\nchore(deps): bump chrono from 0.4.44 to 0.4.45",
           "timestamp": "2026-06-05T15:32:38+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41885.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "69097108a355b6f216d59a0c65ffb99292c42ff6",
+          "message": "Merge pull request #3055 from f1shl3gs/dependabot/cargo/twox-hash-2.1.5\n\nchore(deps): bump twox-hash from 2.1.4 to 2.1.5",
+          "timestamp": "2026-10-09T09:46:00+08:00",
+          "tree_id": "abac5dabb23370d7c5de7e44b83fba5cde1692b3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/69097108a355b6f216d59a0c65ffb99292c42ff6"
+        },
+        "date": 1791510944494,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 514,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41891.1,
             "unit": "KiB"
           }
         ]
