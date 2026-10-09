@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1791510908821,
+  "lastUpdate": 1791510958384,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4a800946f3ac71c20414580cbebb3445691e0e6c",
-          "message": "Merge pull request #2925 from f1shl3gs/dependabot/cargo/mimalloc-0.1.52\n\nchore(deps): bump mimalloc from 0.1.51 to 0.1.52",
-          "timestamp": "2026-05-23T09:31:26+08:00",
-          "tree_id": "559d0bf4f20881c84c74cbaa9737a55c7fa715b2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4a800946f3ac71c20414580cbebb3445691e0e6c"
-        },
-        "date": 1779500483087,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7017900,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 844990,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 53.527,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "caff44c89120c0a5040c470e51a85ea757131820",
           "message": "Merge pull request #2926 from f1shl3gs/dependabot/cargo/http-1.4.1\n\nchore(deps): bump http from 1.4.0 to 1.4.1",
           "timestamp": "2026-05-26T12:25:18+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 29.143,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "69097108a355b6f216d59a0c65ffb99292c42ff6",
+          "message": "Merge pull request #3055 from f1shl3gs/dependabot/cargo/twox-hash-2.1.5\n\nchore(deps): bump twox-hash from 2.1.4 to 2.1.5",
+          "timestamp": "2026-10-09T09:46:00+08:00",
+          "tree_id": "abac5dabb23370d7c5de7e44b83fba5cde1692b3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/69097108a355b6f216d59a0c65ffb99292c42ff6"
+        },
+        "date": 1791510928762,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7663400,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 527960,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 48.942,
             "unit": "ns/op"
           }
         ]
