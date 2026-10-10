@@ -16,7 +16,7 @@ proptest = { version = "1.11.0", default-features = false, features = ["std"] }
 rand = { version = "0.10.3", default-features = false }
 rand_distr = { version = "0.6.0", default-features = false }
 testify = { path = "../testify" }
-tokio = { version = "1.53.1", default-features = false, features = ["test-util"] }
+tokio = { version = "1.53.2", default-features = false, features = ["test-util"] }
 tokio-test = { version = "0.4.6", default-features = false }
 tower-test = { version = "0.4.0", default-features = false }
 
@@ -44,14 +44,14 @@ humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = fa
 hostname = { path = "../hostname" }
 http = { version = "1.5.0", default-features = false }
 http-body-util = { version = "0.1.5", default-features = false }
-hyper = { version = "1.11.1", default-features = false, features = ["full"] }
+hyper = { version = "1.12.0", default-features = false, features = ["full"] }
 hyper-rustls = { version = "0.27.10", default-features = false, features = ["rustls-native-certs"] }
 hyper-util = { version = "0.1.21", default-features = false, features = ["client", "http1", "http2", "server"] }
 indexmap = { version = "2.14.2", default-features = false, features = ["serde"] }
-inventory = { version = "0.3.24", default-features = false }
+inventory = { version = "0.3.25", default-features = false }
 ipnet = { version = "2.12.2", default-features = false }
 listenfd = { version = "1.0.2", default-features = false }
-libc = { version = "0.2.189", default-features = false }
+libc = { version = "0.2.190", default-features = false }
 log_schema = { path = "../log_schema" }
 metrics = { path = "../metrics" }
 pem = { version = "4.0.0", default-features = false, features = ["std"] }
@@ -69,10 +69,10 @@ serde_yaml = { git = "https://github.com/f1shl3gs/serde-yaml.git", rev = "62dea6
 snap = { version = "1.1.2", default-features = false }
 socket2 = { version = "0.6.5", default-features = false }
 thiserror = { version = "2.0.21", default-features = false }
-tokio = { version = "1.53.1", default-features = false, features = ["time", "net", "signal", "rt-multi-thread"] }
+tokio = { version = "1.53.2", default-features = false, features = ["time", "net", "signal", "rt-multi-thread"] }
 tokio-rustls = { version = "0.26.6", default-features = false }
 tokio-stream = { version = "0.1.19", default-features = false, features = ["net", "sync"] }
-tokio-util = { version = "0.7.19", default-features = false, features = ["time"] }
+tokio-util = { version = "0.7.20", default-features = false, features = ["time"] }
 tower = { version = "0.5.3", default-features = false, features = ["limit", "retry", "timeout"] }
 tracing = { version = "0.1.44", default-features = false }
 tracing-core = { version = "0.1.36", default-features = false }
@@ -80,8 +80,8 @@ tracing-internal = { path = "../tracing-internal" }
 tracing-limit = { path = "../tracing-limit" }
 tracing-subscriber = { version = "0.3.23", default-features = false, features = ["env-filter", "json", "fmt", "ansi"] }
 tripwire = { path = "../tripwire" }
-twox-hash = { version = "2.1.4", default-features = false, features = ["xxhash64"] }
+twox-hash = { version = "2.1.5", default-features = false, features = ["xxhash64"] }
 typesize = { path = "../typesize" }
 typetag = { version = "0.2.23" }
 value = { path = "../value" }
-zstd = { version = "0.14.0", default-features = false }
+zstd = { version = "0.14.1", default-features = false }
