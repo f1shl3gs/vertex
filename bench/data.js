@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1791608284018,
+  "lastUpdate": 1791608287084,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1306c6c38e6f3977dc211a18a93c00af8ee996e6",
-          "message": "Merge pull request #2931 from f1shl3gs/deps/bump_jemalloc_to_0.7.0\n\ndeps: bump tikv-jemalloc to 0.7.0",
-          "timestamp": "2026-05-27T22:15:07+08:00",
-          "tree_id": "41871f15b088c5e14ae9e47733460a2acf4a7c8c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1306c6c38e6f3977dc211a18a93c00af8ee996e6"
-        },
-        "date": 1779891461173,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.488,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 183.71,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 337.32,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 705.81,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "25d548f2c7028a0dd0c5bd8c9cbaa1755bdc5186",
           "message": "Merge pull request #2932 from f1shl3gs/dependabot/cargo/hyper-1.10.0\n\nchore(deps): bump hyper from 1.9.0 to 1.10.0",
           "timestamp": "2026-05-28T11:24:30+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 696.7,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "755e9ac423530601f2e26f9f3b45a31c751c6c71",
+          "message": "Merge pull request #3057 from f1shl3gs/cargo/upgrade\n\ncargo: upgrade",
+          "timestamp": "2026-10-10T12:55:45+08:00",
+          "tree_id": "434b46bf66ded840c3d1a8fae09547fdc68eee1a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/755e9ac423530601f2e26f9f3b45a31c751c6c71"
+        },
+        "date": 1791608266900,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 16.879,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 136.56,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 251.24,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 524.03,
             "unit": "ns/op"
           }
         ]
