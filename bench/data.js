@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1791603878963,
+  "lastUpdate": 1791604189986,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0158d22864d7f7b7866bb18dab072e95ffe138fd",
-          "message": "Merge pull request #2930 from f1shl3gs/sources/node/fix_infiniband_device_test\n\nsources/node: fix infiniband_devices test",
-          "timestamp": "2026-05-27T21:52:24+08:00",
-          "tree_id": "19ea91e543aa35c4e6fcdf61141eef559ff8c928",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0158d22864d7f7b7866bb18dab072e95ffe138fd"
-        },
-        "date": 1779890569086,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7688500,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 793520,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.832,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1306c6c38e6f3977dc211a18a93c00af8ee996e6",
           "message": "Merge pull request #2931 from f1shl3gs/deps/bump_jemalloc_to_0.7.0\n\ndeps: bump tikv-jemalloc to 0.7.0",
           "timestamp": "2026-05-27T22:15:07+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 53.005,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0adccfdfc956e81cff53971155488bdf1ed306ee",
+          "message": "Merge pull request #3056 from f1shl3gs/dependabot/cargo/hyper-1.12.0\n\nchore(deps): bump hyper from 1.11.1 to 1.12.0",
+          "timestamp": "2026-10-10T11:41:16+08:00",
+          "tree_id": "08317b5eb4cbb3780ce57f13e49c16ef4f21dd65",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0adccfdfc956e81cff53971155488bdf1ed306ee"
+        },
+        "date": 1791604170852,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 5289800,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 661410,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 41.794,
             "unit": "ns/op"
           }
         ]
