@@ -263,7 +263,7 @@ impl NetlinkConnection {
         };
 
         Ok(NetlinkConnection {
-            inner: AsyncFd::new(fd)?,
+            inner: unsafe { AsyncFd::register(fd)? },
         })
     }
 
@@ -283,7 +283,7 @@ impl NetlinkConnection {
         };
 
         Ok(NetlinkConnection {
-            inner: AsyncFd::new(fd)?,
+            inner: unsafe { AsyncFd::register(fd)? },
         })
     }
 }

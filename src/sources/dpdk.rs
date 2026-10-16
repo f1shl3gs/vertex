@@ -589,7 +589,7 @@ impl UnixSeqStream {
         };
 
         Ok(UnixSeqStream {
-            inner: AsyncFd::new(fd)?,
+            inner: unsafe { AsyncFd::register(fd)? },
         })
     }
 }

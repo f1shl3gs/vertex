@@ -371,13 +371,21 @@ impl Client {
         };
 
         let pid = std::process::id();
-        let mut client = Client {
-            fd: NetlinkDatagram(AsyncFd::new(fd)?),
-            family_id: 16, // GENL_ID_CTRL
-            family_version: 1,
-
-            pid,
-            seq: AtomicU32::new(1),
+        let mut client = unsafe {
+            match AsyncFd::register(fd) {
+                Ok(fd) => Client {
+                    fd: NetlinkDatagram(fd),
+                    family_id: 16, // GENL_ID_CTRL
+                    family_version: 1,
+                    pid,
+                    seq: AtomicU32::new(1),
+                },
+                Err(err) => {
+                    let (fd, err) = err.into_parts();
+                    drop(fd);
+                    return Err(Error::Io(err));
+                }
+            }
         };
 
         // get family
