@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1792115044002,
+  "lastUpdate": 1792115076219,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "29625eb192b97508a23739a8e56887ace305470a",
-          "message": "Merge pull request #2945 from f1shl3gs/dependabot/cargo/syn-2.0.118\n\nchore(deps): bump syn from 2.0.117 to 2.0.118",
-          "timestamp": "2026-06-18T20:29:06+08:00",
-          "tree_id": "6460536e38f65002cc1c3fc78a1ed8f38a1d7620",
-          "url": "https://github.com/f1shl3gs/vertex/commit/29625eb192b97508a23739a8e56887ace305470a"
-        },
-        "date": 1781786385187,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 560,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40095.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "54614fdb429e8d04539826407bf7754ef045983b",
           "message": "Merge pull request #2946 from f1shl3gs/dependabot/cargo/bytes-1.12.0\n\nchore(deps): bump bytes from 1.11.1 to 1.12.0",
           "timestamp": "2026-06-18T20:44:08+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41864.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b8206782f2d250eab8caff3b3165bbade0d49f43",
+          "message": "Merge pull request #3059 from f1shl3gs/dependabot/cargo/zstd-0.14.2\n\nchore(deps): bump zstd from 0.14.1 to 0.14.2",
+          "timestamp": "2026-10-16T09:33:31+08:00",
+          "tree_id": "4acb5bcc1d105a74f8f92e877a3f8cbf0a6d7b40",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b8206782f2d250eab8caff3b3165bbade0d49f43"
+        },
+        "date": 1792115052130,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 518,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41865.4,
             "unit": "KiB"
           }
         ]
