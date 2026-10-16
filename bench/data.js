@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1792114547390,
+  "lastUpdate": 1792114549366,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "03be5c88ffc1bbbd0cd04ea20542f49886c30115",
-          "message": "Merge pull request #2935 from f1shl3gs/dependabot/cargo/hyper-1.10.1\n\nchore(deps): bump hyper from 1.10.0 to 1.10.1",
-          "timestamp": "2026-05-30T18:11:47+08:00",
-          "tree_id": "c2607556af225095e02804644c5cf034b458ae00",
-          "url": "https://github.com/f1shl3gs/vertex/commit/03be5c88ffc1bbbd0cd04ea20542f49886c30115"
-        },
-        "date": 1780136038136,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 13.098,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 69.172,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 132.17,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 161.93,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b8206782f2d250eab8caff3b3165bbade0d49f43",
+          "message": "Merge pull request #3059 from f1shl3gs/dependabot/cargo/zstd-0.14.2\n\nchore(deps): bump zstd from 0.14.1 to 0.14.2",
+          "timestamp": "2026-10-16T09:33:31+08:00",
+          "tree_id": "4acb5bcc1d105a74f8f92e877a3f8cbf0a6d7b40",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b8206782f2d250eab8caff3b3165bbade0d49f43"
+        },
+        "date": 1792114534847,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 27.637,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 59.729,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 99.781,
             "unit": "ns/op"
           }
         ]
