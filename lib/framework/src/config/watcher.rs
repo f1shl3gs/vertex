@@ -37,7 +37,7 @@ mod inotify {
             };
 
             Ok(Watcher {
-                fd: AsyncFd::new(fd)?,
+                fd: unsafe { AsyncFd::register(fd)? },
                 wds: vec![],
             })
         }

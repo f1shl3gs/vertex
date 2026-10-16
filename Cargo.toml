@@ -412,7 +412,7 @@ event = { path = "lib/event", features = ["test"] }
 framework = { path = "lib/framework", features = ["test-util"] }
 serde_path_to_error = { version = "0.1.20", default-features = false }
 testify = { path = "lib/testify" }
-tokio = { version = "1.53.2", default-features = false, features = ["test-util"] }
+tokio = { version = "1.53.3", default-features = false, features = ["test-util"] }
 tonic = { version = "0.14.6", default-features = false, features = ["server", "router"]}
 
 [dependencies]
@@ -449,7 +449,7 @@ tikv-jemalloc-ctl = { version = "0.7.0", optional = true, features = ["use_std"]
 async-stream = { version = "0.3.6", optional = true }
 async-trait = { version = "0.1.92", default-features = false }
 futures = { version = "0.3.34", default-features = false }
-tokio = { version = "1.53.2", default-features = false, features = ["time", "net", "signal", "rt-multi-thread", "io-util"] }
+tokio = { version = "1.53.3", default-features = false, features = ["time", "net", "signal", "rt-multi-thread", "io-util"] }
 tokio-util = { version = "0.7.20", default-features = false, features = ["codec", "time", "net"] }
 
 # Tracing
@@ -464,7 +464,7 @@ httpdate = { version = "1.0.3", default-features = false, optional = true }
 http-body-util = { version = "0.1.5", default-features = false }
 
 # TLS
-rustls = { version = "0.23.45", default-features = false, features = ["ring"] }
+rustls = { version = "0.23.46", default-features = false, features = ["ring"] }
 
 # Tower
 tower = { version = "0.5.3", default-features = false }
@@ -472,7 +472,7 @@ tower = { version = "0.5.3", default-features = false }
 # Serde
 serde = { version = "1.0.229", default-features = false, features = ["derive"] }
 serde_yaml = { git = "https://github.com/f1shl3gs/serde-yaml.git", rev = "62dea63989d8bfd09a9453fa957605dcf09aa4a7", default-features = false }
-serde_json = { version = "1.0.151", default-features = false }
+serde_json = { version = "1.0.154", default-features = false }
 
 # GRPC & Protobuf
 prost = { version = "0.14.4", default-features = false, features = ["std"] }
@@ -515,7 +515,7 @@ regex = { version = "1.13.1", default-features = false }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "b55080ee3f195d5badcc7161abfe0a3f45fb0546", optional = true, features = ["transport-tls"] }
 sbbf = { git = "https://github.com/f1shl3gs/sbbf.git", rev = "d619ab889a9637dd849206568a3023dee7046a8f", optional = true }
 sha1 = { version = "0.11.0", default-features = false, optional = true }
-sha2 = { version = "0.11.0", default-features = false, optional = true }
+sha2 = { version = "0.11.1", default-features = false, optional = true }
 snap = { version = "1.1.2", default-features = false, optional = true }
 socket2 = { version = "0.6.5", optional = true, default-features = false}
 thiserror = { version = "2.0.21", default-features = false }

@@ -14,7 +14,7 @@ futures = { version = "0.3.34", default-features = false }
 percent-encoding = { version = "2.3.2", default-features = false }
 rand = { version = "0.10.3", default-features = false, features = ["thread_rng"] }
 serde = { version = "1.0.229", default-features = false }
-serde_json = { version = "1.0.151", default-features = false, features = ["std"] }
-tokio = { version = "1.53.2", default-features = false, features = ["fs", "rt-multi-thread"] }
+serde_json = { version = "1.0.154", default-features = false, features = ["std"] }
+tokio = { version = "1.53.3", default-features = false, features = ["fs", "rt-multi-thread"] }
 tokio-util = { version = "0.7.20", default-features = false }
 tracing = { version = "0.1.44", default-features = false }

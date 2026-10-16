@@ -54,7 +54,7 @@ impl Registration {
             slots,
         };
         let stream = EventStream {
-            fd: AsyncFd::new(fd)?,
+            fd: unsafe { AsyncFd::register(fd)? },
             capacity,
             slots,
         };

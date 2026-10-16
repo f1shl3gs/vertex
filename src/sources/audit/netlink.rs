@@ -94,7 +94,7 @@ impl Connection {
         };
 
         Ok(Connection {
-            fd: AsyncFd::new(fd)?,
+            fd: unsafe { AsyncFd::register(fd)? },
         })
     }
 }
