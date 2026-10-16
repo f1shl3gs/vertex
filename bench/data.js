@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1792118941793,
+  "lastUpdate": 1792118952790,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "79c4cea6bcf0d83690caad707b0d2271ca49c8eb",
-          "message": "Merge pull request #2937 from f1shl3gs/dependabot/cargo/rustls-native-certs-0.8.4\n\nchore(deps): bump rustls-native-certs from 0.8.3 to 0.8.4",
-          "timestamp": "2026-06-02T19:55:26+08:00",
-          "tree_id": "fcb5e7f9d5a0b979a37226786b2bd89086383633",
-          "url": "https://github.com/f1shl3gs/vertex/commit/79c4cea6bcf0d83690caad707b0d2271ca49c8eb"
-        },
-        "date": 1780401452537,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 501050,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 540660,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d1438f62b1820504c8bd9f6dc4cf1fe6e70992d9",
+          "message": "Merge pull request #3066 from f1shl3gs/toolchain/1.99.1\n\ntoolchain: bump to 1.99.1",
+          "timestamp": "2026-10-16T10:46:34+08:00",
+          "tree_id": "ba7fe6583f4e4f8a2f84f04417286dcc9c98c9a5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d1438f62b1820504c8bd9f6dc4cf1fe6e70992d9"
+        },
+        "date": 1792118932805,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 388720,
             "unit": "ns/op"
           }
         ]
