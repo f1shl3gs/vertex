@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1792114522882,
+  "lastUpdate": 1792114524497,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "16a1b4e07cb935ee7ec4f326fac7dda2bdee205f",
-          "message": "Merge pull request #2936 from f1shl3gs/chore/switch_to_assert_matches\n\nchore: switch to assert_matches",
-          "timestamp": "2026-05-30T17:48:52+08:00",
-          "tree_id": "6d4d803e2a75f7e93e8962bb9ab96affb52635b5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/16a1b4e07cb935ee7ec4f326fac7dda2bdee205f"
-        },
-        "date": 1780134655434,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 495750,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 538580,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b8206782f2d250eab8caff3b3165bbade0d49f43",
+          "message": "Merge pull request #3059 from f1shl3gs/dependabot/cargo/zstd-0.14.2\n\nchore(deps): bump zstd from 0.14.1 to 0.14.2",
+          "timestamp": "2026-10-16T09:33:31+08:00",
+          "tree_id": "4acb5bcc1d105a74f8f92e877a3f8cbf0a6d7b40",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b8206782f2d250eab8caff3b3165bbade0d49f43"
+        },
+        "date": 1792114509282,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 248550,
             "unit": "ns/op"
           }
         ]
