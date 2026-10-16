@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1792114560063,
+  "lastUpdate": 1792114580732,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "03be5c88ffc1bbbd0cd04ea20542f49886c30115",
-          "message": "Merge pull request #2935 from f1shl3gs/dependabot/cargo/hyper-1.10.1\n\nchore(deps): bump hyper from 1.10.0 to 1.10.1",
-          "timestamp": "2026-05-30T18:11:47+08:00",
-          "tree_id": "c2607556af225095e02804644c5cf034b458ae00",
-          "url": "https://github.com/f1shl3gs/vertex/commit/03be5c88ffc1bbbd0cd04ea20542f49886c30115"
-        },
-        "date": 1780136055852,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.135,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 187.12,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 345.96,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 740.47,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "79c4cea6bcf0d83690caad707b0d2271ca49c8eb",
           "message": "Merge pull request #2937 from f1shl3gs/dependabot/cargo/rustls-native-certs-0.8.4\n\nchore(deps): bump rustls-native-certs from 0.8.3 to 0.8.4",
           "timestamp": "2026-06-02T19:55:26+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 576.11,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b8206782f2d250eab8caff3b3165bbade0d49f43",
+          "message": "Merge pull request #3059 from f1shl3gs/dependabot/cargo/zstd-0.14.2\n\nchore(deps): bump zstd from 0.14.1 to 0.14.2",
+          "timestamp": "2026-10-16T09:33:31+08:00",
+          "tree_id": "4acb5bcc1d105a74f8f92e877a3f8cbf0a6d7b40",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b8206782f2d250eab8caff3b3165bbade0d49f43"
+        },
+        "date": 1792114556825,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.494,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 183.66,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 349.31,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 741.02,
             "unit": "ns/op"
           }
         ]
