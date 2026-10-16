@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1792114620060,
+  "lastUpdate": 1792114869608,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7c0967681d7a8e6b9a0a5942a8b46d5874ad9e52",
-          "message": "Merge pull request #2942 from f1shl3gs/dependabot/cargo/regex-1.12.4\n\nchore(deps): bump regex from 1.12.3 to 1.12.4",
-          "timestamp": "2026-06-10T09:09:52+08:00",
-          "tree_id": "25669efddedf8be2c9c662fc180b5f554c12e5e8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7c0967681d7a8e6b9a0a5942a8b46d5874ad9e52"
-        },
-        "date": 1781054431130,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 557,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40100.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d7a4a3bfc5611562ae3122ee5a1b78d5cfa7cc4c",
           "message": "Merge pull request #2943 from f1shl3gs/dependabot/cargo/memchr-2.8.2\n\nchore(deps): bump memchr from 2.8.1 to 2.8.2",
           "timestamp": "2026-06-12T10:37:07+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41873.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a3bfa5ac2220c0cb77f0378789786d2dee048fe8",
+          "message": "Merge pull request #3065 from f1shl3gs/dependabot/cargo/sha2-0.11.1\n\nchore(deps): bump sha2 from 0.11.0 to 0.11.1",
+          "timestamp": "2026-10-16T09:30:40+08:00",
+          "tree_id": "ee6fabe8db656655f97ed3c30f85df686eaf16d7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a3bfa5ac2220c0cb77f0378789786d2dee048fe8"
+        },
+        "date": 1792114846612,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 525,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41858.3,
             "unit": "KiB"
           }
         ]
