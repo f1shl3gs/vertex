@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1792114985132,
+  "lastUpdate": 1792115006664,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "16a1b4e07cb935ee7ec4f326fac7dda2bdee205f",
-          "message": "Merge pull request #2936 from f1shl3gs/chore/switch_to_assert_matches\n\nchore: switch to assert_matches",
-          "timestamp": "2026-05-30T17:48:52+08:00",
-          "tree_id": "6d4d803e2a75f7e93e8962bb9ab96affb52635b5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/16a1b4e07cb935ee7ec4f326fac7dda2bdee205f"
-        },
-        "date": 1780135105353,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7271500,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 806710,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.063,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "03be5c88ffc1bbbd0cd04ea20542f49886c30115",
           "message": "Merge pull request #2935 from f1shl3gs/dependabot/cargo/hyper-1.10.1\n\nchore(deps): bump hyper from 1.10.0 to 1.10.1",
           "timestamp": "2026-05-30T18:11:47+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.237,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "979d60eb7ba417b857256602aca7853f1e6e92ef",
+          "message": "Merge pull request #3063 from f1shl3gs/dependabot/cargo/serde_json-1.0.154\n\nchore(deps): bump serde_json from 1.0.151 to 1.0.154",
+          "timestamp": "2026-10-16T09:33:15+08:00",
+          "tree_id": "37fe945f8323ca507033941574f0bf8913c5ad26",
+          "url": "https://github.com/f1shl3gs/vertex/commit/979d60eb7ba417b857256602aca7853f1e6e92ef"
+        },
+        "date": 1792114983290,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 6998300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 829020,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 53.213,
             "unit": "ns/op"
           }
         ]
