@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1792412113829,
+  "lastUpdate": 1792475075889,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "bcfe1476e5774084b094556b1f79795b5defeced",
-          "message": "Merge pull request #2941 from f1shl3gs/dependabot/cargo/http-1.4.2\n\nchore(deps): bump http from 1.4.1 to 1.4.2",
-          "timestamp": "2026-06-09T12:53:48+08:00",
-          "tree_id": "bbfd7b250f3c642c3256b422908414b39cecaea4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bcfe1476e5774084b094556b1f79795b5defeced"
-        },
-        "date": 1780980956681,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 534890,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 529920,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "efb9acc582e81a16b455f5f9268bf29f27f7f61c",
+          "message": "Merge pull request #3069 from f1shl3gs/deps/bump_tokio_to_1.54.0\n\ndeps: bump to tokio 1.54.0",
+          "timestamp": "2026-10-20T13:42:47+08:00",
+          "tree_id": "a7f594a6b390bafc589f3aafbd5126a3a79cfc01",
+          "url": "https://github.com/f1shl3gs/vertex/commit/efb9acc582e81a16b455f5f9268bf29f27f7f61c"
+        },
+        "date": 1792475060930,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 264180,
             "unit": "ns/op"
           }
         ]
