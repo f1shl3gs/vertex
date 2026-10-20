@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1792475124879,
+  "lastUpdate": 1792475133956,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "bcfe1476e5774084b094556b1f79795b5defeced",
-          "message": "Merge pull request #2941 from f1shl3gs/dependabot/cargo/http-1.4.2\n\nchore(deps): bump http from 1.4.1 to 1.4.2",
-          "timestamp": "2026-06-09T12:53:48+08:00",
-          "tree_id": "bbfd7b250f3c642c3256b422908414b39cecaea4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bcfe1476e5774084b094556b1f79795b5defeced"
-        },
-        "date": 1780980963616,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.605,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 85.666,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 163.52,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 164.53,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "efb9acc582e81a16b455f5f9268bf29f27f7f61c",
+          "message": "Merge pull request #3069 from f1shl3gs/deps/bump_tokio_to_1.54.0\n\ndeps: bump to tokio 1.54.0",
+          "timestamp": "2026-10-20T13:42:47+08:00",
+          "tree_id": "a7f594a6b390bafc589f3aafbd5126a3a79cfc01",
+          "url": "https://github.com/f1shl3gs/vertex/commit/efb9acc582e81a16b455f5f9268bf29f27f7f61c"
+        },
+        "date": 1792475109528,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.509,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 86.484,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 162.3,
             "unit": "ns/op"
           }
         ]
