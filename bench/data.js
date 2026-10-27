@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1793083209526,
+  "lastUpdate": 1793083223253,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d9f162603b4a246f56eaba931d5f6878756500e5",
-          "message": "Merge pull request #2953 from f1shl3gs/dependabot/cargo/quote-1.0.46\n\nchore(deps): bump quote from 1.0.45 to 1.0.46",
-          "timestamp": "2026-06-24T18:42:09+08:00",
-          "tree_id": "f896f3009119cac93ec2e52f8f76ac74e40bd391",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d9f162603b4a246f56eaba931d5f6878756500e5"
-        },
-        "date": 1782298350795,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 547,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40044.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "aa5dba57b62cd6033ad492b5c75026a7669c40fe",
           "message": "Merge pull request #2951 from f1shl3gs/dependabot/cargo/memmap2-0.9.11\n\nchore(deps): bump memmap2 from 0.9.10 to 0.9.11",
           "timestamp": "2026-06-24T18:43:13+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41878.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8f423f8e3f0465e471439e3169dcc9c07eaac396",
+          "message": "Merge pull request #3073 from f1shl3gs/dependabot/cargo/memmap2-0.9.12\n\nchore(deps): bump memmap2 from 0.9.11 to 0.9.12",
+          "timestamp": "2026-10-27T14:31:03+08:00",
+          "tree_id": "da63f9752875eb108bd28264c2c0fbfc8ecf24f7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8f423f8e3f0465e471439e3169dcc9c07eaac396"
+        },
+        "date": 1793083201699,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 461,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41880,
             "unit": "KiB"
           }
         ]
