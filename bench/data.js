@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1793084659312,
+  "lastUpdate": 1793097221970,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "29625eb192b97508a23739a8e56887ace305470a",
-          "message": "Merge pull request #2945 from f1shl3gs/dependabot/cargo/syn-2.0.118\n\nchore(deps): bump syn from 2.0.117 to 2.0.118",
-          "timestamp": "2026-06-18T20:29:06+08:00",
-          "tree_id": "6460536e38f65002cc1c3fc78a1ed8f38a1d7620",
-          "url": "https://github.com/f1shl3gs/vertex/commit/29625eb192b97508a23739a8e56887ace305470a"
-        },
-        "date": 1781785865776,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 496040,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 390250,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e96b9ab45d0d4db906a00a8805781ee73993f968",
+          "message": "Merge pull request #3075 from f1shl3gs/deps/rskafka\n\ndeps: update rskafka to latest",
+          "timestamp": "2026-10-27T18:31:04+08:00",
+          "tree_id": "f7201a7d8e77393f6677a0816ba40cc517b9aa26",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e96b9ab45d0d4db906a00a8805781ee73993f968"
+        },
+        "date": 1793097201653,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 387880,
             "unit": "ns/op"
           }
         ]
