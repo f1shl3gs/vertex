@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1793082820301,
+  "lastUpdate": 1793082832090,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d7a4a3bfc5611562ae3122ee5a1b78d5cfa7cc4c",
-          "message": "Merge pull request #2943 from f1shl3gs/dependabot/cargo/memchr-2.8.2\n\nchore(deps): bump memchr from 2.8.1 to 2.8.2",
-          "timestamp": "2026-06-12T10:37:07+08:00",
-          "tree_id": "536c7bc190387149fbf70e120c03641948a9f440",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d7a4a3bfc5611562ae3122ee5a1b78d5cfa7cc4c"
-        },
-        "date": 1781231953620,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 528550,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 515310,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c929bc34a8cfa1d9d08079305bf6c58db2c800e9",
+          "message": "Merge pull request #3071 from f1shl3gs/dependabot/cargo/tokio-1.54.1\n\nchore(deps): bump tokio from 1.54.0 to 1.54.1",
+          "timestamp": "2026-10-27T14:31:24+08:00",
+          "tree_id": "c7ce4f6f447625a226c62d00fd4ed7bb16ba9e2b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c929bc34a8cfa1d9d08079305bf6c58db2c800e9"
+        },
+        "date": 1793082808498,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 474240,
             "unit": "ns/op"
           }
         ]
