@@ -2307,7 +2307,7 @@ name = "metrics"
 version = "0.1.0"
 dependencies = [
  "criterion",
- "parking_lot 0.13.0",
+ "parking_lot",
 ]
 
 [[package]]
@@ -2617,16 +2617,6 @@ name = "parking"
 version = "2.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f38d5652c16fde515bb1ecef450ab0f6a219d619a7274976324d5e377f7dceba"
-
-[[package]]
-name = "parking_lot"
-version = "0.12.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "93857453250e3077bd71ff98b6a65ea6621a19bb0f559a85248955ac12c45a1a"
-dependencies = [
- "lock_api 0.4.14",
- "parking_lot_core 0.9.12",
-]
 
 [[package]]
 name = "parking_lot"
@@ -3532,14 +3522,14 @@ dependencies = [
 [[package]]
 name = "rskafka"
 version = "0.6.0"
-source = "git+https://github.com/f1shl3gs/rskafka?rev=b55080ee3f195d5badcc7161abfe0a3f45fb0546#b55080ee3f195d5badcc7161abfe0a3f45fb0546"
+source = "git+https://github.com/f1shl3gs/rskafka?rev=ca211d1e96db16c7e45910ec5eea364e7df118ec#ca211d1e96db16c7e45910ec5eea364e7df118ec"
 dependencies = [
  "chrono",
  "crc32c",
  "flate2",
  "futures",
  "lz4",
- "parking_lot 0.12.5",
+ "parking_lot",
  "rand 0.10.3",
  "rsasl",
  "rustls",
@@ -4967,7 +4957,7 @@ dependencies = [
  "metrics",
  "mimalloc",
  "ntp",
- "parking_lot 0.13.0",
+ "parking_lot",
  "percent-encoding",
  "pin-project-lite",
  "pprof",
