@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1793097228569,
+  "lastUpdate": 1793097249634,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "29625eb192b97508a23739a8e56887ace305470a",
-          "message": "Merge pull request #2945 from f1shl3gs/dependabot/cargo/syn-2.0.118\n\nchore(deps): bump syn from 2.0.117 to 2.0.118",
-          "timestamp": "2026-06-18T20:29:06+08:00",
-          "tree_id": "6460536e38f65002cc1c3fc78a1ed8f38a1d7620",
-          "url": "https://github.com/f1shl3gs/vertex/commit/29625eb192b97508a23739a8e56887ace305470a"
-        },
-        "date": 1781785886655,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.382,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 176.19,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 347.16,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 709.15,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "54614fdb429e8d04539826407bf7754ef045983b",
           "message": "Merge pull request #2946 from f1shl3gs/dependabot/cargo/bytes-1.12.0\n\nchore(deps): bump bytes from 1.11.1 to 1.12.0",
           "timestamp": "2026-06-18T20:44:08+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 556.73,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e96b9ab45d0d4db906a00a8805781ee73993f968",
+          "message": "Merge pull request #3075 from f1shl3gs/deps/rskafka\n\ndeps: update rskafka to latest",
+          "timestamp": "2026-10-27T18:31:04+08:00",
+          "tree_id": "f7201a7d8e77393f6677a0816ba40cc517b9aa26",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e96b9ab45d0d4db906a00a8805781ee73993f968"
+        },
+        "date": 1793097225978,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.391,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 182.49,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 334.84,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 687.09,
             "unit": "ns/op"
           }
         ]
