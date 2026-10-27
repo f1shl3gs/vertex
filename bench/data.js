@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1793082855591,
+  "lastUpdate": 1793082860290,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d7a4a3bfc5611562ae3122ee5a1b78d5cfa7cc4c",
-          "message": "Merge pull request #2943 from f1shl3gs/dependabot/cargo/memchr-2.8.2\n\nchore(deps): bump memchr from 2.8.1 to 2.8.2",
-          "timestamp": "2026-06-12T10:37:07+08:00",
-          "tree_id": "536c7bc190387149fbf70e120c03641948a9f440",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d7a4a3bfc5611562ae3122ee5a1b78d5cfa7cc4c"
-        },
-        "date": 1781231951663,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.881,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 86.57,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 166.06,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 124.7,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8f423f8e3f0465e471439e3169dcc9c07eaac396",
+          "message": "Merge pull request #3073 from f1shl3gs/dependabot/cargo/memmap2-0.9.12\n\nchore(deps): bump memmap2 from 0.9.11 to 0.9.12",
+          "timestamp": "2026-10-27T14:31:03+08:00",
+          "tree_id": "da63f9752875eb108bd28264c2c0fbfc8ecf24f7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8f423f8e3f0465e471439e3169dcc9c07eaac396"
+        },
+        "date": 1793082831221,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 36.703,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 94.546,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 160.73,
             "unit": "ns/op"
           }
         ]
