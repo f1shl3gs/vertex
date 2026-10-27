@@ -512,7 +512,7 @@ pulsar = { git = "https://github.com/f1shl3gs/pulsar-rs", rev = "bab5d791bb64f9e
 quick-xml = { version = "0.42.0", default-features = false, features = ["serialize"], optional = true }
 rand = { version = "0.10.3", default-features = false }
 regex = { version = "1.13.1", default-features = false }
-rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "b55080ee3f195d5badcc7161abfe0a3f45fb0546", optional = true, features = ["transport-tls"] }
+rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "ca211d1e96db16c7e45910ec5eea364e7df118ec", optional = true, features = ["transport-tls"] }
 sbbf = { git = "https://github.com/f1shl3gs/sbbf.git", rev = "d619ab889a9637dd849206568a3023dee7046a8f", optional = true }
 sha1 = { version = "0.11.0", default-features = false, optional = true }
 sha2 = { version = "0.11.1", default-features = false, optional = true }
