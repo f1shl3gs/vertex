@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1792818086182,
+  "lastUpdate": 1793082820301,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7c0967681d7a8e6b9a0a5942a8b46d5874ad9e52",
-          "message": "Merge pull request #2942 from f1shl3gs/dependabot/cargo/regex-1.12.4\n\nchore(deps): bump regex from 1.12.3 to 1.12.4",
-          "timestamp": "2026-06-10T09:09:52+08:00",
-          "tree_id": "25669efddedf8be2c9c662fc180b5f554c12e5e8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7c0967681d7a8e6b9a0a5942a8b46d5874ad9e52"
-        },
-        "date": 1781053924520,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 531060,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 529440,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8f423f8e3f0465e471439e3169dcc9c07eaac396",
+          "message": "Merge pull request #3073 from f1shl3gs/dependabot/cargo/memmap2-0.9.12\n\nchore(deps): bump memmap2 from 0.9.11 to 0.9.12",
+          "timestamp": "2026-10-27T14:31:03+08:00",
+          "tree_id": "da63f9752875eb108bd28264c2c0fbfc8ecf24f7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8f423f8e3f0465e471439e3169dcc9c07eaac396"
+        },
+        "date": 1793082794650,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 515310,
             "unit": "ns/op"
           }
         ]
