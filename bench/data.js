@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1793084217360,
+  "lastUpdate": 1793084219869,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b3d02829c39b75d5df6c6e5b6203d68ad1a999ab",
-          "message": "Merge pull request #2944 from f1shl3gs/deps/bump_memchr_to_2.8.2\n\ndeps: bump memchr to 2.8.2",
-          "timestamp": "2026-06-13T11:46:49+08:00",
-          "tree_id": "34b0a4cafc6837f855add81b62e7f5ce1aabea6e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b3d02829c39b75d5df6c6e5b6203d68ad1a999ab"
-        },
-        "date": 1781322546919,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 23.08,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 192.79,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 353.95,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 745.54,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "29625eb192b97508a23739a8e56887ace305470a",
           "message": "Merge pull request #2945 from f1shl3gs/dependabot/cargo/syn-2.0.118\n\nchore(deps): bump syn from 2.0.117 to 2.0.118",
           "timestamp": "2026-06-18T20:29:06+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 685.45,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "75110220ebd09f8622a39b6f57028f28055c0a87",
+          "message": "Merge pull request #3074 from f1shl3gs/cargo/upgrade\n\ncargo: upgrade",
+          "timestamp": "2026-10-27T14:54:18+08:00",
+          "tree_id": "3aaded8b3eb7865c30cb1b0d71cad295d90fe013",
+          "url": "https://github.com/f1shl3gs/vertex/commit/75110220ebd09f8622a39b6f57028f28055c0a87"
+        },
+        "date": 1793084200824,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 16.96,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 137.36,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 273.52,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 556.73,
             "unit": "ns/op"
           }
         ]
