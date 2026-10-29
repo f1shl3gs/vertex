@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1793283897749,
+  "lastUpdate": 1793283900006,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "54614fdb429e8d04539826407bf7754ef045983b",
-          "message": "Merge pull request #2946 from f1shl3gs/dependabot/cargo/bytes-1.12.0\n\nchore(deps): bump bytes from 1.11.1 to 1.12.0",
-          "timestamp": "2026-06-18T20:44:08+08:00",
-          "tree_id": "e1624e01efe28068148b75150c7710345e905e3c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/54614fdb429e8d04539826407bf7754ef045983b"
-        },
-        "date": 1781786771315,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 540800,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 387880,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "47b1d86f8cb26b71129d07fe14c779de3ff96ec2",
+          "message": "Merge pull request #3076 from f1shl3gs/deps/bump_tonic_stuff\n\ndeps: bump tonic* to 0.14.8",
+          "timestamp": "2026-10-29T22:22:33+08:00",
+          "tree_id": "70db67e371c5bbc1b0bf9a8fc3d96c6b1d9712e1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/47b1d86f8cb26b71129d07fe14c779de3ff96ec2"
+        },
+        "date": 1793283875815,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 536250,
             "unit": "ns/op"
           }
         ]
