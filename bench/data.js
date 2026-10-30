@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1793380462741,
+  "lastUpdate": 1793380526496,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f8a7852114d153f3076aa711aaa047c1c352f510",
-          "message": "Merge pull request #2957 from f1shl3gs/dependabot/cargo/rand-0.10.2\n\nchore(deps): bump rand from 0.10.1 to 0.10.2",
-          "timestamp": "2026-07-02T23:36:11+08:00",
-          "tree_id": "3a79f1982fd059d32c9917bd645016e924935c00",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f8a7852114d153f3076aa711aaa047c1c352f510"
-        },
-        "date": 1783007208761,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 556,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 40059.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c08c64c1bcc182cf3c4ce0112ec811db8fc9a079",
           "message": "Merge pull request #2958 from f1shl3gs/deps/bump_rand_to_0.10.2\n\ndeps: bump rand to 0.10.2",
           "timestamp": "2026-07-04T12:38:26+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41917.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7b381101a683e3e078fc6d5be9011726cf271710",
+          "message": "Merge pull request #3077 from f1shl3gs/deps/tonic-0.14.9\n\ndeps: bump tonic-* to 0.14.9",
+          "timestamp": "2026-10-31T01:04:11+08:00",
+          "tree_id": "e2d30b7bf551986f855f6e810faa756cff1ab974",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7b381101a683e3e078fc6d5be9011726cf271710"
+        },
+        "date": 1793380502970,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 576,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41911.5,
             "unit": "KiB"
           }
         ]
