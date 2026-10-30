@@ -402,7 +402,7 @@ required-features = ["sinks-socket"]
 
 [build-dependencies]
 prost-build = { version = "0.14.4", default-features = false }
-tonic-prost-build = { version = "0.14.8", default-features = false, features = ["transport"] }
+tonic-prost-build = { version = "0.14.9", default-features = false, features = ["transport"] }
 
 [dev-dependencies]
 base64 = { version = "0.23.1", default-features = false }
@@ -413,7 +413,7 @@ framework = { path = "lib/framework", features = ["test-util"] }
 serde_path_to_error = { version = "0.1.20", default-features = false }
 testify = { path = "lib/testify" }
 tokio = { version = "1.54.1", default-features = false, features = ["test-util"] }
-tonic = { version = "0.14.8", default-features = false, features = ["server", "router"]}
+tonic = { version = "0.14.9", default-features = false, features = ["server", "router"]}
 
 [dependencies]
 # Workspaces
@@ -477,9 +477,9 @@ serde_json = { version = "1.0.154", default-features = false }
 # GRPC & Protobuf
 prost = { version = "0.14.4", default-features = false, features = ["std"] }
 prost-types = { version = "0.14.4", default-features = false }
-tonic = { version = "0.14.8", default-features = false, optional = true, features = ["transport"] }
-tonic-prost = { version = "0.14.8", default-features = false, optional = true }
-tonic-health = { version = "0.14.8", default-features = false, optional = true }
+tonic = { version = "0.14.9", default-features = false, optional = true, features = ["transport"] }
+tonic-prost = { version = "0.14.9", default-features = false, optional = true }
+tonic-health = { version = "0.14.9", default-features = false, optional = true }
 
 # Profile
 pprof = { version = "0.15.0", default-features = false, optional = true, features = ["flamegraph", "prost-codec"] }
@@ -492,7 +492,7 @@ base64 = { version = "0.23.1", default-features = false, optional = true }
 bytes = { version = "1.12.1", default-features = false }
 chrono = { version = "0.4.45", default-features = false }
 dashmap = { version = "6.2.1", default-features = false, optional = true }
-encoding_rs = { version = "0.8.42", optional = true, features = ["serde"] }
+encoding_rs = { version = "0.8.44", optional = true, features = ["serde"] }
 exitcode = { version = "1.1.2" }
 flate2 = { version = "1.1.10", optional = true }
 gcra = { git = "https://github.com/f1shl3gs/gcra.git", rev = "c4011e32aa408947decf812dd6fa2eee7492be16", optional = true }
