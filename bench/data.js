@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1793380067923,
+  "lastUpdate": 1793380462741,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "06a240144e4201b0d797dbb615b0a165e084d88e",
-          "message": "Merge pull request #2947 from f1shl3gs/deps/bump_bytes_to_1.12.0\n\ndeps: bump bytes to 1.12.0",
-          "timestamp": "2026-06-18T21:21:43+08:00",
-          "tree_id": "e9e6fa48e5f045ec99eeaffcfb6f21897b8cba08",
-          "url": "https://github.com/f1shl3gs/vertex/commit/06a240144e4201b0d797dbb615b0a165e084d88e"
-        },
-        "date": 1781789519248,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 8222200,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 462640,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 47.881,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5a323ff4f212bba42be7842d6629c40f8f27c945",
           "message": "Merge pull request #2948 from f1shl3gs/dependabot/github_actions/actions/checkout-7\n\nchore(ci): bump actions/checkout from 6 to 7",
           "timestamp": "2026-06-19T14:47:34+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 30.339,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7b381101a683e3e078fc6d5be9011726cf271710",
+          "message": "Merge pull request #3077 from f1shl3gs/deps/tonic-0.14.9\n\ndeps: bump tonic-* to 0.14.9",
+          "timestamp": "2026-10-31T01:04:11+08:00",
+          "tree_id": "e2d30b7bf551986f855f6e810faa756cff1ab974",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7b381101a683e3e078fc6d5be9011726cf271710"
+        },
+        "date": 1793380438718,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 7351100,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 839760,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 52.412,
             "unit": "ns/op"
           }
         ]
