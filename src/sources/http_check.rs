@@ -142,7 +142,7 @@ async fn run(
                         "Whether the target is success",
                         1,
                         tags!(
-                            "instance" => instance.clone(),
+                            "instance" => &instance,
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -150,7 +150,7 @@ async fn run(
                         "The number of redirects",
                         trace.redirects(),
                         tags!(
-                            "instance" => instance.clone(),
+                            "instance" => &instance,
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -159,7 +159,7 @@ async fn run(
                         trace.resolving(),
                         tags!(
                             "phase" => "resolve",
-                            "instance" => instance.clone(),
+                            "instance" => &instance,
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -168,7 +168,7 @@ async fn run(
                         trace.connecting(),
                         tags!(
                             "phase" => "connect",
-                            "instance" => instance.clone(),
+                            "instance" => &instance,
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -177,7 +177,7 @@ async fn run(
                         trace.tls_handshake(),
                         tags!(
                             "phase" => "tls",
-                            "instance" => instance.clone(),
+                            "instance" => &instance,
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -186,7 +186,7 @@ async fn run(
                         trace.processing(),
                         tags!(
                             "phase" => "processing",
-                            "instance" => instance.clone(),
+                            "instance" => &instance,
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -195,7 +195,7 @@ async fn run(
                         trace.transferring(),
                         tags!(
                             "phase" => "transfer",
-                            "instance" => instance.clone(),
+                            "instance" => &instance,
                         ),
                     ),
                 ]);
@@ -213,7 +213,7 @@ async fn run(
                     "Returns the version of HTTP of the probe response",
                     version,
                     tags!(
-                        "instance" => instance.clone(),
+                        "instance" => &instance,
                     ),
                 ));
 
@@ -226,7 +226,7 @@ async fn run(
                         "Length of http content response",
                         content_length,
                         tags!(
-                            "instance" => instance.clone(),
+                            "instance" => &instance,
                         ),
                     ));
                 }
@@ -241,7 +241,7 @@ async fn run(
                         "Returns the Last-Modified HTTP response header in unixtime",
                         ts.as_secs_f64(),
                         tags!(
-                            "instance" => instance.clone(),
+                            "instance" => &instance,
                         ),
                     ));
                 }
@@ -260,7 +260,7 @@ async fn run(
                         "Response HTTP status code",
                         parts.status.as_u16(),
                         tags!(
-                            "instance" => instance.clone(),
+                            "instance" => &instance,
                         ),
                     ),
                 ]);
@@ -273,7 +273,7 @@ async fn run(
                     "Whether the target is success",
                     0,
                     tags!(
-                        "instance" => instance.clone(),
+                        "instance" => &instance,
                     ),
                 ));
             }
