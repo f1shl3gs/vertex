@@ -3,7 +3,7 @@ use std::time::{Duration, Instant};
 
 use chrono::Utc;
 
-fn calculate_hash<T: Hash>(t: &T) -> u64 {
+fn calculate_hash<T: Hash + ?Sized>(t: &T) -> u64 {
     // Default hasher is not the fastest, but it's totally fine here, cause
     // this func is not in the hot path.
     let mut s = std::collections::hash_map::DefaultHasher::new();
@@ -12,7 +12,7 @@ fn calculate_hash<T: Hash>(t: &T) -> u64 {
 }
 
 // offset returns the time until the next scrape cycle for the target.
-fn offset<H: Hash>(h: &H, interval: Duration, jitter_seed: u64, now: i64) -> Duration {
+fn offset<H: Hash + ?Sized>(h: &H, interval: Duration, jitter_seed: u64, now: i64) -> Duration {
     let hv = calculate_hash(h);
     let base = interval.as_nanos() as i64 - now % interval.as_nanos() as i64;
     let offset = (hv ^ jitter_seed) % interval.as_nanos() as u64;
@@ -26,13 +26,13 @@ fn offset<H: Hash>(h: &H, interval: Duration, jitter_seed: u64, now: i64) -> Dur
 }
 
 #[inline]
-pub fn calculate_start<T: Hash>(target: &T, interval: Duration) -> Instant {
+pub fn calculate_start<T: Hash + ?Sized>(target: &T, interval: Duration) -> Instant {
     calculate_start_with_jitter(target, interval, 0)
 }
 
 /// Return next `start` of the interval
 #[inline]
-pub fn calculate_start_with_jitter<T: Hash>(
+pub fn calculate_start_with_jitter<T: Hash + ?Sized>(
     target: &T,
     interval: Duration,
     jitter: u64,
