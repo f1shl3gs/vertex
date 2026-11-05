@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1793890676415,
+  "lastUpdate": 1793890683045,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5a323ff4f212bba42be7842d6629c40f8f27c945",
-          "message": "Merge pull request #2948 from f1shl3gs/dependabot/github_actions/actions/checkout-7\n\nchore(ci): bump actions/checkout from 6 to 7",
-          "timestamp": "2026-06-19T14:47:34+08:00",
-          "tree_id": "0537c8841cb7de92a15153ed10809d63dc0caba2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5a323ff4f212bba42be7842d6629c40f8f27c945"
-        },
-        "date": 1781851783130,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.812,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 87.223,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 175.72,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 164.63,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fdc10ef49d7303f88a05275ffefbcb144a9403ae",
+          "message": "Merge pull request #3079 from f1shl3gs/sources/http_check/remove_some_clone\n\nsources/http_check: remove some clones",
+          "timestamp": "2026-11-05T22:55:05+08:00",
+          "tree_id": "1c87cec5a5ee1aad82df390b4e0b0b7526eb3a48",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fdc10ef49d7303f88a05275ffefbcb144a9403ae"
+        },
+        "date": 1793890659161,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.489,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 131.79,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 219.34,
             "unit": "ns/op"
           }
         ]
