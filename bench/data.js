@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1793890746032,
+  "lastUpdate": 1793890761107,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f887c57d42ab185c62bb040e3bc08924bca830ce",
-          "message": "Merge pull request #2949 from f1shl3gs/deps/bump_syn_to_2.0.118\n\ndeps: bump syn to 2.0.118",
-          "timestamp": "2026-06-19T15:04:02+08:00",
-          "tree_id": "4921767819ceaf5f919ae76709bec78f5fcee9c1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f887c57d42ab185c62bb040e3bc08924bca830ce"
-        },
-        "date": 1781852769280,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.949,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 90.218,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 169.59,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 219.34,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3d341d251ade09554da035866b7dd5ca010cf539",
+          "message": "Merge pull request #3078 from f1shl3gs/sources/tcp_check/init\n\nsources/tcp_check: init",
+          "timestamp": "2026-11-05T22:55:34+08:00",
+          "tree_id": "564072f8653dd68fb540df7da702cee413af2056",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3d341d251ade09554da035866b7dd5ca010cf539"
+        },
+        "date": 1793890736673,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.867,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 91.654,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 166.72,
             "unit": "ns/op"
           }
         ]
