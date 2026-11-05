@@ -110,6 +110,8 @@ mod syslog;
 mod systemd;
 #[cfg(feature = "sources-tail")]
 mod tail;
+#[cfg(feature = "sources-tcp_check")]
+mod tcp_check;
 #[cfg(feature = "sources-tengine")]
 mod tengine;
 #[cfg(all(target_os = "linux", feature = "sources-wireless"))]
