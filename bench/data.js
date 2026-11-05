@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1793380526496,
+  "lastUpdate": 1793890672037,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5a323ff4f212bba42be7842d6629c40f8f27c945",
-          "message": "Merge pull request #2948 from f1shl3gs/dependabot/github_actions/actions/checkout-7\n\nchore(ci): bump actions/checkout from 6 to 7",
-          "timestamp": "2026-06-19T14:47:34+08:00",
-          "tree_id": "0537c8841cb7de92a15153ed10809d63dc0caba2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5a323ff4f212bba42be7842d6629c40f8f27c945"
-        },
-        "date": 1781851769262,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 535380,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 386000,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fdc10ef49d7303f88a05275ffefbcb144a9403ae",
+          "message": "Merge pull request #3079 from f1shl3gs/sources/http_check/remove_some_clone\n\nsources/http_check: remove some clones",
+          "timestamp": "2026-11-05T22:55:05+08:00",
+          "tree_id": "1c87cec5a5ee1aad82df390b4e0b0b7526eb3a48",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fdc10ef49d7303f88a05275ffefbcb144a9403ae"
+        },
+        "date": 1793890650076,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 433350,
             "unit": "ns/op"
           }
         ]
