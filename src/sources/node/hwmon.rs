@@ -179,7 +179,7 @@ fn hwmon_metrics(dir: &Path) -> Result<Vec<Metric>, Error> {
             let name = if element == "input" {
                 // input is actually the value
                 if props.contains_key("") {
-                    prefix.clone() + "_input"
+                    format!("{prefix}_input")
                 } else {
                     prefix.clone()
                 }

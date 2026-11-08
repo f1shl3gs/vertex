@@ -209,7 +209,7 @@ fn get_stats(config: &Config, root: PathBuf) -> Result<Vec<Stat>, Error> {
             Ok(usage) => {
                 stats.push(Stat {
                     device: device.to_string(),
-                    mount_point: mount_point.clone(),
+                    mount_point,
                     fs_type: fs_type.to_string(),
                     options: options.to_string(),
                     ro,
@@ -235,7 +235,7 @@ fn get_stats(config: &Config, root: PathBuf) -> Result<Vec<Stat>, Error> {
                     device: device.to_string(),
                     fs_type: fs_type.to_string(),
                     options: options.to_string(),
-                    mount_point: mount_point.clone(),
+                    mount_point,
                     size: 0,
                     free: 0,
                     avail: 0,
