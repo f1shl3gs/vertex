@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1793891202932,
+  "lastUpdate": 1794195448098,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "bc421ef9cd4ac68f39af817240e9dc63dbc895bb",
-          "message": "Merge pull request #2950 from f1shl3gs/cargo/update\n\nmisc: cargo update",
-          "timestamp": "2026-06-19T16:01:24+08:00",
-          "tree_id": "9339391f903f29d90c741fccb17499660d3ed255",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bc421ef9cd4ac68f39af817240e9dc63dbc895bb"
-        },
-        "date": 1781856204573,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 539780,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 531730,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3076a27a15b1e2e6ca610659b3a0a570e4898316",
+          "message": "Merge pull request #3081 from f1shl3gs/sources/node/remove_some_clones\n\nsources/node: remove some clones",
+          "timestamp": "2026-11-09T11:35:22+08:00",
+          "tree_id": "bb2224f28f192e06a1e2062a2a2d38a393e71d5f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3076a27a15b1e2e6ca610659b3a0a570e4898316"
+        },
+        "date": 1794195433147,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 267710,
             "unit": "ns/op"
           }
         ]
