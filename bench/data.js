@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1794195476466,
+  "lastUpdate": 1794195500100,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "bc421ef9cd4ac68f39af817240e9dc63dbc895bb",
-          "message": "Merge pull request #2950 from f1shl3gs/cargo/update\n\nmisc: cargo update",
-          "timestamp": "2026-06-19T16:01:24+08:00",
-          "tree_id": "9339391f903f29d90c741fccb17499660d3ed255",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bc421ef9cd4ac68f39af817240e9dc63dbc895bb"
-        },
-        "date": 1781856223193,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 16.043,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 93.345,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 180.28,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 166.72,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3076a27a15b1e2e6ca610659b3a0a570e4898316",
+          "message": "Merge pull request #3081 from f1shl3gs/sources/node/remove_some_clones\n\nsources/node: remove some clones",
+          "timestamp": "2026-11-09T11:35:22+08:00",
+          "tree_id": "bb2224f28f192e06a1e2062a2a2d38a393e71d5f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3076a27a15b1e2e6ca610659b3a0a570e4898316"
+        },
+        "date": 1794195474151,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 15.349,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 85.873,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 167.98,
             "unit": "ns/op"
           }
         ]
