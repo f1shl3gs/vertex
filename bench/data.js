@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1794195448098,
+  "lastUpdate": 1794195476466,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bc421ef9cd4ac68f39af817240e9dc63dbc895bb",
-          "message": "Merge pull request #2950 from f1shl3gs/cargo/update\n\nmisc: cargo update",
-          "timestamp": "2026-06-19T16:01:24+08:00",
-          "tree_id": "9339391f903f29d90c741fccb17499660d3ed255",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bc421ef9cd4ac68f39af817240e9dc63dbc895bb"
-        },
-        "date": 1781856233020,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.449,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 173.51,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 343.68,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 739.18,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bedb1497822cb911110507490efdacc99861e5e8",
           "message": "Merge pull request #2954 from f1shl3gs/dependabot/github_actions/actions/cache-6\n\nchore(ci): bump actions/cache from 5 to 6",
           "timestamp": "2026-06-24T18:41:15+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 595.1,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3076a27a15b1e2e6ca610659b3a0a570e4898316",
+          "message": "Merge pull request #3081 from f1shl3gs/sources/node/remove_some_clones\n\nsources/node: remove some clones",
+          "timestamp": "2026-11-09T11:35:22+08:00",
+          "tree_id": "bb2224f28f192e06a1e2062a2a2d38a393e71d5f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3076a27a15b1e2e6ca610659b3a0a570e4898316"
+        },
+        "date": 1794195456271,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 18.303,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 143.26,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 281.37,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 568.57,
             "unit": "ns/op"
           }
         ]
