@@ -151,8 +151,8 @@ impl BigUint {
         debug_assert!(self.cmp(rhs) != Ordering::Less);
         let mut out = Vec::with_capacity(self.0.len());
         let mut borrow: u128 = 0;
-        for i in 0..self.0.len() {
-            let left = self.0[i] as u128;
+        for (i, v) in self.0.iter().enumerate() {
+            let left = *v as u128;
             let right = rhs.0.get(i).copied().unwrap_or(0) as u128 + borrow;
             if left >= right {
                 out.push((left - right) as u64);
