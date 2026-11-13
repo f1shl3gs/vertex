@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1794556663049,
+  "lastUpdate": 1794556666085,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "aa5dba57b62cd6033ad492b5c75026a7669c40fe",
-          "message": "Merge pull request #2951 from f1shl3gs/dependabot/cargo/memmap2-0.9.11\n\nchore(deps): bump memmap2 from 0.9.10 to 0.9.11",
-          "timestamp": "2026-06-24T18:43:13+08:00",
-          "tree_id": "25d0ff1e6bf8467ed0a96300a9bb5d637f10c122",
-          "url": "https://github.com/f1shl3gs/vertex/commit/aa5dba57b62cd6033ad492b5c75026a7669c40fe"
-        },
-        "date": 1782297950931,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.53,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 170.18,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 338.93,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 726.2,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5d35fe999f468dd46d3bb3eb8711bbbd13e2c68b",
           "message": "Merge pull request #2952 from f1shl3gs/dependabot/cargo/rustls-0.23.41\n\nchore(deps): bump rustls from 0.23.40 to 0.23.41",
           "timestamp": "2026-06-24T18:43:51+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 403.15,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "173a402189d99473ee2a536f214e8f88f088cbec",
+          "message": "Merge pull request #3080 from f1shl3gs/dependabot/cargo/crc32fast-1.5.4\n\nchore(deps): bump crc32fast from 1.5.3 to 1.5.4",
+          "timestamp": "2026-11-13T15:54:41+08:00",
+          "tree_id": "d0d19598f7a789c4d634203975463f37b24bd98f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/173a402189d99473ee2a536f214e8f88f088cbec"
+        },
+        "date": 1794556642218,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 22.365,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 181.06,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 339.62,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 683.6,
             "unit": "ns/op"
           }
         ]
