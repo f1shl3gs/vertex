@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1794646736407,
+  "lastUpdate": 1794646772089,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c345c152e010b61363599f58b4d7b7e129bcee6f",
-          "message": "Merge pull request #2955 from f1shl3gs/misc/bump_some_deps\n\ndeps: bump to memmap2@0.9.11, quote@1.0.46 and rustls@0.23.41",
-          "timestamp": "2026-06-29T00:13:21+08:00",
-          "tree_id": "7a12871e2463ea0945e336123c3023830453b5fe",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c345c152e010b61363599f58b4d7b7e129bcee6f"
-        },
-        "date": 1782663312209,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 534220,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 532740,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eaaaebf04dd6a08b4ab17ddfba66df0e4a0d9f0f",
+          "message": "Merge pull request #3086 from f1shl3gs/toolchain/1.100.0\n\nbump toolchain to 1.100.0",
+          "timestamp": "2026-11-14T16:56:53+08:00",
+          "tree_id": "800457774ea16a60766cb047442cb6f85ab0d502",
+          "url": "https://github.com/f1shl3gs/vertex/commit/eaaaebf04dd6a08b4ab17ddfba66df0e4a0d9f0f"
+        },
+        "date": 1794646747057,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 535700,
             "unit": "ns/op"
           }
         ]
