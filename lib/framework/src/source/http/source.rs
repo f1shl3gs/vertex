@@ -40,7 +40,7 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
         let acknowledgements = cx.acknowledgements;
         let shutdown = cx.shutdown;
         let output = cx.output;
-        let builder = self.clone();
+        let builder = self;
         let tls = tls.cloned();
         let inner = Arc::new(Inner {
             method,
