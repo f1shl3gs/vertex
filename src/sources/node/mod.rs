@@ -45,6 +45,7 @@ mod powersupplyclass;
 mod pressure;
 mod processes;
 mod rapl;
+mod resctrl;
 mod schedstat;
 mod selinux;
 mod slabinfo;
@@ -341,6 +342,10 @@ struct Collectors {
     #[serde(default = "default_true")]
     rapl: bool,
 
+    /// Expose resctrl metrics
+    #[serde(default)]
+    resctrl: bool,
+
     /// Exposes task scheduler statistics from `/proc/schedstat`.
     #[serde(default = "default_true")]
     schedstat: bool,
@@ -479,6 +484,7 @@ impl Default for Collectors {
             pressure: true,
             processes: false,
             rapl: true,
+            resctrl: false,
             schedstat: true,
             selinux: true,
             slabinfo: None,
@@ -921,6 +927,11 @@ async fn run(
         if collectors.rapl {
             let paths = paths.clone();
             tasks.spawn(collect!(rapl, paths));
+        }
+
+        if collectors.resctrl {
+            let paths = paths.clone();
+            tasks.spawn(collect!(resctrl, paths));
         }
 
         if collectors.schedstat {
