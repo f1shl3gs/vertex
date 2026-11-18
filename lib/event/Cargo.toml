@@ -15,11 +15,11 @@ test = ["value/string_path"]
 
 [dev-dependencies]
 criterion = { version = "0.8.2", default-features = false }
-rand = { version = "0.10.3", default-features = false, features = ["thread_rng"] }
+rand = { version = "0.10.4", default-features = false, features = ["thread_rng"] }
 
 [dependencies]
 buffer = { path = "../buffer" }
-bytes = { version = "1.12.1", default-features = false }
+bytes = { version = "1.12.2", default-features = false }
 chrono = { version = "0.4.45", default-features = false, features = ["now", "serde"] }
 finalize = { path = "../finalize" }
 futures = { version = "0.3.34", default-features = false, features = ["std"] }
