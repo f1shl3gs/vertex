@@ -54,6 +54,7 @@ mod softnet;
 mod stat;
 #[cfg(target_os = "linux")]
 mod swap;
+mod tainted;
 mod tapestats;
 mod tcpstat;
 mod thermal_zone;
@@ -372,6 +373,10 @@ struct Collectors {
     #[serde(default)]
     swap: bool,
 
+    /// Expose kernel tainted
+    #[serde(default)]
+    tainted: bool,
+
     /// Exposes statistics from `/sys/class/scsi_tape`.
     #[serde(default = "default_true")]
     tapestats: bool,
@@ -482,6 +487,7 @@ impl Default for Collectors {
             softirqs: false,
             stat: true,
             swap: false,
+            tainted: false,
             tapestats: true,
             time: true,
             timex: true,
@@ -956,6 +962,11 @@ async fn run(
         if collectors.swap {
             let paths = paths.clone();
             tasks.spawn(collect!(swap, paths));
+        }
+
+        if collectors.tainted {
+            let paths = paths.clone();
+            tasks.spawn(collect!(tainted, paths));
         }
 
         if collectors.tapestats {

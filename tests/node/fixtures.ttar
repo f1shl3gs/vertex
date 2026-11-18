@@ -3483,6 +3483,11 @@ Lines: 1
 3072
 Mode: 644
 # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: fixtures/proc/sys/kernel/tainted
+Lines: 1
+12288
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Path: fixtures/proc/sys/kernel/threads-max
 Lines: 1
 7801EOF
