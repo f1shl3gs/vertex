@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795015757054,
+  "lastUpdate": 1795015945461,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "6105b43ab77847b8ae74a35efbe3bc15ec7d55de",
-          "message": "Merge pull request #2961 from f1shl3gs/dependabot/cargo/crossbeam-utils-0.8.22\n\nchore(deps): bump crossbeam-utils from 0.8.21 to 0.8.22",
-          "timestamp": "2026-07-10T15:59:03+08:00",
-          "tree_id": "54874e9a21d40adc8bf13e09d6c2fb4bc77f8c9d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6105b43ab77847b8ae74a35efbe3bc15ec7d55de"
-        },
-        "date": 1783670971584,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 551,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41891.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c47df6447e86d80133dd4ccc3f49a6b4441fdade",
           "message": "Merge pull request #2970 from f1shl3gs/dependabot/cargo/thrift-0.24.0\n\nchore(deps): bump thrift from 0.23.0 to 0.24.0",
           "timestamp": "2026-07-13T15:44:41+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41872,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "093f5af8a0d502c693fe9e7a984d22123306c954",
+          "message": "Merge pull request #3089 from f1shl3gs/sources/node/tainted\n\nsources/node: add kernel tainted",
+          "timestamp": "2026-11-18T23:22:26+08:00",
+          "tree_id": "3a5431906d17d0d1c94f1d62ed2e1fbde7619a2d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/093f5af8a0d502c693fe9e7a984d22123306c954"
+        },
+        "date": 1795015927069,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 451,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41888,
             "unit": "KiB"
           }
         ]
