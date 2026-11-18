@@ -12,7 +12,7 @@ hyper-util = { version = "0.1.21", default-features = false, features = ["client
 hyper-unix = { path = "../hyper-unix" }
 futures = { version = "0.3.34", default-features = false }
 percent-encoding = { version = "2.3.2", default-features = false }
-rand = { version = "0.10.3", default-features = false, features = ["thread_rng"] }
+rand = { version = "0.10.4", default-features = false, features = ["thread_rng"] }
 serde = { version = "1.0.229", default-features = false }
 serde_json = { version = "1.0.154", default-features = false, features = ["std"] }
 tokio = { version = "1.54.1", default-features = false, features = ["fs", "rt-multi-thread"] }

@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-bytes = { version = "1.12.1", default-features = false }
+bytes = { version = "1.12.2", default-features = false }
 futures = { version = "0.3.34", default-features = false }
 memchr = { version = "2.8.3", default-features = false, features = ["alloc"] }
 pin-project-lite = { version = "0.2.17", default-features = false }
@@ -18,7 +18,7 @@ libc = { version = "0.2.191", default-features = false }
 [dev-dependencies]
 chrono = { version = "0.4.45", default-features = false, features = ["now"] }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes"], rev = "84cfd7acea8e3c69512a2f33496641a92efaff66" }
-rand = { version = "0.10.3", default-features = false, features = ["thread_rng"] }
+rand = { version = "0.10.4", default-features = false, features = ["thread_rng"] }
 temp-dir = { version = "0.2.0", default-features = false }
 tracing-subscriber = { version = "0.3.23", default-features = false, features = ["fmt"] }
 tokio = { version = "1.54.1", default-features = false, features = ["signal", "macros"] }
