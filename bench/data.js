@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795007673788,
+  "lastUpdate": 1795015507944,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c08c64c1bcc182cf3c4ce0112ec811db8fc9a079",
-          "message": "Merge pull request #2958 from f1shl3gs/deps/bump_rand_to_0.10.2\n\ndeps: bump rand to 0.10.2",
-          "timestamp": "2026-07-04T12:38:26+08:00",
-          "tree_id": "42d1d8d5e6963f938bab51c842c8c23fa7320f93",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c08c64c1bcc182cf3c4ce0112ec811db8fc9a079"
-        },
-        "date": 1783140045975,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.605,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 87.119,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 164.39,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 166.96,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "093f5af8a0d502c693fe9e7a984d22123306c954",
+          "message": "Merge pull request #3089 from f1shl3gs/sources/node/tainted\n\nsources/node: add kernel tainted",
+          "timestamp": "2026-11-18T23:22:26+08:00",
+          "tree_id": "3a5431906d17d0d1c94f1d62ed2e1fbde7619a2d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/093f5af8a0d502c693fe9e7a984d22123306c954"
+        },
+        "date": 1795015492784,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 29.436,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 62.552,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 104.98,
             "unit": "ns/op"
           }
         ]
