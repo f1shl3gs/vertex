@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795101670565,
+  "lastUpdate": 1795101717236,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c47df6447e86d80133dd4ccc3f49a6b4441fdade",
-          "message": "Merge pull request #2970 from f1shl3gs/dependabot/cargo/thrift-0.24.0\n\nchore(deps): bump thrift from 0.23.0 to 0.24.0",
-          "timestamp": "2026-07-13T15:44:41+08:00",
-          "tree_id": "4b41c3da8b53abda08de9712997b4b146eed2d6a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c47df6447e86d80133dd4ccc3f49a6b4441fdade"
-        },
-        "date": 1783929330307,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 557,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41891.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b086ae645d4a3e053fba10d27942836385a2c0a9",
           "message": "Merge pull request #2971 from f1shl3gs/dependabot/cargo/socket2-0.6.5\n\nchore(deps): bump socket2 from 0.6.4 to 0.6.5",
           "timestamp": "2026-07-15T22:53:44+08:00",
@@ -16605,6 +16571,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 41888,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "295bcd8fce2e05df6ca6f9dd44845b903d748dfc",
+          "message": "Merge pull request #3091 from f1shl3gs/misc/remove_unnecessary_dep\n\ncargo: remove unused dep feature of sinks-prometheus_exporter",
+          "timestamp": "2026-11-19T23:11:03+08:00",
+          "tree_id": "399e0d0c555dfe814b78034bba7e4ce450616671",
+          "url": "https://github.com/f1shl3gs/vertex/commit/295bcd8fce2e05df6ca6f9dd44845b903d748dfc"
+        },
+        "date": 1795101692089,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 554,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41902.1,
             "unit": "KiB"
           }
         ]
