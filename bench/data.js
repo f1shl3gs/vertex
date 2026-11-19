@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795101309237,
+  "lastUpdate": 1795101332804,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "65254506d1fbc387eac8af7b900b6100fc045431",
-          "message": "Merge pull request #2968 from f1shl3gs/misc/fix_clippy_check\n\nmisc: fix clippy warnings",
-          "timestamp": "2026-07-10T15:30:30+08:00",
-          "tree_id": "74268b07759b2ae4348d77fd39770cde571451f3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/65254506d1fbc387eac8af7b900b6100fc045431"
-        },
-        "date": 1783668790425,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.435,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 169.07,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 335.01,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 704.09,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "80c0b31b4a07f5d5acb1b65245b38a5826ca5bf8",
           "message": "Merge pull request #2965 from f1shl3gs/dependabot/cargo/lru-0.18.1\n\nchore(deps): bump lru from 0.18.0 to 0.18.1",
           "timestamp": "2026-07-10T15:49:30+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 464.5,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "28ed59f3df3f0c894162fccf7be24a041d7144d7",
+          "message": "Merge pull request #3090 from f1shl3gs/sources/node/add_resctrl\n\nsources/node: add resctrl",
+          "timestamp": "2026-11-19T23:10:31+08:00",
+          "tree_id": "15f11b981f2fd17be4fbc95f6be70b6cc66501f0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/28ed59f3df3f0c894162fccf7be24a041d7144d7"
+        },
+        "date": 1795101315398,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 15.602,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 109.58,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 206.16,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 470.2,
             "unit": "ns/op"
           }
         ]
