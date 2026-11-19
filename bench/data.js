@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795101268077,
+  "lastUpdate": 1795101275827,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "13eb8b53a026449fa5da4d6953a62b3221fd77ae",
-          "message": "Merge pull request #2960 from f1shl3gs/cargo/update\n\nmisc: cargo update",
-          "timestamp": "2026-07-05T23:21:30+08:00",
-          "tree_id": "ed0cfb4232ff822f78abae1ae1ee64be3174c654",
-          "url": "https://github.com/f1shl3gs/vertex/commit/13eb8b53a026449fa5da4d6953a62b3221fd77ae"
-        },
-        "date": 1783265053978,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 22.46,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 166.68,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 310.77,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 689.51,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "65254506d1fbc387eac8af7b900b6100fc045431",
           "message": "Merge pull request #2968 from f1shl3gs/misc/fix_clippy_check\n\nmisc: fix clippy warnings",
           "timestamp": "2026-07-10T15:30:30+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 462.42,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "295bcd8fce2e05df6ca6f9dd44845b903d748dfc",
+          "message": "Merge pull request #3091 from f1shl3gs/misc/remove_unnecessary_dep\n\ncargo: remove unused dep feature of sinks-prometheus_exporter",
+          "timestamp": "2026-11-19T23:11:03+08:00",
+          "tree_id": "399e0d0c555dfe814b78034bba7e4ce450616671",
+          "url": "https://github.com/f1shl3gs/vertex/commit/295bcd8fce2e05df6ca6f9dd44845b903d748dfc"
+        },
+        "date": 1795101257346,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 15.74,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 119.97,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 239.14,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 464.5,
             "unit": "ns/op"
           }
         ]
