@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795182004282,
+  "lastUpdate": 1795182013939,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16624,45 +16624,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "80c0b31b4a07f5d5acb1b65245b38a5826ca5bf8",
-          "message": "Merge pull request #2965 from f1shl3gs/dependabot/cargo/lru-0.18.1\n\nchore(deps): bump lru from 0.18.0 to 0.18.1",
-          "timestamp": "2026-07-10T15:49:30+08:00",
-          "tree_id": "67cb3e61fefcd2be0f82c46651afba80ce1133d0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/80c0b31b4a07f5d5acb1b65245b38a5826ca5bf8"
-        },
-        "date": 1783670382215,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 7301300,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 783600,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 52.159,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bb835dc792d204e2121937aaf9fedbd920f8c8af",
           "message": "Merge pull request #2964 from f1shl3gs/dependabot/cargo/regex-1.13.0\n\nchore(deps): bump regex from 1.12.4 to 1.13.0",
           "timestamp": "2026-07-10T15:52:15+08:00",
@@ -20507,6 +20468,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 52.842,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "975eb3b4ee98ebe69ea23b4283b1a9941baa4b3d",
+          "message": "Merge pull request #3092 from f1shl3gs/deps/bump_pin-project-lite\n\ndeps: bump pin-project-lite to 0.2.18",
+          "timestamp": "2026-11-20T21:30:51+08:00",
+          "tree_id": "3d1aa74f65092dfe729ab96ce73e4878abdf1f53",
+          "url": "https://github.com/f1shl3gs/vertex/commit/975eb3b4ee98ebe69ea23b4283b1a9941baa4b3d"
+        },
+        "date": 1795181996491,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 5219000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 310120,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 38.376,
             "unit": "ns/op"
           }
         ]
