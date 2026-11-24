@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-hyper = { version = "1.12.0", default-features = false, features = ["client"] }
+hyper = { version = "1.13.0", default-features = false, features = ["client"] }
 hyper-util = { version = "0.1.21", default-features = false, features = ["client", "client-legacy"] }
 pin-project-lite = { version = "0.2.18", default-features = false }
 tokio = { version = "1.54.1", default-features = false }
