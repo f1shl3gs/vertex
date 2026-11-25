@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795596215509,
+  "lastUpdate": 1795596247612,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d14e5f936384dada0d2aa634dc3dc7502e55fa08",
-          "message": "Merge pull request #2962 from f1shl3gs/dependabot/cargo/bytes-1.12.1\n\nchore(deps): bump bytes from 1.12.0 to 1.12.1",
-          "timestamp": "2026-07-10T15:58:33+08:00",
-          "tree_id": "8de6a28312ef1ba7aa9c0b9c93818e8d0c8d6717",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d14e5f936384dada0d2aa634dc3dc7502e55fa08"
-        },
-        "date": 1783670426872,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 251630,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 529140,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "314cd74716cb4bc75e71f5a2f62b1c4e84b68fd2",
+          "message": "Merge pull request #3094 from f1shl3gs/dependabot/cargo/lru-0.19.1\n\nchore(deps): bump lru from 0.19.0 to 0.19.1",
+          "timestamp": "2026-11-25T16:41:41+08:00",
+          "tree_id": "a3b78ae9503430ab6903c1de4a7325842674e587",
+          "url": "https://github.com/f1shl3gs/vertex/commit/314cd74716cb4bc75e71f5a2f62b1c4e84b68fd2"
+        },
+        "date": 1795596230078,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 387070,
             "unit": "ns/op"
           }
         ]
