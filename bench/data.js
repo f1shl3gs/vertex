@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795596141718,
+  "lastUpdate": 1795596144453,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20526,50 +20526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bb835dc792d204e2121937aaf9fedbd920f8c8af",
-          "message": "Merge pull request #2964 from f1shl3gs/dependabot/cargo/regex-1.13.0\n\nchore(deps): bump regex from 1.12.4 to 1.13.0",
-          "timestamp": "2026-07-10T15:52:15+08:00",
-          "tree_id": "4d5c133e823ecfdcf115cb3b8799c5c121a42c1d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bb835dc792d204e2121937aaf9fedbd920f8c8af"
-        },
-        "date": 1783670085836,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 18.757,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 151.62,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 307.94,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 653.05,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d5018fedd44ae541630646a54467ffe469e65110",
           "message": "Merge pull request #2963 from f1shl3gs/dependabot/cargo/memchr-2.8.3\n\nchore(deps): bump memchr from 2.8.2 to 2.8.3",
           "timestamp": "2026-07-10T15:52:45+08:00",
@@ -24909,6 +24865,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 485.41,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "65a55f63da6a271ada4e88993bd39495f8a2ceb0",
+          "message": "Merge pull request #3093 from f1shl3gs/deps/bump_hyper_to_1.13.0\n\ndeps: bump hyper to 1.13.0",
+          "timestamp": "2026-11-25T16:39:35+08:00",
+          "tree_id": "c1a20ed4b12bd00d4ea59660a88da70069cb1636",
+          "url": "https://github.com/f1shl3gs/vertex/commit/65a55f63da6a271ada4e88993bd39495f8a2ceb0"
+        },
+        "date": 1795596122355,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 15.517,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 126.05,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 231.96,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 464.3,
             "unit": "ns/op"
           }
         ]
