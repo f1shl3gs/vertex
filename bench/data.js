@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795596144453,
+  "lastUpdate": 1795596147761,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d5018fedd44ae541630646a54467ffe469e65110",
-          "message": "Merge pull request #2963 from f1shl3gs/dependabot/cargo/memchr-2.8.3\n\nchore(deps): bump memchr from 2.8.2 to 2.8.3",
-          "timestamp": "2026-07-10T15:52:45+08:00",
-          "tree_id": "1f374028c352f27cb882f453b96c7be935bb7a3f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d5018fedd44ae541630646a54467ffe469e65110"
-        },
-        "date": 1783670104147,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 15.611,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 85.916,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 168.35,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 104.18,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "65a55f63da6a271ada4e88993bd39495f8a2ceb0",
+          "message": "Merge pull request #3093 from f1shl3gs/deps/bump_hyper_to_1.13.0\n\ndeps: bump hyper to 1.13.0",
+          "timestamp": "2026-11-25T16:39:35+08:00",
+          "tree_id": "c1a20ed4b12bd00d4ea59660a88da70069cb1636",
+          "url": "https://github.com/f1shl3gs/vertex/commit/65a55f63da6a271ada4e88993bd39495f8a2ceb0"
+        },
+        "date": 1795596129222,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 30.07,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 67.551,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 119.89,
             "unit": "ns/op"
           }
         ]
