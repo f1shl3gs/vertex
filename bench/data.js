@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795596150923,
+  "lastUpdate": 1795596155247,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d5018fedd44ae541630646a54467ffe469e65110",
-          "message": "Merge pull request #2963 from f1shl3gs/dependabot/cargo/memchr-2.8.3\n\nchore(deps): bump memchr from 2.8.2 to 2.8.3",
-          "timestamp": "2026-07-10T15:52:45+08:00",
-          "tree_id": "1f374028c352f27cb882f453b96c7be935bb7a3f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d5018fedd44ae541630646a54467ffe469e65110"
-        },
-        "date": 1783670083785,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 520970,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 389280,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6bae023748549cac225dce68583abec6e59073c7",
+          "message": "Merge pull request #3096 from f1shl3gs/dependabot/cargo/url-2.5.9\n\nchore(deps): bump url from 2.5.8 to 2.5.9",
+          "timestamp": "2026-11-25T16:40:12+08:00",
+          "tree_id": "2c8a6f090005b6c2d696af850cf347a70c28e2f0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6bae023748549cac225dce68583abec6e59073c7"
+        },
+        "date": 1795596131379,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 529140,
             "unit": "ns/op"
           }
         ]
