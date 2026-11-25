@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795596604988,
+  "lastUpdate": 1795596614417,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13222,40 +13222,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fe0f0e9f0629453703652fd178f304fe0d841683",
-          "message": "Merge pull request #2974 from f1shl3gs/dependabot/cargo/syn-2.0.119\n\nchore(deps): bump syn from 2.0.118 to 2.0.119",
-          "timestamp": "2026-07-18T13:10:27+08:00",
-          "tree_id": "dea40cfc561229ba67e588aac475623fa9c14481",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fe0f0e9f0629453703652fd178f304fe0d841683"
-        },
-        "date": 1784352059712,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 553,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 41884.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "26081140+f1shl3gs@users.noreply.github.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "42e556af270157b173d5629be8315aee318bcf58",
           "message": "Merge pull request #2975 from f1shl3gs/dependabot/cargo/snap-1.1.2\n\nchore(deps): bump snap from 1.1.1 to 1.1.2",
           "timestamp": "2026-07-18T13:11:14+08:00",
@@ -16600,6 +16566,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 446,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 41925.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26081140+f1shl3gs@users.noreply.github.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "46670961d8d204e028b3c1d7d579fbe43c3ae98f",
+          "message": "Merge pull request #3095 from f1shl3gs/dependabot/cargo/form_urlencoded-1.2.3\n\nchore(deps): bump form_urlencoded from 1.2.2 to 1.2.3",
+          "timestamp": "2026-11-25T16:41:20+08:00",
+          "tree_id": "2c8a6f090005b6c2d696af850cf347a70c28e2f0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/46670961d8d204e028b3c1d7d579fbe43c3ae98f"
+        },
+        "date": 1795596596019,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 440,
             "unit": "s"
           },
           {
